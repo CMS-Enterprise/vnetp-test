@@ -30,6 +30,8 @@ describe('EndpointGroupComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-endpoint-group-modal', inputs: ['tenantId'] }),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-endpoint-display-modal', inputs: ['modalId'] }),
+        MockComponent({ selector: 'app-aci-runtime', inputs: ['endpointGroup'] }),
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],

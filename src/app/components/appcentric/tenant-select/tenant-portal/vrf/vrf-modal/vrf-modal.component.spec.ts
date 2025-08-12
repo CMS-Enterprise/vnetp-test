@@ -34,7 +34,8 @@ describe('VrfModalComponent', () => {
     policyControlEnforced: true,
     policyControlEnforcementIngress: false,
     maxExternalRoutes: 100,
-    bgpASN: 65000,
+    internalBgpAsn: 65000,
+    externalBgpAsn: 65001,
     tenantId: 'test-tenant-id',
   });
 
@@ -57,7 +58,7 @@ describe('VrfModalComponent', () => {
 
   it('should reset currentVrf to null when reset is called', () => {
     component.currentVrf = createMockVrf();
-    
+
     component.reset();
 
     expect(component.currentVrf).toBeNull();
@@ -65,7 +66,7 @@ describe('VrfModalComponent', () => {
 
   it('should display Close button in footer', () => {
     const closeButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
-    
+
     expect(closeButton).toBeTruthy();
     expect(closeButton.nativeElement.textContent.trim()).toBe('Close');
   });
@@ -87,7 +88,7 @@ describe('VrfModalComponent', () => {
         ModalMode: ModalMode.Edit,
         vrf: mockVrf,
       };
-      
+
       const ngx = TestBed.inject(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockReturnValue(mockDto);
       jest.spyOn(ngx, 'resetModalData');
@@ -105,7 +106,7 @@ describe('VrfModalComponent', () => {
         ModalMode: ModalMode.Edit,
         vrf: null,
       };
-      
+
       const ngx = TestBed.inject(NgxSmartModalService);
       jest.spyOn(ngx, 'getModalData').mockReturnValue(mockDto);
 

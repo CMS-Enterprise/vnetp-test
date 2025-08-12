@@ -9,14 +9,9 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { BgpAsnRangeModalComponent } from './ranges/bgp-asn-range-modal.component';
 import { BgpAsnRangesComponent } from './ranges/bgp-asn-ranges.component';
-import { BgpAsnAllocationsComponent } from './allocations/bgp-asn-allocations.component';
-import { GlobalBgpAsnService } from './services/global-bgp-asn.service';
 import { GlobalBgpAsnComponent } from './global-bgp-asn.component';
 
-const routes: Routes = [
-  { path: '', component: BgpAsnRangesComponent },
-  { path: 'allocations', component: BgpAsnAllocationsComponent },
-];
+const routes: Routes = [{ path: '', component: BgpAsnRangesComponent }];
 
 @NgModule({
   imports: [
@@ -29,8 +24,7 @@ const routes: Routes = [
     IconButtonModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [GlobalBgpAsnComponent, BgpAsnRangesComponent, BgpAsnRangeModalComponent, BgpAsnAllocationsComponent],
+  declarations: [GlobalBgpAsnComponent, BgpAsnRangesComponent, BgpAsnRangeModalComponent],
   exports: [GlobalBgpAsnComponent],
-  providers: [GlobalBgpAsnService],
 })
 export class GlobalBgpAsnModule {}

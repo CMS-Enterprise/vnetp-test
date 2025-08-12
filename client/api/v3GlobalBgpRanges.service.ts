@@ -43,10 +43,6 @@ export interface DeleteGlobalBgpAsnRequestParams {
     id: string;
 }
 
-export interface ListGlobalBgpAsnRequestParams {
-    environmentId: string;
-}
-
 export interface UpdateGlobalBgpAsnRequestParams {
     id: string;
     updateGlobalBgpRangeDto: UpdateGlobalBgpRangeDto;
@@ -307,19 +303,14 @@ export class V3GlobalBgpRangesService {
     }
 
     /**
-     * List BGP ranges for an environment
-     * @param requestParameters
+     * List BGP ranges
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listGlobalBgpAsn(requestParameters: ListGlobalBgpAsnRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<GlobalBgpAsnRange>>;
-    public listGlobalBgpAsn(requestParameters: ListGlobalBgpAsnRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<GlobalBgpAsnRange>>>;
-    public listGlobalBgpAsn(requestParameters: ListGlobalBgpAsnRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<GlobalBgpAsnRange>>>;
-    public listGlobalBgpAsn(requestParameters: ListGlobalBgpAsnRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const environmentId = requestParameters.environmentId;
-        if (environmentId === null || environmentId === undefined) {
-            throw new Error('Required parameter environmentId was null or undefined when calling listGlobalBgpAsn.');
-        }
+    public listRangesGlobalBgpAsn(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<GlobalBgpAsnRange>>;
+    public listRangesGlobalBgpAsn(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<GlobalBgpAsnRange>>>;
+    public listRangesGlobalBgpAsn(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<GlobalBgpAsnRange>>>;
+    public listRangesGlobalBgpAsn(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -341,7 +332,7 @@ export class V3GlobalBgpRangesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<GlobalBgpAsnRange>>(`${this.configuration.basePath}/v3/global/bgp-ranges/environment/${encodeURIComponent(String(environmentId))}`,
+        return this.httpClient.get<Array<GlobalBgpAsnRange>>(`${this.configuration.basePath}/v3/global/bgp-ranges`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

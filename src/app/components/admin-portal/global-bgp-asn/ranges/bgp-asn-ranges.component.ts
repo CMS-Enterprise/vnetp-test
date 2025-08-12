@@ -3,9 +3,10 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { GlobalBgpAsnService } from '../services/global-bgp-asn.service';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { GlobalBgpAsnRange } from 'client';
+import { V3GlobalBgpRangesService, GlobalBgpAsnRange } from 'client';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-bgp-asn-ranges',
@@ -19,7 +20,8 @@ export class BgpAsnRangesComponent implements OnInit {
   public config: TableConfig<GlobalBgpAsnRange> = {
     description: 'BGP ASN ranges',
     columns: [
-      { name: 'Environment', property: 'environmentId' },
+      { name: 'Name', property: 'name' },
+      { name: 'Environment', value: (r: GlobalBgpAsnRange & any) => r.environment?.name || r.environmentId },
       { name: 'Start', property: 'start' },
       { name: 'End', property: 'end' },
       { name: 'Type', property: 'type' },
@@ -36,7 +38,7 @@ export class BgpAsnRangesComponent implements OnInit {
   public data: GlobalBgpAsnRange[] = [];
   public tableData = { data: [], count: 0, total: 0, page: 1, pageCount: 1 };
 
-  constructor(private ngx: NgxSmartModalService, private bgpService: GlobalBgpAsnService) {}
+  constructor(private ngx: NgxSmartModalService, private bgpApi: V3GlobalBgpRangesService) {}
 
   ngOnInit(): void {
     this.load();
@@ -49,25 +51,48 @@ export class BgpAsnRangesComponent implements OnInit {
   }
 
   openEdit(range: GlobalBgpAsnRange): void {
+    console.log('openEdit', range);
     this.ngx.setModalData({ ModalMode: ModalMode.Edit, range }, 'bgpAsnRangeModal');
     this.ngx.getModal('bgpAsnRangeModal').onCloseFinished.subscribe(() => this.load());
     this.ngx.getModal('bgpAsnRangeModal').open();
   }
 
   load(): void {
-    this.bgpService.getRanges().subscribe({
+    this.bgpApi.listRangesGlobalBgpAsn().subscribe({
       next: ranges => {
-        const augmented = ranges.map(r => ({ ...r, count: (r as any).count ?? 0, percentUsed: (r as any).percentUsed ?? 0 }));
-        this.data = augmented as any;
-        this.tableData = {
-          data: augmented as any,
-          count: augmented.length,
-          total: augmented.length,
-          page: 1,
-          pageCount: 1,
-        };
+        const decorated$ = (ranges || []).map(range =>
+          this.bgpApi.allocationsSummaryGlobalBgpAsn({ rangeId: range.id }).pipe(
+            map(summary => ({
+              ...range,
+              allocatedCount: summary?.allocatedCount ?? 0,
+              freeCount: summary?.freeCount ?? 0,
+              usedPercent: summary?.usedPercent ?? 0,
+            })),
+            catchError(() => of({ ...range, allocatedCount: 0, freeCount: 0, usedPercent: 0 } as any)),
+          ),
+        );
+
+        if (decorated$.length === 0) {
+          this.data = [];
+          this.tableData = { data: [], count: 0, total: 0, page: 1, pageCount: 1 };
+          return;
+        }
+
+        forkJoin(decorated$).subscribe(decorated => {
+          this.data = decorated as any;
+          this.tableData = {
+            data: decorated as any,
+            count: decorated.length,
+            total: decorated.length,
+            page: 1,
+            pageCount: 1,
+          };
+        });
       },
-      error: () => {},
+      error: () => {
+        this.data = [];
+        this.tableData = { data: [], count: 0, total: 0, page: 1, pageCount: 1 };
+      },
     });
   }
 }

@@ -16976,20 +16976,11 @@
         ]
       }
     },
-    "/v3/global/bgp-ranges/environment/{environmentId}": {
+    "/v3/global/bgp-ranges": {
       "get": {
-        "operationId": "listGlobalBgpAsn",
-        "summary": "List BGP ranges for an environment",
-        "parameters": [
-          {
-            "name": "environmentId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "listRangesGlobalBgpAsn",
+        "summary": "List BGP ranges",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -17008,9 +16999,7 @@
         "tags": [
           "v3/global/bgp-ranges"
         ]
-      }
-    },
-    "/v3/global/bgp-ranges": {
+      },
       "post": {
         "operationId": "createGlobalBgpAsn",
         "summary": "Create a BGP range",
@@ -33270,6 +33259,85 @@
           }
         }
       },
+      "GlobalExternalRoute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "network": {
+            "type": "string"
+          },
+          "externalVrf": {
+            "type": "string",
+            "enum": [
+              "cms-entsrv-inet",
+              "cms-entsrv-ldapdns",
+              "cms-entsrv-mgmt",
+              "cms-entsrv-mon",
+              "cms-entsrv-pres",
+              "cms-entsrv-sec",
+              "cms-entsrv-vpn",
+              "cmsnet_appdev",
+              "cmsnet_appprod",
+              "cmsnet_datadev",
+              "cmsnet_dataprod",
+              "cmsnet_edc_vpn",
+              "cmsnet_edcmgmt",
+              "cmsnet_presdev",
+              "cmsnet_presprod",
+              "cmsnet_sec",
+              "cmsnet_transport"
+            ]
+          },
+          "lastSeen": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expired": {
+            "type": "boolean"
+          },
+          "uptime": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "asPath": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "tag": {
+            "type": "string"
+          },
+          "environmentId": {
+            "type": "string"
+          },
+          "environment": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Environment"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "externalVrf",
+          "lastSeen",
+          "expired",
+          "uptime",
+          "protocol",
+          "asPath",
+          "tag",
+          "environmentId",
+          "environment"
+        ]
+      },
       "GlobalBgpAsnAllocation": {
         "type": "object",
         "properties": {
@@ -33332,6 +33400,14 @@
           "environmentId": {
             "type": "string"
           },
+          "environment": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Environment"
+              }
+            ]
+          },
           "start": {
             "type": "number",
             "minimum": 65536
@@ -33360,10 +33436,79 @@
           "id",
           "name",
           "environmentId",
+          "environment",
           "start",
           "end",
           "type",
           "allocations"
+        ]
+      },
+      "Environment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "lastRouteSyncAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "externalVrfs": {
+            "type": "array",
+            "nullable": true,
+            "description": "External VRFs allowed for this environment",
+            "items": {
+              "type": "string",
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ]
+            }
+          },
+          "globalExternalRoutes": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalExternalRoute"
+            }
+          },
+          "bgpAsnRanges": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalBgpAsnRange"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "lastRouteSyncAt",
+          "externalVrfs",
+          "globalExternalRoutes",
+          "bgpAsnRanges"
         ]
       },
       "CreateGlobalBgpRangeDto": {
@@ -34756,153 +34901,6 @@
         },
         "required": [
           "organization"
-        ]
-      },
-      "Environment": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "lastRouteSyncAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "externalVrfs": {
-            "type": "array",
-            "nullable": true,
-            "description": "External VRFs allowed for this environment",
-            "items": {
-              "type": "string",
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ]
-            }
-          },
-          "globalExternalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GlobalExternalRoute"
-            }
-          },
-          "bgpAsnRanges": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GlobalBgpAsnRange"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "description",
-          "lastRouteSyncAt",
-          "externalVrfs",
-          "globalExternalRoutes",
-          "bgpAsnRanges"
-        ]
-      },
-      "GlobalExternalRoute": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "network": {
-            "type": "string"
-          },
-          "externalVrf": {
-            "type": "string",
-            "enum": [
-              "cms-entsrv-inet",
-              "cms-entsrv-ldapdns",
-              "cms-entsrv-mgmt",
-              "cms-entsrv-mon",
-              "cms-entsrv-pres",
-              "cms-entsrv-sec",
-              "cms-entsrv-vpn",
-              "cmsnet_appdev",
-              "cmsnet_appprod",
-              "cmsnet_datadev",
-              "cmsnet_dataprod",
-              "cmsnet_edc_vpn",
-              "cmsnet_edcmgmt",
-              "cmsnet_presdev",
-              "cmsnet_presprod",
-              "cmsnet_sec",
-              "cmsnet_transport"
-            ]
-          },
-          "lastSeen": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "expired": {
-            "type": "boolean"
-          },
-          "uptime": {
-            "type": "string"
-          },
-          "protocol": {
-            "type": "string"
-          },
-          "asPath": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
-          },
-          "tag": {
-            "type": "string"
-          },
-          "environmentId": {
-            "type": "string"
-          },
-          "environment": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Environment"
-              }
-            ]
-          }
-        },
-        "required": [
-          "network",
-          "externalVrf",
-          "lastSeen",
-          "expired",
-          "uptime",
-          "protocol",
-          "asPath",
-          "tag",
-          "environmentId",
-          "environment"
         ]
       },
       "GlobalExternalRouteSummary": {

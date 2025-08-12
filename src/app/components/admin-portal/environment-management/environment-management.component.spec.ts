@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 
 import { EnvironmentManagementComponent } from './environment-management.component';
 import { ActivatedRoute } from '@angular/router';
-import { MockComponent } from '../../../../test/mock-components';
+import { MockComponent, MockFontAwesomeComponent } from '../../../../test/mock-components';
 
 describe('EnvironmentManagementComponent', () => {
   let component: EnvironmentManagementComponent;
@@ -31,6 +31,8 @@ describe('EnvironmentManagementComponent', () => {
       declarations: [
         EnvironmentManagementComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockFontAwesomeComponent,
+        MockComponent({ selector: 'app-environment-modal' }),
       ],
       providers: [
         { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },

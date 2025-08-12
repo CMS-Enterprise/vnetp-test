@@ -6,11 +6,9 @@
 </div>
 
 <app-table [config]="config" [data]="tableData">
-  <ng-template #actionsTemplate let-row>
-    <button class="btn btn-sm btn-link" (click)="openEdit(row)">Edit</button>
+  <ng-template #actionsTemplate let-range="datum">
+    <button class="btn btn-sm btn-link" (click)="openEdit(range)">Edit</button>
   </ng-template>
 </app-table>
 
-<ngx-smart-modal #bgpAsnRangeModal identifier="bgpAsnRangeModal">
-  <app-bgp-asn-range-modal></app-bgp-asn-range-modal>
-</ngx-smart-modal>
+<app-bgp-asn-range-modal></app-bgp-asn-range-modal>

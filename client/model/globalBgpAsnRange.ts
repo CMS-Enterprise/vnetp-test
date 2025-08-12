@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Environment } from './environment';
 import { GlobalBgpAsnAllocation } from './globalBgpAsnAllocation';
 
 
@@ -17,6 +18,7 @@ export interface GlobalBgpAsnRange {
     name: string;
     description?: string;
     environmentId: string;
+    readonly environment: Environment;
     start: number;
     end: number;
     type: GlobalBgpAsnRangeTypeEnum;

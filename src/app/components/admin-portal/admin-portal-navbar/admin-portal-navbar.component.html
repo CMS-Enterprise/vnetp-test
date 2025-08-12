@@ -33,7 +33,7 @@
             >Global Messages</a
           >
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="tenant-v2" queryParamsHandling="merge">
-            Manage Logical Tenants
+            TV2 Logical Tenants
           </a>
 
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="global-bgp-asn" queryParamsHandling="merge">
@@ -41,8 +41,16 @@
           </a>
 
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="wan-form-request" queryParamsHandling="merge"
-            >Wan Form Requests</a
+            >WAN Form Requests</a
           >
+          <a
+            *ngIf="userRoles?.includes('global-admin')"
+            class="dropdown-item"
+            routerLink="environment-management"
+            queryParamsHandling="merge"
+          >
+            Environments
+          </a>
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="app-id-maintenance" queryParamsHandling="merge">
             App ID Maintenance
           </a>

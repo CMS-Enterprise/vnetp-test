@@ -20,6 +20,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { V2AppCentricVrfsService, Vrf } from 'client';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { Tenant } from 'client';
 
 describe('VrfComponent', () => {
   let component: VrfComponent;
@@ -46,6 +47,7 @@ describe('VrfComponent', () => {
     fixture = TestBed.createComponent(VrfComponent);
     component = fixture.componentInstance;
     component.tenantId = '123';
+    component.tenant = { id: '123', wanFormStatus: 'PENDING' } as Tenant;
     fixture.detectChanges();
   });
 

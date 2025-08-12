@@ -5,6 +5,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
 
 import { EnvironmentModalComponent } from './environment-modal.component';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 describe('EnvironmentModalComponent', () => {
   let component: EnvironmentModalComponent;
@@ -32,8 +34,8 @@ describe('EnvironmentModalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [EnvironmentModalComponent],
-      imports: [ReactiveFormsModule],
+      declarations: [EnvironmentModalComponent, MockFontAwesomeComponent],
+      imports: [ReactiveFormsModule, NgxSmartModalModule],
       providers: [
         UntypedFormBuilder,
         { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },
