@@ -126,7 +126,7 @@ spec:
                         sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
                         cobertura(coberturaReportFile: 'cobertura-coverage.xml')
                     }
-                    slackSend(channel: 'cds-draas-jenkins')
+                    slackSend(channel: 'cds-draas-jenkins', message: "Build #${BUILD_NUMBER} of branch ${env.GIT_BRANCH} in ${env.JOB_NAME} completed: ${currentBuild.result}")
                 }
             }
     
