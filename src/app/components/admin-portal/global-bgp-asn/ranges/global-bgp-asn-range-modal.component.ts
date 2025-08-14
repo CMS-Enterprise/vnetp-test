@@ -14,10 +14,10 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-bgp-asn-range-modal',
-  templateUrl: './bgp-asn-range-modal.component.html',
+  selector: 'app-global-bgp-asn-range-modal',
+  templateUrl: './global-bgp-asn-range-modal.component.html',
 })
-export class BgpAsnRangeModalComponent implements OnInit, OnDestroy {
+export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
   form: FormGroup;
   environments: { id: string; name: string }[] = [];
   mode: ModalMode = ModalMode.Create;
@@ -43,7 +43,7 @@ export class BgpAsnRangeModalComponent implements OnInit, OnDestroy {
   }
 
   getData(): void {
-    const dto = Object.assign({}, this.ngx.getModalData('bgpAsnRangeModal') as any);
+    const dto = Object.assign({}, this.ngx.getModalData('globalBgpAsnRangeModal') as any);
     this.mode = dto?.ModalMode ?? ModalMode.Create;
     if (this.mode === ModalMode.Edit && dto?.range) {
       this.editingRange = dto.range;
@@ -61,7 +61,7 @@ export class BgpAsnRangeModalComponent implements OnInit, OnDestroy {
     } else {
       this.reset();
     }
-    this.ngx.resetModalData('bgpAsnRangeModal');
+    this.ngx.resetModalData('globalBgpAsnRangeModal');
   }
 
   reset(): void {
@@ -153,6 +153,6 @@ export class BgpAsnRangeModalComponent implements OnInit, OnDestroy {
   }
 
   close(): void {
-    this.ngx.close('bgpAsnRangeModal');
+    this.ngx.close('globalBgpAsnRangeModal');
   }
 }

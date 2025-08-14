@@ -9,13 +9,13 @@ spec:
   restartPolicy: Never
   containers:
   - name: node
-    image: artifactory.cloud.cms.gov/docker/node:20.16
+    image: artifactory.cloud.cms.gov/docker/node:20.19.2
     command: ['cat']
     tty: true
     resources:
       limits:
-        cpu: 500m
-        memory: 5Gi
+        cpu: 4000m
+        memory: 10Gi
         
   - name: sonarcli
     image: artifactory.cloud.cms.gov/docker/sonarsource/sonar-scanner-cli:5
@@ -23,7 +23,7 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 500m
+        cpu: 2000m
         memory: 5Gi
     
   - name: jfrogcli
@@ -32,8 +32,8 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 1000m
-        memory: 1024Mi
+        cpu: 2000m
+        memory: 5Gi
 
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
@@ -42,7 +42,7 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 1000m
+        cpu: 2000m
     volumeMounts:
       - name: jenkins-docker-cfg
         mountPath: /kaniko/.docker

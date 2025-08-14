@@ -7,11 +7,11 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 import { TableModule } from 'src/app/common/table/table.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
-import { BgpAsnRangeModalComponent } from './ranges/bgp-asn-range-modal.component';
-import { BgpAsnRangesComponent } from './ranges/bgp-asn-ranges.component';
+import { GlobalBgpAsnRangeModalComponent } from './ranges/global-bgp-asn-range-modal.component';
+import { GlobalBgpAsnRangesComponent } from './ranges/global-bgp-asn-ranges.component';
 import { GlobalBgpAsnComponent } from './global-bgp-asn.component';
 
-const routes: Routes = [{ path: '', component: BgpAsnRangesComponent }];
+const routes: Routes = [{ path: '', component: GlobalBgpAsnRangesComponent }];
 
 @NgModule({
   imports: [
@@ -24,7 +24,7 @@ const routes: Routes = [{ path: '', component: BgpAsnRangesComponent }];
     IconButtonModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [GlobalBgpAsnComponent, BgpAsnRangesComponent, BgpAsnRangeModalComponent],
+  declarations: [GlobalBgpAsnComponent, GlobalBgpAsnRangesComponent, GlobalBgpAsnRangeModalComponent],
   exports: [GlobalBgpAsnComponent],
 })
 export class GlobalBgpAsnModule {}

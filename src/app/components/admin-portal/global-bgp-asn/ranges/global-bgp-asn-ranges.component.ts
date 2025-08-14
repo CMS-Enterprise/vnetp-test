@@ -9,10 +9,10 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-bgp-asn-ranges',
-  templateUrl: './bgp-asn-ranges.component.html',
+  selector: 'app-global-bgp-asn-ranges',
+  templateUrl: './global-bgp-asn-ranges.component.html',
 })
-export class BgpAsnRangesComponent implements OnInit {
+export class GlobalBgpAsnRangesComponent implements OnInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public addIcon: IconDefinition = faPlus as any;
@@ -45,15 +45,15 @@ export class BgpAsnRangesComponent implements OnInit {
   }
 
   openCreate(): void {
-    this.ngx.setModalData({ ModalMode: ModalMode.Create }, 'bgpAsnRangeModal');
-    this.ngx.getModal('bgpAsnRangeModal').onCloseFinished.subscribe(() => this.load());
-    this.ngx.getModal('bgpAsnRangeModal').open();
+    this.ngx.setModalData({ ModalMode: ModalMode.Create }, 'globalBgpAsnRangeModal');
+    this.ngx.getModal('globalBgpAsnRangeModal').onCloseFinished.subscribe(() => this.load());
+    this.ngx.getModal('globalBgpAsnRangeModal').open();
   }
 
   openEdit(range: GlobalBgpAsnRange): void {
-    this.ngx.setModalData({ ModalMode: ModalMode.Edit, range }, 'bgpAsnRangeModal');
-    this.ngx.getModal('bgpAsnRangeModal').onCloseFinished.subscribe(() => this.load());
-    this.ngx.getModal('bgpAsnRangeModal').open();
+    this.ngx.setModalData({ ModalMode: ModalMode.Edit, range }, 'globalBgpAsnRangeModal');
+    this.ngx.getModal('globalBgpAsnRangeModal').onCloseFinished.subscribe(() => this.load());
+    this.ngx.getModal('globalBgpAsnRangeModal').open();
   }
 
   load(): void {
