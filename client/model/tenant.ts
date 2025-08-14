@@ -53,11 +53,20 @@ export interface Tenant {
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
     readonly workflows?: Array<Workflow>;
-    readonly datacenterId: string;
+    readonly datacenterId?: string;
     readonly datacenter: Datacenter;
     readonly multiVrf: boolean;
     readonly multiL3out: boolean;
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
+    readonly environmentId: string;
+    readonly wanFormStatus?: TenantWanFormStatusEnum;
 }
+export enum TenantWanFormStatusEnum {
+    Pending = 'PENDING',
+    Approved = 'APPROVED',
+    Active = 'ACTIVE'
+};
+
+
 

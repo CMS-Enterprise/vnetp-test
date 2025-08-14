@@ -1,0 +1,102 @@
+<ngx-smart-modal
+  #environmentModal
+  customClass="large-modal"
+  identifier="environmentModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">
+      {{ modalMode === 'Create' ? 'Create Environment' : 'Edit Environment' }}
+    </h4>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div *ngIf="isLoading" class="text-center">
+        <fa-icon [icon]="['fas', 'spinner']" spin></fa-icon>
+        Loading environment data...
+      </div>
+
+      <div *ngIf="!isLoading">
+        <div class="form-group">
+          <label for="name">Name *</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-control"
+            [class.is-invalid]="submitted && f.name.errors"
+            [class.is-disabled]="modalMode === 'Edit'"
+            aria-label="Environment name"
+          />
+          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+            <div *ngIf="f.name.errors.required">Name is required</div>
+            <div *ngIf="f.name.errors.maxlength">Name must be less than 100 characters</div>
+          </div>
+          <small *ngIf="modalMode === 'Edit'" class="form-text text-muted"> Environment name cannot be changed after creation </small>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-control"
+            rows="3"
+            [class.is-invalid]="submitted && f.description.errors"
+            aria-label="Environment description"
+          ></textarea>
+          <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+            <div *ngIf="f.description.errors.required">Description is required</div>
+            <div *ngIf="f.description.errors.maxlength">Description must be less than 500 characters</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>External VRFs *</label>
+
+          <!-- Selected VRFs Section -->
+          <div class="vrf-section">
+            <h6 class="vrf-section-title">Selected VRFs</h6>
+            <div class="vrf-list-container selected-vrfs" [class.empty]="getSelectedVrfs().length === 0">
+              <div *ngIf="getSelectedVrfs().length === 0" class="empty-message">No VRFs selected</div>
+              <div *ngFor="let vrf of getSelectedVrfs()" class="vrf-item selected">
+                <span class="vrf-label">{{ getVrfLabel(vrf) }}</span>
+                <span class="vrf-status">(Selected)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Available VRFs Section -->
+          <div class="vrf-section">
+            <h6 class="vrf-section-title">Available VRFs</h6>
+            <div class="vrf-list-container available-vrfs" [class.empty]="getAvailableVrfs().length === 0">
+              <div *ngIf="getAvailableVrfs().length === 0" class="empty-message">All VRFs have been selected</div>
+              <div *ngFor="let vrf of getAvailableVrfs()" class="vrf-item available">
+                <span class="vrf-label">{{ vrf.label }}</span>
+                <button type="button" class="btn btn-sm btn-outline-primary add-vrf-btn" (click)="addVrf(vrf.value)">
+                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="submitted && f.externalVrfs.errors" class="invalid-feedback d-block">
+            <div *ngIf="f.externalVrfs.errors.required">At least one External VRF must be selected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
+      <button type="submit" class="btn btn-success" [disabled]="isLoading">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>{{ modalMode === 'Create' ? 'Create' : 'Update' }}</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>

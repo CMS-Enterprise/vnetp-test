@@ -1,16 +1,13 @@
 /* eslint-disable */
-import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { VrfModalComponent } from './vrf-modal.component';
 import { By } from '@angular/platform-browser';
-import { V2AppCentricVrfsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { Vrf } from 'client';
 
 describe('VrfModalComponent', () => {
   let component: VrfModalComponent;
@@ -18,8 +15,7 @@ describe('VrfModalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [VrfModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
-      imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
+      declarations: [VrfModalComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   });
@@ -30,145 +26,94 @@ describe('VrfModalComponent', () => {
     fixture.detectChanges();
   });
 
-  const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  const isRequired = (prop: string): boolean => {
-    const fc = getFormControl(prop);
-    fc.setValue(null);
-    return !!fc.errors && !!fc.errors.required;
-  };
+  const createMockVrf = (): Vrf => ({
+    id: 'test-vrf-id',
+    name: 'Test VRF',
+    alias: 'test-alias',
+    description: 'Test description',
+    policyControlEnforced: true,
+    policyControlEnforcementIngress: false,
+    maxExternalRoutes: 100,
+    internalBgpAsn: 65000,
+    externalBgpAsn: 65001,
+    tenantId: 'test-tenant-id',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Name', () => {
-    it('should have a minimum length of 3 and maximum length of 100', () => {
-      const { name } = component.form.controls;
-
-      name.setValue('a');
-      expect(name.valid).toBe(false);
-
-      name.setValue('a'.repeat(3));
-      expect(name.valid).toBe(true);
-
-      name.setValue('a'.repeat(101));
-      expect(name.valid).toBe(false);
-    });
-
-    it('should not allow invalid characters', () => {
-      const { name } = component.form.controls;
-
-      name.setValue('invalid/name!');
-      expect(name.valid).toBe(false);
-    });
+  it('should initialize with no current VRF', () => {
+    expect(component.currentVrf).toBeNull();
   });
 
-  describe('alias', () => {
-    it('should have a maximum length of 100', () => {
-      const { alias } = component.form.controls;
-
-      alias.setValue('a');
-      expect(alias.valid).toBe(true);
-
-      alias.setValue('a'.repeat(101));
-      expect(alias.valid).toBe(false);
-    });
-  });
-
-  describe('description', () => {
-    it('should have a maximum length of 500', () => {
-      const { description } = component.form.controls;
-
-      description.setValue('a');
-      expect(description.valid).toBe(true);
-
-      description.setValue('a'.repeat(501));
-      expect(description.valid).toBe(false);
-    });
-  });
-
-  it('should have correct required and optional fields by default', () => {
-    const requiredFields = ['name'];
-    const optionalFields = ['alias', 'description', 'policyControlEnforced', 'policyControlEnforcementIngress'];
-
-    requiredFields.forEach(r => {
-      expect(isRequired(r)).toBe(true);
-    });
-    optionalFields.forEach(r => {
-      expect(isRequired(r)).toBe(false);
-    });
-  });
-
-  it('should call to create a Vrf', () => {
-    const service = TestBed.inject(V2AppCentricVrfsService);
-    const createVrfSpy = jest.spyOn(service, 'createOneVrf');
-
-    component.modalMode = ModalMode.Create;
-    component.form.setValue({
-      policyControlEnforced: true,
-      policyControlEnforcementIngress: true,
-      name: 'vrf1',
-      alias: '',
-      description: 'description!',
-    });
-
-    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
-    saveButton.nativeElement.click();
-
-    expect(createVrfSpy).toHaveBeenCalled();
-  });
-
-  it('should call to update a Vrf', () => {
-    const service = TestBed.inject(V2AppCentricVrfsService);
-    const updateVrfSpy = jest.spyOn(service, 'updateOneVrf');
-
-    component.modalMode = ModalMode.Edit;
-    component.vrfId = '123';
-    component.form.setValue({
-      policyControlEnforced: true,
-      policyControlEnforcementIngress: true,
-      name: 'vrf1',
-      alias: '',
-      description: 'updated description!',
-    });
-
-    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
-    saveButton.nativeElement.click();
-
-    expect(updateVrfSpy).toHaveBeenCalled();
-  });
-
-  it('should call ngx.close with the correct argument when cancelled', () => {
+  it('should call ngx.close when closeModal is called', () => {
     const ngx = component['ngx'];
-
     const ngxSpy = jest.spyOn(ngx, 'close');
 
-    component['closeModal']();
+    component.closeModal();
 
     expect(ngxSpy).toHaveBeenCalledWith('vrfModal');
   });
 
-  it('should reset the form when closing the modal', () => {
-    component.form.controls.description.setValue('Test');
+  it('should reset currentVrf to null when reset is called', () => {
+    component.currentVrf = createMockVrf();
 
-    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
-    cancelButton.nativeElement.click();
+    component.reset();
 
-    expect(component.form.controls.description.value).toBe('');
+    expect(component.currentVrf).toBeNull();
+  });
+
+  it('should display Close button in footer', () => {
+    const closeButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
+
+    expect(closeButton).toBeTruthy();
+    expect(closeButton.nativeElement.textContent.trim()).toBe('Close');
+  });
+
+  it('should close modal when Close button is clicked', () => {
+    const ngx = component['ngx'];
+    const ngxSpy = jest.spyOn(ngx, 'close');
+    const closeButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
+
+    closeButton.nativeElement.click();
+
+    expect(ngxSpy).toHaveBeenCalledWith('vrfModal');
   });
 
   describe('getData', () => {
-    const createVrfDto = () => ({
-      ModalMode: ModalMode.Edit,
-      vrf: { id: 1 },
-    });
-    it('should run getData', () => {
+    it('should set currentVrf and vrfId when modal data is provided', () => {
+      const mockVrf = createMockVrf();
+      const mockDto = {
+        ModalMode: ModalMode.Edit,
+        vrf: mockVrf,
+      };
+
       const ngx = TestBed.inject(NgxSmartModalService);
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createVrfDto());
+      jest.spyOn(ngx, 'getModalData').mockReturnValue(mockDto);
+      jest.spyOn(ngx, 'resetModalData');
 
       component.getData();
 
-      expect(component.form.controls.description.enabled).toBe(true);
+      expect(component.modalMode).toBe(ModalMode.Edit);
+      expect(component.vrfId).toBe(mockVrf.id);
+      expect(component.currentVrf).toEqual(mockVrf);
+      expect(ngx.resetModalData).toHaveBeenCalledWith('vrfModal');
+    });
+
+    it('should handle missing VRF data gracefully', () => {
+      const mockDto = {
+        ModalMode: ModalMode.Edit,
+        vrf: null,
+      };
+
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockReturnValue(mockDto);
+
+      component.getData();
+
+      expect(component.modalMode).toBe(ModalMode.Edit);
+      expect(component.currentVrf).toBeNull();
     });
   });
 });

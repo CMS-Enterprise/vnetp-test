@@ -1,6 +1,14 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  GetManyVrfResponseDto,
+  Tenant,
+  V2AppCentricTenantsService,
+  V2AppCentricVrfsService,
+  V3GlobalWanFormRequestService,
+  Vrf,
+  WanFormRequest,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -12,6 +20,8 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { RouteDataUtil } from '../../../../../utils/route-data.util';
+import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
 
 @Component({
   selector: 'app-vrf',
@@ -26,10 +36,17 @@ export class VrfComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public vrfModalSubscription: Subscription;
   public tenantId: string;
-
+  public applicationMode: ApplicationMode;
   public isLoading = false;
+  public currentView: 'vrf' | 'subnets' | 'routes' = 'vrf';
+  public selectedVrf: Vrf | null = null;
+  public expandedRow: Vrf | null = null;
+  public tenant: Tenant;
+  public wanFormRequest: WanFormRequest;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
 
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
@@ -46,8 +63,12 @@ export class VrfComponent implements OnInit {
       { name: 'Description', property: 'description' },
       { name: 'Policy Control Enforced', property: 'policyControlEnforced' },
       { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
+      { name: 'Max External Routes', property: 'maxExternalRoutes' },
+      { name: 'Internal BGP ASN', property: 'internalBgpAsn' },
+      { name: 'External BGP ASN', property: 'externalBgpAsn' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandableRows,
   };
 
   constructor(
@@ -55,6 +76,9 @@ export class VrfComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private tenantService: V2AppCentricTenantsService,
+    private wanFormRequestService: V3GlobalWanFormRequestService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
@@ -71,7 +95,33 @@ export class VrfComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     this.getVrfs();
+    this.getTenant();
+  }
+
+  public getTenant(): void {
+    this.tenantService.getOneTenant({ id: this.tenantId }).subscribe(tenant => {
+      this.tenant = tenant;
+      if (this.tenant.wanFormStatus === 'PENDING') {
+        this.getWanFormRequest();
+      }
+    });
+  }
+
+  public showVrfList(): void {
+    this.selectedVrf = null;
+    this.currentView = 'vrf';
+  }
+
+  public showSubnets(vrf: Vrf): void {
+    this.selectedVrf = vrf;
+    this.currentView = 'subnets';
+  }
+
+  public showRoutes(vrf: Vrf): void {
+    this.selectedVrf = vrf;
+    this.currentView = 'routes';
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -91,23 +141,30 @@ export class VrfComponent implements OnInit {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
+
+    const relations =
+      this.applicationMode === ApplicationMode.NETCENTRIC
+        ? []
+        : ['wanForm', 'wanForm.internalRoutes', 'wanForm.internalRoutes.appcentricSubnet', 'wanForm.externalRoutes'];
+
     this.vrfService
       .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
+        relations,
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: data => {
           this.vrfs = data;
         },
-        () => {
+        error: () => {
           this.vrfs = null;
         },
-        () => {
+        complete: () => {
           this.isLoading = false;
         },
-      );
+      });
   }
 
   private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
@@ -253,5 +310,54 @@ export class VrfComponent implements OnInit {
       `Are you sure you would like to import ${event.length} VRF${event.length > 1 ? 's' : ''}?`,
       onConfirm,
     );
+  }
+
+  public createWanFormRequest(): void {
+    const message =
+      'This action will submit your route changes for approval. ' +
+      'Once submitted, you will not be able to make further changes until the request is approved, rejected, or cancelled. ' +
+      'Are you sure you want to proceed?';
+    const title = 'Request Deployment of Route Changes';
+    const onConfirm = () => {
+      this.wanFormRequestService
+        .createOneWanFormRequest({
+          wanFormRequestDto: {
+            tenantId: this.tenantId,
+            organization: 'test',
+          },
+        })
+        .subscribe({
+          next: () => {
+            this.getTenant();
+            this.refreshVrfs();
+          },
+        });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
+  }
+
+  public getWanFormRequest(): void {
+    this.wanFormRequestService
+      .getManyWanFormRequests({ filter: [`tenantId||eq||${this.tenantId}`, 'status||eq||PENDING'] })
+      .subscribe(wanFormRequests => {
+        this.wanFormRequest = wanFormRequests[0];
+      });
+  }
+
+  public cancelWanFormRequest(): void {
+    const title = 'Cancel Route Change Request';
+    const message =
+      'This action will cancel your pending route change request and restart the approval process. ' +
+      'This cannot be undone. Are you sure you want to proceed?';
+    const onConfirm = () => {
+      this.wanFormRequestService.deleteOneWanFormRequest({ wanFormRequestId: this.wanFormRequest.id }).subscribe({
+        next: () => {
+          this.getTenant();
+          this.refreshVrfs();
+        },
+      });
+    };
+    this.showConfirmationModal(title, message, onConfirm);
   }
 }

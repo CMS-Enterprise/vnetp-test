@@ -8,7 +8,13 @@ import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } f
 import { MockProvider } from 'src/test/mock-providers';
 
 import { L3OutsModalComponent } from './l3-outs-modal.component';
-import { V2AppCentricL3outsService, V2AppCentricVrfsService } from 'client';
+import {
+  V2AppCentricL3outsService,
+  V2AppCentricVrfsService,
+  V2AppCentricBridgeDomainsService,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
+} from 'client';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -179,6 +185,218 @@ describe('L3OutsModalComponent', () => {
       expect(component.form.controls.description.enabled).toBe(true);
       component.getVrfs();
       expect(getVrfsSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('getData branches and value setting', () => {
+    it('should enable name in Create mode and not call getVrf when vrfId missing', () => {
+      const vrfService = TestBed.inject(V2AppCentricVrfsService);
+      const getVrfSpy = jest.spyOn(vrfService, 'getOneVrf');
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => ({ modalMode: ModalMode.Create }));
+
+      component.getData();
+      expect(component.form.controls.name.enabled).toBe(true);
+      expect(getVrfSpy).not.toHaveBeenCalled();
+    });
+
+    it('should set form values and disable name when l3Out provided', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => ({
+        modalMode: ModalMode.Edit,
+        l3Out: { id: '1', name: 'L3', description: 'D', alias: 'A', vrfId: 'v1' },
+      }));
+      jest.spyOn(TestBed.inject(V2AppCentricVrfsService), 'getOneVrf').mockReturnValue({ subscribe: (fn: any) => fn({ id: 'v1' }) } as any);
+
+      component.getData();
+      expect(component.form.controls.name.value).toBe('L3');
+      expect(component.form.controls.name.disabled).toBe(true);
+      expect(component.form.controls.description.value).toBe('D');
+      expect(component.form.controls.alias.value).toBe('A');
+      expect(component.form.controls.vrfId.value).toBe('v1');
+    });
+  });
+
+  describe('data loading sequence and error branches', () => {
+    it('loadBridgeDomains should log error when no vrfId', () => {
+      component['dto'] = { l3Out: {} } as any;
+      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      (component as any).loadBridgeDomains();
+      expect(errSpy).toHaveBeenCalled();
+      errSpy.mockRestore();
+    });
+
+    it('should load bridge domains, then epgs, then esgs successfully', () => {
+      component.tenantId = 't1';
+      component['dto'] = { l3Out: { vrfId: 'v1' } } as any;
+
+      jest.spyOn(TestBed.inject(V2AppCentricBridgeDomainsService), 'getManyBridgeDomain').mockReturnValue({
+        subscribe: (next: any) =>
+          next({
+            data: [{ id: 'bd1', name: 'BD1', subnets: [{ id: 's1', name: 'S1', gatewayIp: '1.1.1.1', advertisedExternally: true }] }],
+          }),
+      } as any);
+
+      jest.spyOn(TestBed.inject(V2AppCentricEndpointGroupsService), 'getManyEndpointGroup').mockReturnValue({
+        subscribe: (next: any) => next({ data: [{ id: 'epg1', bridgeDomainId: 'bd1' }] }),
+      } as any);
+
+      jest.spyOn(TestBed.inject(V2AppCentricEndpointSecurityGroupsService), 'getManyEndpointSecurityGroup').mockReturnValue({
+        subscribe: (next: any) => next({ data: [{ id: 'esg1', selectors: [{ endpointGroupId: 'epg1' }] }] }),
+      } as any);
+
+      (component as any).loadBridgeDomains();
+
+      expect(component.bridgeDomains.length).toBe(1);
+      expect(component.bridgeDomainsWithSubnets.length).toBe(1);
+      const bd = component.bridgeDomainsWithSubnets[0];
+      expect(bd.subnets.length).toBe(1);
+      expect(bd.epgs.length).toBe(1);
+      expect(bd.esgs.length).toBe(1);
+    });
+
+    it('should handle error in bridge domains load', () => {
+      component.tenantId = 't1';
+      component['dto'] = { l3Out: { vrfId: 'v1' } } as any;
+      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      jest.spyOn(TestBed.inject(V2AppCentricBridgeDomainsService), 'getManyBridgeDomain').mockReturnValue({
+        subscribe: (_n: any, error: any) => error(new Error('bd fail')),
+      } as any);
+      (component as any).loadBridgeDomains();
+      expect(errSpy).toHaveBeenCalled();
+      errSpy.mockRestore();
+    });
+
+    it('should handle error in EPG load', () => {
+      component.tenantId = 't1';
+      component['dto'] = { l3Out: { vrfId: 'v1' } } as any;
+      jest.spyOn(TestBed.inject(V2AppCentricBridgeDomainsService), 'getManyBridgeDomain').mockReturnValue({
+        subscribe: (next: any) => next({ data: [{ id: 'bd1', name: 'BD1', subnets: [] }] }),
+      } as any);
+      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      jest.spyOn(TestBed.inject(V2AppCentricEndpointGroupsService), 'getManyEndpointGroup').mockReturnValue({
+        subscribe: (_n: any, error: any) => error(new Error('epg fail')),
+      } as any);
+      (component as any).loadBridgeDomains();
+      expect(errSpy).toHaveBeenCalled();
+      errSpy.mockRestore();
+    });
+
+    it('should handle error in ESG load', () => {
+      component.tenantId = 't1';
+      component['dto'] = { l3Out: { vrfId: 'v1' } } as any;
+      jest.spyOn(TestBed.inject(V2AppCentricBridgeDomainsService), 'getManyBridgeDomain').mockReturnValue({
+        subscribe: (next: any) => next({ data: [{ id: 'bd1', name: 'BD1', subnets: [] }] }),
+      } as any);
+      jest.spyOn(TestBed.inject(V2AppCentricEndpointGroupsService), 'getManyEndpointGroup').mockReturnValue({
+        subscribe: (next: any) => next({ data: [] }),
+      } as any);
+      const errSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      jest.spyOn(TestBed.inject(V2AppCentricEndpointSecurityGroupsService), 'getManyEndpointSecurityGroup').mockReturnValue({
+        subscribe: (_n: any, error: any) => error(new Error('esg fail')),
+      } as any);
+      (component as any).loadBridgeDomains();
+      expect(errSpy).toHaveBeenCalled();
+      errSpy.mockRestore();
+    });
+
+    it('processBridgeDomains should no-op when bridgeDomains undefined', () => {
+      component['bridgeDomains'] = undefined as any;
+      (component as any).processBridgeDomains();
+      expect(component.bridgeDomainsWithSubnets).toBeDefined();
+    });
+
+    it('updateEpgAssociations should no-op when epgs missing', () => {
+      component['epgs'] = undefined as any;
+      (component as any).updateEpgAssociations();
+    });
+
+    it('updateEsgAssociations should no-op when esgs missing', () => {
+      component['esgs'] = undefined as any;
+      (component as any).updateEsgAssociations();
+    });
+  });
+
+  describe('selection toggles and helpers', () => {
+    it('toggleSubnetAdvertisement should toggle value', () => {
+      component.bridgeDomainsWithSubnets = [
+        { id: 'bd1', name: 'BD', subnets: [{ id: 's1', name: 'S', gateway: 'g', isAdvertised: false }], epgs: [], esgs: [] },
+      ];
+      component.toggleSubnetAdvertisement('bd1', 's1');
+      expect(component.bridgeDomainsWithSubnets[0].subnets[0].isAdvertised).toBe(true);
+    });
+
+    it('toggleEpgSelection and isEpgSelected should reflect state', () => {
+      expect(component.isEpgSelected('e1')).toBe(false);
+      component.toggleEpgSelection('e1');
+      expect(component.isEpgSelected('e1')).toBe(true);
+      component.toggleEpgSelection('e1');
+      expect(component.isEpgSelected('e1')).toBe(false);
+    });
+
+    it('toggleEsgSelection and isEsgSelected should reflect state', () => {
+      expect(component.isEsgSelected('g1')).toBe(false);
+      component.toggleEsgSelection('g1');
+      expect(component.isEsgSelected('g1')).toBe(true);
+      component.toggleEsgSelection('g1');
+      expect(component.isEsgSelected('g1')).toBe(false);
+    });
+  });
+
+  describe('reset, onTableEvent, getVrfs and getVrf', () => {
+    it('reset should clear selections and arrays', () => {
+      component.selectedEpgIds.add('e1');
+      component.selectedEsgIds.add('g1');
+      component.bridgeDomainsWithSubnets = [{} as any];
+      component.reset();
+      expect(component.selectedEpgIds.size).toBe(0);
+      expect(component.selectedEsgIds.size).toBe(0);
+      expect(component.bridgeDomainsWithSubnets.length).toBe(0);
+    });
+
+    it('onTableEvent should set dto and call getVrfs with event', () => {
+      const spy = jest.spyOn(component, 'getVrfs');
+      const evt = { page: 2, perPage: 50, searchText: 'abc', searchColumn: 'name' } as any;
+      component.onTableEvent(evt);
+      expect(component.tableComponentDto).toBe(evt);
+      expect(spy).toHaveBeenCalledWith(evt);
+    });
+
+    it('getVrfs should build search filter, set pagination, and unset loading on complete', () => {
+      const vrfService = TestBed.inject(V2AppCentricVrfsService);
+      const spy = jest.spyOn(vrfService, 'getManyVrf').mockReturnValue({
+        subscribe: (next: any, _err: any, complete: any) => {
+          next({ data: [] });
+          complete();
+        },
+      } as any);
+      component.tenantId = 't1';
+      component.getVrfs({ page: 3, perPage: 10, searchText: 'foo', searchColumn: 'name' });
+      expect(spy).toHaveBeenCalled();
+      const args = spy.mock.calls[0][0] as any;
+      expect(args.filter).toEqual(expect.arrayContaining([`tenantId||eq||t1`, `name||cont||foo`]));
+      expect(component.isLoading).toBe(false);
+    });
+
+    it('getVrfs should set vrfs null on error and unset loading', () => {
+      const vrfService = TestBed.inject(V2AppCentricVrfsService);
+      jest.spyOn(vrfService, 'getManyVrf').mockReturnValue({
+        subscribe: (_n: any, error: any, complete: any) => {
+          error(new Error('fail'));
+          complete();
+        },
+      } as any);
+      component.tenantId = 't1';
+      component.getVrfs();
+      expect(component.vrfs).toBeNull();
+      expect(component.isLoading).toBe(false);
+    });
+
+    it('getVrf should set vrf', () => {
+      const vrfService = TestBed.inject(V2AppCentricVrfsService);
+      jest.spyOn(vrfService, 'getOneVrf').mockReturnValue({ subscribe: (next: any) => next({ id: 'v1' }) } as any);
+      component.getVrf('v1');
+      expect(component.vrf).toEqual({ id: 'v1' } as any);
     });
   });
 });

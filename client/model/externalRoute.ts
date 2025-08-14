@@ -14,14 +14,17 @@ import { WanForm } from './wanForm';
 
 export interface ExternalRoute { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     network: string;
-    fromPrefixLength: number;
-    toPrefixLength: number;
-    protocol?: string;
-    vrf: string;
-    metric: number;
-    uptime?: string;
-    readonly wanForms?: Array<WanForm>;
-    runtimeDataLastRefreshed?: string;
+    externalVrf?: string;
+    globalExternalRouteId?: string;
+    manual?: boolean;
+    readonly wanForm?: WanForm;
+    wanFormId: string;
 }
 

@@ -1,7 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Tenant, V2AppCentricTenantsService } from 'client';
+import {
+  VrfExternalVrfsEnum,
+  AdminV2AppCentricTenantsService,
+  TenantAdminCreateDto,
+  TenantAdminDto,
+  VrfAdminDto,
+  VrfAdminDtoExternalVrfsEnum,
+  VrfAdminDtoDefaultExternalVrfEnum,
+  Environment,
+  V3GlobalEnvironmentService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -24,12 +34,12 @@ export class TenantSelectModalComponent implements OnInit {
   public isTenantV2Mode = false;
   public currentMode: ApplicationMode;
   public modalData: TenantModalDto;
-  public selectedFile: File = null;
-  public firewallVendorOptions = ['ASA', 'PANOS'];
-  public firewallArchitectureOptions = ['Physical', 'Virtual'];
-  public haModesOptions = ['Active-Passive', 'Active-Active'];
-  public datacenterOptions = ['East', 'West'];
-  public deploymentModeOptions = ['Hot Site First', 'Cold Site First', 'Scheduled Sync'];
+  public selectedExternalVrf = '';
+  public externalConnectivityOptions: string[] = [];
+  public vrfConfigurations: VrfAdminDto[] = [];
+  public vrfCollapsedStates: boolean[] = [];
+  public environments: Environment[] = [];
+  public isLoadingEnvironments = false;
 
   // Help text for tooltips
   public helpText: TenantSelectModalHelpText;
@@ -39,7 +49,8 @@ export class TenantSelectModalComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
-    private tenantService: V2AppCentricTenantsService,
+    private tenantService: AdminV2AppCentricTenantsService,
+    private environmentService: V3GlobalEnvironmentService,
     helpText: TenantSelectModalHelpText,
   ) {
     this.helpText = helpText;
@@ -47,30 +58,230 @@ export class TenantSelectModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.determineApplicationMode();
+    this.initializeExternalConnectivityOptions();
     this.buildForm();
+    this.initializeVrfConfigurations();
+    this.loadEnvironments();
   }
 
   /**
-   * Updates App-ID checkbox values based on firewall vendor selections
+   * Initialize external connectivity options from VrfExternalVrfsEnum
    */
-  private updateAppIdAvailability(): void {
-    // Handle North/South App-ID
-    const northSouthVendor = this.form.get('northSouthFirewallVendor').value;
-    if (northSouthVendor !== 'PANOS') {
-      this.form.get('northSouthAppId').setValue(false);
-      this.form.get('northSouthAppId').disable();
-    } else {
-      this.form.get('northSouthAppId').enable();
+  private initializeExternalConnectivityOptions(): void {
+    this.externalConnectivityOptions = Object.values(VrfExternalVrfsEnum);
+  }
+
+  /**
+   * Load available environments from the API
+   */
+  private loadEnvironments(): void {
+    this.isLoadingEnvironments = true;
+    this.environmentService.getManyEnvironments().subscribe({
+      next: environments => {
+        this.environments = environments;
+        this.isLoadingEnvironments = false;
+      },
+      error: error => {
+        console.error('Error loading environments:', error);
+        this.isLoadingEnvironments = false;
+      },
+    });
+  }
+
+  /**
+   * Initialize VRF configurations with a default VRF
+   */
+  private initializeVrfConfigurations(): void {
+    this.vrfConfigurations = [this.createDefaultVrfConfiguration()];
+    this.vrfCollapsedStates = [false]; // Default VRF starts expanded
+  }
+
+  /**
+   * Create a default VRF configuration
+   */
+  private createDefaultVrfConfiguration(): VrfAdminDto {
+    return {
+      name: 'default_vrf',
+      alias: '',
+      description: 'Default VRF configuration',
+      externalVrfs: [VrfAdminDtoExternalVrfsEnum.CmsnetTransport],
+      defaultExternalVrf: VrfAdminDtoDefaultExternalVrfEnum.CmsnetTransport,
+      policyControlEnforced: true,
+      policyControlEnforcementIngress: true,
+      hostBasedRoutesToExternalVrfs: false,
+      maxExternalRoutes: 100,
+      autoSelectInternalBgpAsn: true,
+      autoSelectExternalBgpAsn: true,
+    };
+  }
+
+  /**
+   * Add a new VRF configuration
+   */
+  public addVrf(): void {
+    const newVrf = this.createDefaultVrfConfiguration();
+    newVrf.name = ''; // Clear the name for new VRFs
+    newVrf.description = '';
+    this.vrfConfigurations.push(newVrf);
+    this.vrfCollapsedStates.push(false); // New VRFs start expanded
+  }
+
+  /**
+   * Remove a VRF configuration
+   */
+  public removeVrf(index: number): void {
+    const vrf = this.vrfConfigurations[index];
+
+    // Prevent deletion if it's the last VRF or if it's the default_vrf
+    if (this.vrfConfigurations.length > 1 && vrf.name !== 'default_vrf') {
+      this.vrfConfigurations.splice(index, 1);
+      this.vrfCollapsedStates.splice(index, 1);
+    }
+  }
+
+  /**
+   * Check if a VRF can be removed
+   */
+  public canRemoveVrf(index: number): boolean {
+    const vrf = this.vrfConfigurations[index];
+    return this.vrfConfigurations.length > 1 && vrf.name !== 'default_vrf';
+  }
+
+  /**
+   * Get available external VRFs for a specific VRF configuration (not already selected)
+   * Filters based on selected environment if available
+   */
+  public getAvailableExternalVrfs(vrfIndex: number): Array<{ value: VrfAdminDtoExternalVrfsEnum; label: string }> {
+    const selectedVrfs = this.vrfConfigurations[vrfIndex].externalVrfs || [];
+    let availableVrfs = Object.values(VrfAdminDtoExternalVrfsEnum);
+
+    // Filter based on selected environment
+    const selectedEnvironmentId = this.form.get('environmentId')?.value;
+    if (selectedEnvironmentId) {
+      const selectedEnvironment = this.environments.find(env => env.id === selectedEnvironmentId);
+      if (selectedEnvironment && selectedEnvironment.externalVrfs) {
+        // Only show VRFs that are available in the selected environment
+        const environmentVrfs = selectedEnvironment.externalVrfs.map(vrf => vrf as unknown as VrfAdminDtoExternalVrfsEnum);
+        availableVrfs = availableVrfs.filter(vrf => environmentVrfs.includes(vrf));
+      }
     }
 
-    // Handle East/West App-ID
-    const eastWestVendor = this.form.get('eastWestFirewallVendor').value;
-    if (eastWestVendor !== 'PANOS') {
-      this.form.get('eastWestAppId').setValue(false);
-      this.form.get('eastWestAppId').disable();
-    } else {
-      this.form.get('eastWestAppId').enable();
+    return availableVrfs.filter(vrf => !selectedVrfs.includes(vrf)).map(vrf => ({ value: vrf, label: vrf }));
+  }
+
+  /**
+   * Add an external VRF to a VRF configuration
+   */
+  public addExternalVrf(vrfIndex: number, selectedVrf: VrfAdminDtoExternalVrfsEnum): void {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (!vrf.externalVrfs) {
+      vrf.externalVrfs = [];
     }
+
+    if (!vrf.externalVrfs.includes(selectedVrf)) {
+      vrf.externalVrfs.push(selectedVrf);
+
+      // If this is the first external VRF, make it the default
+      if (vrf.externalVrfs.length === 1) {
+        vrf.defaultExternalVrf = selectedVrf as unknown as VrfAdminDtoDefaultExternalVrfEnum;
+      }
+    }
+  }
+
+  /**
+   * Add an external VRF and clear the selection
+   */
+  public addExternalVrfAndClear(vrfIndex: number, selectedVrf: string): void {
+    if (selectedVrf) {
+      this.addExternalVrf(vrfIndex, selectedVrf as any);
+      this.selectedExternalVrf = '';
+    }
+  }
+
+  /**
+   * Get selected external VRFs for a VRF configuration
+   */
+  public getSelectedExternalVrfs(vrfIndex: number): VrfAdminDtoExternalVrfsEnum[] {
+    return this.vrfConfigurations[vrfIndex].externalVrfs || [];
+  }
+
+  /**
+   * Toggle default VRF status (checkbox behavior)
+   */
+  public toggleDefaultExternalVrf(vrfIndex: number, externalVrf: VrfAdminDtoExternalVrfsEnum): void {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (this.isDefaultExternalVrf(vrfIndex, externalVrf)) {
+      // Unset as default
+      vrf.defaultExternalVrf = undefined;
+    } else {
+      // Set as default
+      vrf.defaultExternalVrf = externalVrf as unknown as VrfAdminDtoDefaultExternalVrfEnum;
+    }
+  }
+
+  /**
+   * Remove an external VRF from a VRF configuration
+   */
+  public removeExternalVrf(vrfIndex: number, vrfToRemove: VrfAdminDtoExternalVrfsEnum): void {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (!vrf.externalVrfs) {
+      return;
+    }
+
+    const index = vrf.externalVrfs.indexOf(vrfToRemove);
+    if (index > -1) {
+      // If removing the default VRF, set a new default first
+      if (vrf.defaultExternalVrf === (vrfToRemove as unknown as VrfAdminDtoDefaultExternalVrfEnum) && vrf.externalVrfs.length > 1) {
+        const remainingVrfs = vrf.externalVrfs.filter(v => v !== vrfToRemove);
+        vrf.defaultExternalVrf = remainingVrfs[0] as unknown as VrfAdminDtoDefaultExternalVrfEnum;
+      }
+
+      vrf.externalVrfs.splice(index, 1);
+
+      // If no external VRFs left, clear the default
+      if (vrf.externalVrfs.length === 0) {
+        vrf.defaultExternalVrf = undefined;
+      }
+    }
+  }
+
+  /**
+   * Set the default external VRF for a VRF configuration
+   */
+  public setDefaultExternalVrf(vrfIndex: number, defaultVrf: VrfAdminDtoExternalVrfsEnum): void {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (vrf.externalVrfs && vrf.externalVrfs.includes(defaultVrf)) {
+      vrf.defaultExternalVrf = defaultVrf as unknown as VrfAdminDtoDefaultExternalVrfEnum;
+    }
+  }
+
+  /**
+   * Check if an external VRF is the default for a VRF configuration
+   */
+  public isDefaultExternalVrf(vrfIndex: number, externalVrf: VrfAdminDtoExternalVrfsEnum): boolean {
+    return this.vrfConfigurations[vrfIndex].defaultExternalVrf === (externalVrf as unknown as VrfAdminDtoDefaultExternalVrfEnum);
+  }
+
+  /**
+   * Toggle the collapse state of a VRF configuration
+   */
+  public toggleVrfCollapse(index: number): void {
+    if (index >= 0 && index < this.vrfCollapsedStates.length) {
+      this.vrfCollapsedStates[index] = !this.vrfCollapsedStates[index];
+    }
+  }
+
+  /**
+   * Check if an external VRF can be removed (cannot remove if it's the default)
+   */
+  public canRemoveExternalVrf(vrfIndex: number, externalVrf: VrfAdminDtoExternalVrfsEnum): boolean {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (!vrf.externalVrfs || vrf.externalVrfs.length <= 1) {
+      return false; // Cannot remove if it's the only external VRF
+    }
+
+    // Cannot remove if it's the current default external VRF
+    return !this.isDefaultExternalVrf(vrfIndex, externalVrf);
   }
 
   /**
@@ -79,79 +290,12 @@ export class TenantSelectModalComponent implements OnInit {
   private updateSizeBasedOptions(): void {
     const tenantSize = this.form.get('tenantSize').value;
 
-    // For x-small or small tenants, restrict east/west firewall architecture to Virtual and disable HA
+    // For x-small or small tenants, update VRF configurations to restrict options
     if (tenantSize === 'x-small' || tenantSize === 'small') {
-      this.form.get('eastWestFirewallArchitecture').setValue('Virtual');
-      this.form.get('eastWestFirewallArchitecture').disable();
-
-      this.form.get('eastWestHa').setValue(false);
-      this.form.get('eastWestHa').disable();
-
-      // Since HA is disabled, also disable HA mode
-      this.form.get('eastWestHaMode').disable();
-    } else {
-      this.form.get('eastWestFirewallArchitecture').enable();
-      this.form.get('eastWestHa').enable();
-
-      // Update HA mode availability based on eastWestHa value
-      this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
-    }
-  }
-
-  /**
-   * Updates HA mode availability based on HA checkbox state
-   */
-  private updateHaModeAvailability(haControlName: string, haModeControlName: string): void {
-    const haEnabled = this.form.get(haControlName).value;
-
-    if (haEnabled) {
-      this.form.get(haModeControlName).enable();
-    } else {
-      this.form.get(haModeControlName).disable();
-    }
-  }
-
-  /**
-   * Updates regional HA options visibility and validation
-   */
-  private updateRegionalHaOptions(): void {
-    const regionalHaEnabled = this.form.get('regionalHa').value;
-
-    if (regionalHaEnabled) {
-      this.form.get('primaryDatacenter').enable();
-      this.form.get('secondaryDatacenter').enable();
-
-      // Update deployment mode visibility based on whether a secondary site is selected
-      this.updateDeploymentModeVisibility();
-    } else {
-      this.form.get('primaryDatacenter').disable();
-      this.form.get('secondaryDatacenter').disable();
-      this.form.get('deploymentMode').disable();
-    }
-  }
-
-  /**
-   * Updates deployment mode visibility based on secondary datacenter selection
-   */
-  private updateDeploymentModeVisibility(): void {
-    const secondaryDatacenter = this.form.get('secondaryDatacenter').value;
-
-    if (secondaryDatacenter && secondaryDatacenter !== '') {
-      this.form.get('deploymentMode').enable();
-    } else {
-      this.form.get('deploymentMode').disable();
-    }
-  }
-
-  /**
-   * Ensures primary and secondary datacenters are not the same
-   */
-  private validateDatacenterSelection(): void {
-    const primaryDatacenter = this.form.get('primaryDatacenter').value;
-    const secondaryDatacenter = this.form.get('secondaryDatacenter').value;
-
-    if (secondaryDatacenter && primaryDatacenter === secondaryDatacenter) {
-      this.form.get('secondaryDatacenter').setValue('');
+      this.vrfConfigurations.forEach(vrf => {
+        // Apply any size-based restrictions here if needed
+        vrf.maxExternalRoutes = Math.min(vrf.maxExternalRoutes || 1000, 500);
+      });
     }
   }
 
@@ -191,47 +335,17 @@ export class TenantSelectModalComponent implements OnInit {
     // Set AdminPortal specific form values if in admin portal mode
     if (this.isAdminPortalMode) {
       this.form.controls.tenantSize.setValue(this.modalData.tenantSize || 'medium');
-      this.form.controls.northSouthFirewallVendor.setValue(this.modalData.northSouthFirewallVendor || 'PANOS');
-      this.form.controls.northSouthFirewallArchitecture.setValue(this.modalData.northSouthFirewallArchitecture || 'Virtual');
-      this.form.controls.northSouthHa.setValue(this.modalData.northSouthHa !== false);
-      this.form.controls.northSouthHaMode.setValue(this.modalData.northSouthHaMode || 'Active-Passive');
-      this.form.controls.eastWestFirewallVendor.setValue(this.modalData.eastWestFirewallVendor || 'PANOS');
-      this.form.controls.eastWestFirewallArchitecture.setValue(this.modalData.eastWestFirewallArchitecture || 'Virtual');
-      this.form.controls.eastWestHa.setValue(this.modalData.eastWestHa !== false);
-      this.form.controls.eastWestHaMode.setValue(this.modalData.eastWestHaMode || 'Active-Passive');
       this.form.controls.vcdLocation.setValue(this.modalData.vcdLocation || 'VCD-East');
       this.form.controls.vcdTenantType.setValue(this.modalData.vcdTenantType || 'new');
-
-      this.form.controls.regionalHa.setValue(this.modalData.regionalHa || false);
-      this.form.controls.primaryDatacenter.setValue(this.modalData.primaryDatacenter || 'East');
-      this.form.controls.secondaryDatacenter.setValue(this.modalData.secondaryDatacenter || '');
-      this.form.controls.deploymentMode.setValue(this.modalData.deploymentMode || 'Hot Site First');
 
       if (this.modalData.vcdTenantId) {
         this.form.controls.vcdTenantId.setValue(this.modalData.vcdTenantId);
       }
 
-      // Set feature flags
-      if (this.modalData.featureFlags) {
-        this.form.controls.northSouthAppId.setValue(this.modalData.featureFlags.northSouthAppId);
-        this.form.controls.eastWestAppId.setValue(this.modalData.featureFlags.eastWestAppId);
-        this.form.controls.nat64NorthSouth.setValue(this.modalData.featureFlags.nat64NorthSouth !== false);
-        this.form.controls.eastWestAllowSgBypass.setValue(this.modalData.featureFlags.eastWestAllowSgBypass);
-        this.form.controls.eastWestNat.setValue(this.modalData.featureFlags.eastWestNat);
-      }
-
-      // Update App-ID availability based on current firewall vendor selections
-      this.updateAppIdAvailability();
+      // Environment selection will default to empty and be required
 
       // Update size-based options
       this.updateSizeBasedOptions();
-
-      // Update HA mode availability
-      this.updateHaModeAvailability('northSouthHa', 'northSouthHaMode');
-      this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
-
-      // Update regional HA options
-      this.updateRegionalHaOptions();
     }
 
     this.ngx.resetModalData('tenantModal');
@@ -239,9 +353,9 @@ export class TenantSelectModalComponent implements OnInit {
 
   public reset(): void {
     this.submitted = false;
-    this.selectedFile = null;
     this.ngx.resetModalData('tenantModal');
     this.buildForm();
+    this.initializeVrfConfigurations();
   }
 
   private buildForm(): void {
@@ -250,58 +364,22 @@ export class TenantSelectModalComponent implements OnInit {
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
 
+      // Environment selection (required)
+      environmentId: ['', Validators.required],
+
       // Base tenant options
       tenantSize: ['medium'],
       vendorAgnosticNat: [false],
-
-      // AdminPortal specific fields
-      northSouthFirewallVendor: ['PANOS'],
-      northSouthFirewallArchitecture: ['Virtual'],
-      northSouthHa: [true],
-      northSouthHaMode: ['Active-Passive'],
-      eastWestFirewallVendor: ['PANOS'],
-      eastWestFirewallArchitecture: ['Virtual'],
-      eastWestHa: [true],
-      eastWestHaMode: ['Active-Passive'],
-
-      // Regional HA options
-      regionalHa: [false],
-      primaryDatacenter: ['East'],
-      secondaryDatacenter: [''],
-      deploymentMode: ['Hot Site First'],
+      multiVrf: [false],
+      multiL3out: [false],
 
       // VMWare Cloud Director Integration
       vcdLocation: ['VCD-East'],
       vcdTenantType: ['new'],
       vcdTenantId: [''],
-
-      // Feature flags
-      northSouthAppId: [true],
-      eastWestAppId: [true],
-      nat64NorthSouth: [true],
-      eastWestAllowSgBypass: [false],
-      eastWestNat: [false],
     });
 
     // Set up form control value change handlers
-    this.form.get('northSouthFirewallVendor').valueChanges.subscribe(value => {
-      if (value !== 'PANOS') {
-        this.form.get('northSouthAppId').setValue(false);
-        this.form.get('northSouthAppId').disable();
-      } else {
-        this.form.get('northSouthAppId').enable();
-      }
-    });
-
-    this.form.get('eastWestFirewallVendor').valueChanges.subscribe(value => {
-      if (value !== 'PANOS') {
-        this.form.get('eastWestAppId').setValue(false);
-        this.form.get('eastWestAppId').disable();
-      } else {
-        this.form.get('eastWestAppId').enable();
-      }
-    });
-
     this.form.get('vcdTenantType').valueChanges.subscribe(value => {
       if (value === 'existing') {
         this.form.get('vcdTenantId').setValidators([Validators.required]);
@@ -312,68 +390,75 @@ export class TenantSelectModalComponent implements OnInit {
       this.form.get('vcdTenantId').updateValueAndValidity();
     });
 
+    // Watch for environment changes and filter VRFs accordingly
+    this.form.get('environmentId').valueChanges.subscribe(() => {
+      this.filterVrfsBasedOnEnvironment();
+    });
+
     // New form control handlers
     this.form.get('tenantSize').valueChanges.subscribe(() => {
       this.updateSizeBasedOptions();
     });
 
-    this.form.get('northSouthHa').valueChanges.subscribe(() => {
-      this.updateHaModeAvailability('northSouthHa', 'northSouthHaMode');
-    });
-
-    this.form.get('eastWestHa').valueChanges.subscribe(() => {
-      this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
-    });
-
-    this.form.get('regionalHa').valueChanges.subscribe(() => {
-      this.updateRegionalHaOptions();
-    });
-
-    this.form.get('primaryDatacenter').valueChanges.subscribe(() => {
-      this.validateDatacenterSelection();
-    });
-
-    this.form.get('secondaryDatacenter').valueChanges.subscribe(() => {
-      this.validateDatacenterSelection();
-      this.updateDeploymentModeVisibility();
-    });
-
     // Initialize the form state
     this.updateSizeBasedOptions();
-    this.updateHaModeAvailability('northSouthHa', 'northSouthHaMode');
-    this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
-    this.updateRegionalHaOptions();
   }
 
-  public onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.selectedFile = input.files[0];
+  /**
+   * Filter VRF configurations based on selected environment
+   */
+  private filterVrfsBasedOnEnvironment(): void {
+    const selectedEnvironmentId = this.form.get('environmentId')?.value;
+    if (!selectedEnvironmentId) {
+      return;
     }
+
+    const selectedEnvironment = this.environments.find(env => env.id === selectedEnvironmentId);
+    if (!selectedEnvironment || !selectedEnvironment.externalVrfs) {
+      return;
+    }
+
+    const environmentVrfs = selectedEnvironment.externalVrfs.map(vrf => vrf as unknown as VrfAdminDtoExternalVrfsEnum);
+
+    // Filter each VRF configuration to remove VRFs not available in the environment
+    this.vrfConfigurations.forEach(vrf => {
+      if (vrf.externalVrfs) {
+        // Remove VRFs that are not available in the selected environment
+        vrf.externalVrfs = vrf.externalVrfs.filter(extVrf => environmentVrfs.includes(extVrf));
+
+        // Clear default if it's no longer available
+        if (vrf.defaultExternalVrf && !environmentVrfs.includes(vrf.defaultExternalVrf as unknown as VrfAdminDtoExternalVrfsEnum)) {
+          vrf.defaultExternalVrf = undefined;
+        }
+      }
+    });
   }
 
-  private createTenant(tenant: Tenant): void {
+  private createTenant(tenantAdminCreateDto: TenantAdminCreateDto): void {
     if (this.isAdminPortalMode) {
-      this.tenantService.createOneV2TenantTenant({ tenant: { name: tenant.name } as any }).subscribe(() => {
+      this.tenantService.createOneV2Tenant({ tenantAdminCreateDto }).subscribe(() => {
         this.closeModal();
       });
     } else {
-      this.tenantService.createOneTenant({ tenant }).subscribe(() => {
-        this.closeModal();
-      });
+      // For non-admin mode, just close the modal for now
+      this.closeModal();
     }
   }
 
-  private editTenant(tenant: Tenant): void {
-    delete tenant.name;
-    this.tenantService
-      .updateOneTenant({
-        id: this.TenantId,
-        tenant,
-      })
-      .subscribe(() => {
-        this.closeModal();
-      });
+  private editTenant(tenantAdminDto: TenantAdminDto): void {
+    if (this.isAdminPortalMode) {
+      this.tenantService
+        .updateTenantAdmin({
+          id: this.TenantId,
+          tenantAdminDto,
+        })
+        .subscribe(() => {
+          this.closeModal();
+        });
+    } else {
+      // For non-admin mode, just close the modal for now
+      this.closeModal();
+    }
   }
 
   public save(): void {
@@ -382,77 +467,129 @@ export class TenantSelectModalComponent implements OnInit {
       return;
     }
 
+    // Validate VRF ASN selections: for each VRF, require either auto-select OR a valid ASN for both internal and external
+    const vrfValidationFailed = this.vrfConfigurations.some(vrf => {
+      const internalOk = vrf.autoSelectInternalBgpAsn === true || this.isAsnValid(vrf.internalBgpAsn);
+      const externalOk = vrf.autoSelectExternalBgpAsn === true || this.isAsnValid(vrf.externalBgpAsn);
+      return !internalOk || !externalOk;
+    });
+
+    if (vrfValidationFailed) {
+      return;
+    }
+
     const {
       name,
       description,
       alias,
-      tenantSize,
+      environmentId,
+      // tenantSize,
       vendorAgnosticNat,
-      northSouthFirewallVendor,
-      northSouthFirewallArchitecture,
-      northSouthHa,
-      northSouthHaMode,
-      eastWestFirewallVendor,
-      eastWestFirewallArchitecture,
-      eastWestHa,
-      eastWestHaMode,
-      regionalHa,
-      primaryDatacenter,
-      secondaryDatacenter,
-      deploymentMode,
-      vcdLocation,
-      vcdTenantType,
-      vcdTenantId,
-      northSouthAppId,
-      eastWestAppId,
-      nat64NorthSouth,
-      eastWestAllowSgBypass,
-      eastWestNat,
+      multiVrf,
+      multiL3out,
+      // vcdLocation,
+      // vcdTenantType,
+      // vcdTenantId,
     } = this.form.value;
 
-    const tenant = {
-      name,
-      description,
-      alias,
-    } as Tenant;
-
     if (this.isAdminPortalMode) {
-      // Add AdminPortal specific properties
-      // Note: These would normally be added to a tenant configuration object or metadata
-      // But for now we'll just log them
-      console.log('AdminPortal Tenant Configuration:', {
-        tenantSize,
-        vendorAgnosticNat,
-        northSouthFirewallVendor,
-        northSouthFirewallArchitecture,
-        northSouthHa,
-        northSouthHaMode: northSouthHa ? northSouthHaMode : null,
-        eastWestFirewallVendor,
-        eastWestFirewallArchitecture,
-        eastWestHa,
-        eastWestHaMode: eastWestHa ? eastWestHaMode : null,
-        regionalHa,
-        primaryDatacenter: regionalHa ? primaryDatacenter : null,
-        secondaryDatacenter: regionalHa && secondaryDatacenter ? secondaryDatacenter : null,
-        deploymentMode: regionalHa && secondaryDatacenter ? deploymentMode : null,
-        vcdLocation,
-        vcdTenantType,
-        vcdTenantId: vcdTenantType === 'existing' ? vcdTenantId : null,
-        featureFlags: {
-          northSouthAppId,
-          eastWestAppId,
-          nat64NorthSouth,
-          eastWestAllowSgBypass,
-          eastWestNat,
-        },
-        templateFile: this.selectedFile ? this.selectedFile.name : null,
-      });
-    }
+      if (this.ModalMode === ModalMode.Create) {
+        const tenantAdminCreateDto: TenantAdminCreateDto = {
+          name,
+          description,
+          alias,
+          environmentId,
+          multiVrf,
+          multiL3out,
+          allowServiceGraphBypass: vendorAgnosticNat, // Map this field appropriately
+          vrfs: multiVrf ? this.vrfConfigurations : [this.vrfConfigurations[0]], // Always include at least one VRF
+        };
 
-    if (this.ModalMode === ModalMode.Create) {
-      this.createTenant(tenant);
+        this.createTenant(tenantAdminCreateDto);
+      } else {
+        const tenantAdminDto: TenantAdminDto = {
+          name,
+          description,
+          alias,
+          environmentId,
+          multiVrf,
+          multiL3out,
+          allowServiceGraphBypass: vendorAgnosticNat,
+        };
+
+        this.editTenant(tenantAdminDto);
+      }
     } else {
-      this.editTenant(tenant);
+      // Handle non-admin mode if still needed
+      this.closeModal();
     }
+  }
+
+  // BGP ASN helpers for template bindings
+  private parseAsnValue(value: unknown): number | undefined {
+    if (typeof value === 'number') {
+      return Number.isNaN(value) ? undefined : value;
+    }
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (trimmed === '') {
+        return undefined;
+      }
+      const num = Number(trimmed);
+      return Number.isNaN(num) ? undefined : num;
+    }
+    return undefined;
+  }
+
+  private isAsnProvided(value: unknown): boolean {
+    if (typeof value === 'number') {
+      return !Number.isNaN(value);
+    }
+    if (typeof value === 'string') {
+      return value.trim() !== '';
+    }
+    return false;
+  }
+
+  private isAsnValid(value: unknown): boolean {
+    const num = this.parseAsnValue(value);
+    return typeof num === 'number' && num >= 1 && num <= 4294967295;
+  }
+  public onInternalAutoSelectChange(vrf: VrfAdminDto): void {
+    if (vrf.autoSelectInternalBgpAsn) {
+      vrf.internalBgpAsn = undefined;
+    }
+  }
+
+  public onExternalAutoSelectChange(vrf: VrfAdminDto): void {
+    if (vrf.autoSelectExternalBgpAsn) {
+      vrf.externalBgpAsn = undefined;
+    }
+  }
+
+  public onInternalAsnInput(vrf: VrfAdminDto): void {
+    if (this.isAsnProvided(vrf.internalBgpAsn)) {
+      vrf.autoSelectInternalBgpAsn = false;
+    }
+  }
+
+  public onExternalAsnInput(vrf: VrfAdminDto): void {
+    if (this.isAsnProvided(vrf.externalBgpAsn)) {
+      vrf.autoSelectExternalBgpAsn = false;
+    }
+  }
+
+  public internalAsnInvalid(vrf: VrfAdminDto): boolean {
+    if (vrf.autoSelectInternalBgpAsn) {
+      return false;
+    }
+    return !this.isAsnValid(vrf.internalBgpAsn);
+  }
+
+  public externalAsnInvalid(vrf: VrfAdminDto): boolean {
+    if (vrf.autoSelectExternalBgpAsn) {
+      return false;
+    }
+    return !this.isAsnValid(vrf.externalBgpAsn);
   }
 }

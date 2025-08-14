@@ -13,11 +13,11 @@
 
 export interface WanFormRequest { 
     readonly id?: string;
-    readonly wanFormId: string;
-    readonly tenant: string;
+    readonly tenantId?: string;
+    readonly datacenterId?: string;
+    readonly organization: string;
     readonly createdAt?: string;
+    readonly updatedAt?: string;
     status?: string;
-    datacenterId?: string;
-    aciTenantId?: string;
 }
 

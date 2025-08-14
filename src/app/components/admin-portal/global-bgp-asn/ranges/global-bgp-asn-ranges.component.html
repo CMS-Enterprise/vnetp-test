@@ -1,0 +1,14 @@
+<div class="mb-2">
+  <button class="btn btn-primary" (click)="openCreate()">
+    <fa-icon [icon]="addIcon" class="icon"></fa-icon>
+    <span>Create Range</span>
+  </button>
+</div>
+
+<app-table [config]="config" [data]="tableData">
+  <ng-template #actionsTemplate let-range="datum">
+    <button class="btn btn-sm btn-link" (click)="openEdit(range)">Edit</button>
+  </ng-template>
+</app-table>
+
+<app-global-bgp-asn-range-modal></app-global-bgp-asn-range-modal>

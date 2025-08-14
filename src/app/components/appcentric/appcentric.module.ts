@@ -56,15 +56,6 @@ const routes: Routes = [
         loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
       {
-        path: 'wan-form',
-        canActivate: [AuthGuard],
-        data: {
-          breadcrumb: 'WAN Form',
-          title: 'WAN Form',
-        },
-        loadChildren: () => import('../network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
-      },
-      {
         path: ':tenantId/l3-out-management',
         canActivate: [AuthGuard],
         data: {

@@ -304,7 +304,21 @@ export class TenantSelectModalHelpText {
     'Adds a UI option when creating NAT rules that generates a corresponding firewall rule ' +
     'to match NAT traffic and uses a vendor-agnostic firewall automation strategy that ' +
     'handles differences in processing flow between ASA and PANOS';
-  RegionalHA = 'Configure high availability across multiple datacenter regions';
-  DeploymentMode =
-    'Hot Site First: Deploy to primary site first, then secondary\nCold Site First: Deploy to secondary site first, then primary\nScheduled Sync: Schedule regular synchronization between sites\n\nNote: A failure in the secondary deployment will halt the workflow and rollback the changes to the secondary environment.';
+  MultiVrf = 'Enable multiple VRFs within tenant.';
+  MultiL3out = 'Enable multiple L3Outs within tenant VRFs.';
+  DefaultExternalVrf =
+    'Default External VRF for this Tenant VRF. A default route will be initiated into the tenant from this External VRF.';
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class VrfModalHelpText {
+  ExternalVrfs = 'External VRFs that this VRF is connected to. Please submit a change request to change this setting at the VRF level.';
+  MaxExternalRoutes =
+    'Maximum number of external routes that can be allowed into this VRF. Please submit a change request to change this setting at the VRF level.';
+  DefaultExternalVrf =
+    'Default External VRF for this VRF. A default route will be initiated into the VRF from this External VRF. Please submit a change request to change this setting at the VRF level.';
+  HostBasedRoutesToExternalVrfs =
+    'Advertise host-based routes (/32,/128) to external VRFs. Note that Bridge Domains must have Host Based Routing enabled. Please submit a change request to change this setting at the VRF level.';
 }

@@ -1,0 +1,45 @@
+<h3 class="header-with-button">
+  Advertised Internal Routes
+  <button *ngIf="!global" class="inline-button" (click)="manageSubnets.emit()" data-testid="manage-subnets-button">
+    Manage Internal Routes
+  </button>
+</h3>
+<div class="table-container mb-4">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-network">Network</th>
+        <th class="col-vrf">Advertised to External VRF(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let internalRoute of wanForm?.internalRoutes">
+        <td class="col-network">{{ internalRoute.appcentricSubnet?.gatewayIp }}</td>
+        <td class="col-vrf">{{ internalRoute.exportedToVrfs.join(', ') }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 class="header-with-button">
+  Learned External Routes
+  <button *ngIf="!global" class="inline-button" (click)="manageRoutes.emit()" data-testid="manage-routes-button">
+    Manage External Routes
+  </button>
+</h3>
+<div class="table-container mb-4">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-network">Network</th>
+        <th class="col-vrf">Learned from External VRF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let route of wanForm?.externalRoutes">
+        <td class="col-network">{{ route.network }}</td>
+        <td class="col-vrf">{{ route.externalVrf }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

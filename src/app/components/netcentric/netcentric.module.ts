@@ -171,15 +171,6 @@ const routes: Routes = [
         },
         loadChildren: () => import('../../components/f5-config/f5-config.module').then(m => m.F5ConfigModule),
       },
-      {
-        path: 'wan-form',
-        canActivate: [AuthGuard],
-        data: {
-          breadcrumb: 'WAN Form',
-          title: 'Automation - WAN Form',
-        },
-        loadChildren: () => import('../network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
-      },
     ],
   },
 ];

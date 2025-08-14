@@ -33,7 +33,6 @@ export interface Datacenter {
     readonly selfServices?: SelfService;
     readonly wanForms?: Array<WanForm>;
     readonly appCentricTenant?: Tenant;
-    readonly appCentricTenantId?: string;
     readonly tenantVersion?: number;
 }
 

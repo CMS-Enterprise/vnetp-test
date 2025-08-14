@@ -14,9 +14,9 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
 import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select.component';
-import { WanFormRequestComponent } from './wan-form-request/wan-form-request.component';
 import { AppIdMaintenanceModule } from './app-id-maintenance/app-id-maintenance.module';
 import { AppIdMaintenanceComponent } from './app-id-maintenance/app-id-maintenance.component';
+import { EnvironmentManagementComponent } from './environment-management/environment-management.component';
 
 const routes: Routes = [
   {
@@ -33,6 +33,15 @@ const routes: Routes = [
           title: 'Dashboard',
         },
         loadChildren: () => import('./admin-portal-dashboard/admin-portal-dashboard.module').then(m => m.AdminPortalDashboardModule),
+      },
+      {
+        path: 'global-bgp-asn',
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Global BGP ASN',
+          title: 'Global BGP ASN',
+        },
+        loadChildren: () => import('./global-bgp-asn/global-bgp-asn.module').then(m => m.GlobalBgpAsnModule),
       },
       {
         path: 'global-messages',
@@ -56,7 +65,6 @@ const routes: Routes = [
       },
       {
         path: 'wan-form-request',
-        component: WanFormRequestComponent,
         canActivate: [AdminAuthGuard],
         data: { breadcrumb: 'WAN Form Requests', title: 'WAN Form Requests' },
         loadChildren: () => import('./wan-form-request/wan-form-request.module').then(m => m.WanFormRequestModule),
@@ -70,6 +78,16 @@ const routes: Routes = [
           title: 'App ID Maintenance',
         },
         loadChildren: () => import('./app-id-maintenance/app-id-maintenance.module').then(m => m.AppIdMaintenanceModule),
+      },
+      {
+        path: 'environment-management',
+        component: EnvironmentManagementComponent,
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Environment Management',
+          title: 'Environment Management',
+        },
+        loadChildren: () => import('./environment-management/environment-management.module').then(m => m.EnvironmentManagementModule),
       },
     ],
   },

@@ -2,6 +2,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
+import { AdminV2AppCentricTenantsService } from './api/adminV2AppCentricTenants.service';
+import { AdminV2AppCentricVrfsService } from './api/adminV2AppCentricVrfs.service';
 import { UtilitiesService } from './api/utilities.service';
 import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';
@@ -17,8 +19,9 @@ import { V1LoadBalancerRoutesService } from './api/v1LoadBalancerRoutes.service'
 import { V1LoadBalancerSelfIpsService } from './api/v1LoadBalancerSelfIps.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
+import { V1NetworkScopeFormsExternalRoutesService } from './api/v1NetworkScopeFormsExternalRoutes.service';
+import { V1NetworkScopeFormsInternalRoutesService } from './api/v1NetworkScopeFormsInternalRoutes.service';
 import { V1NetworkScopeFormsWanFormService } from './api/v1NetworkScopeFormsWanForm.service';
-import { V1NetworkScopeFormsWanFormSubnetService } from './api/v1NetworkScopeFormsWanFormSubnet.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
 import { V1NetworkSecurityFirewallRulesService } from './api/v1NetworkSecurityFirewallRules.service';
 import { V1NetworkSecurityNatRuleGroupsService } from './api/v1NetworkSecurityNatRuleGroups.service';
@@ -33,7 +36,6 @@ import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
 import { V1RuntimeDataAciRuntimeService } from './api/v1RuntimeDataAciRuntime.service';
 import { V1RuntimeDataAppIdRuntimeService } from './api/v1RuntimeDataAppIdRuntime.service';
-import { V1RuntimeDataExternalRouteService } from './api/v1RuntimeDataExternalRoute.service';
 import { V1RuntimeDataF5ConfigService } from './api/v1RuntimeDataF5Config.service';
 import { V1RuntimeDataHitcountService } from './api/v1RuntimeDataHitcount.service';
 import { V1SelfServiceService } from './api/v1SelfService.service';
@@ -56,6 +58,9 @@ import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service'
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 import { V2WorkflowsService } from './api/v2Workflows.service';
+import { V3GlobalBgpRangesService } from './api/v3GlobalBgpRanges.service';
+import { V3GlobalEnvironmentService } from './api/v3GlobalEnvironment.service';
+import { V3GlobalExternalRoutesService } from './api/v3GlobalExternalRoutes.service';
 import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
 import { V3GlobalWanFormRequestService } from './api/v3GlobalWanFormRequest.service';
 
