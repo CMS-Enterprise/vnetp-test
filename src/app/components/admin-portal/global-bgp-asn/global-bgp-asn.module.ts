@@ -1,0 +1,30 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+
+import { TableModule } from 'src/app/common/table/table.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { GlobalBgpAsnRangeModalComponent } from './ranges/global-bgp-asn-range-modal.component';
+import { GlobalBgpAsnRangesComponent } from './ranges/global-bgp-asn-ranges.component';
+import { GlobalBgpAsnComponent } from './global-bgp-asn.component';
+
+const routes: Routes = [{ path: '', component: GlobalBgpAsnRangesComponent }];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    NgxSmartModalModule,
+    TableModule,
+    IconButtonModule,
+    RouterModule.forChild(routes),
+  ],
+  declarations: [GlobalBgpAsnComponent, GlobalBgpAsnRangesComponent, GlobalBgpAsnRangeModalComponent],
+  exports: [GlobalBgpAsnComponent],
+})
+export class GlobalBgpAsnModule {}

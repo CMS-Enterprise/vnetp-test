@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { UnderlayAllocation } from './underlayAllocation';
 import { SimplifiedWanForm } from './simplifiedWanForm';
 
 
@@ -19,7 +20,9 @@ export interface SimplifiedVrf {
     externalVrfs?: Array<SimplifiedVrfExternalVrfsEnum>;
     defaultExternalVrf?: SimplifiedVrfDefaultExternalVrfEnum;
     hostBasedRoutesToExternalVrfs?: boolean;
-    bgpASN?: number;
+    internalBgpAsn?: number;
+    externalBgpAsn?: number;
+    readonly underlayAllocation?: UnderlayAllocation;
 }
 export enum SimplifiedVrfExternalVrfsEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

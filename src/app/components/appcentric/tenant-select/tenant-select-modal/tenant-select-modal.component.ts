@@ -110,7 +110,8 @@ export class TenantSelectModalComponent implements OnInit {
       policyControlEnforcementIngress: true,
       hostBasedRoutesToExternalVrfs: false,
       maxExternalRoutes: 100,
-      bgpASN: 65000,
+      autoSelectInternalBgpAsn: true,
+      autoSelectExternalBgpAsn: true,
     };
   }
 
@@ -466,6 +467,17 @@ export class TenantSelectModalComponent implements OnInit {
       return;
     }
 
+    // Validate VRF ASN selections: for each VRF, require either auto-select OR a valid ASN for both internal and external
+    const vrfValidationFailed = this.vrfConfigurations.some(vrf => {
+      const internalOk = vrf.autoSelectInternalBgpAsn === true || this.isAsnValid(vrf.internalBgpAsn);
+      const externalOk = vrf.autoSelectExternalBgpAsn === true || this.isAsnValid(vrf.externalBgpAsn);
+      return !internalOk || !externalOk;
+    });
+
+    if (vrfValidationFailed) {
+      return;
+    }
+
     const {
       name,
       description,
@@ -511,5 +523,73 @@ export class TenantSelectModalComponent implements OnInit {
       // Handle non-admin mode if still needed
       this.closeModal();
     }
+  }
+
+  // BGP ASN helpers for template bindings
+  private parseAsnValue(value: unknown): number | undefined {
+    if (typeof value === 'number') {
+      return Number.isNaN(value) ? undefined : value;
+    }
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (trimmed === '') {
+        return undefined;
+      }
+      const num = Number(trimmed);
+      return Number.isNaN(num) ? undefined : num;
+    }
+    return undefined;
+  }
+
+  private isAsnProvided(value: unknown): boolean {
+    if (typeof value === 'number') {
+      return !Number.isNaN(value);
+    }
+    if (typeof value === 'string') {
+      return value.trim() !== '';
+    }
+    return false;
+  }
+
+  private isAsnValid(value: unknown): boolean {
+    const num = this.parseAsnValue(value);
+    return typeof num === 'number' && num >= 1 && num <= 4294967295;
+  }
+  public onInternalAutoSelectChange(vrf: VrfAdminDto): void {
+    if (vrf.autoSelectInternalBgpAsn) {
+      vrf.internalBgpAsn = undefined;
+    }
+  }
+
+  public onExternalAutoSelectChange(vrf: VrfAdminDto): void {
+    if (vrf.autoSelectExternalBgpAsn) {
+      vrf.externalBgpAsn = undefined;
+    }
+  }
+
+  public onInternalAsnInput(vrf: VrfAdminDto): void {
+    if (this.isAsnProvided(vrf.internalBgpAsn)) {
+      vrf.autoSelectInternalBgpAsn = false;
+    }
+  }
+
+  public onExternalAsnInput(vrf: VrfAdminDto): void {
+    if (this.isAsnProvided(vrf.externalBgpAsn)) {
+      vrf.autoSelectExternalBgpAsn = false;
+    }
+  }
+
+  public internalAsnInvalid(vrf: VrfAdminDto): boolean {
+    if (vrf.autoSelectInternalBgpAsn) {
+      return false;
+    }
+    return !this.isAsnValid(vrf.internalBgpAsn);
+  }
+
+  public externalAsnInvalid(vrf: VrfAdminDto): boolean {
+    if (vrf.autoSelectExternalBgpAsn) {
+      return false;
+    }
+    return !this.isAsnValid(vrf.externalBgpAsn);
   }
 }

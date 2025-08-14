@@ -11,6 +11,7 @@ import {
   MockFontAwesomeComponent,
   MockImportExportComponent,
   MockYesNoModalComponent,
+  MockIconButtonComponent,
 } from '../../../../../../test/mock-components';
 import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription } from 'rxjs';
@@ -33,6 +34,8 @@ describe('EndpointSecurityGroupComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-endpoint-security-group-modal', inputs: ['tenantId'] }),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-endpoint-display-modal', inputs: ['modalId'] }),
+        MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],

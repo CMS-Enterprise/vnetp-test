@@ -84,7 +84,8 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="form-label"><strong>BGP ASN</strong></label>
-            <div class="form-control-plaintext">{{ currentVrf.bgpASN || 'Not set' }}</div>
+            <div class="form-control-plaintext">Internal: {{ currentVrf.internalBgpAsn || 'Not set' }}</div>
+            <div class="form-control-plaintext">External: {{ currentVrf.externalBgpAsn || 'Not set' }}</div>
           </div>
         </div>
       </div>

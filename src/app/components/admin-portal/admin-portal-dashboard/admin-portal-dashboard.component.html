@@ -11,16 +11,23 @@
     </div>
   </aside>
 
-  <!-- Overall Environment -->
-  <aside class="dashboard__card" aria-label="Overall Environment">
-    <h4 class="dashboard__heading">Overall Environment</h4>
+  <!-- Global Resources -->
+  <aside class="dashboard__card" aria-label="Global Resources">
+    <h4 class="dashboard__heading">Global Resources</h4>
     <ul class="dash-card">
+      <li>
+        <a routerLink="/adminportal/tenant-v2" queryParamsHandling="merge">
+          <span> TV2 Logical Tenants</span>
+        </a>
+      </li>
       <li>
         <a routerLink="/adminportal/global-messages" queryParamsHandling="merge">
           <span> Global Messages </span>
-          <span class="inline-block ml-auto">
-            {{ globalMessages || 0 }}
-          </span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/adminportal/wan-form-request" queryParamsHandling="merge">
+          <span> WAN Form Requests </span>
         </a>
       </li>
       <li>
@@ -28,15 +35,10 @@
           <span> Environments </span>
         </a>
       </li>
+
       <li>
-        <a routerLink="/adminportal/tenant-v2" queryParamsHandling="merge">
-          <span>Logical Tenants</span>
-        </a>
-      </li>
-      <li>
-        <a routerLink="/netcentric/wan-form" queryParamsHandling="merge">
-          <span> Wan Forms </span>
-          <!-- TODO: WAN Form is specifically a tenant V2 feature, we should route to the tenantV2 router. -->
+        <a routerLink="/adminportal/global-bgp-asn" queryParamsHandling="merge">
+          <span> Global BGP ASN </span>
         </a>
       </li>
     </ul>

@@ -11,13 +11,10 @@
  */
 
 
-export interface WanFormRequest { 
-    readonly id?: string;
-    readonly tenantId?: string;
-    readonly datacenterId?: string;
-    readonly organization: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    status?: string;
+export interface GlobalBgpAsnAllocationSummaryDto { 
+    rangeId: string;
+    allocatedCount: number;
+    freeCount: number;
+    usedPercent: number;
 }
 

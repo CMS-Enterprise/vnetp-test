@@ -58,6 +58,7 @@ api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
 api/v2Workflows.service.ts
+api/v3GlobalBgpRanges.service.ts
 api/v3GlobalEnvironment.service.ts
 api/v3GlobalExternalRoutes.service.ts
 api/v3GlobalMessages.service.ts
@@ -78,6 +79,7 @@ model/connectivityNode.ts
 model/contract.ts
 model/contractToEpg.ts
 model/contractToEsg.ts
+model/createGlobalBgpRangeDto.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
 model/createManyBridgeDomainDto.ts
@@ -205,6 +207,9 @@ model/getManyWanFormRequestResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWorkflowResponseDto.ts
 model/getManyZoneResponseDto.ts
+model/globalBgpAsnAllocation.ts
+model/globalBgpAsnAllocationSummaryDto.ts
+model/globalBgpAsnRange.ts
 model/globalExternalRoute.ts
 model/globalExternalRouteSummary.ts
 model/hitcountData.ts
@@ -216,6 +221,7 @@ model/ipAddress.ts
 model/job.ts
 model/justDiffOutput.ts
 model/l3Out.ts
+model/l3OutWithAllocationDto.ts
 model/loadBalancerHealthMonitor.ts
 model/loadBalancerIrule.ts
 model/loadBalancerNode.ts
@@ -281,6 +287,10 @@ model/tier.ts
 model/tierGroup.ts
 model/towerJobDto.ts
 model/truncatedTerraformResourceChange.ts
+model/underlayAllocation.ts
+model/underlayAllocationDto.ts
+model/updateGlobalBgpRangeDto.ts
+model/updateUnderlayAllocationsDto.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts
@@ -289,6 +299,7 @@ model/vlan.ts
 model/vrf.ts
 model/vrfAdminDto.ts
 model/vrfAdminUpdateDto.ts
+model/vrfWithAllocationsDto.ts
 model/wanForm.ts
 model/wanFormChanges.ts
 model/wanFormChangesExternalRouteDto.ts

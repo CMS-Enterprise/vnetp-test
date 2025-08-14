@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { Tenant } from './tenant';
+import { UnderlayAllocation } from './underlayAllocation';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 
@@ -34,5 +35,6 @@ export interface L3Out {
     readonly tenantVersion?: number;
     readonly endpointGroups?: Array<L3Out>;
     readonly endpointSecurityGroups?: Array<L3Out>;
+    readonly underlayAllocation?: Array<UnderlayAllocation>;
 }
 

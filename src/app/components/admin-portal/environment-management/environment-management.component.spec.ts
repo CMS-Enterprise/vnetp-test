@@ -34,6 +34,7 @@ describe('EnvironmentManagementComponent', () => {
         EnvironmentManagementComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-environment-modal' }),
       ],
       providers: [
         { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },

@@ -42,7 +42,19 @@ export interface VrfAdminDto {
     /**
      * BGP ASN assigned to this tenant VRF
      */
-    bgpASN?: number;
+    internalBgpAsn?: number;
+    /**
+     * Auto-select internal BGP ASN from environment ranges
+     */
+    autoSelectInternalBgpAsn?: boolean;
+    /**
+     * BGP ASN assigned to this tenant VRF
+     */
+    externalBgpAsn?: number;
+    /**
+     * Auto-select external BGP ASN from environment ranges
+     */
+    autoSelectExternalBgpAsn?: boolean;
     /**
      * Tenant ID for VRF assignment (required for creation)
      */

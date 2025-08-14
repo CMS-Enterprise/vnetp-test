@@ -9,23 +9,23 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GlobalExternalRoute } from './globalExternalRoute';
-import { GlobalBgpAsnRange } from './globalBgpAsnRange';
 
 
-export interface Environment { 
-    readonly id?: string;
-    name: string;
-    description: string;
-    lastRouteSyncAt: string;
-    /**
-     * External VRFs allowed for this environment
-     */
-    externalVrfs: Array<EnvironmentExternalVrfsEnum> | null;
-    readonly globalExternalRoutes: Array<GlobalExternalRoute>;
-    readonly bgpAsnRanges: Array<GlobalBgpAsnRange>;
+export interface UnderlayAllocationDto { 
+    id?: string;
+    type: UnderlayAllocationDtoTypeEnum;
+    ipv4Network?: string;
+    ipv6Network?: string;
+    vlan: string;
+    vrfId?: string;
+    externalVrf?: UnderlayAllocationDtoExternalVrfEnum;
 }
-export enum EnvironmentExternalVrfsEnum {
+export enum UnderlayAllocationDtoTypeEnum {
+    ServiceGraph = 'service_graph',
+    L3Out = 'l3_out',
+    ExternalVrf = 'external_vrf'
+};
+export enum UnderlayAllocationDtoExternalVrfEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',
     CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
     CmsEntsrvMgmt = 'cms-entsrv-mgmt',
