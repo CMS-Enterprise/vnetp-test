@@ -11,7 +11,6 @@ import {
   L3Out,
   NetworkObject,
   NetworkObjectGroup,
-  RouteProfile,
   ServiceObject,
   ServiceObjectGroup,
   Tier,
@@ -23,7 +22,6 @@ import {
   V1TiersService,
   V2AppCentricApplicationProfilesService,
   V2AppCentricL3outsService,
-  V2AppCentricRouteProfilesService,
   V2AppCentricTenantsService,
   Vrf,
 } from 'client';
@@ -60,7 +58,6 @@ describe('AuditLogComponent', () => {
   let mockNgxSmartModalService: Partial<NgxSmartModalService>;
   let mockAppCentricTenantService: Partial<V2AppCentricTenantsService>;
   let mockAppProfileService: Partial<V2AppCentricApplicationProfilesService>;
-  let mockRouteProfileService: Partial<V2AppCentricRouteProfilesService>;
   let mockL3OutService: Partial<V2AppCentricL3outsService>;
   let mockRouter: any;
   let mockActivatedRoute: Partial<ActivatedRoute>;
@@ -81,7 +78,6 @@ describe('AuditLogComponent', () => {
     mockNgxSmartModalService = { getModal: jest.fn().mockReturnValue({ open: jest.fn() }) };
     mockAppCentricTenantService = { getManyTenant: jest.fn().mockReturnValue(of({ data: [{ id: 't-1', name: 'Tenant 1' }] })) };
     mockAppProfileService = { getManyApplicationProfile: jest.fn().mockReturnValue(of({ data: [] })) };
-    mockRouteProfileService = { getManyRouteProfile: jest.fn().mockReturnValue(of({ data: [] })) };
     mockL3OutService = { getManyL3Out: jest.fn().mockReturnValue(of({ data: [] })) };
     mockRouter = { navigate: jest.fn() };
     mockActivatedRoute = {
@@ -138,7 +134,6 @@ describe('AuditLogComponent', () => {
         { provide: ActivatedRoute, useValue: { ...mockActivatedRoute, ...routeData } },
         { provide: V2AppCentricTenantsService, useValue: mockAppCentricTenantService },
         { provide: V2AppCentricApplicationProfilesService, useValue: mockAppProfileService },
-        { provide: V2AppCentricRouteProfilesService, useValue: mockRouteProfileService },
         { provide: V2AppCentricL3outsService, useValue: mockL3OutService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -426,25 +421,6 @@ describe('AuditLogComponent', () => {
       expect(component.currentMode).toBe(ApplicationMode.APPCENTRIC);
     });
 
-    it('should process updated appcentric logs correctly', fakeAsync(() => {
-      const logs = {
-        data: [
-          {
-            actionType: AuditLogActionTypeEnum.Update,
-            entityType: 'ApplicationProfile',
-            tenantId: 't-1',
-            entityBefore: { routeProfileId: 'rp-1' },
-            entityAfter: { routeProfileId: 'rp-2' },
-          },
-        ],
-      };
-      appCentricLogsSubject.next(logs);
-      tick();
-      const props = component.auditLogs.data[0].changedProperties;
-      expect(props.find(p => p.propertyName === 'routeProfileId').before).toBe('name-for-rp-1');
-      expect(props.find(p => p.propertyName === 'routeProfileId').after).toBe('name-for-rp-2');
-    }));
-
     it('should process contract changes', fakeAsync(() => {
       const logs = {
         data: [
@@ -619,14 +595,10 @@ describe('AuditLogComponent', () => {
             entityType: 'TestEntity',
             tenantId: 't-1',
             entityBefore: {
-              routeProfileId: null, // This will cause getObjectName to return 'N/A'
               theConsumedContractId: null,
-              l3outForRouteProfileId: null,
             },
             entityAfter: {
-              routeProfileId: 'rp-1', // This will resolve to a name
               theConsumedContractId: 'cc-1',
-              l3outForRouteProfileId: 'l3-1',
             },
           },
         ],
@@ -636,17 +608,9 @@ describe('AuditLogComponent', () => {
 
       const props = component.auditLogs.data[0].changedProperties;
 
-      const rpProp = props.find(p => p.propertyName === 'routeProfileId');
-      expect(rpProp.before).toBe('-'); // Check the 'N/A' case of the ternary
-      expect(rpProp.after).toBe('name-for-rp-1'); // Check the 'else' case
-
       const ccProp = props.find(p => p.propertyName === 'theConsumedContractId');
       expect(ccProp.before).toBe('-');
       expect(ccProp.after).toBe('name-for-cc-1');
-
-      const l3Prop = props.find(p => p.propertyName === 'l3outForRouteProfileId');
-      expect(l3Prop.before).toBe('-');
-      expect(l3Prop.after).toBe('name-for-l3-1');
     }));
 
     it('should handle unresolved "after" IDs by displaying a dash', fakeAsync(() => {
@@ -656,16 +620,8 @@ describe('AuditLogComponent', () => {
             actionType: AuditLogActionTypeEnum.Update,
             entityType: 'TestEntity',
             tenantId: 't-1',
-            entityBefore: {
-              routeProfileId: 'rp-1',
-              theConsumedContractId: 'cc-1',
-              l3outForRouteProfileId: 'l3-1',
-            },
-            entityAfter: {
-              routeProfileId: null,
-              theConsumedContractId: null,
-              l3outForRouteProfileId: null,
-            },
+            entityBefore: { theConsumedContractId: 'cc-1' },
+            entityAfter: { theConsumedContractId: null },
           },
         ],
       };
@@ -674,17 +630,9 @@ describe('AuditLogComponent', () => {
 
       const props = component.auditLogs.data[0].changedProperties;
 
-      const rpProp = props.find(p => p.propertyName === 'routeProfileId');
-      expect(rpProp.before).toBe('name-for-rp-1');
-      expect(rpProp.after).toBe('-');
-
       const ccProp = props.find(p => p.propertyName === 'theConsumedContractId');
       expect(ccProp.before).toBe('name-for-cc-1');
       expect(ccProp.after).toBe('-');
-
-      const l3Prop = props.find(p => p.propertyName === 'l3outForRouteProfileId');
-      expect(l3Prop.before).toBe('name-for-l3-1');
-      expect(l3Prop.after).toBe('-');
     }));
   });
 
