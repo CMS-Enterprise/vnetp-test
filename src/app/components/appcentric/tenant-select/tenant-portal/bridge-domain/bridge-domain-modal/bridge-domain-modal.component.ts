@@ -7,8 +7,6 @@ import {
   L3Out,
   V2AppCentricL3outsService,
   V2AppCentricVrfsService,
-  V2AppCentricRouteProfilesService,
-  RouteProfile,
   GetManyL3OutResponseDto,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -45,7 +43,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public l3Outs: L3Out[];
   public filteredL3Outs: L3Out[];
   public vrfs: Vrf[];
-  public routeProfiles: RouteProfile[];
   public l3OutsTableData: GetManyL3OutResponseDto;
 
   public selectedL3Out: L3Out;
@@ -73,7 +70,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private l3OutService: V2AppCentricL3outsService,
     private vrfService: V2AppCentricVrfsService,
-    private routeProfileService: V2AppCentricRouteProfilesService,
   ) {}
 
   ngOnInit(): void {
@@ -108,7 +104,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.bridgeDomainId = dto.bridgeDomain.id;
       this.getL3OutsTableData();
       this.getL3Outs();
-      this.getRouteProfiles();
     } else {
       this.form.controls.name.enable();
       this.form.controls.unicastRouting.setValue(true);
@@ -133,8 +128,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.form.controls.epMoveDetectionModeGarp.setValue(bridgeDomain.epMoveDetectionModeGarp);
       this.form.controls.vrfId.setValue(bridgeDomain.vrfId);
       this.form.controls.vrfId.disable();
-      this.form.controls.l3OutForRouteProfileId.setValue(bridgeDomain.l3OutForRouteProfileId);
-      this.form.controls.routeProfileId.setValue(bridgeDomain.routeProfileId);
       this.form.controls.hostBasedRouting.setValue(bridgeDomain.hostBasedRouting);
     }
 
@@ -220,16 +213,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       hostBasedRouting,
     } = this.form.value;
 
-    let { l3OutForRouteProfileId, routeProfileId } = this.form.value;
-    // Check if these fields are empty strings, and if so, set them to null
-    l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;
-    routeProfileId = routeProfileId === '' ? null : routeProfileId;
-
-    // fixes condition where the l3Out dropdown
-    if (l3OutForRouteProfileId === null) {
-      routeProfileId = null;
-    }
-
     const tenantId = this.tenantId;
 
     const bridgeDomain = {
@@ -242,8 +225,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       bdMacAddress,
       limitLocalIpLearning,
       epMoveDetectionModeGarp,
-      l3OutForRouteProfileId,
-      routeProfileId,
       hostBasedRouting,
     } as BridgeDomain;
 
@@ -311,23 +292,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
           this.vrfs = data.data;
         },
         () => (this.vrfs = null),
-        () => (this.isLoading = false),
-      );
-  }
-
-  public getRouteProfiles(): void {
-    this.isLoading = true;
-    this.routeProfileService
-      .getManyRouteProfile({
-        filter: [`tenantId||eq||${this.tenantId}`],
-        page: 1,
-        perPage: 1000,
-      })
-      .subscribe(
-        data => {
-          this.routeProfiles = data.data;
-        },
-        () => (this.routeProfiles = null),
         () => (this.isLoading = false),
       );
   }

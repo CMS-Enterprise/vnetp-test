@@ -20936,472 +20936,6 @@
         ]
       }
     },
-    "/v2/app-centric/route-profiles": {
-      "post": {
-        "operationId": "createOneRouteProfile",
-        "summary": "Create one RouteProfile",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RouteProfile"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      },
-      "get": {
-        "operationId": "getManyRouteProfile",
-        "summary": "Get many RouteProfile",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyRouteProfileResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/RouteProfile"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/route-profiles/bulk": {
-      "post": {
-        "operationId": "createManyRouteProfile",
-        "summary": "Create many RouteProfile",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyRouteProfileDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/RouteProfile"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RouteProfile"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/route-profiles/{id}": {
-      "get": {
-        "operationId": "getOneRouteProfile",
-        "summary": "Get one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneRouteProfile",
-        "summary": "Update one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RouteProfile"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneRouteProfile",
-        "summary": "Delete one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/route-profiles/{id}/soft": {
-      "delete": {
-        "operationId": "softDeleteOneRouteProfile",
-        "summary": "Soft delete one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/route-profiles/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneRouteProfile",
-        "summary": "Restore one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/route-profiles/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneRouteProfile",
-        "summary": "Provision one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/route-profiles/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneRouteProfile",
-        "summary": "Deprovision one RouteProfile",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/route-profiles"
-        ]
-      }
-    },
     "/v2/app-centric/selectors/selectorCheck": {
       "post": {
         "operationId": "createSelectorCheck",
@@ -25788,7 +25322,7 @@
             "type": "string"
           },
           "vlan": {
-            "type": "string"
+            "type": "number"
           },
           "vrfId": {
             "type": "string"
@@ -25866,13 +25400,6 @@
               "$ref": "#/components/schemas/BridgeDomain"
             }
           },
-          "bridgeDomainsForRouteProfile": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
           "vrf": {
             "readOnly": true,
             "allOf": [
@@ -25916,10 +25443,11 @@
           },
           "underlayAllocation": {
             "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UnderlayAllocation"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UnderlayAllocation"
+              }
+            ]
           }
         },
         "required": [
@@ -26410,7 +25938,6 @@
               "FilterEntry",
               "Subject",
               "Vrf",
-              "RouteProfile",
               "Selector",
               "WanForm",
               "ExternalRoute",
@@ -27030,10 +26557,11 @@
           },
           "serviceGraphUnderlayAllocation": {
             "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UnderlayAllocation"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UnderlayAllocation"
+              }
+            ]
           },
           "externalVrfUnderlayAllocations": {
             "readOnly": true,
@@ -27046,77 +26574,6 @@
         "required": [
           "policyControlEnforced",
           "policyControlEnforcementIngress",
-          "tenantId"
-        ]
-      },
-      "RouteProfile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
           "tenantId"
         ]
       },
@@ -27234,28 +26691,6 @@
             "items": {
               "$ref": "#/components/schemas/L3Out"
             }
-          },
-          "l3OutForRouteProfileId": {
-            "type": "string"
-          },
-          "l3OutForRouteProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/L3Out"
-              }
-            ]
-          },
-          "routeProfileId": {
-            "type": "string"
-          },
-          "routeProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/RouteProfile"
-              }
-            ]
           }
         },
         "required": [
@@ -28127,7 +27562,6 @@
               "FilterEntry",
               "Subject",
               "Vrf",
-              "RouteProfile",
               "Selector",
               "WanForm",
               "ExternalRoute",
@@ -32953,7 +32387,7 @@
             "type": "string"
           },
           "vlan": {
-            "type": "string"
+            "type": "number"
           },
           "vrfId": {
             "type": "string"
@@ -33259,85 +32693,6 @@
           }
         }
       },
-      "GlobalExternalRoute": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "network": {
-            "type": "string"
-          },
-          "externalVrf": {
-            "type": "string",
-            "enum": [
-              "cms-entsrv-inet",
-              "cms-entsrv-ldapdns",
-              "cms-entsrv-mgmt",
-              "cms-entsrv-mon",
-              "cms-entsrv-pres",
-              "cms-entsrv-sec",
-              "cms-entsrv-vpn",
-              "cmsnet_appdev",
-              "cmsnet_appprod",
-              "cmsnet_datadev",
-              "cmsnet_dataprod",
-              "cmsnet_edc_vpn",
-              "cmsnet_edcmgmt",
-              "cmsnet_presdev",
-              "cmsnet_presprod",
-              "cmsnet_sec",
-              "cmsnet_transport"
-            ]
-          },
-          "lastSeen": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "expired": {
-            "type": "boolean"
-          },
-          "uptime": {
-            "type": "string"
-          },
-          "protocol": {
-            "type": "string"
-          },
-          "asPath": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
-          },
-          "tag": {
-            "type": "string"
-          },
-          "environmentId": {
-            "type": "string"
-          },
-          "environment": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Environment"
-              }
-            ]
-          }
-        },
-        "required": [
-          "network",
-          "externalVrf",
-          "lastSeen",
-          "expired",
-          "uptime",
-          "protocol",
-          "asPath",
-          "tag",
-          "environmentId",
-          "environment"
-        ]
-      },
       "GlobalBgpAsnAllocation": {
         "type": "object",
         "properties": {
@@ -33383,6 +32738,92 @@
           "role",
           "organizationId",
           "globalBgpRangeId"
+        ]
+      },
+      "GlobalExternalRoute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "network": {
+            "type": "string"
+          },
+          "externalVrf": {
+            "type": "string",
+            "enum": [
+              "cms-entsrv-inet",
+              "cms-entsrv-ldapdns",
+              "cms-entsrv-mgmt",
+              "cms-entsrv-mon",
+              "cms-entsrv-pres",
+              "cms-entsrv-sec",
+              "cms-entsrv-vpn",
+              "cmsnet_appdev",
+              "cmsnet_appprod",
+              "cmsnet_datadev",
+              "cmsnet_dataprod",
+              "cmsnet_edc_vpn",
+              "cmsnet_edcmgmt",
+              "cmsnet_presdev",
+              "cmsnet_presprod",
+              "cmsnet_sec",
+              "cmsnet_transport"
+            ]
+          },
+          "lastSeen": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expired": {
+            "type": "boolean"
+          },
+          "uptime": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "bgpAllocationId": {
+            "type": "string",
+            "description": "Allocation reference id"
+          },
+          "environmentId": {
+            "type": "string"
+          },
+          "environment": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Environment"
+              }
+            ]
+          },
+          "bgpAllocation": {
+            "description": "Linked BGP ASN allocation",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GlobalBgpAsnAllocation"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "externalVrf",
+          "lastSeen",
+          "expired",
+          "uptime",
+          "protocol",
+          "tag",
+          "environmentId",
+          "environment",
+          "bgpAllocation"
         ]
       },
       "GlobalBgpAsnRange": {

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { Environment } from './environment';
+import { GlobalBgpAsnAllocation } from './globalBgpAsnAllocation';
 
 
 export interface GlobalExternalRoute { 
@@ -20,10 +21,17 @@ export interface GlobalExternalRoute {
     expired: boolean;
     uptime: string;
     protocol: string;
-    asPath: Array<number>;
     tag: string;
+    /**
+     * Allocation reference id
+     */
+    bgpAllocationId?: string;
     environmentId: string;
     readonly environment: Environment;
+    /**
+     * Linked BGP ASN allocation
+     */
+    readonly bgpAllocation: GlobalBgpAsnAllocation;
 }
 export enum GlobalExternalRouteExternalVrfEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

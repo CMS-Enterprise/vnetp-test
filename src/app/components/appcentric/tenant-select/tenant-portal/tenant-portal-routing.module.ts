@@ -52,12 +52,6 @@ const routes: Routes = [
       },
       {
         outlet,
-        path: 'route-profile',
-        data: { breadcrumb: 'Route Profile', title: 'Tenant Portal - Route Profile' },
-        loadChildren: () => import('./route-profile/route-profile.module').then(m => m.RouteProfileModule),
-      },
-      {
-        outlet,
         path: 'internal-firewall',
         data: {
           breadcrumb: 'Internal Firewall',

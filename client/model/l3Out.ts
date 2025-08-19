@@ -27,7 +27,6 @@ export interface L3Out {
     alias?: string;
     description?: string;
     readonly bridgeDomains?: Array<BridgeDomain>;
-    readonly bridgeDomainsForRouteProfile?: Array<BridgeDomain>;
     readonly vrf?: Vrf;
     vrfId: string;
     readonly tenant?: Tenant;
@@ -35,6 +34,6 @@ export interface L3Out {
     readonly tenantVersion?: number;
     readonly endpointGroups?: Array<L3Out>;
     readonly endpointSecurityGroups?: Array<L3Out>;
-    readonly underlayAllocation?: Array<UnderlayAllocation>;
+    readonly underlayAllocation?: UnderlayAllocation;
 }
 

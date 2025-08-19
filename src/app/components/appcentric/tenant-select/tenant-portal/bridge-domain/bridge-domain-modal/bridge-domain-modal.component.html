@@ -183,34 +183,6 @@
           (tableEvent)="onTableEvent($event)"
         ></app-table>
       </div>
-
-      <div *ngIf="modalMode === 'Edit'">
-        <hr />
-        <div class="form-group">
-          <label for="l3outForRouteProfile">L3 Out for Route Profile</label>
-          <ng-select
-            id="l3OutForRouteProfile"
-            [items]="l3Outs"
-            bindLabel="name"
-            bindValue="id"
-            formControlName="l3OutForRouteProfileId"
-          ></ng-select>
-        </div>
-        <div class="form-group" *ngIf="f.l3OutForRouteProfileId.value">
-          <label for="routeProfile">Route Profile</label>
-          <ng-select
-            id="routeProfile"
-            [items]="routeProfiles"
-            bindLabel="name"
-            bindValue="id"
-            formControlName="routeProfileId"
-            [class.is-invalid]="submitted && f.routeProfileId.errors"
-          ></ng-select>
-          <div *ngIf="submitted && f.routeProfileId.errors" class="custom-invalid-feedback">
-            <div *ngIf="f.routeProfileId.errors.required">Route Profile is required when Route Profile for L3 Out has a value</div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <footer class="modal-footer">
