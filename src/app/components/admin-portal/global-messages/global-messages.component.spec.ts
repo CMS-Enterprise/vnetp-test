@@ -10,7 +10,7 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Message, V3GlobalMessagesService } from 'client';
+import { GetManyMessageResponseDto, Message, V3GlobalMessagesService } from 'client';
 import { GlobalMessagesComponent } from './global-messages.component';
 import { Subject, Subscription, of } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -46,12 +46,13 @@ describe('GlobalMessagesComponent', () => {
   describe('Get Messages', () => {
     it('should fetch messages', () => {
       const messageService = TestBed.inject(V3GlobalMessagesService);
-      const messagesMock: PaginationDTO = {
+      const messagesMock: GetManyMessageResponseDto = {
+        totalPages: 1,
         total: 2,
         count: 2,
         page: 1,
         pageCount: 1,
-        data: ['message1', 'message2'],
+        data: [{ id: '1', description: 'message1', timestamp: new Date().toISOString() } as Message, { id: '2', description: 'message2', timestamp: new Date().toISOString() } as Message],
       };
       component.messages = messagesMock;
 
