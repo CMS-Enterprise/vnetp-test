@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { JobsComponent } from './jobs.component';
 import { CommonModule } from '@angular/common';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
@@ -13,7 +12,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), FontAwesomeModule, NgxPaginationModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FontAwesomeModule],
   declarations: [JobsComponent],
   exports: [JobsComponent],
 })

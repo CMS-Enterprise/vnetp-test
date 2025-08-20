@@ -7,7 +7,6 @@ import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module'
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
@@ -32,7 +31,6 @@ const routes: Routes = [
     FontAwesomeModule,
     FormsModule,
     IconButtonModule,
-    NgxPaginationModule,
     NgxSmartModalModule,
     NgSelectModule,
     ReactiveFormsModule,

@@ -11,7 +11,7 @@
   </button>
 </ng-template>
 
-<button aria-label="navigate-to-wan-form" class="btn float-left mr-3" (click)="navigateToWanForm()">
+<button aria-label="navigate-to-wan-form" class="btn float-start me-3" (click)="navigateToWanForm()">
   <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
 </button>
 <h1>Manage Allowed External Routes for: {{ wanForm?.name }}</h1>
@@ -37,7 +37,7 @@
   </section>
   <input
     type="text"
-    class="search-input ml-1 mb-1"
+    class="search-input ms-1 mb-1"
     placeholder="Search..."
     aria-label="Search"
     [(ngModel)]="searchQuery"

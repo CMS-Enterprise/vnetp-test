@@ -7,25 +7,25 @@
     {{ modalBody }}
   </div>
   @if (allowEmptyTier) {
-  <div [style.padding]="'15px 22px'" class="custom-control custom-radio">
+  <div [style.padding]="'15px 22px'" class="form-check">
     <input
       type="checkbox"
-      class="custom-control-input"
+      class="form-check-input"
       id="allowEmptyTierRadio"
       name="allowEmptyTierRadio"
       [(ngModel)]="allowEmptyTierRadio"
       mdbInput
     />
-    <label class="custom-control-label" for="allowEmptyTierRadio"> If checked, CSV's without TierIDs will default to current tier. </label>
+    <label class="form-check-label" for="allowEmptyTierRadio"> If checked, CSV's without TierIDs will default to current tier. </label>
   </div>
   }
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="no()">
+    <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="no()">
       {{ cancelText }}
     </button>
 
-    <button id="confirmText" type="button" class="btn btn-{{ confirmButtonType }}" data-dismiss="modal" (click)="yes()">
+    <button id="confirmText" type="button" class="btn btn-{{ confirmButtonType }}" data-bs-dismiss="modal" (click)="yes()">
       {{ confirmText }}
     </button>
   </footer>

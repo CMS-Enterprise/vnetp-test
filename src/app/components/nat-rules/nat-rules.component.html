@@ -21,7 +21,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (natRuleGroup of natRuleGroups | paginate : { itemsPerPage: perPage, currentPage: currentNatRulePage }; track natRuleGroup) {
+    @for (natRuleGroup of natRuleGroups; track natRuleGroup) {
     <tr>
       <td>
         {{ getTierName(natRuleGroup.tierId) }}

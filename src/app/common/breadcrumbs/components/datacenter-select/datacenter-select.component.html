@@ -3,7 +3,7 @@
   <app-icon-button icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
   } @if (currentDatacenter) {
   <span>
-    Current Datacenter: <span class="text-bold ml-1">{{ currentDatacenter.name }}</span>
+    Current Datacenter: <span class="text-bold ms-1">{{ currentDatacenter.name }}</span>
   </span>
   } @if (!currentDatacenter) {
   <span>No Datacenter Selected</span>
@@ -11,7 +11,7 @@
   <tooltip message="Switch Datacenter on Dashboard."></tooltip>
   }
 
-  <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter || disableSelect" (click)="openDatacenterSwitchModal()">
+  <button class="btn btn-primary ms-3" [disabled]="lockCurrentDatacenter || disableSelect" (click)="openDatacenterSwitchModal()">
     {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
   </button>
 </div>
@@ -25,7 +25,7 @@
     Current Datacenter:
     {{ currentDatacenter?.name || 'No Datacenter Selected' }}
 
-    <select [(ngModel)]="selectedDatacenter" class="form-control">
+    <select [(ngModel)]="selectedDatacenter" class="form-select">
       <option></option>
       @for (datacenter of datacenters; track datacenter) {
       <option [ngValue]="datacenter">{{ datacenter.name }}</option>
@@ -34,12 +34,12 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">Cancel</button>
+    <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="datacenterSwitchModal.close()">Cancel</button>
 
     <button
       type="button"
       class="btn btn-primary"
-      data-dismiss="modal"
+      data-bs-dismiss="modal"
       [disabled]="!selectedDatacenter"
       (click)="switchDatacenter(); datacenterSwitchModal.close()"
     >

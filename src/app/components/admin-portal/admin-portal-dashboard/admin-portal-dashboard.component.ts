@@ -46,7 +46,7 @@ export class AdminPortalDashboardComponent implements OnInit {
   }
 
   public getGlobalMessages() {
-    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 10000 }).subscribe(data => {
+    this.globalMessagesService.getManyMessage({ page: 1, perPage: 10000 }).subscribe(data => {
       this.globalMessages = data.total;
       this.status[1].status = 'green';
     });

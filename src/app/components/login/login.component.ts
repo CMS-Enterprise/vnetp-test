@@ -31,11 +31,16 @@ export class LoginComponent implements OnInit {
   disableUserPass = true;
   showTenantButton = false;
   showAdminPortalButton = false;
-  globalOnlyUser = false;
+  showAccountSelectionButton = true;
 
   selectedMode = 'netcentric';
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit() {
     environment.dynamic.dcsLocations.map(location => {
@@ -109,6 +114,7 @@ export class LoginComponent implements OnInit {
             .subscribe(
               tenantData => {
                 const currentTenants = tenantData;
+                console.log(data)
                 if (userTenants.some(t => t === '*')) {
                   // If the user has an "*"" that means they have access to all available tenants.
                   this.availableTenants = currentTenants;
@@ -118,16 +124,15 @@ export class LoginComponent implements OnInit {
                     // if user is a global admin user we show the admin portal navigation button
                     if (role === 'global-admin') {
                       this.showAdminPortalButton = true;
-                      this.globalOnlyUser = true;
                     }
                   });
                 } else {
                   // If the user is not a global admin, filter current tenats based on their tenants.
                   this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.tenant === ut));
                 }
-                const roles = data.dcsPermissions[0].roles;
 
                 this.showTenantButton = true;
+                this.showAccountSelectionButton = true;
               },
               () => {
                 this.toastr.error('Error getting tenants');
@@ -145,23 +150,22 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
-    if (!tenant || !tenant.tenantQueryParameter) {
-      this.toastr.error('Invalid tenant configuration');
-      return;
-    }
-
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);
     this.authService.currentTenantValue = tenantQueryParameter;
-    // if the user had a session expire, and they can choose from multiple tenants,
-    // we pre-select their old tenant for them above if they stay with that same tenant,
-    // we will apply the returnURL from that session, to redirect them back to whatever
-    // page they were on after login if they choose a different tenant, we redirect them
-    // to the dashboard after they login
-    if (tenantQueryParameter !== this.oldTenant) {
+
+    // Check if the returnUrl contains a different mode than the selected one
+    const modeInReturnUrl = this.returnUrl?.split('/')[1];
+    const validModes = ['appcentric', 'netcentric', 'tenantv2'];
+
+    if (validModes.includes(modeInReturnUrl) && modeInReturnUrl !== mode) {
+      // If mode has changed, redirect to the dashboard of the new mode
+      this.returnUrl = `/${mode}/dashboard`;
+    } else if (tenantQueryParameter !== this.oldTenant) {
       this.returnUrl = `/${mode}/dashboard`;
     }
+
     // if the returnUrl is /dashboard then we assume the user is starting a brand new session
     // when they login we allow them to select a tenant and then they are brought to the dashboard
     if (this.returnUrl === `/${mode}/dashboard`) {
@@ -180,12 +184,11 @@ export class LoginComponent implements OnInit {
   }
 
   navToAdminPortal(tenant) {
-    if (!tenant || !tenant.tenantQueryParameter) {
-      this.toastr.error('Invalid tenant configuration');
-      return;
+    if (!this.selectedTenant) {
+      return false;
     }
-
     const { tenantQueryParameter } = tenant;
+
     this.authService.currentTenantValue = tenantQueryParameter;
     localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
 

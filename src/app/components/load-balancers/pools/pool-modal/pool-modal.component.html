@@ -13,7 +13,7 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <!-- Name -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="name">Name</label>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
         @if (submitted && f.name.errors) {
@@ -32,13 +32,13 @@
       </div>
 
       <!-- Load Balancing Method -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="loadBalancingMethod">Load Balancing Method</label>
         <tooltip [message]="helpText.LoadBalancingMethod"></tooltip>
         <select
           id="loadBalancingMethod"
           formControlName="loadBalancingMethod"
-          class="form-control"
+          class="form-select"
           [class.is-invalid]="submitted && f.loadBalancingMethod.errors"
         >
           <option></option>
@@ -59,11 +59,11 @@
       <hr />
       <h5 class="mb-10">Nodes</h5>
       <!-- Available Nodes -->
-      <div class="form-row">
-        <div class="form-group col-md-3">
+      <div class="row">
+        <div class="mb-3 col-md-3">
           <label for="availableNodes">Available Nodes</label>
           <div class="input-group align-items-center">
-            <select id="avaiableNodes" class="form-control" id="availableNodes" formControlName="selectedNode">
+            <select id="avaiableNodes" class="form-select" id="availableNodes" formControlName="selectedNode">
               <option></option>
               @for (node of availableNodes; track node) {
               <option [ngValue]="node">{{ node.name }}</option>
@@ -72,7 +72,7 @@
           </div>
         </div>
         <!-- Service Port -->
-        <div class="form-group col-md-3">
+        <div class="mb-3 col-md-3">
           <label for="servicePort">Service Port</label>
           <tooltip [message]="helpText.ServicePort"></tooltip>
           <input
@@ -93,7 +93,7 @@
           }
         </div>
         <!-- Ratio -->
-        <div class="form-group col-md-3">
+        <div class="mb-3 col-md-3">
           <label for="ratio">Ratio</label>
           <tooltip [message]="helpText.Ratio"></tooltip>
           <input id="ratio" type="text" formControlName="ratio" class="form-control" [class.is-invalid]="submitted && f.ratio.errors" />
@@ -109,7 +109,7 @@
           </div>
           }
         </div>
-        <div class="col-md-3 text-right" style="margin-top: 25px">
+        <div class="col-md-3 text-end" style="margin-top: 25px">
           <button
             type="button"
             class="btn btn-info"
@@ -159,10 +159,10 @@
       </table>
       <hr />
       <h5 class="mb-10">Health Monitors</h5>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="availableHealthMonitors">Available Health Monitors</label>
         <div class="input-group align-items-center">
-          <select id="availableHealthMonitors" class="form-control mr-3" formControlName="selectedHealthMonitor">
+          <select id="availableHealthMonitors" class="form-select me-3" formControlName="selectedHealthMonitor">
             <option></option>
             @for (healthMonitor of availableHealthMonitors; track healthMonitor) {
             <option [ngValue]="healthMonitor.id">{{ healthMonitor.name }}</option>
@@ -223,9 +223,9 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+      <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="closeModal()">Cancel</button>
 
-      <button class="btn btn-success" data-dismiss="modal">
+      <button class="btn btn-success" data-bs-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save Pool</span>
       </button>

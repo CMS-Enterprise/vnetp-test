@@ -19,14 +19,4 @@ tr.expandableRow {
   }
 }
 
-tr.expandableContent {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
-}
-
-tr.expanded {
-  opacity: 1;
-  background-color: white;
-}
+/* Material detail row approach: the detail row is a regular row with predicate, so no hard hide here */

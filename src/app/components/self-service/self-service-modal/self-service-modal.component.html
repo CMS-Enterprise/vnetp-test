@@ -6,13 +6,13 @@
   <main class="modal-body">
     <div [hidden]="submittedInitialForm && showSecondForm">
       <form [formGroup]="initialForm">
-        <div class="form-row">
-          <div class="form-group col-md-2">
+        <div class="row">
+          <div class="mb-3 col-md-2">
             <label for="deviceType">Device Type</label>
             <select
               id="deviceType"
               formControlName="deviceType"
-              class="form-control"
+              class="form-select"
               [class.is-invalid]="submittedInitialForm && f.deviceType.errors"
               aria-label="Device Type"
             >
@@ -29,7 +29,7 @@
             }
           </div>
 
-          <div class="form-group col-md-3">
+          <div class="mb-3 col-md-3">
             <label for="DCSTierSelect">Select a Tier</label>
             <ng-select
               [class.is-invalid]="submittedInitialForm && f.DCSTierSelect.errors"
@@ -49,14 +49,14 @@
           </div>
 
           @if (f.deviceType.value) {
-          <div class="form-group col">
+          <div class="mb-3 col">
             <label for="deviceConfig">Device Config</label>
             <input
               [class.is-invalid]="f.deviceConfig.errors"
               formControlName="deviceConfig"
               id="deviceConfig"
               type="file"
-              class="form-control-file"
+              class="form-control"
               (change)="deviceConfigFileChange($event)"
             />
             @if (f.deviceConfig.errors) {
@@ -68,13 +68,13 @@
             }
           </div>
           } @if (f.deviceType.value === 'PA') {
-          <div class="form-group col">
+          <div class="mb-3 col">
             <label for="intervrfSubnets">Intervrf Subnets</label>
             <input
               [class.is-invalid]="submittedInitialForm && f.intervrfSubnets.errors"
               id="intervrfSubnets"
               type="file"
-              class="form-control-file"
+              class="form-control"
               (change)="intervrfSubnetsFileChange($event)"
             />
             @if (submittedInitialForm && f.intervrfSubnets.errors) {
@@ -86,7 +86,7 @@
             }
           </div>
           } @if (tiersFromConfig && tiersFromConfig.length > 0) {
-          <div class="form-group col">
+          <div class="mb-3 col">
             <label for="selectedTiersFromConfig">Select Tier(s) from the config</label>
             <ng-select
               [class.is-invalid]="submittedInitialForm && f.selectedTiersFromConfig.errors"
@@ -120,8 +120,8 @@
 
     @if (submittedInitialForm && showSecondForm && !receivedConfig && !showSpinner) {
     <div>
-      <div class="form-row">
-        <div class="form-group col">
+      <div class="row">
+        <div class="mb-3 col">
           <ul>
             @for (tier of selectedTiers; track tier) {
             <li style="margin-bottom: inherit">
@@ -182,7 +182,7 @@
             }
           </ul>
         </div>
-        <div class="form-group col">
+        <div class="mb-3 col">
           <h3>Interface Matrix Information</h3>
           <textarea rows="12" cols="50" readonly>
               The interface matrix is used to translate tenant network configurations into the DRaaS environment. This is done by identifying detected interfaces in the provided configuration and allowing them to be designated as Intervrf or External. This is necessary since it gives our conversion process a map of the interface/zone names from the source environment and allows it to translate it to the DRaaS environment based on the to/from interfaces/zones of each NAT/FW rule in the configuration. In the case of PANOS conversions, a list of subnets must be provided that would classify a rule as Intervrf IF that rules source/destination ip address or object fall within one of those subnets.
@@ -202,18 +202,18 @@
 
   @if (showFooter) {
   <footer class="modal-footer">
-    <button style="margin-right: auto" type="button" class="btn btn-warning" data-dismiss="modal" (click)="reset()">
+    <button style="margin-right: auto" type="button" class="btn btn-warning" data-bs-dismiss="modal" (click)="reset()">
       <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
       <span>Reset</span>
     </button>
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">Cancel</button>
+    <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="onClose()">Cancel</button>
     @if (f.selectedTiersFromConfig && f.selectedTiersFromConfig.value && f.selectedTiersFromConfig.value.length > 0) {
     <button [hidden]="submittedInitialForm && showSecondForm" type="button" class="btn btn-primary" (click)="saveTiers()">
       <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
       <span>Next</span>
     </button>
     } @if (showSecondForm) {
-    <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="saveNameSpaces()">
+    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="saveNameSpaces()">
       <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
       <span>Submit</span>
     </button>

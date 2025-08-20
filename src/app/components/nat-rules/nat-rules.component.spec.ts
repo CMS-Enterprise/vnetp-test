@@ -11,7 +11,6 @@ import {
 } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { V1TiersService } from 'client';
 import { MockProvider } from '../../../test/mock-providers';
 import { FilterPipe } from '../../pipes/filter.pipe';
@@ -25,7 +24,7 @@ describe('NatRuleComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule],
       declarations: [
         FilterPipe,
         NatRulesComponent,

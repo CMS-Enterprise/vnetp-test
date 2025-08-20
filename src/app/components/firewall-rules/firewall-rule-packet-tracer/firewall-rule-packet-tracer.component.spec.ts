@@ -8,7 +8,6 @@ import {
 } from 'src/test/mock-components';
 import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -29,7 +28,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         FirewallRulePacketTracerComponent,
         ImportExportComponent,

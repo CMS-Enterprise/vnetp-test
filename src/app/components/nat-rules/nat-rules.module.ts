@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,7 +42,6 @@ const routes: Routes = [
     FormsModule,
     IconButtonModule,
     FontAwesomeModule,
-    NgxPaginationModule,
     NgxSmartModalModule,
     PreviewModalModule,
     ReactiveFormsModule,

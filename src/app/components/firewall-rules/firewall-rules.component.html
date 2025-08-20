@@ -21,8 +21,7 @@
     </tr>
   </thead>
   <tbody>
-    @for ( firewallRuleGroup of firewallRuleGroups | filter : filterFirewallRuleGroup | paginate : { itemsPerPage: perPage, currentPage:
-    currentFirewallRulePage } ; track firewallRuleGroup) {
+    @for ( firewallRuleGroup of firewallRuleGroups | filter : filterFirewallRuleGroup; track firewallRuleGroup) {
     <tr>
       <td>
         {{ getTierName(firewallRuleGroup.tierId) }}

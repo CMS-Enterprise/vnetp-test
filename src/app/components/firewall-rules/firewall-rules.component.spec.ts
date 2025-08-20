@@ -11,7 +11,6 @@ import {
   MockComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -25,7 +24,7 @@ describe('FirewallRulesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule],
       declarations: [
         FilterPipe,
         FirewallRulesComponent,

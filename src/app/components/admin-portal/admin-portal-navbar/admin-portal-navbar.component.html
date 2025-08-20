@@ -6,8 +6,8 @@
     <button
       class="navbar-toggler"
       type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
       aria-label="Toggle navigation"
@@ -15,14 +15,14 @@
       <fa-icon class="icon" [icon]="['fas', 'bars']"></fa-icon>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item dropdown">
           <a
             tabindex="0"
             class="nav-link dropdown-toggle"
             id="networkingNavbarDropdown"
             role="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
             >Admin
@@ -43,14 +43,14 @@
           </a>
         </li>
       </ul>
-      <ul class="navbar-nav ml-auto align-items-lg-center">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
         <li class="nav-item dropdown">
           <a
             tabindex="0"
             class="nav-link dropdown-toggle"
             id="userNavbarDropdown"
             role="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
           >
@@ -78,9 +78,9 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">Cancel</button>
+    <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="logoutModal.close()">Cancel</button>
 
-    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
+    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="logout()">
       <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>
       <span>Logout</span>
     </button>

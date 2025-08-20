@@ -3,12 +3,12 @@
     <img src="/assets/img/logo-alt.png" class="logo" alt="CMS DRaaS Logo" />
 
     <form name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="location">Location</label>
         <select
           id="location"
           name="location"
-          class="form-control"
+          class="form-select"
           #location="ngModel"
           [(ngModel)]="selectedLocation"
           aria-label="location"
@@ -33,7 +33,7 @@
         }
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="username">Username</label>
         <input
           type="text"
@@ -58,7 +58,7 @@
         }
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="password">Password</label>
         <input
           type="password"
@@ -98,12 +98,12 @@
     </form>
 
     <form name="tenantForm" (ngSubmit)="(secondform.form.valid)" #secondform="ngForm" novalidate>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="tenant">Account</label>
         <select
           id="tenant"
           name="tenant"
-          class="form-control"
+          class="form-select"
           #tenant="ngModel"
           [(ngModel)]="selectedTenant"
           aria-label="Tenant"
@@ -128,12 +128,12 @@
         }
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="mode">Mode</label>
         <select
           id="mode"
           name="mode"
-          class="form-control"
+          class="form-select"
           #mode="ngModel"
           [(ngModel)]="selectedMode"
           aria-label="Mode"
@@ -144,8 +144,7 @@
           <option value="appcentric">Appcentric</option>
         </select>
       </div>
-
-      @if (!globalOnlyUser) {
+      @if (showAccountSelectionButton) {
       <button class="btn btn-primary btn-lg" (click)="setTenantAndNavigate(selectedTenant, selectedMode)">Select Account</button>
       } @if (showAdminPortalButton) {
       <button class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">Admin Portal</button>

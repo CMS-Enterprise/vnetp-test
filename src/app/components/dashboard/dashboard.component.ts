@@ -15,7 +15,7 @@ import {
   V1AuditLogService,
   Datacenter,
   V3GlobalMessagesService,
-  PaginationDTO,
+  GetManyMessageResponseDto,
 } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from '../../services/auth.service';
@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   firewallRuleCount: number;
   natRuleCount: number;
   auditLogs;
-  messages: PaginationDTO;
+  messages: GetManyMessageResponseDto;
   public config: TableConfig<any> = {
     description: 'Audit Log',
     columns: [
@@ -116,7 +116,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getGlobalMessages() {
-    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 3 }).subscribe(data => {
+    this.globalMessagesService.getManyMessage({ page: 1, perPage: 3 }).subscribe(data => {
       this.messages = data;
     });
   }

@@ -9,7 +9,6 @@ import {
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import {
@@ -36,7 +35,7 @@ describe('NatRulesPacketTracerComponent', () => {
       close: jest.fn(),
     };
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         NatRulePacketTracerComponent,
         ImportExportComponent,

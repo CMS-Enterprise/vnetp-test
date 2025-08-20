@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
@@ -58,7 +57,6 @@ const routes: Routes = [
     FontAwesomeModule,
     FormsModule,
     IconButtonModule,
-    NgxPaginationModule,
     NgxSmartModalModule,
     NgSelectModule,
     PreviewModalModule,

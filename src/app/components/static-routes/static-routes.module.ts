@@ -5,7 +5,6 @@ import { StaticRouteModalComponent } from './static-route-modal/static-route-mod
 import { StaticRouteDetailComponent } from './static-route-detail/static-route-detail.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +31,6 @@ const routes: Routes = [
     FontAwesomeModule,
     FormsModule,
     IconButtonModule,
-    NgxPaginationModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),

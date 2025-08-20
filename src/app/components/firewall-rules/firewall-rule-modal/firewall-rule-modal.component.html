@@ -12,7 +12,7 @@
 
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
         <input
@@ -38,14 +38,14 @@
         }
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-2">
+      <div class="row">
+        <div class="mb-3 col-md-2">
           <label for="action">Action</label>
           <tooltip [message]="helpText.Action"></tooltip>
           <select
             id="action"
             formControlName="action"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.action.errors"
             aria-label="Action"
           >
@@ -63,13 +63,13 @@
         </div>
 
         @if (firewallRuleGroupType !== 'ZoneBased') {
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="direction">Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select
             id="direction"
             formControlName="direction"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.direction.errors"
             aria-label="Direction"
           >
@@ -87,13 +87,13 @@
         </div>
         }
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="protocol">Protocol</label>
           <tooltip [message]="helpText.Protocol"></tooltip>
           <select
             id="protocol"
             formControlName="protocol"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.protocol.errors"
             aria-label="Protocol"
           >
@@ -112,13 +112,13 @@
           }
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="logging">Logging</label>
           <tooltip [message]="helpText.Logging"></tooltip>
           <select
             id="logging"
             formControlName="logging"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.logging.errors"
             aria-label="Logging"
           >
@@ -135,13 +135,13 @@
           }
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="enabled">Enabled</label>
           <tooltip [message]="helpText.Enabled"></tooltip>
           <select
             id="enabled"
             formControlName="enabled"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.enabled.errors"
             aria-label="Logging"
           >
@@ -158,7 +158,7 @@
           }
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="ruleIndex">Rule Index</label>
           <tooltip [message]="helpText.RuleIndex"></tooltip>
           <input
@@ -184,8 +184,8 @@
       @if (firewallRuleGroupType === 'ZoneBased') {
       <hr />
       } @if (firewallRuleGroupType === 'ZoneBased') {
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
               <tr>
@@ -213,7 +213,7 @@
             </tbody>
           </table>
         </div>
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
               <tr>
@@ -239,10 +239,10 @@
         </div>
       </div>
       } @if (firewallRuleGroupType === 'ZoneBased') {
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <div class="input-group align-items-center">
-            <select id="availableFromZones" class="form-control mr-3" formControlName="selectedFromZone">
+            <select id="availableFromZones" class="form-select me-3" formControlName="selectedFromZone">
               <option></option>
               @for (zone of zones; track zone) {
               <option [ngValue]="zone.id">{{ zone.name }}</option>
@@ -254,9 +254,9 @@
             </button>
           </div>
         </div>
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <div class="input-group align-items-center">
-            <select id="availableToZones" class="form-control mr-3" formControlName="selectedToZone">
+            <select id="availableToZones" class="form-select me-3" formControlName="selectedToZone">
               <option></option>
               @for (zone of zones; track zone) {
               <option [ngValue]="zone.id">{{ zone.name }}</option>
@@ -273,11 +273,11 @@
 
       <hr />
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="sourceNetworkType">Source Network Type</label>
           <tooltip [message]="helpText.SourceNetworkType"></tooltip>
-          <select id="sourceNetworkType" formControlName="sourceNetworkType" class="form-control" aria-label="Source Network Type">
+          <select id="sourceNetworkType" formControlName="sourceNetworkType" class="form-select" aria-label="Source Network Type">
             <option></option>
             <option value="IpAddress">IP</option>
             <option value="NetworkObject">Network Object</option>
@@ -285,7 +285,7 @@
           </select>
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           @if (f.sourceNetworkType.value === 'IpAddress') {
           <label for="sourceIpAddress">Source IP</label>
           } @if (f.sourceNetworkType.value === 'IpAddress') {
@@ -368,14 +368,14 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="destinationNetworkType">Destination Network Type</label>
           <tooltip [message]="helpText.DestinationNetworkType"></tooltip>
           <select
             id="destinationNetworkType"
             formControlName="destinationNetworkType"
-            class="form-control"
+            class="form-select"
             aria-label="Destination Network Type"
           >
             <option></option>
@@ -385,7 +385,7 @@
           </select>
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           @if (f.destinationNetworkType.value === 'IpAddress') {
           <label for="destinationIpAddress">Destination IP</label>
           } @if (f.destinationNetworkType.value === 'IpAddress') {
@@ -472,11 +472,11 @@
       @if (f.protocol.value !== 'IP' && f.protocol.value !== 'ICMP') {
       <div>
         <hr />
-        <div class="form-row">
-          <div class="form-group col-md-12">
+        <div class="row">
+          <div class="mb-3 col-md-12">
             <label for="serviceType">Service Type</label>
             <tooltip [message]="helpText.SourceServiceType"></tooltip>
-            <select id="serviceType" formControlName="serviceType" class="form-control" aria-label="Source Service Type">
+            <select id="serviceType" formControlName="serviceType" class="form-select" aria-label="Source Service Type">
               <option></option>
               <option value="Port">Port</option>
               <option value="ServiceObject">Service Object</option>
@@ -484,9 +484,9 @@
             </select>
           </div>
         </div>
-        <div class="form-row">
+        <div class="row">
           @if (f.serviceType.value === 'Port') {
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             @if (f.serviceType.value === 'Port') {
             <label for="sourcePorts">Source Port</label>
             } @if (f.serviceType.value === 'Port') {
@@ -511,7 +511,7 @@
             }
           </div>
           }
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             @if (f.serviceType.value === 'Port') {
             <label for="destinationPorts">Destination Port</label>
             } @if (f.serviceType.value === 'Port') {
@@ -597,9 +597,9 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">Cancel</button>
+      <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="cancel()">Cancel</button>
 
-      <button class="btn btn-success" data-dismiss="modal">
+      <button class="btn btn-success" data-bs-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>

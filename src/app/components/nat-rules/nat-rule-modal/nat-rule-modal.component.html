@@ -13,7 +13,7 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <!-- Name -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" required />
@@ -33,7 +33,7 @@
       </div>
 
       <!-- Description -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="description">Description</label>
         <input
           id="description"
@@ -53,13 +53,13 @@
         }
       </div>
 
-      <div class="form-row">
+      <div class="row">
         <!-- NAT Direction -->
         @if (NatRuleGroupType !== 'ZoneBased') {
-        <div class="form-group col-md-3">
+        <div class="mb-3 col-md-3">
           <label for="direction">NAT Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
-          <select id="direction" formControlName="direction" class="form-control" [class.is-invalid]="submitted && f.direction.errors">
+          <select id="direction" formControlName="direction" class="form-select" [class.is-invalid]="submitted && f.direction.errors">
             <option [value]="NatRuleDirection.In">In</option>
             <option [value]="NatRuleDirection.Out">Out</option>
           </select>
@@ -73,13 +73,13 @@
         </div>
         }
 
-        <div class="form-group col-md-3">
+        <div class="mb-3 col-md-3">
           <label for="biDirectional">Bi-directional</label>
           <tooltip [message]="helpText.Bidirectional"></tooltip>
           <select
             id="biDirectional"
             formControlName="biDirectional"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.biDirectional.errors"
           >
             <option [ngValue]="true">True</option>
@@ -95,7 +95,7 @@
         </div>
 
         <!-- Rule Index -->
-        <div class="form-group col-md-3">
+        <div class="mb-3 col-md-3">
           <label for="ruleIndex">Rule Index</label>
           <tooltip [message]="helpText.RuleIndex"></tooltip>
           <input
@@ -117,13 +117,13 @@
         </div>
 
         <!-- Enabled -->
-        <div class="form-group col-md-3">
+        <div class="mb-3 col-md-3">
           <label for="enabled">Enabled</label>
           <tooltip [message]="helpText.Enabled"></tooltip>
           <select
             id="enabled"
             formControlName="enabled"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.enabled.errors"
             aria-label="Enabled"
           >
@@ -137,8 +137,8 @@
       @if (NatRuleGroupType === 'ZoneBased') {
       <hr />
       } @if (NatRuleGroupType === 'ZoneBased') {
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
               <tr>
@@ -162,7 +162,7 @@
             </tbody>
           </table>
           <div class="input-group align-items-center">
-            <select id="availableFromZones" class="form-control mr-3" formControlName="selectedFromZone">
+            <select id="availableFromZones" class="form-select me-3" formControlName="selectedFromZone">
               <option></option>
               @for (zone of zones; track zone) {
               <option [ngValue]="zone.id">{{ zone.name }}</option>
@@ -174,7 +174,7 @@
             </button>
           </div>
         </div>
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="toZone">To Zone</label>
           <ng-select
             formControlName="toZone"
@@ -202,15 +202,15 @@
 
       <h4>Original</h4>
 
-      <div class="form-row">
+      <div class="row">
         <!-- Original Service Type -->
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalServiceType">Original Service Type</label>
           <tooltip [message]="helpText.OriginalServiceType"></tooltip>
           <select
             id="originalServiceType"
             formControlName="originalServiceType"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.originalServiceType.errors"
           >
             @if (f.translatedServiceType.value === NatRuleTranslatedServiceType.None) {
@@ -229,7 +229,7 @@
 
         <!-- Original Service Object -->
         @if (f.originalServiceType.value === NatRuleOriginalServiceType.ServiceObject) {
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalServiceObject">Original Service Object</label>
           <ng-select
             formControlName="originalServiceObject"
@@ -258,14 +258,14 @@
       </div>
 
       <!-- Original Source Address Type -->
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="originalSourceAddressType">Original Source Address Type</label>
           <tooltip [message]="helpText.OriginalSourceAddressType"></tooltip>
           <select
             id="originalSourceAddressType"
             formControlName="originalSourceAddressType"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.originalSourceAddressType.errors"
           >
             @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.None) {
@@ -285,7 +285,7 @@
 
         <!-- Original Source Network Object -->
         @if (f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject) {
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalSourceNetworkObject">Original Source Network Object</label>
           <ng-select
             formControlName="originalSourceNetworkObject"
@@ -317,7 +317,7 @@
 
         <!-- Original Source Network Object Group -->
         @if (f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObjectGroup) {
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalSourceNetworkObjectGroup">Original Source Network Object Group</label>
           <ng-select
             formControlName="originalSourceNetworkObjectGroup"
@@ -353,15 +353,15 @@
       </div>
 
       <!-- Original Destination Address Type -->
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="originalDestinationAddressType">Original Destination Address Type</label>
           <tooltip [message]="helpText.OriginalDestinationAddressType"></tooltip>
 
           <select
             id="originalDestinationAddressType"
             formControlName="originalDestinationAddressType"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
           >
             @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None) {
@@ -382,7 +382,7 @@
 
         <!-- Original Destination Network Object -->
         @if (f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject) {
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalDestinationNetworkObject">Original Destination Network Object</label>
           <ng-select
             formControlName="originalDestinationNetworkObject"
@@ -418,7 +418,7 @@
 
         <!-- Original Destination Network Object Group -->
         @if (f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup) {
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalDestinationNetworkObjectGroup">Original Destination Network Object Group</label>
           <ng-select
             formControlName="originalDestinationNetworkObjectGroup"
@@ -458,13 +458,13 @@
       <h4>Translation</h4>
 
       <!-- Translation Type -->
-      <div class="form-group">
+      <div class="mb-3">
         <label for="translationType">Translation Type</label>
         <tooltip [message]="helpText.TranslationType"></tooltip>
         <select
           id="translationType"
           formControlName="translationType"
-          class="form-control"
+          class="form-select"
           [class.is-invalid]="submitted && f.translationType.errors"
         >
           <option [value]="NatRuleTranslationType.Static">Static</option>
@@ -481,15 +481,15 @@
       </div>
 
       <div>
-        <div class="form-row">
+        <div class="row">
           <!-- Translated Service Type -->
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedServiceType">Translated Service Type</label>
             <tooltip [message]="helpText.TranslatedServiceType"></tooltip>
             <select
               id="translatedServiceType"
               formControlName="translatedServiceType"
-              class="form-control"
+              class="form-select"
               [class.is-invalid]="submitted && f.translatedServiceType.errors"
             >
               <option [value]="NatRuleTranslatedServiceType.None">None</option>
@@ -506,7 +506,7 @@
 
           <!-- Translated Service Object -->
           @if (f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObject) {
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedServiceObject">Translated Service Object</label>
             <ng-select
               formControlName="translatedServiceObject"
@@ -533,15 +533,15 @@
           </div>
           }
         </div>
-        <div class="form-row">
+        <div class="row">
           <!-- Translated Source Address Type -->
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedSourceAddressType">Translated Source Address Type</label>
             <tooltip [message]="helpText.TranslatedSourceAddressType"></tooltip>
             <select
               id="translatedSourceAddressType"
               formControlName="translatedSourceAddressType"
-              class="form-control"
+              class="form-select"
               [class.is-invalid]="submitted && f.translatedSourceAddressType.errors"
             >
               @if (f.translationType.value === NatRuleTranslationType.Static) {
@@ -563,7 +563,7 @@
 
           <!-- Translated Source Network Object -->
           @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject) {
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedSourceNetworkObject">Translated Source Network Object</label>
             <ng-select
               formControlName="translatedSourceNetworkObject"
@@ -599,7 +599,7 @@
 
           <!-- Translated Source Network Object Group -->
           @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup) {
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedSourceNetworkObjectGroup">Translated Source Network Object Group</label>
             <ng-select
               formControlName="translatedSourceNetworkObjectGroup"
@@ -634,15 +634,15 @@
           }
         </div>
 
-        <div class="form-row">
+        <div class="row">
           <!-- Translated Destination Address Type -->
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedDestinationAddressType">Translated Destination Address Type</label>
             <tooltip [message]="helpText.TranslatedDestinationAddressType"></tooltip>
             <select
               id="translatedDestinationAddressType"
               formControlName="translatedDestinationAddressType"
-              class="form-control"
+              class="form-select"
               [class.is-invalid]="submitted && f.translatedDestinationAddressType.errors"
             >
               <option [value]="NatRuleTranslatedDestinationAddressType.None">None</option>
@@ -662,7 +662,7 @@
 
           <!-- Translated Destination Network Object -->
           @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject) {
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedDestinationNetworkObject">Translated Destination Network Object</label>
             <ng-select
               formControlName="translatedDestinationNetworkObject"
@@ -698,7 +698,7 @@
 
           <!-- Translated Destination Network Object Group -->
           @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup) {
-          <div class="form-group col-md-6">
+          <div class="mb-3 col-md-6">
             <label for="translatedDestinationNetworkObjectGroup">Translated Destination Network Object Group</label>
             <ng-select
               formControlName="translatedDestinationNetworkObjectGroup"
@@ -736,9 +736,9 @@
     </div>
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+      <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="closeModal()">Cancel</button>
 
-      <button class="btn btn-success" data-dismiss="modal">
+      <button class="btn btn-success" data-bs-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save NAT Rule</span>
       </button>

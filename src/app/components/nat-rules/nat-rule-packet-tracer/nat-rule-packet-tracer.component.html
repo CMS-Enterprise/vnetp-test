@@ -52,7 +52,7 @@
           <tr class="text-center">
             <td [attr.colspan]="12">No Matches</td>
           </tr>
-          } @for (rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }; track rule) {
+          } @for (rule of filteredRules; track rule) {
           <tr>
             <td>
               <span class="d-flex">
@@ -124,7 +124,7 @@
         </tbody>
         <tfoot>
           <td [attr.colspan]="12">
-            <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event"></pagination-controls>
+            <!-- <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event"></pagination-controls> -->
           </td>
         </tfoot>
       </table>
@@ -134,13 +134,13 @@
 
   <form [formGroup]="form" (ngSubmit)="search()">
     <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group col-md-2">
+      <div class="row">
+        <div class="mb-3 col-md-2">
           <label for="biDirectional">biDirectional</label>
           <select
             id="biDirectional"
             formControlName="biDirectional"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.biDirectional.errors"
             aria-label="Direction"
           >
@@ -157,12 +157,12 @@
           }
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="direction">Direction</label>
           <select
             id="direction"
             formControlName="direction"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.direction.errors"
             aria-label="Direction"
           >
@@ -179,12 +179,12 @@
           }
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="enabled">Enabled</label>
           <select
             id="enabled"
             formControlName="enabled"
-            class="form-control"
+            class="form-select"
             [class.is-invalid]="submitted && f.enabled.errors"
             aria-label="Enabled"
           >
@@ -204,8 +204,8 @@
 
       <hr />
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="originalSourceIp">Original Source IP</label>
           <input
             type="text"
@@ -229,8 +229,8 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="originalDestinationIp">Original Destination IP</label>
           <input
             type="text"
@@ -256,8 +256,8 @@
 
       <hr />
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="translatedSourceIp">Translated Source IP</label>
           <input
             type="text"
@@ -281,8 +281,8 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="translatedDestinationIp">Translated Destination IP</label>
           <input
             type="text"
@@ -308,8 +308,8 @@
 
       <hr />
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="originalSourcePort">Original Source Port</label>
           <input
             type="text"
@@ -332,7 +332,7 @@
           }
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="originalDestinationPort">Original Destination Port</label>
           <input
             type="text"
@@ -356,8 +356,8 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="translatedSourcePort">Translated Source Port</label>
           <input
             type="text"
@@ -380,7 +380,7 @@
           }
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="translatedDestinationPort">Translated Destination Port</label>
           <input
             type="text"
@@ -406,9 +406,9 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="close()">Cancel</button>
+      <button type="button" class="btn btn-link" data-bs-dismiss="modal" (click)="close()">Cancel</button>
 
-      <button class="btn btn-primary" data-dismiss="modal">
+      <button class="btn btn-primary" data-bs-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
         <span>Search</span>
       </button>

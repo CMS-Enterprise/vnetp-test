@@ -1,5 +1,16 @@
 import { SearchBarComponent, SearchColumnConfig } from '../search-bar/search-bar.component';
-import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  Input,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Output,
+  EventEmitter,
+  ViewChild,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
@@ -7,6 +18,8 @@ import { Subject, Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AdvancedSearchAdapter } from '../advanced-search/advanced-search.adapter';
 import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
+import { MatTable } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 export interface TableColumn<T> {
   name: string;
@@ -52,7 +65,7 @@ export interface TableConfig<T> {
   styleUrls: ['./table.component.scss'],
   standalone: false,
 })
-export class TableComponent<T> implements AfterViewInit {
+export class TableComponent<T> implements AfterViewInit, OnChanges {
   @Input() config: TableConfig<T>;
   @Input() data: { data: any[]; count: number; total: number; page: number; pageCount: number };
   @Input() itemsPerPage;
@@ -65,6 +78,8 @@ export class TableComponent<T> implements AfterViewInit {
 
   @ViewChild(SearchBarComponent) searchBarComponent!: SearchBarComponent;
   @ViewChild(AdvancedSearchComponent) advancedSearchComponent!: AdvancedSearchComponent<any>;
+  @ViewChild(MatTable) table!: MatTable<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   advancedSearchSubscription: Subscription;
 
@@ -81,6 +96,11 @@ export class TableComponent<T> implements AfterViewInit {
   public advancedSearchAdapterSubject: Subject<any> = new Subject<any>();
 
   public expandableRows: boolean;
+  public displayedColumns: string[] = [];
+  public detailColumns: string[] = ['detail'];
+  public materialColumns: Array<{ id: string; col: TableColumn<T> }> = [];
+  public readonly expanderColumnId = 'expander';
+  public dataSourceData: any[] = [];
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -151,7 +171,23 @@ export class TableComponent<T> implements AfterViewInit {
 
     this.expandableRows = Boolean(this.config.expandableRows);
 
+    // Prepare Material table columns based on config to avoid downstream changes
+    const cols = this.config?.columns || [];
+    this.materialColumns = cols.map((col, index) => ({ id: this.generateColumnId(col, index), col }));
+    this.displayedColumns = this.materialColumns.map(mc => mc.id);
+    if (this.expandableRows) {
+      this.displayedColumns = [this.expanderColumnId, ...this.displayedColumns];
+    }
+
     this.changeRef.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.data) {
+      this.dataSourceData = this.data && Array.isArray(this.data.data) ? this.data.data : [];
+      // Render rows to ensure Material recalculates predicate rows
+      Promise.resolve().then(() => this.table?.renderRows());
+    }
   }
 
   // user has registered search parameters, we take these parameters and emit them forward
@@ -216,12 +252,41 @@ export class TableComponent<T> implements AfterViewInit {
     this.ngx.getModal('advancedSearch').open();
   }
 
-  handleRowClick(event: Event, datum: any): void {
-    if (!this.isEventFromButton(event)) {
-      if (this.expandableRows) {
-        datum.expanded = !datum.expanded;
-      }
+  toggleExpand(event: Event, datum: any): void {
+    event.stopPropagation();
+    if (this.expandableRows) {
+      datum.expanded = !datum.expanded;
+      // Create a new array reference so MatTable detects the change
+      this.dataSourceData = [...this.dataSourceData];
+      this.table?.renderRows();
+      this.changeRef.detectChanges();
     }
+  }
+
+  // Row predicate used by Material table to render the expanded detail row
+  isExpanded = (_index: number, row: any) => !!row && row.expanded === true;
+
+  // TrackBy for dynamic column ngFor
+  trackByColumn(_index: number, col: TableColumn<T>): string {
+    return col?.name ?? String(_index);
+  }
+
+  trackByMaterialColumn(_index: number, mc: { id: string; col: TableColumn<T> }): string {
+    return mc?.id ?? String(_index);
+  }
+
+  private generateColumnId(col: TableColumn<T>, index: number): string {
+    const base = (col?.name || (col?.property as string) || '').toString().trim();
+    if (base.length > 0) {
+      return base.replace(/\s+/g, '_').replace(/[^A-Za-z0-9_\-]/g, '_');
+    }
+    return `col_${index}`;
+  }
+
+  handleMatPage(event: PageEvent): void {
+    this.itemsPerPage = event.pageSize;
+    this.currentPage = event.pageIndex + 1;
+    this.onTableEvent();
   }
 
   isEventFromButton(event: Event): boolean {

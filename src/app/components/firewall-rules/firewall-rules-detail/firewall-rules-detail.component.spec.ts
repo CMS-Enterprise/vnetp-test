@@ -12,7 +12,6 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
@@ -33,7 +32,6 @@ describe('FirewallRulesDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        NgxPaginationModule,
         ReactiveFormsModule,
         RouterTestingModule,
         HttpClientTestingModule,

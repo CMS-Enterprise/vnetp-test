@@ -23,7 +23,6 @@ import { NatRulePacketTracerComponent } from '../nat-rule-packet-tracer/nat-rule
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
@@ -64,7 +63,6 @@ describe('NatRulesDetailComponent', () => {
       ],
       imports: [
         FormsModule,
-        NgxPaginationModule,
         ApplicationPipesModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),

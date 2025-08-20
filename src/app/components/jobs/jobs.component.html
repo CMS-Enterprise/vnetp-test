@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (job of jobs | paginate : { itemsPerPage: perPage, currentPage: currentJobsPage }; track job) {
+    @for (job of jobs; track job) {
     <tr>
       <td>{{ job?.jobType }}</td>
       <td>{{ job?.createdAt | date : 'medium' }}</td>
@@ -26,10 +26,10 @@
     }
   </tbody>
 </table>
-<pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls>
+<!-- <pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls> -->
 
 <section class="btn-toolbar btn-toolbar--start" role="toolbar">
-  <span class="mr-3">Entities per page</span>
+  <span class="me-3">Entities per page</span>
   <div class="btn-group" role="group">
     <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
     <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>

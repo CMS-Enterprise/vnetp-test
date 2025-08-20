@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ApplicationPipesModule } from '../../pipes/application-pipes.module';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { TableModule } from 'src/app/common/table/table.module';
@@ -44,7 +43,6 @@ const routes: Routes = [
     ImportExportModule,
     ApplicationPipesModule,
     FontAwesomeModule,
-    NgxPaginationModule,
     YesNoModalModule,
     TierSelectModule,
     TableModule,

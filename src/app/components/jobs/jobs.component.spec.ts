@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { JobsComponent } from './jobs.component';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1JobsService } from 'client';
@@ -11,7 +10,7 @@ describe('JobsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NgxPaginationModule],
+      imports: [],
       declarations: [JobsComponent, MockFontAwesomeComponent],
       providers: [MockProvider(V1JobsService)],
     });

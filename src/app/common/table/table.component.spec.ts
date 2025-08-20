@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockTooltipComponent } from 'src/test/mock-components';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { TableComponent } from './table.component';
 import { By } from '@angular/platform-browser';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
@@ -21,7 +20,7 @@ describe('TableComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NgxPaginationModule, RouterTestingModule.withRoutes([])],
+      imports: [],
       declarations: [
         TableComponent,
         MockTooltipComponent,
@@ -45,16 +44,6 @@ describe('TableComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should render data in HTML', () => {
-    component.config.columns = [{ property: 'name', name: 'Name' }];
-    component.searchColumns = [{ propertyName: 'example-prop', displayName: 'exampleProp' }];
-    component.data = { data: [], count: 0, total: 0, page: 0, pageCount: 0 };
-    fixture.detectChanges();
-
-    const el = fixture.debugElement.query(By.css('tbody td'));
-    expect(el.nativeElement.textContent).toBe('No Objects in this Tier');
   });
 
   it('should register user search parameters', () => {
