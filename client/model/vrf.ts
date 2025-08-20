@@ -50,7 +50,7 @@ export interface Vrf {
     maxExternalRoutes?: number;
     internalBgpAsn?: number;
     externalBgpAsn?: number;
-    readonly serviceGraphUnderlayAllocation?: Array<UnderlayAllocation>;
+    readonly serviceGraphUnderlayAllocation?: UnderlayAllocation;
     readonly externalVrfUnderlayAllocations?: Array<UnderlayAllocation>;
 }
 export enum VrfExternalVrfsEnum {

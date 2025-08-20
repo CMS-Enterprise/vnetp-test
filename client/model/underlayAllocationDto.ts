@@ -16,7 +16,7 @@ export interface UnderlayAllocationDto {
     type: UnderlayAllocationDtoTypeEnum;
     ipv4Network?: string;
     ipv6Network?: string;
-    vlan: string;
+    vlan: number;
     vrfId?: string;
     externalVrf?: UnderlayAllocationDtoExternalVrfEnum;
 }

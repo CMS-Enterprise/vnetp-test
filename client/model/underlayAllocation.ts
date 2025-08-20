@@ -17,7 +17,7 @@ export interface UnderlayAllocation {
     type: UnderlayAllocationTypeEnum;
     ipv4Network: string;
     ipv6Network: string;
-    vlan: string;
+    vlan: number;
     vrfId: string;
     vrf: Vrf;
     externalVrf: string;
