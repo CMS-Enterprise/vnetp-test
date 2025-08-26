@@ -1,7 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService, GetManyStaticRouteResponseDto } from 'client';
+import {
+  Tier,
+  StaticRoute,
+  V1NetworkStaticRoutesService,
+  GetManyStaticRouteResponseDto,
+  V1DatacentersService,
+} from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -51,7 +57,7 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private route: ActivatedRoute,
     private staticRouteService: V1NetworkStaticRoutesService,
-    private tierService: V1TiersService,
+    private datacenterService: V1DatacentersService,
   ) {}
 
   createStaticRoute() {
@@ -104,18 +110,16 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
 
   getStaticRoutes() {
     this.isLoading = true;
-    this.tierService.getOneTier({ id: this.Id, join: ['staticRoutes'] }).subscribe(
-      data => {
-        this.tier = data;
-        this.staticRoutes.data = data.staticRoutes;
-      },
-      () => {
-        this.staticRoutes = null;
-      },
-      () => {
+    this.staticRouteService.getManyStaticRoute({ filter: [`tierId||eq||${this.Id}`] }).subscribe({
+      next: data => {
+        this.staticRoutes = data;
         this.isLoading = false;
       },
-    );
+      error: () => {
+        this.staticRoutes = null;
+        this.isLoading = false;
+      },
+    });
   }
 
   public onTableEvent(event: TableComponentDto) {
@@ -127,8 +131,13 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.Id = this.route.snapshot.paramMap.get('id');
-        // TODO: Ensure Tier is in selected datacenter tiers.
-        this.getStaticRoutes();
+        this.datacenterService.getOneDatacenter({ id: cd.id, join: ['tiers'] }).subscribe(response => {
+          const tier = response.tiers.find(t => t.id === this.Id);
+          if (tier) {
+            this.tier = tier;
+            this.getStaticRoutes();
+          }
+        });
       }
     });
   }

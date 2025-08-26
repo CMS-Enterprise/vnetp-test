@@ -171,15 +171,8 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let route">
-              <span
-                class="d-inline-block"
-                [matTooltip]="
-                  route.externalVrf === parentVrf?.defaultExternalVrf
-                    ? 'This is the default external VRF and cannot be added'
-                    : 'Add Route to Wan Form'
-                "
-              >
-                <button [disabled]="route.externalVrf === parentVrf?.defaultExternalVrf" mat-icon-button (click)="addRouteToWanForm(route)">
+              <span class="d-inline-block" [matTooltip]="getAddRouteTooltip(route)">
+                <button [disabled]="isRouteBgpTagBlocked(route)" mat-icon-button (click)="addRouteToWanForm(route)">
                   <mat-icon>playlist_add</mat-icon>
                 </button>
               </span>

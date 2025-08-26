@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/c
 import {
   GetManyLoadBalancerProfileResponseDto,
   LoadBalancerProfile,
+  LoadBalancerProfileReverseProxyEnum,
   LoadBalancerProfileTypeEnum,
   Tier,
   V1LoadBalancerProfilesService,
@@ -20,7 +21,6 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
-import { ProfileReverseProxyType } from '../profile-modal/profile-modal.component';
 import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface ProfileView extends LoadBalancerProfile {
@@ -38,7 +38,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerProfileTypeEnum },
-    { displayName: 'Reverse Proxy', propertyName: 'reverseProxy', propertyType: ProfileReverseProxyType },
+    { displayName: 'Reverse Proxy', propertyName: 'reverseProxy', propertyType: LoadBalancerProfileReverseProxyEnum },
   ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;

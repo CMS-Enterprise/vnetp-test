@@ -28630,7 +28630,9 @@
             "type": "object"
           },
           "reverseProxy": {
-            "type": "string"
+            "type": "string",
+            "enum": ["Explicit", "Reverse", "Transparent"],
+            "readOnly": true
           },
           "key": {
             "type": "string"
@@ -28642,7 +28644,7 @@
             "type": "string"
           }
         },
-        "required": ["name", "type", "properties", "reverseProxy", "key", "certificate", "tierId"]
+        "required": ["name", "type", "properties", "key", "certificate", "tierId"]
       },
       "LoadBalancerPolicy": {
         "type": "object",

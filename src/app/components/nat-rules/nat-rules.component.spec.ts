@@ -1,5 +1,3 @@
-// TODO: Re-enable this test file.
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {

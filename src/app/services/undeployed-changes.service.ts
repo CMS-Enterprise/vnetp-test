@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Datacenter, V1TiersService } from '../../../client';
 import { DatacenterContextService } from './datacenter-context.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { ApplicationMode } from '../models/other/application-mode-enum';
+import { RouteDataUtil } from '../utils/route-data.util';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +19,16 @@ export class UndeployedChangesService {
   private undeployedChangesSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   public undeployedChanges: Observable<boolean> = this.undeployedChangesSubject.asObservable();
 
-  constructor(private datacenterContextService: DatacenterContextService, private tierService: V1TiersService) {
+  public applicationMode: ApplicationMode;
+
+  constructor(
+    private datacenterContextService: DatacenterContextService,
+    private tierService: V1TiersService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+  ) {
     this.setupSubscriptions();
+    this.setupRouteModeListener();
     // Get undeployed changes every 30 seconds.
     setInterval(() => {
       this.getUndeployedChanges();
@@ -24,8 +36,17 @@ export class UndeployedChangesService {
   }
 
   getUndeployedChanges() {
-    // TODO: Determine if netcentric or appcentric
-    this.getNetcentricChanges();
+    if (this.applicationMode === ApplicationMode.APPCENTRIC) {
+      return;
+    }
+
+    if (this.applicationMode === ApplicationMode.TENANTV2) {
+      return;
+    }
+
+    if (this.applicationMode === ApplicationMode.NETCENTRIC) {
+      this.getNetcentricChanges();
+    }
   }
 
   setupSubscriptions() {
@@ -34,6 +55,19 @@ export class UndeployedChangesService {
       // Get undeployed changes on datacenter change.
       this.getUndeployedChanges();
     });
+  }
+
+  private setupRouteModeListener(): void {
+    // Set initial mode
+    this.setApplicationModeFromRouter();
+    // Update on navigation end
+    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      this.setApplicationModeFromRouter();
+    });
+  }
+
+  private setApplicationModeFromRouter(): void {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
   }
 
   getNetcentricChanges(): void {

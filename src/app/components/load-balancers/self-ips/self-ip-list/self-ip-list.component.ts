@@ -151,7 +151,6 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
         response => {
           this.selfIps = response;
           this.selfIps.data = (this.selfIps.data as SelfIpView[]).map((s: LoadBalancerSelfIp) => {
-            // TODO: Fix back-end generated type
             const loadBalancerVlan = (s as any).loadBalancerVlan as { name: string };
             return {
               ...s,

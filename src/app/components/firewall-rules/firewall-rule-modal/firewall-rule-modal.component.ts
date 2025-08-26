@@ -24,6 +24,8 @@ import {
   EndpointGroup,
   EndpointSecurityGroup,
   PanosApplication,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
 } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -108,6 +110,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private appIdService: AppIdRuntimeService,
     private tierContextService: TierContextService,
+    private endpointGroupService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
   ) {}
 
   public openAppIdModal(): void {
@@ -648,7 +652,16 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           this.handleServiceObjectGroup(property, objectId);
           break;
         }
-        // TODO: Add cases for EndpointGroup and EndpointSecurityGroup if info popups are needed
+
+        case FirewallRuleSourceAddressTypeEnum.EndpointGroup: {
+          this.handleEndpointGroup(property, objectId);
+          break;
+        }
+
+        case FirewallRuleSourceAddressTypeEnum.EndpointSecurityGroup: {
+          this.handleEndpointSecurityGroup(property, objectId);
+          break;
+        }
       }
     }
   }
@@ -744,6 +757,52 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  handleEndpointGroup(property, objectId) {
+    this.endpointGroupService.getOneEndpointGroup({ id: objectId, relations: ['endpoints', 'endpoints.ipAddresses'] }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const modalBody = data.endpoints.map(endpoint => {
+        const ipAddresses = endpoint.ipAddresses.map(ip => ip.address);
+        return `${ipAddresses.join(', ')}`;
+      });
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  handleEndpointSecurityGroup(property, objectId) {
+    this.endpointSecurityGroupService
+      .getOneEndpointSecurityGroup({
+        id: objectId,
+        relations: [
+          'selectors',
+          'selectors.endpointGroup',
+          'selectors.endpointGroup.endpoints',
+          'selectors.endpointGroup.endpoints.ipAddresses',
+        ],
+      })
+      .subscribe(data => {
+        const objectName = data.name;
+        const modalTitle = `${property} : ${objectName}`;
+        const modalBody = data.selectors.map(selector => {
+          const epgName = selector.endpointGroup.name;
+          const ips = selector.endpointGroup.endpoints.flatMap(endpoint => endpoint.ipAddresses.map(ip => ip.address));
+          return `${epgName}: ${ips.join(', ')}`;
+        });
+        const dto = {
+          modalTitle,
+          modalBody,
+        };
+        this.subscribeToObjectInfoModal();
+        this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+        this.ngx.getModal('firewallRuleObjectInfoModal').open();
+      });
+  }
   subscribeToObjectInfoModal() {
     this.objectInfoSubscription = this.ngx.getModal('firewallRuleObjectInfoModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRuleObjectInfoModal');

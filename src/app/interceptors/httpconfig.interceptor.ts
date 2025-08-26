@@ -2,7 +2,6 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
@@ -39,8 +38,7 @@ export class HttpConfigInterceptor {
 
       // If no tenant is selected, log the user out and allow them to reselect a tenant.
       if (!tenant) {
-        console.log('Logged out due to missing tenant');
-        // this.auth.logout();
+        this.auth.logout();
       }
 
       const headers = new HttpHeaders({
@@ -73,7 +71,6 @@ export class HttpConfigInterceptor {
     }
 
     if (request.params.get('filter') && request.params.get('filter').split(',').length > 1) {
-      console.log('filter', request.params.get('filter'));
       const filterParam = request.params.get('filter');
 
       // Split on commas and reconstruct valid filter expressions
@@ -113,9 +110,6 @@ export class HttpConfigInterceptor {
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           this.processSuccessRequest(request, event);
-          if (!environment.production) {
-            // console.log('debug-httpevent-->>', event);
-          }
         }
         return event;
       }),
@@ -145,10 +139,8 @@ export class HttpConfigInterceptor {
           status: errorResponse.status,
         };
 
-        // console.error(data);
-
         this.toastr.error(toastrMessage);
-        return throwError(errorResponse);
+        return throwError(() => errorResponse);
       }),
     );
   }

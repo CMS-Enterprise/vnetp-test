@@ -100,14 +100,12 @@
       <!-- Endpoints Information -->
       <div class="endpoints-info">
         <div class="source-endpoint">
-          <!-- TODO: Add support for multiple source endpoints -->
           <strong>Source:</strong> {{ connectivityResult.sourceEndpoint.ipAddresses[0].address }}
           <span *ngIf="connectivityResult.sourceEndpoint.endpointGroup?.name">
             ({{ connectivityResult.sourceEndpoint.endpointGroup.name }})
           </span>
         </div>
         <div class="destination-endpoint">
-          <!-- TODO: Add support for multiple destination endpoints -->
           <strong>Destination:</strong> {{ connectivityResult.destinationEndpoint.ipAddresses[0].address }}
           <span *ngIf="connectivityResult.destinationEndpoint.endpointGroup?.name">
             ({{ connectivityResult.destinationEndpoint.endpointGroup.name }})

@@ -9,7 +9,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UndeployedChangesService } from '../services/undeployed-changes.service';
 import { Injector } from '@angular/core';
 
-// TODO: this returns a bunch of errors that need to be supressed
 describe('HttpConfigInterceptor', () => {
   let interceptor: HttpConfigInterceptor;
 
