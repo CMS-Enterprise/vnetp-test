@@ -2,10 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { ProfileModalComponent, ProfileReverseProxyType } from './profile-modal.component';
+import { ProfileModalComponent } from './profile-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerProfile, LoadBalancerProfileTypeEnum, V1LoadBalancerProfilesService } from 'client';
+import {
+  LoadBalancerProfile,
+  LoadBalancerProfileReverseProxyEnum,
+  LoadBalancerProfileTypeEnum,
+  V1LoadBalancerProfilesService,
+} from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { ProfileModalDto } from './profile-modal.dto';
 
@@ -104,7 +109,7 @@ describe('ProfileModalComponent', () => {
       certificate: null,
       description: 'Description',
       name: 'NewName',
-      reverseProxy: ProfileReverseProxyType.Explicit,
+      reverseProxy: LoadBalancerProfileReverseProxyEnum.Explicit,
       type: LoadBalancerProfileTypeEnum.Http,
     });
     component.save();
@@ -116,7 +121,7 @@ describe('ProfileModalComponent', () => {
         key: null,
         name: 'NewName',
         properties: null,
-        reverseProxy: ProfileReverseProxyType.Explicit,
+        reverseProxy: LoadBalancerProfileReverseProxyEnum.Explicit,
         tierId: '1',
         type: LoadBalancerProfileTypeEnum.Http,
       },
@@ -138,7 +143,7 @@ describe('ProfileModalComponent', () => {
       certificate: null,
       description: 'Description',
       name: 'NewName',
-      reverseProxy: ProfileReverseProxyType.Explicit,
+      reverseProxy: LoadBalancerProfileReverseProxyEnum.Explicit,
       type: LoadBalancerProfileTypeEnum.Http,
     });
     component.save();
@@ -151,7 +156,7 @@ describe('ProfileModalComponent', () => {
         key: null,
         name: undefined,
         properties: null,
-        reverseProxy: ProfileReverseProxyType.Explicit,
+        reverseProxy: LoadBalancerProfileReverseProxyEnum.Explicit,
         type: undefined,
       },
     });

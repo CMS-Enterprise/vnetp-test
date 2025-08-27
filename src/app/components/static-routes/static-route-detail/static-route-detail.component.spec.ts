@@ -2,13 +2,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1TiersService, V1NetworkStaticRoutesService, Tier, StaticRoute } from 'client';
+import { V1TiersService, V1NetworkStaticRoutesService, Tier, StaticRoute, V1DatacentersService } from 'client';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { EntityService } from 'src/app/services/entity.service';
@@ -16,6 +16,7 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 jest.mock('src/app/utils/SubscriptionUtil');
 
@@ -25,6 +26,7 @@ describe('StaticRouteDetailComponent', () => {
   let tierService: V1TiersService;
   let staticRouteService: V1NetworkStaticRoutesService;
   let entityService: EntityService;
+  let datacenterService: V1DatacentersService;
   let ngx: NgxSmartModalService;
   const datacenterSubject = new Subject<any>();
 
@@ -35,7 +37,7 @@ describe('StaticRouteDetailComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [
         StaticRouteDetailComponent,
         YesNoModalComponent,
@@ -50,6 +52,7 @@ describe('StaticRouteDetailComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1NetworkStaticRoutesService),
         MockProvider(V1TiersService),
+        MockProvider(V1DatacentersService),
         {
           provide: DatacenterContextService,
           useValue: { currentDatacenter: datacenterSubject.asObservable() },
@@ -69,6 +72,9 @@ describe('StaticRouteDetailComponent', () => {
     staticRouteService = TestBed.inject(V1NetworkStaticRoutesService);
     entityService = TestBed.inject(EntityService);
     ngx = TestBed.inject(NgxSmartModalService);
+    datacenterService = TestBed.inject(V1DatacentersService);
+    // Default mock: datacenter lookup returns the mock tier so ngOnInit can proceed safely
+    jest.spyOn(datacenterService, 'getOneDatacenter').mockReturnValue(of({ tiers: [mockTier] } as any));
     fixture.detectChanges();
   });
 
@@ -176,18 +182,14 @@ describe('StaticRouteDetailComponent', () => {
   describe('getStaticRoutes', () => {
     it('should populate data on success', () => {
       const mockRoutes = [{ id: 'sr-1' }, { id: 'sr-2' }];
-      jest.spyOn(tierService, 'getOneTier').mockReturnValue(of({ ...mockTier, staticRoutes: mockRoutes } as any));
+      jest.spyOn(staticRouteService, 'getManyStaticRoute').mockReturnValue(of({ data: mockRoutes } as any));
       component.getStaticRoutes();
       expect(component.staticRoutes.data).toEqual(mockRoutes);
       expect(component.isLoading).toBe(false);
     });
 
     it('should set staticRoutes to null on error', () => {
-      jest.spyOn(tierService, 'getOneTier').mockImplementation(() => {
-        return {
-          subscribe: (_next, error) => error(),
-        } as any;
-      });
+      jest.spyOn(staticRouteService, 'getManyStaticRoute').mockReturnValue(throwError(() => new Error('boom')) as any);
       component.getStaticRoutes();
       expect(component.staticRoutes).toBeNull();
     });
@@ -206,6 +208,8 @@ describe('StaticRouteDetailComponent', () => {
   describe('ngOnInit', () => {
     it('should set Id and fetch routes when datacenter present', () => {
       const refreshSpy = jest.spyOn(component, 'getStaticRoutes').mockImplementation();
+      // Ensure datacenter lookup returns a tier matching the route id
+      (datacenterService.getOneDatacenter as jest.Mock).mockReturnValueOnce(of({ tiers: [mockTier] } as any));
       datacenterSubject.next({ id: 'dc-1' });
       expect(component.Id).toBe('tier-1');
       expect(refreshSpy).toHaveBeenCalled();

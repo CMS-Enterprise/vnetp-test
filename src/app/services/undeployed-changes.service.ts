@@ -27,8 +27,8 @@ export class UndeployedChangesService {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.setupSubscriptions();
     this.setupRouteModeListener();
+    this.setupSubscriptions();
     // Get undeployed changes every 30 seconds.
     setInterval(() => {
       this.getUndeployedChanges();
