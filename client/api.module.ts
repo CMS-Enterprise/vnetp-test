@@ -52,7 +52,6 @@ import { V2AppCentricEndpointsService } from './api/v2AppCentricEndpoints.servic
 import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
 import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
 import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';
-import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfiles.service';
 import { V2AppCentricSelectorsService } from './api/v2AppCentricSelectors.service';
 import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';

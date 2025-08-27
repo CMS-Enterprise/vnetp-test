@@ -81,7 +81,6 @@ export enum AuditLogEntityTypeEnum {
     FilterEntry = 'FilterEntry',
     Subject = 'Subject',
     Vrf = 'Vrf',
-    RouteProfile = 'RouteProfile',
     Selector = 'Selector',
     WanForm = 'WanForm',
     ExternalRoute = 'ExternalRoute',

@@ -44,8 +44,12 @@ export class TenantV2NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentTenantSubscription.unsubscribe();
-    this.currentUserSubscription.unsubscribe();
+    if (this.currentTenantSubscription) {
+      this.currentTenantSubscription.unsubscribe();
+    }
+    if (this.currentUserSubscription) {
+      this.currentUserSubscription.unsubscribe();
+    }
   }
 
   public openLogoutModal(): void {
