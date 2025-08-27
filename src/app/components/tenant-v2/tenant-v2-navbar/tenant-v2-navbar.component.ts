@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AuthService } from '../../../services/auth.service';
 import { Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './tenant-v2-navbar.component.html',
   styleUrls: ['./tenant-v2-navbar.component.scss'],
 })
-export class TenantV2NavbarComponent implements OnInit {
+export class TenantV2NavbarComponent implements OnInit, OnDestroy {
   public user: any;
   public tenant: string;
   public userRoles: string[];
@@ -41,6 +41,11 @@ export class TenantV2NavbarComponent implements OnInit {
         }
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.currentTenantSubscription.unsubscribe();
+    this.currentUserSubscription.unsubscribe();
   }
 
   public openLogoutModal(): void {
