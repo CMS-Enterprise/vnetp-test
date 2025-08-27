@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/adminV2AppCentricTenants.service.ts
@@ -53,7 +52,6 @@ api/v2AppCentricEndpoints.service.ts
 api/v2AppCentricFilterEntries.service.ts
 api/v2AppCentricFilters.service.ts
 api/v2AppCentricL3outs.service.ts
-api/v2AppCentricRouteProfiles.service.ts
 api/v2AppCentricSelectors.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
@@ -109,7 +107,6 @@ model/createManyNatRuleDto.ts
 model/createManyNatRuleGroupDto.ts
 model/createManyNetworkObjectDto.ts
 model/createManyNetworkObjectGroupDto.ts
-model/createManyRouteProfileDto.ts
 model/createManySelectorDto.ts
 model/createManyServiceObjectDto.ts
 model/createManyServiceObjectGroupDto.ts
@@ -192,7 +189,6 @@ model/getManyNatRuleGroupResponseDto.ts
 model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
 model/getManyNetworkObjectResponseDto.ts
-model/getManyRouteProfileResponseDto.ts
 model/getManySelectorResponseDto.ts
 model/getManyServiceObjectGroupResponseDto.ts
 model/getManyServiceObjectResponseDto.ts
@@ -252,7 +248,6 @@ model/paginationDTO.ts
 model/panosApplication.ts
 model/panosApplicationReferences.ts
 model/poolImportCollectionDto.ts
-model/routeProfile.ts
 model/ruleOperationDto.ts
 model/selector.ts
 model/selfService.ts

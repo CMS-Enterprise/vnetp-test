@@ -21,15 +21,14 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 const tabs: Tab[] = [
+  { name: 'VRF', route: ['vrf'], id: 'vrf' },
+  { name: 'L3 Outs', route: ['l3-outs'], id: 'l3-outs' },
+  { name: 'Bridge Domain', route: ['bridge-domain'], id: 'bridge-domain' },
   { name: 'Application Profile', route: ['application-profile'], id: 'application-profile' },
   { name: 'Endpoint Group', route: ['endpoint-group'], id: 'endpoint-group' },
   { name: 'Endpoint Security Group', route: ['endpoint-security-group'], id: 'endpoint-security-group' },
-  { name: 'Bridge Domain', route: ['bridge-domain'], id: 'bridge-domain' },
   { name: 'Contract', route: ['contract'], id: 'contract' },
   { name: 'Filter', route: ['filter'], id: 'filter' },
-  { name: 'L3 Outs', route: ['l3-outs'], id: 'l3-outs' },
-  { name: 'VRF', route: ['vrf'], id: 'vrf' },
-  { name: 'Route Profile', route: ['route-profile'], id: 'route-profile' },
   {
     name: 'Internal Firewall',
     tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
@@ -592,12 +591,12 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Fallback to first tab
       const fallbackTab = this.tabs[0];
-      this.currentTab = fallbackTab?.name || 'Application Profile';
+      this.currentTab = fallbackTab?.name || 'VRF';
       this.initialSubTab = null;
       return 0;
     } catch (error) {
       const errorFallbackTab = this.tabs[0];
-      this.currentTab = errorFallbackTab?.name || 'Application Profile';
+      this.currentTab = errorFallbackTab?.name || 'VRF';
       this.initialSubTab = null;
       return 0;
     }
