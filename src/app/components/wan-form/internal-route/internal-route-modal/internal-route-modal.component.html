@@ -77,10 +77,10 @@
               </span>
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="submitted && f.appcentricSubnetId.errors">
+            <ng-container *ngIf="f.appcentricSubnetId.errors.required">Subnet is required</ng-container>
+          </mat-error>
         </mat-form-field>
-        <mat-error *ngIf="submitted && f.appcentricSubnetId.errors">
-          <ng-container *ngIf="f.appcentricSubnetId.errors.required">Subnet is required</ng-container>
-        </mat-error>
       </div>
     </div>
 
