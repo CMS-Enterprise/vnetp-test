@@ -23,7 +23,7 @@ export interface LoadBalancerProfile {
     description?: string;
     type: LoadBalancerProfileTypeEnum;
     properties: object;
-    reverseProxy: string;
+    readonly reverseProxy?: LoadBalancerProfileReverseProxyEnum;
     key: string;
     certificate: string;
     tierId: string;
@@ -31,6 +31,11 @@ export interface LoadBalancerProfile {
 export enum LoadBalancerProfileTypeEnum {
     ClientSsl = 'ClientSSL',
     Http = 'Http'
+};
+export enum LoadBalancerProfileReverseProxyEnum {
+    Explicit = 'Explicit',
+    Reverse = 'Reverse',
+    Transparent = 'Transparent'
 };
 
 
