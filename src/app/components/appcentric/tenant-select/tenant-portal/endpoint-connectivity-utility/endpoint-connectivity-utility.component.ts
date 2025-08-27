@@ -106,8 +106,8 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       tenantId: this.tenantId,
     };
 
-    this.utilitiesService.generateConnectivityReportUtilities({ endpointConnectivityQuery: query }).subscribe(
-      (result: EndpointConnectionUtilityResponse) => {
+    this.utilitiesService.generateConnectivityReportUtilities({ endpointConnectivityQuery: query }).subscribe({
+      next: (result: EndpointConnectionUtilityResponse) => {
         this.isLoading = false;
         this.connectivityResult = result;
 
@@ -118,11 +118,11 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
           this.connectivityResult.connectionTrace.fullPath = [];
         }
       },
-      error => {
+      error: err => {
         this.isLoading = false;
-        this.error = error.message || 'An error occurred while testing connectivity';
+        this.error = err.message || 'An error occurred while testing connectivity';
       },
-    );
+    });
   }
 
   // Reset the form

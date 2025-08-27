@@ -12,105 +12,86 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="form-control"
-          [class.is-invalid]="submitted && f.name.errors"
-          aria-label="name"
-        />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
-        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="name" aria-label="Name" />
+          <mat-error *ngIf="submitted && f.name.errors">
+            <ng-container *ngIf="f.name.errors.required">Name is required</ng-container>
+            <ng-container *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</ng-container>
+            <ng-container *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</ng-container>
+            <ng-container *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</ng-container>
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group">
-        <label for="description">Description</label>
-        <input
-          type="text"
-          id="description"
-          formControlName="description"
-          class="form-control"
-          [class.is-invalid]="submitted && f.description.errors"
-          aria-label="Description"
-        />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
-        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Description</mat-label>
+          <input matInput type="text" formControlName="description" aria-label="Description" />
+          <mat-error *ngIf="submitted && f.description.errors">
+            <ng-container *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</ng-container>
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group">
-        <label for="exportedToVrfs">ExportedTo Vrfs</label>
-        <ng-select
-          [items]="vrfOptions"
-          [multiple]="true"
-          [closeOnSelect]="false"
-          bindLabel="label"
-          bindValue="value"
-          formControlName="exportedToVrfs"
-          [class.is-invalid]="submitted && f.exportedToVrfs.errors"
-        >
-          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-            <input type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{ standalone: true }" />
-            {{ item.label }}
-          </ng-template>
-        </ng-select>
-        <div *ngIf="submitted && f.exportedToVrfs.errors" class="invalid-feedback">
-          <div *ngIf="f.exportedToVrfs.errors.required">Exported To Vrfs is required</div>
-        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>ExportedTo VRFs</mat-label>
+          <mat-select formControlName="exportedToVrfs" multiple>
+            <mat-option *ngFor="let opt of vrfOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="submitted && f.exportedToVrfs.errors">
+            <ng-container *ngIf="f.exportedToVrfs.errors.required">Exported To Vrfs is required</ng-container>
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group" *ngIf="applicationMode === 'netcentric'">
-        <label for="netcentricSubnet">Subnet</label>
-        <select
-          id="netcentricSubnet"
-          formControlName="netcentricSubnetId"
-          class="form-control"
-          [class.is-invalid]="submitted && f.netcentricSubnetId.errors"
-          aria-label="Netcentric Subnet"
-        >
-          <option *ngFor="let subnet of availableNetcentricSubnets" [value]="subnet.id">
-            {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlan?.name }}, Tier:
-            {{ subnet.tier?.name }}, Shared: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }})
-          </option>
-        </select>
-        <div *ngIf="submitted && f.netcentricSubnetId.errors" class="invalid-feedback">
-          <div *ngIf="f.netcentricSubnetId.errors.required">Subnet is required</div>
-        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Subnet</mat-label>
+          <mat-select formControlName="netcentricSubnetId" aria-label="Netcentric Subnet">
+            <mat-option *ngFor="let subnet of availableNetcentricSubnets" [value]="subnet.id">
+              {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlan?.name }}, Tier:
+              {{ subnet.tier?.name }}, Shared: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }})
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="submitted && f.netcentricSubnetId.errors">
+            <ng-container *ngIf="f.netcentricSubnetId.errors.required">Subnet is required</ng-container>
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group" *ngIf="applicationMode === ApplicationMode.APPCENTRIC || applicationMode === ApplicationMode.TENANTV2">
         <label for="appcentricSubnet">Subnet</label>
-        <select
-          id="appcentricSubnet"
-          formControlName="appcentricSubnetId"
-          class="form-control"
-          [class.is-invalid]="submitted && f.appcentricSubnetId.errors"
-          aria-label="Appcentric Subnet"
-        >
-          <option *ngFor="let subnet of availableAppcentricSubnets" [value]="subnet.id">
-            {{ subnet.name }} - {{ subnet.alias }} - {{ subnet.description }} (Gateway IP: {{ subnet.gatewayIp }}, Treat As Virtual IP
-            Address: {{ subnet.treatAsVirtualIpAddress ? 'Yes' : 'No' }}, Primary IP Address: {{ subnet.primaryIpAddress ? 'Yes' : 'No' }},
-            Advertised Externally: {{ subnet.advertisedExternally ? 'Yes' : 'No' }}, Preferred: {{ subnet.preferred ? 'Yes' : 'No' }},
-            Shared Between VRFs: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }}, IP Data Plane Learning:
-            {{ subnet.ipDataPlaneLearning ? 'Yes' : 'No' }}, Tenant: {{ subnet.tenant?.name }}, Bridge Domain:
-            {{ subnet.bridgeDomain.name }})
-          </option>
-        </select>
-        <div *ngIf="submitted && f.appcentricSubnetId.errors" class="invalid-feedback">
-          <div *ngIf="f.appcentricSubnetId.errors.required">Subnet is required</div>
-        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Subnet</mat-label>
+          <mat-select id="appcentricSubnet" formControlName="appcentricSubnetId" aria-label="Appcentric Subnet">
+            <mat-option
+              *ngFor="let subnet of availableAppcentricSubnets"
+              [value]="subnet.id"
+              [disabled]="!subnet.advertisedExternally"
+              [attr.aria-disabled]="!subnet.advertisedExternally"
+            >
+              <span [matTooltip]="'This subnet is not advertised externally'" [matTooltipDisabled]="subnet.advertisedExternally">
+                {{ subnet.name }} - {{ subnet.alias }} - {{ subnet.description }} (Gateway IP: {{ subnet.gatewayIp }}, Treat As Virtual IP
+                Address: {{ subnet.treatAsVirtualIpAddress ? 'Yes' : 'No' }}, Primary IP Address:
+                {{ subnet.primaryIpAddress ? 'Yes' : 'No' }}, Advertised Externally: {{ subnet.advertisedExternally ? 'Yes' : 'No' }},
+                Preferred: {{ subnet.preferred ? 'Yes' : 'No' }}, Shared Between VRFs: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }}, IP
+                Data Plane Learning: {{ subnet.ipDataPlaneLearning ? 'Yes' : 'No' }}, Tenant: {{ subnet.tenant?.name }}, Bridge Domain:
+                {{ subnet.bridgeDomain.name }})
+              </span>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="submitted && f.appcentricSubnetId.errors">
+            <ng-container *ngIf="f.appcentricSubnetId.errors.required">Subnet is required</ng-container>
+          </mat-error>
+        </mat-form-field>
       </div>
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
-      <button class="btn btn-success" data-dismiss="modal">
+      <button type="button" mat-button (click)="closeModal()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>

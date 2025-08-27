@@ -16,6 +16,11 @@ import { DatacenterContextService } from '../../../../services/datacenter-contex
 import { InternalRouteModalComponent } from './internal-route-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 describe('InternalRouteModalComponent', () => {
   let component: InternalRouteModalComponent;
@@ -91,7 +96,7 @@ describe('InternalRouteModalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, NgSelectModule],
+      imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, MatTooltipModule, NoopAnimationsModule],
       declarations: [InternalRouteModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },

@@ -62,9 +62,8 @@ export class EndpointSecurityGroupComponent implements OnInit {
       { name: 'Vrf', template: () => this.vrfTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
-    // TODO: Implement appcentric aci runtime
-    // expandableRows: () => this.expandedRows,
   };
+
   constructor(
     private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private tableContextService: TableContextService,

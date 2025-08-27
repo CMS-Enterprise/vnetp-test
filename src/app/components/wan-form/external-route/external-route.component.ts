@@ -144,6 +144,28 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Disable add when available route tag matches parent VRF external BGP ASN
+  public isRouteBgpTagBlocked(route: GlobalExternalRoute): boolean {
+    if (!route) {
+      return false;
+    }
+    const routeTagString = route.tag != null ? String(route.tag) : '';
+    const parentAsnString = this.parentVrf?.externalBgpAsn != null ? String(this.parentVrf.externalBgpAsn) : '';
+    return routeTagString !== '' && parentAsnString !== '' && routeTagString === parentAsnString;
+  }
+
+  public getAddRouteTooltip(route: GlobalExternalRoute): string {
+    if (this.isRouteBgpTagBlocked(route)) {
+      return 'Add disabled: route tag matches the parent VRF external BGP ASN';
+    }
+
+    if (String(route.externalVrf) === String(this.parentVrf.defaultExternalVrf)) {
+      return 'This is the default external VRF and cannot be added';
+    }
+
+    return 'Add Route to Wan Form';
+  }
+
   public restoreRoute(route: ExternalRoute): void {
     this.externalRouteService.restoreOneExternalRoute({ id: route.id }).subscribe(() => {
       this.getAllRoutes();

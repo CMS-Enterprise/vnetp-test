@@ -1,7 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerProfile, LoadBalancerProfileTypeEnum, V1LoadBalancerProfilesService } from 'client';
+import {
+  LoadBalancerProfile,
+  LoadBalancerProfileReverseProxyEnum,
+  LoadBalancerProfileTypeEnum,
+  V1LoadBalancerProfilesService,
+} from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { ProfileModalDto } from './profile-modal.dto';
@@ -19,7 +24,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   public submitted: boolean;
   public ProfileType = LoadBalancerProfileTypeEnum;
 
-  public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => ProfileReverseProxyType[k]);
+  public reverseProxyTypes: LoadBalancerProfileReverseProxyEnum[] = Object.values(LoadBalancerProfileReverseProxyEnum);
   public privateKeyCipher: string;
 
   private profileId: string;
@@ -213,11 +218,4 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
       certificate.updateValueAndValidity();
     });
   }
-}
-
-// TODO: Generate from API
-export enum ProfileReverseProxyType {
-  Explicit = 'Explicit',
-  Reverse = 'Reverse',
-  Transparent = 'Transparent',
 }

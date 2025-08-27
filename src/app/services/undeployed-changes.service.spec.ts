@@ -3,6 +3,7 @@ import { of } from 'rxjs';
 import { UndeployedChangesService } from './undeployed-changes.service';
 import { DatacenterContextService } from './datacenter-context.service';
 import { V1TiersService } from '../../../client';
+import { ActivatedRoute } from '@angular/router';
 
 // Mock dependencies
 const mockDatacenterContextService = {
@@ -22,6 +23,7 @@ describe('UndeployedChangesService', () => {
         UndeployedChangesService,
         { provide: DatacenterContextService, useValue: mockDatacenterContextService },
         { provide: V1TiersService, useValue: mockV1TiersService },
+        { provide: ActivatedRoute, useValue: { snapshot: { data: { mode: 'netcentric' } } } },
       ],
     });
 

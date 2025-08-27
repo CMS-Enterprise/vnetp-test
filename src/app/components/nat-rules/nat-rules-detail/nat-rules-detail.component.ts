@@ -269,9 +269,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         sort: ['ruleIndex,DESC'],
       })
       .subscribe(response => {
-        // TODO: Review this approach, see if we can resolve
-        // this in the generated client.
-        if (response.data[0]) {
+        if (response.data?.[0]) {
           this.latestRuleIndex = response.data[0].ruleIndex;
         }
       });
