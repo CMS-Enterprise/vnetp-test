@@ -11,7 +11,6 @@ import {
   L3Out,
   NetworkObject,
   NetworkObjectGroup,
-  RouteProfile,
   ServiceObject,
   ServiceObjectGroup,
   Tier,
@@ -23,7 +22,6 @@ import {
   V1TiersService,
   V2AppCentricApplicationProfilesService,
   V2AppCentricL3outsService,
-  V2AppCentricRouteProfilesService,
   V2AppCentricTenantsService,
   Vrf,
 } from 'client';
@@ -112,7 +110,6 @@ export class AuditLogComponent implements OnInit {
   public showingAppCentricLogs = true;
   selectedAuditLog;
 
-  routeProfiles: RouteProfile[];
   l3Outs: L3Out[];
   appProfiles: ApplicationProfile[];
   bridgeDomains: BridgeDomain[];
@@ -136,7 +133,6 @@ export class AuditLogComponent implements OnInit {
     private route: ActivatedRoute,
     private appCentricTenantService: V2AppCentricTenantsService,
     private appProfileService: V2AppCentricApplicationProfilesService,
-    private routeProfileService: V2AppCentricRouteProfilesService,
     private l3OutService: V2AppCentricL3outsService,
   ) {
     // We'll determine the mode in ngOnInit after we have access to route data
@@ -148,18 +144,13 @@ export class AuditLogComponent implements OnInit {
       fields: ['id,name'],
       perPage: 50000,
     });
-    const routeProfileRequest = this.routeProfileService.getManyRouteProfile({
-      fields: ['id,name'],
-      perPage: 50000,
-    });
     const l3OutRequest = this.l3OutService.getManyL3Out({
       fields: ['id,name'],
       perPage: 50000,
     });
-    forkJoin([appProfileRequest, routeProfileRequest, l3OutRequest]).subscribe((result: unknown) => {
+    forkJoin([appProfileRequest, l3OutRequest]).subscribe((result: unknown) => {
       this.appProfiles = (result as ApplicationProfile)[0];
-      this.routeProfiles = (result as RouteProfile)[1];
-      this.l3Outs = (result as L3Out)[2];
+      this.l3Outs = (result as L3Out)[1];
       this.getAppCentricAuditLogs();
     });
   }
@@ -246,14 +237,6 @@ export class AuditLogComponent implements OnInit {
                   let beforeMatch;
                   let afterMatch;
                   const lowerCaseKey = key.toLocaleLowerCase();
-                  if (lowerCaseKey === 'routeprofileid') {
-                    beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.routeProfiles);
-                    beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                    beforeValue = beforeMatch;
-                    afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.routeProfiles);
-                    afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                    afterValue = afterMatch;
-                  }
                   if (lowerCaseKey.includes('consumedcontractid')) {
                     beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.consumedContracts);
                     beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
