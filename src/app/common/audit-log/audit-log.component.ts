@@ -150,7 +150,7 @@ export class AuditLogComponent implements OnInit {
     });
     forkJoin([appProfileRequest, l3OutRequest]).subscribe((result: unknown) => {
       this.appProfiles = (result as ApplicationProfile)[0];
-      this.l3Outs = (result as L3Out)[2];
+      this.l3Outs = (result as L3Out)[1];
       this.getAppCentricAuditLogs();
     });
   }
