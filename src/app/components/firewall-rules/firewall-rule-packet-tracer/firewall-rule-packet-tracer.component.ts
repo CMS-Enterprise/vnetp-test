@@ -25,6 +25,8 @@ type FirewallRulePacketTracerChecklist = {
   protocolMatch: boolean;
   enabledMatch: boolean;
   softDeleted: boolean;
+  serviceObjectMatch: boolean;
+  serviceObjectGroupMatch: boolean;
 };
 
 @Component({
@@ -72,7 +74,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   isExactMatch(rule: FirewallRulePacketTracerOutput): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { softDeleted, ...otherValues } = rule.checkList;
-    return Object.values(otherValues).every(value => value === true);
+    return Object.values(otherValues).every(value => value === true || value === null);
   }
 
   isPartialMatch(rule: FirewallRulePacketTracerOutput): boolean {
@@ -118,6 +120,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         destInRange: this.handleInRange(rule, 'destination', this.form.controls.destinationIpAddress),
         sourcePortMatch: this.handlePortMatch(rule, 'source', this.form.controls.sourcePorts),
         destPortMatch: this.handlePortMatch(rule, 'destination', this.form.controls.destinationPorts),
+        serviceObjectMatch: this.handleServiceObjectMatch(rule, this.form.controls.serviceObject),
+        serviceObjectGroupMatch: this.handleServiceObjectGroupMatch(rule, this.form.controls.serviceObjectGroup),
         directionMatch: this.form.controls.direction.value === rule.direction,
         protocolMatch: this.form.controls.protocol.value === rule.protocol,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
@@ -135,6 +139,34 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.resetFilter();
     this.applyFilter();
     this.toastrService.success('Packet Tracer Executed.');
+  }
+
+  handleServiceObjectMatch(rule: FirewallRule, control) {
+    const formServiceObjectValue = control?.value;
+
+    if (!formServiceObjectValue || !rule.serviceObject) {
+      return null;
+    }
+
+    if (rule.serviceObject.name === formServiceObjectValue) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  handleServiceObjectGroupMatch(rule: FirewallRule, control) {
+    const formServiceObjectGroupValue = control?.value;
+
+    if (!formServiceObjectGroupValue || !rule.serviceObjectGroup) {
+      return null;
+    }
+
+    if (rule.serviceObjectGroup.name === formServiceObjectGroupValue) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
@@ -217,6 +249,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const formIpValue = control.value;
     const ruleNetworkObject = location === 'source' ? rule.sourceNetworkObject : rule.destinationNetworkObject;
 
+    // check if form value (now accepts string) matches ruleNetworkObject.name
+    if (formIpValue === ruleNetworkObject.name) {
+      return true;
+    }
+
     // Check if ruleNetworkObject is an IP/Subnet
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
@@ -252,6 +289,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const formIpValue = control.value;
     const ruleNetworkObjectGroupId = location === 'source' ? rule.sourceNetworkObjectGroupId : rule.destinationNetworkObjectGroupId;
     const ruleNetworkObjectGroup = this.getNetworkObjectGroup(ruleNetworkObjectGroupId);
+
+    // check if form value (now accepts string) matches ruleNetworkObjectGroup.name
+    if (formIpValue === ruleNetworkObjectGroup.name) {
+      return true;
+    }
 
     const networkObjectMembers = ruleNetworkObjectGroup.networkObjects;
 
@@ -363,11 +405,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       direction: [''],
       protocol: [''],
       enabled: [true],
-      sourceIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      destinationIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      sourceIpAddress: ['', Validators.compose([Validators.required])],
+      destinationIpAddress: ['', Validators.compose([Validators.required])],
 
       sourcePorts: ['', ValidatePortNumber],
       destinationPorts: ['', ValidatePortNumber],
+      serviceObject: [''],
+      serviceObjectGroup: [''],
     });
     this.setFormValidators();
   }

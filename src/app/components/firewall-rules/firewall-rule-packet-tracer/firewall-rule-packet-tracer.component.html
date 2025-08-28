@@ -39,11 +39,13 @@
             <th scope="col">Enabled Match</th>
             <th scope="col">Source Port Match</th>
             <th scope="col">Dest Port Match</th>
+            <th scope="col">Service Object Match</th>
+            <th scope="col">Service Object Group Match</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="filteredRules && filteredRules?.length === 0" class="text-center">
-            <td [attr.colspan]="8">No Matches</td>
+            <td [attr.colspan]="11">No Matches</td>
           </tr>
           <tr *ngFor="let rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
@@ -94,10 +96,20 @@
                 {{ rule.checkList.destPortMatch }}
               </span>
             </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.serviceObjectMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.serviceObjectMatch }}
+              </span>
+            </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.serviceObjectGroupMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.serviceObjectGroupMatch }}
+              </span>
+            </td>
           </tr>
         </tbody>
         <tfoot>
-          <td [attr.colspan]="8">
+          <td [attr.colspan]="11">
             <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event"></pagination-controls>
           </td>
         </tfoot>
@@ -175,7 +187,7 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="sourceIpAddress">Source IP</label>
+          <label for="sourceIpAddress">Source IP/Name</label>
           <input
             type="text"
             formControlName="sourceIpAddress"
@@ -194,7 +206,7 @@
 
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="destinationIpAddress">Destination IP</label>
+          <label for="destinationIpAddress">Destination IP/Name</label>
           <input
             type="text"
             id="destinationIpAddress"
@@ -244,6 +256,36 @@
               <div *ngIf="f.destinationPorts.errors.required">Destination Port is required</div>
               <div *ngIf="f.destinationPorts.errors.invalidPortNumber">Destination Port must be between 1-65535</div>
               <div *ngIf="f.destinationPorts.errors.portRangeNotAllowed">Port range not allowed</div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="serviceObject">Service Object Name</label>
+            <input
+              type="text"
+              id="serviceObject"
+              formControlName="serviceObject"
+              class="form-control"
+              [class.is-invalid]="submitted && f.serviceObject.errors"
+              aria-label="Service Object"
+            />
+            <div *ngIf="submitted && f.serviceObject.errors" class="invalid-feedback">
+              <div *ngIf="f.serviceObject.errors.required">Service Object</div>
+              <div *ngIf="f.serviceObject.errors.portRangeNotAllowed">Port range not allowed</div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="serviceObjectGroup">Service Object Group Name</label>
+            <input
+              type="text"
+              id="serviceObjectGroup"
+              formControlName="serviceObjectGroup"
+              class="form-control"
+              [class.is-invalid]="submitted && f.serviceObjectGroup.errors"
+              aria-label="Service Object Group"
+            />
+            <div *ngIf="submitted && f.serviceObjectGroup.errors" class="invalid-feedback">
+              <div *ngIf="f.serviceObjectGroup.errors.required">Service Object Group</div>
+              <div *ngIf="f.serviceObjectGroup.errors.portRangeNotAllowed">Port range not allowed</div>
             </div>
           </div>
         </div>
