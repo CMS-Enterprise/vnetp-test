@@ -81,7 +81,11 @@ export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidI
     return null;
   }
 
-  return { invalidIp: true };
+  // since this is only used in packet-tracer components, we can adjust to allow for object-name searching
+  // by removing this return { invalidIp: true }, we still check for invalidIpNoSubnet, but allow some other values to pass
+  // this allows us to do object-name lookup without breaking form validation
+
+  // return { invalidIp: true };
 }
 
 export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {

@@ -26,6 +26,8 @@ type NatRulePacketTracerCheckList = {
   biDirectionalMatch: boolean;
   enabledMatch: boolean;
   softDeleted: boolean;
+  originalServiceObjectMatch: boolean;
+  translatedServiceObjectMatch: boolean;
 };
 
 type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination';
@@ -72,7 +74,7 @@ export class NatRulePacketTracerComponent implements OnInit {
   isExactMatch(rule: NatRulePacketTracerOutput): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { softDeleted, ...otherValues } = rule.checkList;
-    return Object.values(otherValues).every(value => value === true);
+    return Object.values(otherValues).every(value => value === true || value === null);
   }
 
   isPartialMatch(rule: NatRulePacketTracerOutput): boolean {
@@ -151,6 +153,11 @@ export class NatRulePacketTracerComponent implements OnInit {
         break;
     }
 
+    // check if form value (now accepts string) matches ruleNetworkObject.name
+    if (formIpValue === ruleNetworkObject.name) {
+      return true;
+    }
+
     // Check if ruleNetworkObject is an IP/Subnet
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
@@ -201,6 +208,11 @@ export class NatRulePacketTracerComponent implements OnInit {
     }
     const ruleNetworkObjectGroup = this.getNetworkObjectGroup(ruleNetworkObjectGroupId);
 
+    // check if form value (now accepts string) matches ruleNetworkObjectGroup.name
+    if (formIpValue === ruleNetworkObjectGroup.name) {
+      return true;
+    }
+
     const networkObjectMembers = ruleNetworkObjectGroup.networkObjects;
 
     return networkObjectMembers.some(sourceMember => {
@@ -236,6 +248,34 @@ export class NatRulePacketTracerComponent implements OnInit {
 
   getNetworkObjectGroup(id): NetworkObjectGroup {
     return this.objects.networkObjectGroups.find(obj => obj.id === id);
+  }
+
+  handleOriginalServiceObjectMatch(rule: NatRule, control: AbstractControl) {
+    const formServiceObjectValue = control?.value;
+
+    if (!formServiceObjectValue || !rule.originalServiceObject) {
+      return null;
+    }
+
+    if (rule.originalServiceObject.name === formServiceObjectValue) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  handleTranslatedServiceObjectMatch(rule: NatRule, control: AbstractControl) {
+    const formServiceObjectValue = control?.value;
+
+    if (!formServiceObjectValue || !rule.translatedServiceObject) {
+      return null;
+    }
+
+    if (rule.translatedServiceObject.name === formServiceObjectValue) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   handleServiceObjectPortMatch(
@@ -321,6 +361,8 @@ export class NatRulePacketTracerComponent implements OnInit {
           'destination',
           this.form.controls.translatedDestinationPort,
         ),
+        originalServiceObjectMatch: this.handleOriginalServiceObjectMatch(rule, this.form.controls.originalServiceObject),
+        translatedServiceObjectMatch: this.handleTranslatedServiceObjectMatch(rule, this.form.controls.translatedServiceObject),
 
         directionMatch: this.form.controls.direction.value === rule.direction,
         biDirectionalMatch: this.form.controls.biDirectional.value === rule.biDirectional,
@@ -353,6 +395,8 @@ export class NatRulePacketTracerComponent implements OnInit {
       translatedDestinationIp: ['', IsIpV4NoSubnetValidator],
       translatedSourcePort: ['', ValidatePortNumber],
       translatedDestinationPort: ['', ValidatePortNumber],
+      originalServiceObject: [''],
+      translatedServiceObject: [''],
     });
   }
 

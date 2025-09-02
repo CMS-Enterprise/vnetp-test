@@ -3,7 +3,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { ValidatePortNumber } from 'src/app/validators/network-form-validators';
+import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
@@ -141,7 +141,15 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.toastrService.success('Packet Tracer Executed.');
   }
 
-  handleServiceObjectMatch(rule: FirewallRule, control) {
+  // handleNetworkObjectMatch(rule: FirewallRule, control) {
+  //   const formNetworkObjectValue = control.value;
+
+  //   if (formNetworkObjectValue || !rule.sourceNetworkObject) {
+  //     return
+  //   }
+  // }
+
+  handleServiceObjectMatch(rule: FirewallRule, control: AbstractControl) {
     const formServiceObjectValue = control?.value;
 
     if (!formServiceObjectValue || !rule.serviceObject) {
@@ -155,7 +163,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }
   }
 
-  handleServiceObjectGroupMatch(rule: FirewallRule, control) {
+  handleServiceObjectGroupMatch(rule: FirewallRule, control: AbstractControl) {
     const formServiceObjectGroupValue = control?.value;
 
     if (!formServiceObjectGroupValue || !rule.serviceObjectGroup) {
@@ -405,8 +413,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       direction: [''],
       protocol: [''],
       enabled: [true],
-      sourceIpAddress: ['', Validators.compose([Validators.required])],
-      destinationIpAddress: ['', Validators.compose([Validators.required])],
+      sourceIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      destinationIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      sourceObjectName: [''],
+      destinationObjectName: [''],
 
       sourcePorts: ['', ValidatePortNumber],
       destinationPorts: ['', ValidatePortNumber],

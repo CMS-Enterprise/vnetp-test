@@ -42,11 +42,13 @@
             <th scope="col">Direction Match</th>
             <th scope="col">biDirectional Match</th>
             <th scope="col">Enabled Match</th>
+            <th scope="col">Original Service Object Match</th>
+            <th scope="col">Translated Service Object Group Match</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="filteredRules && filteredRules?.length === 0" class="text-center">
-            <td [attr.colspan]="12">No Matches</td>
+            <td [attr.colspan]="14">No Matches</td>
           </tr>
           <tr *ngFor="let rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
@@ -112,10 +114,20 @@
                 {{ rule.checkList.enabledMatch }}
               </span>
             </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.originalServiceObjectMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.originalServiceObjectMatch }}
+              </span>
+            </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.translatedServiceObjectMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.translatedServiceObjectMatch }}
+              </span>
+            </td>
           </tr>
         </tbody>
         <tfoot>
-          <td [attr.colspan]="12">
+          <td [attr.colspan]="14">
             <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event"></pagination-controls>
           </td>
         </tfoot>
@@ -340,6 +352,32 @@
             <div *ngIf="f.translatedDestinationPort.errors.required">Translated Destination Port is required</div>
             <div *ngIf="f.translatedDestinationPort.errors.portRangeNotAllowed">Port range not allowed</div>
           </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="originalServiceObject">Original Service Object Name</label>
+          <input
+            type="text"
+            id="originalServiceObject"
+            formControlName="originalServiceObject"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalServiceObject.errors"
+            aria-label="Original Service Object"
+          />
+          <div *ngIf="submitted && f.originalServiceObject.errors" class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="translatedServiceObject">Translated Service Object Name</label>
+          <input
+            type="text"
+            id="translatedServiceObject"
+            formControlName="translatedServiceObject"
+            class="form-control"
+            [class.is-invalid]="submitted && f.translatedServiceObject.errors"
+            aria-label="Translated Service Objecr"
+          />
+          <div *ngIf="submitted && f.translatedServiceObject.errors" class="invalid-feedback"></div>
         </div>
       </div>
     </div>
