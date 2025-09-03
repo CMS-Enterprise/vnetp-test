@@ -11,10 +11,9 @@
  */
 import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
-import { UnderlayAllocation } from './underlayAllocation';
 import { Tier } from './tier';
+import { ServiceGraph } from './serviceGraph';
 import { BridgeDomain } from './bridgeDomain';
-import { WanForm } from './wanForm';
 
 
 export interface Vrf { 
@@ -39,58 +38,12 @@ export interface Vrf {
     readonly tenant?: Tenant;
     tenantId: string;
     readonly l3outs?: Array<L3Out>;
+    readonly serviceGraphs?: Array<ServiceGraph>;
     readonly bridgeDomains?: Array<BridgeDomain>;
     readonly internalNetworkServicesTier?: Tier;
     readonly externalNetworkServicesTier?: Tier;
     readonly tenantVersion?: number;
-    readonly wanForm?: WanForm;
-    externalVrfs?: Array<VrfExternalVrfsEnum>;
-    defaultExternalVrf?: VrfDefaultExternalVrfEnum;
-    hostBasedRoutesToExternalVrfs?: boolean;
     maxExternalRoutes?: number;
-    internalBgpAsn?: number;
-    externalBgpAsn?: number;
-    readonly serviceGraphUnderlayAllocation?: UnderlayAllocation;
-    readonly externalVrfUnderlayAllocations?: Array<UnderlayAllocation>;
+    bgpAsn?: number;
 }
-export enum VrfExternalVrfsEnum {
-    CmsEntsrvInet = 'cms-entsrv-inet',
-    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
-    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
-    CmsEntsrvMon = 'cms-entsrv-mon',
-    CmsEntsrvPres = 'cms-entsrv-pres',
-    CmsEntsrvSec = 'cms-entsrv-sec',
-    CmsEntsrvVpn = 'cms-entsrv-vpn',
-    CmsnetAppdev = 'cmsnet_appdev',
-    CmsnetAppprod = 'cmsnet_appprod',
-    CmsnetDatadev = 'cmsnet_datadev',
-    CmsnetDataprod = 'cmsnet_dataprod',
-    CmsnetEdcVpn = 'cmsnet_edc_vpn',
-    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
-    CmsnetPresdev = 'cmsnet_presdev',
-    CmsnetPresprod = 'cmsnet_presprod',
-    CmsnetSec = 'cmsnet_sec',
-    CmsnetTransport = 'cmsnet_transport'
-};
-export enum VrfDefaultExternalVrfEnum {
-    CmsEntsrvInet = 'cms-entsrv-inet',
-    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
-    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
-    CmsEntsrvMon = 'cms-entsrv-mon',
-    CmsEntsrvPres = 'cms-entsrv-pres',
-    CmsEntsrvSec = 'cms-entsrv-sec',
-    CmsEntsrvVpn = 'cms-entsrv-vpn',
-    CmsnetAppdev = 'cmsnet_appdev',
-    CmsnetAppprod = 'cmsnet_appprod',
-    CmsnetDatadev = 'cmsnet_datadev',
-    CmsnetDataprod = 'cmsnet_dataprod',
-    CmsnetEdcVpn = 'cmsnet_edc_vpn',
-    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
-    CmsnetPresdev = 'cmsnet_presdev',
-    CmsnetPresprod = 'cmsnet_presprod',
-    CmsnetSec = 'cmsnet_sec',
-    CmsnetTransport = 'cmsnet_transport'
-};
-
-
 

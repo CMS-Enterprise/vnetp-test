@@ -21,7 +21,6 @@ import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
 import { Datacenter } from './datacenter';
 import { AppCentricSubnet } from './appCentricSubnet';
-import { WanForm } from './wanForm';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
 import { Selector } from './selector';
@@ -51,7 +50,6 @@ export interface Tenant {
     readonly filterEntries?: Array<FilterEntry>;
     readonly l3outs?: Array<L3Out>;
     readonly auditLogs?: Array<AuditLog>;
-    readonly wanForms?: WanForm;
     readonly workflows?: Array<Workflow>;
     readonly datacenterId?: string;
     readonly datacenter: Datacenter;

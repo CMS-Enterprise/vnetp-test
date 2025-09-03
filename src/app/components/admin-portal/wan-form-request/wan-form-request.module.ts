@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { WanFormRequestComponent } from './wan-form-request.component';
 import { TableModule } from '../../../common/table/table.module';
-import { WanFormModule } from '../../wan-form/wan-form.module';
 import { WanFormRequestDetailComponent } from './wan-form-request-detail/wan-form-request-detail.component';
 import { YesNoModalModule } from '../../../common/yes-no-modal/yes-no-modal.module';
 
@@ -28,7 +27,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    WanFormModule,
     TableModule,
     MatExpansionModule,
     MatIconModule,

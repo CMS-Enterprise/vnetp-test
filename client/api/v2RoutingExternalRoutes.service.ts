@@ -17,33 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyTenantDto } from '../model/models';
-import { GetManyTenantResponseDto } from '../model/models';
-import { Tenant } from '../model/models';
+import { CreateManyExternalRouteDto } from '../model/models';
+import { ExternalRoute } from '../model/models';
+import { GetManyExternalRouteResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateManyTenantRequestParams {
-    createManyTenantDto: CreateManyTenantDto;
+export interface CreateManyExternalRouteRequestParams {
+    createManyExternalRouteDto: CreateManyExternalRouteDto;
 }
 
-export interface CreateOneTenantRequestParams {
-    tenant: Tenant;
+export interface CreateOneExternalRouteRequestParams {
+    externalRoute: ExternalRoute;
 }
 
-export interface DeleteOneTenantRequestParams {
+export interface DeleteOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneTenantRequestParams {
+export interface DeprovisionOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyTenantRequestParams {
+export interface GetManyExternalRouteRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -66,7 +66,7 @@ export interface GetManyTenantRequestParams {
     s?: string;
 }
 
-export interface GetOneTenantRequestParams {
+export interface GetOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -75,32 +75,32 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneTenantRequestParams {
+export interface ProvisionOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface RestoreOneTenantRequestParams {
+export interface RestoreOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneTenantRequestParams {
+export interface SoftDeleteOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface UpdateOneTenantRequestParams {
+export interface UpdateOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
-    tenant: Tenant;
+    externalRoute: ExternalRoute;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V2AppCentricTenantsService {
+export class V2RoutingExternalRoutesService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -158,18 +158,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create many Tenant
+     * Create many ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tenant>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyTenantDto = requestParameters.createManyTenantDto;
-        if (createManyTenantDto === null || createManyTenantDto === undefined) {
-            throw new Error('Required parameter createManyTenantDto was null or undefined when calling createManyTenant.');
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalRoute>>;
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalRoute>>>;
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalRoute>>>;
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyExternalRouteDto = requestParameters.createManyExternalRouteDto;
+        if (createManyExternalRouteDto === null || createManyExternalRouteDto === undefined) {
+            throw new Error('Required parameter createManyExternalRouteDto was null or undefined when calling createManyExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -201,8 +201,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Tenant>>(`${this.configuration.basePath}/v2/app-centric/tenants/bulk`,
-            createManyTenantDto,
+        return this.httpClient.post<Array<ExternalRoute>>(`${this.configuration.basePath}/v2/routing/external-routes/bulk`,
+            createManyExternalRouteDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -214,18 +214,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create one Tenant
+     * Create one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling createOneTenant.');
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalRoute = requestParameters.externalRoute;
+        if (externalRoute === null || externalRoute === undefined) {
+            throw new Error('Required parameter externalRoute was null or undefined when calling createOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +257,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants`,
-            tenant,
+        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v2/routing/external-routes`,
+            externalRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -270,18 +270,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Delete one Tenant
+     * Delete one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -304,7 +304,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -316,18 +316,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Deprovision one Tenant
+     * Deprovision one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -349,7 +349,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -362,15 +362,15 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get many Tenant
+     * Get many ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyTenantResponseDto>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyExternalRouteResponseDto>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyExternalRouteResponseDto>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyExternalRouteResponseDto>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -456,7 +456,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyTenantResponseDto>(`${this.configuration.basePath}/v2/app-centric/tenants`,
+        return this.httpClient.get<GetManyExternalRouteResponseDto>(`${this.configuration.basePath}/v2/routing/external-routes`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -469,18 +469,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get one Tenant
+     * Get one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling getOneExternalRoute.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -519,7 +519,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalRoute>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -532,18 +532,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Provision one Tenant
+     * Provision one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling provisionOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -565,7 +565,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -578,18 +578,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Restore one Tenant
+     * Restore one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -611,7 +611,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -624,18 +624,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Soft delete one Tenant
+     * Soft delete one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -657,7 +657,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -669,22 +669,22 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Update one Tenant
+     * Update one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneExternalRoute.');
         }
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling updateOneTenant.');
+        const externalRoute = requestParameters.externalRoute;
+        if (externalRoute === null || externalRoute === undefined) {
+            throw new Error('Required parameter externalRoute was null or undefined when calling updateOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -716,8 +716,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
-            tenant,
+        return this.httpClient.put<ExternalRoute>(`${this.configuration.basePath}/v2/routing/external-routes/${encodeURIComponent(String(id))}`,
+            externalRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

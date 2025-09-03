@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { V3GlobalWanFormRequestService, TenantWanFormChanges, V2AppCentricTenantsService, WanFormRequest } from 'client';
+import { V3GlobalWanFormRequestService, V2AppCentricTenantsService, WanFormRequest } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from '../../../../models/other/yes-no-modal-dto';
 import SubscriptionUtil from '../../../../utils/SubscriptionUtil';
@@ -19,7 +19,7 @@ interface GroupedChange {
 })
 export class WanFormRequestDetailComponent implements OnInit {
   public wanFormRequest: WanFormRequest = {} as WanFormRequest;
-  public wanFormChanges: TenantWanFormChanges;
+  public wanFormChanges: any;
   public groupedChanges: GroupedChange[] = [];
   public isLoading = false;
   private requestId: string;
@@ -46,7 +46,7 @@ export class WanFormRequestDetailComponent implements OnInit {
     this.wanFormRequestService.getManyWanFormRequests({ filter: [`id||eq||${this.requestId}`] }).subscribe(response => {
       this.wanFormRequest = response[0];
       if (this.wanFormRequest?.tenantId) {
-        this.loadWanFormChanges(this.wanFormRequest.tenantId);
+        // this.loadWanFormChanges(this.wanFormRequest.tenantId);
       } else {
         this.isLoading = false;
         console.error('Tenant ID not found on WAN form request.');
@@ -54,15 +54,16 @@ export class WanFormRequestDetailComponent implements OnInit {
     });
   }
 
-  private loadWanFormChanges(tenantId: string): void {
-    this.tenantService.getWanFormChangesTenant({ id: tenantId }).subscribe(changes => {
-      this.wanFormChanges = changes;
-      this._groupChangesByWanForm(changes);
-      this.isLoading = false;
-    });
+  private loadWanFormChanges() {
+    // tenantId: string): void {
+    // this.tenantService.getWanFormChangesTenant({ id: tenantId }).subscribe(changes => {
+    //   this.wanFormChanges = changes;
+    //   this._groupChangesByWanForm(changes);
+    //   this.isLoading = false;
+    // });
   }
 
-  private _groupChangesByWanForm(changes: TenantWanFormChanges): void {
+  private _groupChangesByWanForm(changes: any): void {
     const groups: { [key: string]: GroupedChange } = {};
 
     changes.wanFormChanges.forEach(change => {
@@ -137,9 +138,9 @@ export class WanFormRequestDetailComponent implements OnInit {
       'Are you sure you want to approve this request? It will be applied immediately.',
     );
     const onConfirm = () => {
-      this.wanFormRequestService.approveOneWanFormRequest({ id: this.requestId }).subscribe(() => {
-        this.router.navigate(['/admin/wan-form-requests']);
-      });
+      // this.wanFormRequestService.approveOneWanFormRequest({ id: this.requestId }).subscribe(() => {
+      //   this.router.navigate(['/admin/wan-form-requests']);
+      // });
     };
     SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
   }
@@ -147,9 +148,9 @@ export class WanFormRequestDetailComponent implements OnInit {
   public rejectRequest(): void {
     const dto = new YesNoModalDto('Reject WAN Form Request', 'Are you sure you want to reject this request? It cannot be undone.');
     const onConfirm = () => {
-      this.wanFormRequestService.rejectOneWanFormRequest({ id: this.requestId }).subscribe(() => {
-        this.router.navigate(['/admin/wan-form-requests']);
-      });
+      // this.wanFormRequestService.rejectOneWanFormRequest({ id: this.requestId }).subscribe(() => {
+      //   this.router.navigate(['/admin/wan-form-requests']);
+      // });
     };
     SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
   }

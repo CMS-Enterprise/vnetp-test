@@ -17,33 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyTenantDto } from '../model/models';
-import { GetManyTenantResponseDto } from '../model/models';
-import { Tenant } from '../model/models';
+import { CreateManyExternalFirewallDto } from '../model/models';
+import { ExternalFirewall } from '../model/models';
+import { GetManyExternalFirewallResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateManyTenantRequestParams {
-    createManyTenantDto: CreateManyTenantDto;
+export interface CreateManyExternalFirewallRequestParams {
+    createManyExternalFirewallDto: CreateManyExternalFirewallDto;
 }
 
-export interface CreateOneTenantRequestParams {
-    tenant: Tenant;
+export interface CreateOneExternalFirewallRequestParams {
+    externalFirewall: ExternalFirewall;
 }
 
-export interface DeleteOneTenantRequestParams {
+export interface DeleteOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneTenantRequestParams {
+export interface DeprovisionOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyTenantRequestParams {
+export interface GetManyExternalFirewallRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -66,7 +66,7 @@ export interface GetManyTenantRequestParams {
     s?: string;
 }
 
-export interface GetOneTenantRequestParams {
+export interface GetOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -75,32 +75,32 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneTenantRequestParams {
+export interface ProvisionOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface RestoreOneTenantRequestParams {
+export interface RestoreOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneTenantRequestParams {
+export interface SoftDeleteOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface UpdateOneTenantRequestParams {
+export interface UpdateOneExternalFirewallRequestParams {
     /** UUID. */
     id: string;
-    tenant: Tenant;
+    externalFirewall: ExternalFirewall;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V2AppCentricTenantsService {
+export class V2AppCentricExternalFirewallsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -158,18 +158,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create many Tenant
+     * Create many ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tenant>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyTenantDto = requestParameters.createManyTenantDto;
-        if (createManyTenantDto === null || createManyTenantDto === undefined) {
-            throw new Error('Required parameter createManyTenantDto was null or undefined when calling createManyTenant.');
+    public createManyExternalFirewall(requestParameters: CreateManyExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalFirewall>>;
+    public createManyExternalFirewall(requestParameters: CreateManyExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalFirewall>>>;
+    public createManyExternalFirewall(requestParameters: CreateManyExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalFirewall>>>;
+    public createManyExternalFirewall(requestParameters: CreateManyExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyExternalFirewallDto = requestParameters.createManyExternalFirewallDto;
+        if (createManyExternalFirewallDto === null || createManyExternalFirewallDto === undefined) {
+            throw new Error('Required parameter createManyExternalFirewallDto was null or undefined when calling createManyExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -201,8 +201,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Tenant>>(`${this.configuration.basePath}/v2/app-centric/tenants/bulk`,
-            createManyTenantDto,
+        return this.httpClient.post<Array<ExternalFirewall>>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/bulk`,
+            createManyExternalFirewallDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -214,18 +214,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create one Tenant
+     * Create one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling createOneTenant.');
+    public createOneExternalFirewall(requestParameters: CreateOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalFirewall>;
+    public createOneExternalFirewall(requestParameters: CreateOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalFirewall>>;
+    public createOneExternalFirewall(requestParameters: CreateOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalFirewall>>;
+    public createOneExternalFirewall(requestParameters: CreateOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalFirewall = requestParameters.externalFirewall;
+        if (externalFirewall === null || externalFirewall === undefined) {
+            throw new Error('Required parameter externalFirewall was null or undefined when calling createOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +257,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants`,
-            tenant,
+        return this.httpClient.post<ExternalFirewall>(`${this.configuration.basePath}/v2/app-centric/external-firewalls`,
+            externalFirewall,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -270,18 +270,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Delete one Tenant
+     * Delete one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneExternalFirewall(requestParameters: DeleteOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalFirewall>;
+    public deleteOneExternalFirewall(requestParameters: DeleteOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalFirewall>>;
+    public deleteOneExternalFirewall(requestParameters: DeleteOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalFirewall>>;
+    public deleteOneExternalFirewall(requestParameters: DeleteOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -304,7 +304,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalFirewall>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -316,18 +316,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Deprovision one Tenant
+     * Deprovision one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deprovisionOneExternalFirewall(requestParameters: DeprovisionOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneExternalFirewall(requestParameters: DeprovisionOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneExternalFirewall(requestParameters: DeprovisionOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneExternalFirewall(requestParameters: DeprovisionOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -349,7 +349,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -362,15 +362,15 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get many Tenant
+     * Get many ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyTenantResponseDto>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyExternalFirewall(requestParameters: GetManyExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyExternalFirewallResponseDto>;
+    public getManyExternalFirewall(requestParameters: GetManyExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyExternalFirewallResponseDto>>;
+    public getManyExternalFirewall(requestParameters: GetManyExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyExternalFirewallResponseDto>>;
+    public getManyExternalFirewall(requestParameters: GetManyExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -456,7 +456,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyTenantResponseDto>(`${this.configuration.basePath}/v2/app-centric/tenants`,
+        return this.httpClient.get<GetManyExternalFirewallResponseDto>(`${this.configuration.basePath}/v2/app-centric/external-firewalls`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -469,18 +469,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get one Tenant
+     * Get one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneExternalFirewall(requestParameters: GetOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalFirewall>;
+    public getOneExternalFirewall(requestParameters: GetOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalFirewall>>;
+    public getOneExternalFirewall(requestParameters: GetOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalFirewall>>;
+    public getOneExternalFirewall(requestParameters: GetOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling getOneExternalFirewall.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -519,7 +519,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalFirewall>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -532,18 +532,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Provision one Tenant
+     * Provision one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public provisionOneExternalFirewall(requestParameters: ProvisionOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneExternalFirewall(requestParameters: ProvisionOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneExternalFirewall(requestParameters: ProvisionOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneExternalFirewall(requestParameters: ProvisionOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling provisionOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -565,7 +565,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -578,18 +578,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Restore one Tenant
+     * Restore one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneExternalFirewall(requestParameters: RestoreOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneExternalFirewall(requestParameters: RestoreOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneExternalFirewall(requestParameters: RestoreOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneExternalFirewall(requestParameters: RestoreOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -611,7 +611,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -624,18 +624,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Soft delete one Tenant
+     * Soft delete one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneExternalFirewall(requestParameters: SoftDeleteOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneExternalFirewall(requestParameters: SoftDeleteOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneExternalFirewall(requestParameters: SoftDeleteOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneExternalFirewall(requestParameters: SoftDeleteOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -657,7 +657,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -669,22 +669,22 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Update one Tenant
+     * Update one ExternalFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneExternalFirewall(requestParameters: UpdateOneExternalFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalFirewall>;
+    public updateOneExternalFirewall(requestParameters: UpdateOneExternalFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalFirewall>>;
+    public updateOneExternalFirewall(requestParameters: UpdateOneExternalFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalFirewall>>;
+    public updateOneExternalFirewall(requestParameters: UpdateOneExternalFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneExternalFirewall.');
         }
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling updateOneTenant.');
+        const externalFirewall = requestParameters.externalFirewall;
+        if (externalFirewall === null || externalFirewall === undefined) {
+            throw new Error('Required parameter externalFirewall was null or undefined when calling updateOneExternalFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -716,8 +716,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
-            tenant,
+        return this.httpClient.put<ExternalFirewall>(`${this.configuration.basePath}/v2/app-centric/external-firewalls/${encodeURIComponent(String(id))}`,
+            externalFirewall,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

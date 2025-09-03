@@ -17,35 +17,32 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { Tenant } from '../model/models';
-import { TenantAdminDto } from '../model/models';
-import { TenantBasicUpdateDto } from '../model/models';
+import { TenantConnectivityGraph } from '../model/models';
+import { TenantInfrastructureConfigDto } from '../model/models';
+import { TenantInfrastructureResponse } from '../model/models';
+import { TenantInfrastructureValidationResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CascadeDeleteTenantTenantAdminRequestParams {
-    id: string;
+export interface BuildTenantInfrastructureGraphRequestParams {
+    tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
-export interface UpdateTenantAdminRequestParams {
-    /** Tenant ID */
-    id: string;
-    tenantAdminDto: TenantAdminDto;
+export interface ConfigureTenantInfrastructureRequestParams {
+    tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
-export interface UpdateTenantBasicRequestParams {
-    /** Tenant ID */
-    id: string;
-    tenantBasicUpdateDto: TenantBasicUpdateDto;
+export interface ValidateTenantInfrastructureRequestParams {
+    tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminV2AppCentricTenantsService {
+export class V2AdminTenantOrchestratorService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -103,68 +100,19 @@ export class AdminV2AppCentricTenantsService {
     }
 
     /**
-     * Cascade Delete Tenant
+     * Build tenant infrastructure graph
+     * Build tenant infrastructure graph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cascadeDeleteTenantTenantAdmin(requestParameters: CascadeDeleteTenantTenantAdminRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public cascadeDeleteTenantTenantAdmin(requestParameters: CascadeDeleteTenantTenantAdminRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public cascadeDeleteTenantTenantAdmin(requestParameters: CascadeDeleteTenantTenantAdminRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public cascadeDeleteTenantTenantAdmin(requestParameters: CascadeDeleteTenantTenantAdminRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling cascadeDeleteTenantTenantAdmin.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/admin/v2/app-centric/tenants/${encodeURIComponent(String(id))}/cascade`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update tenant (Admin Only)
-     * Update tenant including sensitive properties. Only accessible to GlobalAdmin users.
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateTenantAdmin(requestParameters: UpdateTenantAdminRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateTenantAdmin(requestParameters: UpdateTenantAdminRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateTenantAdmin(requestParameters: UpdateTenantAdminRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateTenantAdmin(requestParameters: UpdateTenantAdminRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateTenantAdmin.');
-        }
-        const tenantAdminDto = requestParameters.tenantAdminDto;
-        if (tenantAdminDto === null || tenantAdminDto === undefined) {
-            throw new Error('Required parameter tenantAdminDto was null or undefined when calling updateTenantAdmin.');
+    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
+    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
+    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
+    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const tenantInfrastructureConfigDto = requestParameters.tenantInfrastructureConfigDto;
+        if (tenantInfrastructureConfigDto === null || tenantInfrastructureConfigDto === undefined) {
+            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling buildTenantInfrastructureGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -196,8 +144,8 @@ export class AdminV2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/admin/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
-            tenantAdminDto,
+        return this.httpClient.post<TenantConnectivityGraph>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/generate-graph`,
+            tenantInfrastructureConfigDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -209,23 +157,19 @@ export class AdminV2AppCentricTenantsService {
     }
 
     /**
-     * Update tenant basic properties
-     * Update only non-sensitive tenant properties (alias, description).
+     * Configure complete tenant infrastructure
+     * Create tenant with VRFs, L3Outs, firewalls, and external VRF connections from declarative configuration
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateTenantBasic(requestParameters: UpdateTenantBasicRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateTenantBasic(requestParameters: UpdateTenantBasicRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateTenantBasic(requestParameters: UpdateTenantBasicRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateTenantBasic(requestParameters: UpdateTenantBasicRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateTenantBasic.');
-        }
-        const tenantBasicUpdateDto = requestParameters.tenantBasicUpdateDto;
-        if (tenantBasicUpdateDto === null || tenantBasicUpdateDto === undefined) {
-            throw new Error('Required parameter tenantBasicUpdateDto was null or undefined when calling updateTenantBasic.');
+    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureResponse>;
+    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureResponse>>;
+    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureResponse>>;
+    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const tenantInfrastructureConfigDto = requestParameters.tenantInfrastructureConfigDto;
+        if (tenantInfrastructureConfigDto === null || tenantInfrastructureConfigDto === undefined) {
+            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling configureTenantInfrastructure.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +201,65 @@ export class AdminV2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/admin/v2/app-centric/tenants/${encodeURIComponent(String(id))}/basic`,
-            tenantBasicUpdateDto,
+        return this.httpClient.post<TenantInfrastructureResponse>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/configure`,
+            tenantInfrastructureConfigDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Validate tenant infrastructure configuration
+     * Validate tenant infrastructure configuration
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureValidationResponse>;
+    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureValidationResponse>>;
+    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureValidationResponse>>;
+    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const tenantInfrastructureConfigDto = requestParameters.tenantInfrastructureConfigDto;
+        if (tenantInfrastructureConfigDto === null || tenantInfrastructureConfigDto === undefined) {
+            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling validateTenantInfrastructure.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<TenantInfrastructureValidationResponse>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/validate`,
+            tenantInfrastructureConfigDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

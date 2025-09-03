@@ -17,33 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyTenantDto } from '../model/models';
-import { GetManyTenantResponseDto } from '../model/models';
-import { Tenant } from '../model/models';
+import { CreateManyServiceGraphFirewallDto } from '../model/models';
+import { GetManyServiceGraphFirewallResponseDto } from '../model/models';
+import { ServiceGraphFirewall } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateManyTenantRequestParams {
-    createManyTenantDto: CreateManyTenantDto;
+export interface CreateManyServiceGraphFirewallRequestParams {
+    createManyServiceGraphFirewallDto: CreateManyServiceGraphFirewallDto;
 }
 
-export interface CreateOneTenantRequestParams {
-    tenant: Tenant;
+export interface CreateOneServiceGraphFirewallRequestParams {
+    serviceGraphFirewall: ServiceGraphFirewall;
 }
 
-export interface DeleteOneTenantRequestParams {
+export interface DeleteOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneTenantRequestParams {
+export interface DeprovisionOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyTenantRequestParams {
+export interface GetManyServiceGraphFirewallRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -66,7 +66,7 @@ export interface GetManyTenantRequestParams {
     s?: string;
 }
 
-export interface GetOneTenantRequestParams {
+export interface GetOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -75,32 +75,32 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneTenantRequestParams {
+export interface ProvisionOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface RestoreOneTenantRequestParams {
+export interface RestoreOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneTenantRequestParams {
+export interface SoftDeleteOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface UpdateOneTenantRequestParams {
+export interface UpdateOneServiceGraphFirewallRequestParams {
     /** UUID. */
     id: string;
-    tenant: Tenant;
+    serviceGraphFirewall: ServiceGraphFirewall;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V2AppCentricTenantsService {
+export class V2AppCentricServiceGraphFirewallsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -158,18 +158,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create many Tenant
+     * Create many ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tenant>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyTenantDto = requestParameters.createManyTenantDto;
-        if (createManyTenantDto === null || createManyTenantDto === undefined) {
-            throw new Error('Required parameter createManyTenantDto was null or undefined when calling createManyTenant.');
+    public createManyServiceGraphFirewall(requestParameters: CreateManyServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ServiceGraphFirewall>>;
+    public createManyServiceGraphFirewall(requestParameters: CreateManyServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ServiceGraphFirewall>>>;
+    public createManyServiceGraphFirewall(requestParameters: CreateManyServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ServiceGraphFirewall>>>;
+    public createManyServiceGraphFirewall(requestParameters: CreateManyServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyServiceGraphFirewallDto = requestParameters.createManyServiceGraphFirewallDto;
+        if (createManyServiceGraphFirewallDto === null || createManyServiceGraphFirewallDto === undefined) {
+            throw new Error('Required parameter createManyServiceGraphFirewallDto was null or undefined when calling createManyServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -201,8 +201,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Tenant>>(`${this.configuration.basePath}/v2/app-centric/tenants/bulk`,
-            createManyTenantDto,
+        return this.httpClient.post<Array<ServiceGraphFirewall>>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/bulk`,
+            createManyServiceGraphFirewallDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -214,18 +214,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create one Tenant
+     * Create one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling createOneTenant.');
+    public createOneServiceGraphFirewall(requestParameters: CreateOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraphFirewall>;
+    public createOneServiceGraphFirewall(requestParameters: CreateOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraphFirewall>>;
+    public createOneServiceGraphFirewall(requestParameters: CreateOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraphFirewall>>;
+    public createOneServiceGraphFirewall(requestParameters: CreateOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const serviceGraphFirewall = requestParameters.serviceGraphFirewall;
+        if (serviceGraphFirewall === null || serviceGraphFirewall === undefined) {
+            throw new Error('Required parameter serviceGraphFirewall was null or undefined when calling createOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +257,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants`,
-            tenant,
+        return this.httpClient.post<ServiceGraphFirewall>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls`,
+            serviceGraphFirewall,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -270,18 +270,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Delete one Tenant
+     * Delete one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneServiceGraphFirewall(requestParameters: DeleteOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraphFirewall>;
+    public deleteOneServiceGraphFirewall(requestParameters: DeleteOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraphFirewall>>;
+    public deleteOneServiceGraphFirewall(requestParameters: DeleteOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraphFirewall>>;
+    public deleteOneServiceGraphFirewall(requestParameters: DeleteOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -304,7 +304,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ServiceGraphFirewall>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -316,18 +316,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Deprovision one Tenant
+     * Deprovision one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deprovisionOneServiceGraphFirewall(requestParameters: DeprovisionOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneServiceGraphFirewall(requestParameters: DeprovisionOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneServiceGraphFirewall(requestParameters: DeprovisionOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneServiceGraphFirewall(requestParameters: DeprovisionOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -349,7 +349,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -362,15 +362,15 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get many Tenant
+     * Get many ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyTenantResponseDto>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyServiceGraphFirewall(requestParameters: GetManyServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyServiceGraphFirewallResponseDto>;
+    public getManyServiceGraphFirewall(requestParameters: GetManyServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyServiceGraphFirewallResponseDto>>;
+    public getManyServiceGraphFirewall(requestParameters: GetManyServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyServiceGraphFirewallResponseDto>>;
+    public getManyServiceGraphFirewall(requestParameters: GetManyServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -456,7 +456,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyTenantResponseDto>(`${this.configuration.basePath}/v2/app-centric/tenants`,
+        return this.httpClient.get<GetManyServiceGraphFirewallResponseDto>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -469,18 +469,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get one Tenant
+     * Get one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneServiceGraphFirewall(requestParameters: GetOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraphFirewall>;
+    public getOneServiceGraphFirewall(requestParameters: GetOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraphFirewall>>;
+    public getOneServiceGraphFirewall(requestParameters: GetOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraphFirewall>>;
+    public getOneServiceGraphFirewall(requestParameters: GetOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling getOneServiceGraphFirewall.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -519,7 +519,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ServiceGraphFirewall>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -532,18 +532,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Provision one Tenant
+     * Provision one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public provisionOneServiceGraphFirewall(requestParameters: ProvisionOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneServiceGraphFirewall(requestParameters: ProvisionOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneServiceGraphFirewall(requestParameters: ProvisionOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneServiceGraphFirewall(requestParameters: ProvisionOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling provisionOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -565,7 +565,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -578,18 +578,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Restore one Tenant
+     * Restore one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneServiceGraphFirewall(requestParameters: RestoreOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneServiceGraphFirewall(requestParameters: RestoreOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneServiceGraphFirewall(requestParameters: RestoreOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneServiceGraphFirewall(requestParameters: RestoreOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -611,7 +611,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -624,18 +624,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Soft delete one Tenant
+     * Soft delete one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneServiceGraphFirewall(requestParameters: SoftDeleteOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneServiceGraphFirewall(requestParameters: SoftDeleteOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneServiceGraphFirewall(requestParameters: SoftDeleteOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneServiceGraphFirewall(requestParameters: SoftDeleteOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -657,7 +657,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -669,22 +669,22 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Update one Tenant
+     * Update one ServiceGraphFirewall
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneServiceGraphFirewall(requestParameters: UpdateOneServiceGraphFirewallRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraphFirewall>;
+    public updateOneServiceGraphFirewall(requestParameters: UpdateOneServiceGraphFirewallRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraphFirewall>>;
+    public updateOneServiceGraphFirewall(requestParameters: UpdateOneServiceGraphFirewallRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraphFirewall>>;
+    public updateOneServiceGraphFirewall(requestParameters: UpdateOneServiceGraphFirewallRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneServiceGraphFirewall.');
         }
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling updateOneTenant.');
+        const serviceGraphFirewall = requestParameters.serviceGraphFirewall;
+        if (serviceGraphFirewall === null || serviceGraphFirewall === undefined) {
+            throw new Error('Required parameter serviceGraphFirewall was null or undefined when calling updateOneServiceGraphFirewall.');
         }
 
         let headers = this.defaultHeaders;
@@ -716,8 +716,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
-            tenant,
+        return this.httpClient.put<ServiceGraphFirewall>(`${this.configuration.basePath}/v2/app-centric/service-graph-firewalls/${encodeURIComponent(String(id))}`,
+            serviceGraphFirewall,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

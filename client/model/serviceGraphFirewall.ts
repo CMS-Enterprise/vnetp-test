@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ExternalVrfConnection } from './externalVrfConnection';
-import { AppCentricSubnet } from './appCentricSubnet';
+import { Tenant } from './tenant';
+import { ServiceGraph } from './serviceGraph';
 
 
-export interface InternalRoute { 
+export interface ServiceGraphFirewall { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -21,9 +21,11 @@ export interface InternalRoute {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    readonly appcentricSubnet?: AppCentricSubnet;
-    appcentricSubnetId?: string;
-    readonly externalVrfConnection?: ExternalVrfConnection;
-    externalVrfConnectionId?: string;
+    name?: string;
+    firewallDeviceType?: string;
+    readonly serviceGraph?: ServiceGraph;
+    serviceGraphId?: string;
+    readonly tenant?: Tenant;
+    tenantId?: string;
 }
 

@@ -9,11 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
+import { Tenant } from './tenant';
 import { ExternalVrfConnection } from './externalVrfConnection';
-import { AppCentricSubnet } from './appCentricSubnet';
 
 
-export interface InternalRoute { 
+export interface ExternalFirewall { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -21,9 +22,14 @@ export interface InternalRoute {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    readonly appcentricSubnet?: AppCentricSubnet;
-    appcentricSubnetId?: string;
-    readonly externalVrfConnection?: ExternalVrfConnection;
-    externalVrfConnectionId?: string;
+    name?: string;
+    firewallDeviceType?: string;
+    readonly externalVrfConnections?: ExternalVrfConnection;
+    uniqueZonePerExternalVrfConnection?: boolean;
+    readonly l3outs?: L3Out;
+    l3outId?: string;
+    readonly tenant?: Tenant;
+    tenantId?: string;
+    bgpAsn?: number;
 }
 

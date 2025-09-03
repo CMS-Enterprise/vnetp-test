@@ -17,33 +17,28 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyTenantDto } from '../model/models';
-import { GetManyTenantResponseDto } from '../model/models';
-import { Tenant } from '../model/models';
+import { CreateManyExternalVrfConnectionDto } from '../model/models';
+import { ExternalVrfConnection } from '../model/models';
+import { GetManyExternalVrfConnectionResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateManyTenantRequestParams {
-    createManyTenantDto: CreateManyTenantDto;
+export interface CreateManyExternalVrfConnectionRequestParams {
+    createManyExternalVrfConnectionDto: CreateManyExternalVrfConnectionDto;
 }
 
-export interface CreateOneTenantRequestParams {
-    tenant: Tenant;
+export interface CreateOneExternalVrfConnectionRequestParams {
+    externalVrfConnection: ExternalVrfConnection;
 }
 
-export interface DeleteOneTenantRequestParams {
+export interface DeleteOneExternalVrfConnectionRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneTenantRequestParams {
-    /** UUID. */
-    id: string;
-}
-
-export interface GetManyTenantRequestParams {
+export interface GetManyExternalVrfConnectionRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -66,7 +61,7 @@ export interface GetManyTenantRequestParams {
     s?: string;
 }
 
-export interface GetOneTenantRequestParams {
+export interface GetOneExternalVrfConnectionRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -75,32 +70,27 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneTenantRequestParams {
+export interface RestoreOneExternalVrfConnectionRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface RestoreOneTenantRequestParams {
+export interface SoftDeleteOneExternalVrfConnectionRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneTenantRequestParams {
+export interface UpdateOneExternalVrfConnectionRequestParams {
     /** UUID. */
     id: string;
-}
-
-export interface UpdateOneTenantRequestParams {
-    /** UUID. */
-    id: string;
-    tenant: Tenant;
+    externalVrfConnection: ExternalVrfConnection;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V2AppCentricTenantsService {
+export class V2RoutingExternalVrfConnectionsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -158,18 +148,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create many Tenant
+     * Create many ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tenant>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyTenantDto = requestParameters.createManyTenantDto;
-        if (createManyTenantDto === null || createManyTenantDto === undefined) {
-            throw new Error('Required parameter createManyTenantDto was null or undefined when calling createManyTenant.');
+    public createManyExternalVrfConnection(requestParameters: CreateManyExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalVrfConnection>>;
+    public createManyExternalVrfConnection(requestParameters: CreateManyExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalVrfConnection>>>;
+    public createManyExternalVrfConnection(requestParameters: CreateManyExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalVrfConnection>>>;
+    public createManyExternalVrfConnection(requestParameters: CreateManyExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyExternalVrfConnectionDto = requestParameters.createManyExternalVrfConnectionDto;
+        if (createManyExternalVrfConnectionDto === null || createManyExternalVrfConnectionDto === undefined) {
+            throw new Error('Required parameter createManyExternalVrfConnectionDto was null or undefined when calling createManyExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;
@@ -201,8 +191,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Tenant>>(`${this.configuration.basePath}/v2/app-centric/tenants/bulk`,
-            createManyTenantDto,
+        return this.httpClient.post<Array<ExternalVrfConnection>>(`${this.configuration.basePath}/v2/routing/external-vrf-connections/bulk`,
+            createManyExternalVrfConnectionDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -214,18 +204,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create one Tenant
+     * Create one ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling createOneTenant.');
+    public createOneExternalVrfConnection(requestParameters: CreateOneExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrfConnection>;
+    public createOneExternalVrfConnection(requestParameters: CreateOneExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrfConnection>>;
+    public createOneExternalVrfConnection(requestParameters: CreateOneExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrfConnection>>;
+    public createOneExternalVrfConnection(requestParameters: CreateOneExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalVrfConnection = requestParameters.externalVrfConnection;
+        if (externalVrfConnection === null || externalVrfConnection === undefined) {
+            throw new Error('Required parameter externalVrfConnection was null or undefined when calling createOneExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +247,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants`,
-            tenant,
+        return this.httpClient.post<ExternalVrfConnection>(`${this.configuration.basePath}/v2/routing/external-vrf-connections`,
+            externalVrfConnection,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -270,18 +260,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Delete one Tenant
+     * Delete one ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneExternalVrfConnection(requestParameters: DeleteOneExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrfConnection>;
+    public deleteOneExternalVrfConnection(requestParameters: DeleteOneExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrfConnection>>;
+    public deleteOneExternalVrfConnection(requestParameters: DeleteOneExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrfConnection>>;
+    public deleteOneExternalVrfConnection(requestParameters: DeleteOneExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;
@@ -304,7 +294,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalVrfConnection>(`${this.configuration.basePath}/v2/routing/external-vrf-connections/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -316,61 +306,15 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Deprovision one Tenant
+     * Get many ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneTenant.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/deprovision`,
-            null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Get many Tenant
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyTenantResponseDto>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyExternalVrfConnection(requestParameters: GetManyExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyExternalVrfConnectionResponseDto>;
+    public getManyExternalVrfConnection(requestParameters: GetManyExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyExternalVrfConnectionResponseDto>>;
+    public getManyExternalVrfConnection(requestParameters: GetManyExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyExternalVrfConnectionResponseDto>>;
+    public getManyExternalVrfConnection(requestParameters: GetManyExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -456,7 +400,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyTenantResponseDto>(`${this.configuration.basePath}/v2/app-centric/tenants`,
+        return this.httpClient.get<GetManyExternalVrfConnectionResponseDto>(`${this.configuration.basePath}/v2/routing/external-vrf-connections`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -469,18 +413,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get one Tenant
+     * Get one ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneExternalVrfConnection(requestParameters: GetOneExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrfConnection>;
+    public getOneExternalVrfConnection(requestParameters: GetOneExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrfConnection>>;
+    public getOneExternalVrfConnection(requestParameters: GetOneExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrfConnection>>;
+    public getOneExternalVrfConnection(requestParameters: GetOneExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling getOneExternalVrfConnection.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -519,7 +463,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalVrfConnection>(`${this.configuration.basePath}/v2/routing/external-vrf-connections/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -532,18 +476,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Provision one Tenant
+     * Restore one ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneExternalVrfConnection(requestParameters: RestoreOneExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneExternalVrfConnection(requestParameters: RestoreOneExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneExternalVrfConnection(requestParameters: RestoreOneExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneExternalVrfConnection(requestParameters: RestoreOneExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;
@@ -565,7 +509,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/routing/external-vrf-connections/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -578,18 +522,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Restore one Tenant
+     * Soft delete one ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneExternalVrfConnection(requestParameters: SoftDeleteOneExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneExternalVrfConnection(requestParameters: SoftDeleteOneExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneExternalVrfConnection(requestParameters: SoftDeleteOneExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneExternalVrfConnection(requestParameters: SoftDeleteOneExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;
@@ -611,8 +555,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/restore`,
-            null,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/routing/external-vrf-connections/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -624,67 +567,22 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Soft delete one Tenant
+     * Update one ExternalVrfConnection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public updateOneExternalVrfConnection(requestParameters: UpdateOneExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrfConnection>;
+    public updateOneExternalVrfConnection(requestParameters: UpdateOneExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrfConnection>>;
+    public updateOneExternalVrfConnection(requestParameters: UpdateOneExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrfConnection>>;
+    public updateOneExternalVrfConnection(requestParameters: UpdateOneExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneExternalVrfConnection.');
         }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/soft`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update one Tenant
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneTenant.');
-        }
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling updateOneTenant.');
+        const externalVrfConnection = requestParameters.externalVrfConnection;
+        if (externalVrfConnection === null || externalVrfConnection === undefined) {
+            throw new Error('Required parameter externalVrfConnection was null or undefined when calling updateOneExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;
@@ -716,8 +614,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
-            tenant,
+        return this.httpClient.put<ExternalVrfConnection>(`${this.configuration.basePath}/v2/routing/external-vrf-connections/${encodeURIComponent(String(id))}`,
+            externalVrfConnection,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

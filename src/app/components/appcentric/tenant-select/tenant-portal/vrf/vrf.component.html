@@ -1,4 +1,4 @@
-<ng-container [ngSwitch]="currentView">
+<!-- <ng-container [ngSwitch]="currentView">
   <ng-container *ngSwitchCase="'vrf'">
     <ng-container *ngIf="!isLoading; else loading">
       <section class="btn-toolbar" role="toolbar">
@@ -50,7 +50,7 @@
       [environmentId]="tenant?.environmentId"
     ></app-external-route>
   </ng-container>
-</ng-container>
+</ng-container> -->
 
 <ng-template #actionsTemplate let-vrf="datum">
   <section class="table__actions">
@@ -95,14 +95,3 @@
 
 <app-vrf-modal [tenantId]="tenantId"></app-vrf-modal>
 <app-yes-no-modal></app-yes-no-modal>
-
-<ng-template #expandableRows let-vrf="datum">
-  <section class="table__expanded-row">
-    <app-wan-form-detail
-      [wanForm]="vrf.wanForm"
-      (manageSubnets)="showSubnets(vrf)"
-      (manageRoutes)="showRoutes(vrf)"
-      [tenant]="tenant"
-    ></app-wan-form-detail>
-  </section>
-</ng-template>

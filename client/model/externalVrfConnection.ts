@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Tenant } from './tenant';
 import { ExternalFirewall } from './externalFirewall';
-import { BridgeDomain } from './bridgeDomain';
-import { Vrf } from './vrf';
+import { ExternalRoute } from './externalRoute';
+import { InternalRoute } from './internalRoute';
 
 
-export interface L3Out { 
+export interface ExternalVrfConnection { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -23,23 +22,18 @@ export interface L3Out {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name?: string;
-    alias?: string;
-    description?: string;
-    readonly bridgeDomains?: Array<BridgeDomain>;
-    readonly vrf?: Vrf;
-    vrfId: string;
-    readonly tenant?: Tenant;
-    tenantId: string;
-    readonly tenantVersion?: number;
-    readonly endpointGroups?: Array<L3Out>;
-    readonly endpointSecurityGroups?: Array<L3Out>;
-    l3outType: string;
-    propagateExternalRoutes?: boolean;
     readonly firewall?: ExternalFirewall;
-    firewallId?: string;
+    externalVrf: string;
+    injectDefaultRouteFromExternalVrf: boolean;
+    allowAllRoutesFromExternalVrf: boolean;
+    advertiseHostBasedRoutesToExternalVrf: boolean;
+    advertiseAllRoutesToExternalVrf: boolean;
     underlayIpv4Network: string;
     underlayIpv6Network: string;
     underlayVlan: number;
+    readonly internalRoutes?: Array<InternalRoute>;
+    readonly externalRoutes?: Array<ExternalRoute>;
+    readonly externalFirewall?: ExternalFirewall;
+    externalFirewallId?: string;
 }
 

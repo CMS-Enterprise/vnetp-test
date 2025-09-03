@@ -25,10 +25,6 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface ApproveOneWanFormRequestRequestParams {
-    id: string;
-}
-
 export interface CreateOneWanFormRequestRequestParams {
     wanFormRequestDto: WanFormRequestDto;
 }
@@ -61,10 +57,6 @@ export interface GetManyWanFormRequestsRequestParams {
     fields?: Array<string>;
     /** Where object for advanced AND/OR queries. */
     s?: string;
-}
-
-export interface RejectOneWanFormRequestRequestParams {
-    id: string;
 }
 
 
@@ -126,53 +118,6 @@ export class V3GlobalWanFormRequestService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
-    }
-
-    /**
-     * Approve one WAN form request
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public approveOneWanFormRequest(requestParameters: ApproveOneWanFormRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanFormRequest>;
-    public approveOneWanFormRequest(requestParameters: ApproveOneWanFormRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanFormRequest>>;
-    public approveOneWanFormRequest(requestParameters: ApproveOneWanFormRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanFormRequest>>;
-    public approveOneWanFormRequest(requestParameters: ApproveOneWanFormRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling approveOneWanFormRequest.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<WanFormRequest>(`${this.configuration.basePath}/v3/global/wan-form-request/approve/${encodeURIComponent(String(id))}`,
-            null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
     }
 
     /**
@@ -384,53 +329,6 @@ export class V3GlobalWanFormRequestService {
         return this.httpClient.get<GetManyWanFormRequestResponseDto>(`${this.configuration.basePath}/v3/global/wan-form-request`,
             {
                 params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Reject one WAN form request
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public rejectOneWanFormRequest(requestParameters: RejectOneWanFormRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanFormRequest>;
-    public rejectOneWanFormRequest(requestParameters: RejectOneWanFormRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanFormRequest>>;
-    public rejectOneWanFormRequest(requestParameters: RejectOneWanFormRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanFormRequest>>;
-    public rejectOneWanFormRequest(requestParameters: RejectOneWanFormRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling rejectOneWanFormRequest.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<WanFormRequest>(`${this.configuration.basePath}/v3/global/wan-form-request/reject/${encodeURIComponent(String(id))}`,
-            null,
-            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

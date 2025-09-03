@@ -17,33 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyTenantDto } from '../model/models';
-import { GetManyTenantResponseDto } from '../model/models';
-import { Tenant } from '../model/models';
+import { CreateManyServiceGraphDto } from '../model/models';
+import { GetManyServiceGraphResponseDto } from '../model/models';
+import { ServiceGraph } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateManyTenantRequestParams {
-    createManyTenantDto: CreateManyTenantDto;
+export interface CreateManyServiceGraphRequestParams {
+    createManyServiceGraphDto: CreateManyServiceGraphDto;
 }
 
-export interface CreateOneTenantRequestParams {
-    tenant: Tenant;
+export interface CreateOneServiceGraphRequestParams {
+    serviceGraph: ServiceGraph;
 }
 
-export interface DeleteOneTenantRequestParams {
+export interface DeleteOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneTenantRequestParams {
+export interface DeprovisionOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyTenantRequestParams {
+export interface GetManyServiceGraphRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -66,7 +66,7 @@ export interface GetManyTenantRequestParams {
     s?: string;
 }
 
-export interface GetOneTenantRequestParams {
+export interface GetOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -75,32 +75,32 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneTenantRequestParams {
+export interface ProvisionOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface RestoreOneTenantRequestParams {
+export interface RestoreOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneTenantRequestParams {
+export interface SoftDeleteOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface UpdateOneTenantRequestParams {
+export interface UpdateOneServiceGraphRequestParams {
     /** UUID. */
     id: string;
-    tenant: Tenant;
+    serviceGraph: ServiceGraph;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V2AppCentricTenantsService {
+export class V2AppCentricServiceGraphsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -158,18 +158,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create many Tenant
+     * Create many ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tenant>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tenant>>>;
-    public createManyTenant(requestParameters: CreateManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyTenantDto = requestParameters.createManyTenantDto;
-        if (createManyTenantDto === null || createManyTenantDto === undefined) {
-            throw new Error('Required parameter createManyTenantDto was null or undefined when calling createManyTenant.');
+    public createManyServiceGraph(requestParameters: CreateManyServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ServiceGraph>>;
+    public createManyServiceGraph(requestParameters: CreateManyServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ServiceGraph>>>;
+    public createManyServiceGraph(requestParameters: CreateManyServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ServiceGraph>>>;
+    public createManyServiceGraph(requestParameters: CreateManyServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyServiceGraphDto = requestParameters.createManyServiceGraphDto;
+        if (createManyServiceGraphDto === null || createManyServiceGraphDto === undefined) {
+            throw new Error('Required parameter createManyServiceGraphDto was null or undefined when calling createManyServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -201,8 +201,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Tenant>>(`${this.configuration.basePath}/v2/app-centric/tenants/bulk`,
-            createManyTenantDto,
+        return this.httpClient.post<Array<ServiceGraph>>(`${this.configuration.basePath}/v2/app-centric/service-graphs/bulk`,
+            createManyServiceGraphDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -214,18 +214,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Create one Tenant
+     * Create one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public createOneTenant(requestParameters: CreateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling createOneTenant.');
+    public createOneServiceGraph(requestParameters: CreateOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraph>;
+    public createOneServiceGraph(requestParameters: CreateOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraph>>;
+    public createOneServiceGraph(requestParameters: CreateOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraph>>;
+    public createOneServiceGraph(requestParameters: CreateOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const serviceGraph = requestParameters.serviceGraph;
+        if (serviceGraph === null || serviceGraph === undefined) {
+            throw new Error('Required parameter serviceGraph was null or undefined when calling createOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +257,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants`,
-            tenant,
+        return this.httpClient.post<ServiceGraph>(`${this.configuration.basePath}/v2/app-centric/service-graphs`,
+            serviceGraph,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -270,18 +270,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Delete one Tenant
+     * Delete one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public deleteOneTenant(requestParameters: DeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneServiceGraph(requestParameters: DeleteOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraph>;
+    public deleteOneServiceGraph(requestParameters: DeleteOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraph>>;
+    public deleteOneServiceGraph(requestParameters: DeleteOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraph>>;
+    public deleteOneServiceGraph(requestParameters: DeleteOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -304,7 +304,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ServiceGraph>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -316,18 +316,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Deprovision one Tenant
+     * Deprovision one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneTenant(requestParameters: DeprovisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deprovisionOneServiceGraph(requestParameters: DeprovisionOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneServiceGraph(requestParameters: DeprovisionOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneServiceGraph(requestParameters: DeprovisionOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneServiceGraph(requestParameters: DeprovisionOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -349,7 +349,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -362,15 +362,15 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get many Tenant
+     * Get many ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyTenantResponseDto>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTenantResponseDto>>;
-    public getManyTenant(requestParameters: GetManyTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyServiceGraph(requestParameters: GetManyServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyServiceGraphResponseDto>;
+    public getManyServiceGraph(requestParameters: GetManyServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyServiceGraphResponseDto>>;
+    public getManyServiceGraph(requestParameters: GetManyServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyServiceGraphResponseDto>>;
+    public getManyServiceGraph(requestParameters: GetManyServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -456,7 +456,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyTenantResponseDto>(`${this.configuration.basePath}/v2/app-centric/tenants`,
+        return this.httpClient.get<GetManyServiceGraphResponseDto>(`${this.configuration.basePath}/v2/app-centric/service-graphs`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -469,18 +469,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get one Tenant
+     * Get one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public getOneTenant(requestParameters: GetOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneServiceGraph(requestParameters: GetOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraph>;
+    public getOneServiceGraph(requestParameters: GetOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraph>>;
+    public getOneServiceGraph(requestParameters: GetOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraph>>;
+    public getOneServiceGraph(requestParameters: GetOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling getOneServiceGraph.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -519,7 +519,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ServiceGraph>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -532,18 +532,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Provision one Tenant
+     * Provision one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneTenant(requestParameters: ProvisionOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public provisionOneServiceGraph(requestParameters: ProvisionOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneServiceGraph(requestParameters: ProvisionOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneServiceGraph(requestParameters: ProvisionOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneServiceGraph(requestParameters: ProvisionOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling provisionOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -565,7 +565,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -578,18 +578,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Restore one Tenant
+     * Restore one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneTenant(requestParameters: RestoreOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneServiceGraph(requestParameters: RestoreOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneServiceGraph(requestParameters: RestoreOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneServiceGraph(requestParameters: RestoreOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneServiceGraph(requestParameters: RestoreOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -611,7 +611,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -624,18 +624,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Soft delete one Tenant
+     * Soft delete one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneTenant(requestParameters: SoftDeleteOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneServiceGraph(requestParameters: SoftDeleteOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneServiceGraph(requestParameters: SoftDeleteOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneServiceGraph(requestParameters: SoftDeleteOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneServiceGraph(requestParameters: SoftDeleteOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -657,7 +657,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -669,22 +669,22 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Update one Tenant
+     * Update one ServiceGraph
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateOneTenant(requestParameters: UpdateOneTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneServiceGraph(requestParameters: UpdateOneServiceGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceGraph>;
+    public updateOneServiceGraph(requestParameters: UpdateOneServiceGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceGraph>>;
+    public updateOneServiceGraph(requestParameters: UpdateOneServiceGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceGraph>>;
+    public updateOneServiceGraph(requestParameters: UpdateOneServiceGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneTenant.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneServiceGraph.');
         }
-        const tenant = requestParameters.tenant;
-        if (tenant === null || tenant === undefined) {
-            throw new Error('Required parameter tenant was null or undefined when calling updateOneTenant.');
+        const serviceGraph = requestParameters.serviceGraph;
+        if (serviceGraph === null || serviceGraph === undefined) {
+            throw new Error('Required parameter serviceGraph was null or undefined when calling updateOneServiceGraph.');
         }
 
         let headers = this.defaultHeaders;
@@ -716,8 +716,8 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
-            tenant,
+        return this.httpClient.put<ServiceGraph>(`${this.configuration.basePath}/v2/app-centric/service-graphs/${encodeURIComponent(String(id))}`,
+            serviceGraph,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
