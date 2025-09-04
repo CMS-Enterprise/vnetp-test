@@ -593,6 +593,7 @@
             [class.btn-primary]="rightPanelView === 'graph'"
             [class.btn-outline-secondary]="rightPanelView !== 'graph'"
             [disabled]="!graph"
+            (click)="showGraph()"
           >
             Graph
           </button>
@@ -665,6 +666,20 @@
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph View -->
+      <div *ngIf="rightPanelView === 'graph'" style="height: 600px">
+        <div *ngIf="graph" id="graphContainer" style="width: 100%; height: 100%; position: relative">
+          <svg id="graphSvg" style="width: 100%; height: 100%"></svg>
+        </div>
+        <div *ngIf="!graph" class="d-flex align-items-center justify-content-center h-100 text-muted">
+          <div class="text-center">
+            <fa-icon class="icon mb-2" [icon]="['fas', 'chart-line']" style="font-size: 3rem; opacity: 0.3"></fa-icon>
+            <div>No graph data available</div>
+            <div class="small">Click "Graph" button in toolbar to generate</div>
           </div>
         </div>
       </div>
