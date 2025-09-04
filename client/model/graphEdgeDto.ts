@@ -30,10 +30,6 @@ export interface GraphEdgeDto {
      */
     type: GraphEdgeDtoTypeEnum;
     /**
-     * Optional validation ID for error mapping
-     */
-    validationId?: string;
-    /**
      * Weight or cost of this edge (for pathfinding)
      */
     weight?: number;

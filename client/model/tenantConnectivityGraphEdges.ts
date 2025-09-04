@@ -16,7 +16,6 @@ export interface TenantConnectivityGraphEdges {
     sourceNodeId?: string;
     targetNodeId?: string;
     type?: TenantConnectivityGraphEdgesTypeEnum;
-    validationId?: string;
     weight?: number;
     bidirectional?: boolean;
     properties?: object;

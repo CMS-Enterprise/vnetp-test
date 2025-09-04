@@ -15,7 +15,6 @@ export interface TenantConnectivityGraphNodes {
     id?: string;
     name?: string;
     type?: TenantConnectivityGraphNodesTypeEnum;
-    validationId?: string;
     config?: object;
     entityId?: string;
     tenantId?: string;

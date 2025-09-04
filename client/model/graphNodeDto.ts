@@ -27,10 +27,6 @@ export interface GraphNodeDto {
      */
     type: GraphNodeDtoTypeEnum;
     /**
-     * Optional validation ID for error mapping
-     */
-    validationId?: string;
-    /**
      * Raw configuration data (varies by node type)
      */
     config?: object;

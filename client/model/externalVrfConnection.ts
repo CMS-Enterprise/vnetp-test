@@ -23,9 +23,7 @@ export interface ExternalVrfConnection {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     name: string;
-    /**
-     * The external VRF that this connection attaches to the external firewall.
-     */
+    readonly firewall?: ExternalFirewall;
     externalVrf: ExternalVrfConnectionExternalVrfEnum;
     injectDefaultRouteFromExternalVrf: boolean;
     allowAllRoutesFromExternalVrf: boolean;

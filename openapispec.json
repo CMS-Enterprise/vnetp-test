@@ -26717,6 +26717,14 @@
           "name": {
             "type": "string"
           },
+          "firewall": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExternalFirewall"
+              }
+            ]
+          },
           "externalVrf": {
             "type": "string",
             "enum": [
@@ -26737,8 +26745,7 @@
               "cmsnet_presprod",
               "cmsnet_sec",
               "cmsnet_transport"
-            ],
-            "description": "The external VRF that this connection attaches to the external firewall."
+            ]
           },
           "injectDefaultRouteFromExternalVrf": {
             "type": "boolean"
@@ -33447,11 +33454,6 @@
             ],
             "example": "VRF"
           },
-          "validationId": {
-            "type": "string",
-            "description": "Optional validation ID for error mapping",
-            "example": "vrf-config-1"
-          },
           "config": {
             "type": "object",
             "description": "Raw configuration data (varies by node type)",
@@ -33614,11 +33616,6 @@
               "APPLICATION_PROFILE_CONTAINS"
             ],
             "example": "VRF_TO_L3OUT"
-          },
-          "validationId": {
-            "type": "string",
-            "description": "Optional validation ID for error mapping",
-            "example": "l3out-config-1"
           },
           "weight": {
             "type": "number",
@@ -34420,9 +34417,6 @@
                     "APPLICATION_PROFILE"
                   ]
                 },
-                "validationId": {
-                  "type": "string"
-                },
                 "config": {
                   "type": "object"
                 },
@@ -34500,9 +34494,6 @@
                     "SERVICE_GRAPH_TO_FIREWALL",
                     "VRF_INTERVRF_CONNECTIVITY"
                   ]
-                },
-                "validationId": {
-                  "type": "string"
                 },
                 "weight": {
                   "type": "number"
