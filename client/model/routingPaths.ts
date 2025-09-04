@@ -19,9 +19,9 @@ export interface RoutingPaths {
      */
     defaultRoutePaths: Array<DefaultRoutePath>;
     /**
-     * VRF connectivity matrix
+     * VRF connectivity matrix (serialized from Map<string, Map<string, ConnectionPath>> to nested objects)
      */
-    vrfConnectivityMatrix: { [key: string]: object; };
+    vrfConnectivityMatrix: { [key: string]: { [key: string]: object; }; };
     /**
      * Potential routing loops detected
      */

@@ -9,23 +9,23 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GraphNodeDto } from './graphNodeDto';
 import { GraphIndexes } from './graphIndexes';
-import { GraphEdgeDto } from './graphEdgeDto';
 import { GraphUtils } from './graphUtils';
 import { RoutingPaths } from './routingPaths';
+import { TenantConnectivityGraphEdges } from './tenantConnectivityGraphEdges';
 import { GraphMetadata } from './graphMetadata';
+import { TenantConnectivityGraphNodes } from './tenantConnectivityGraphNodes';
 
 
 export interface TenantConnectivityGraph { 
     /**
-     * All nodes in the graph - keyed by node ID
+     * All nodes in the graph - keyed by node ID (serialized from Map to object)
      */
-    nodes: { [key: string]: GraphNodeDto; };
+    nodes: { [key: string]: TenantConnectivityGraphNodes; };
     /**
-     * All edges in the graph - keyed by edge ID
+     * All edges in the graph - keyed by edge ID (serialized from Map to object)
      */
-    edges: { [key: string]: GraphEdgeDto; };
+    edges: { [key: string]: TenantConnectivityGraphEdges; };
     /**
      * Strategy used to build this graph
      */

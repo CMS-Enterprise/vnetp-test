@@ -1,0 +1,404 @@
+<section class="tenant-infra">
+  <div class="toolbar">
+    <button class="btn btn-light" (click)="goBack()">← Back to Tenant Select</button>
+    <div class="ml-2">
+      <button class="btn btn-primary" [disabled]="!!parseError || isSubmitting" (click)="validate()">
+        <fa-icon class="icon" [icon]="['fas', 'check']"></fa-icon>
+        Validate
+      </button>
+      <button class="btn btn-primary" [disabled]="!!parseError || isSubmitting" (click)="getGraph()">
+        <fa-icon class="icon" [icon]="['fas', 'chart-line']"></fa-icon>
+        Graph
+      </button>
+      <button class="btn btn-primary" [disabled]="!!parseError || isSubmitting" (click)="saveConfig()">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        Save
+      </button>
+    </div>
+  </div>
+  <h2>Tenant Infrastructure ({{ mode | uppercase }})</h2>
+  <p *ngIf="mode === 'edit'">
+    Editing tenant: <strong>{{ tenantId }}</strong>
+  </p>
+  <p *ngIf="mode === 'create'">Creating a new tenant configuration.</p>
+
+  <div class="row">
+    <div class="col-lg-4 col-md-5">
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'tenant'" (click)="setActiveTab('tenant')">Tenant</a></li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="activeTab === 'firewalls'" (click)="setActiveTab('firewalls')">External Firewalls</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'vrfs'" (click)="setActiveTab('vrfs')">VRFs</a></li>
+      </ul>
+
+      <!-- Tenant Form -->
+      <div *ngIf="activeTab === 'tenant'">
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-control" [(ngModel)]="config.tenant.name" (ngModelChange)="onConfigMutated()" />
+        </div>
+        <div class="form-group">
+          <label>Environment ID</label>
+          <input class="form-control" [(ngModel)]="config.tenant.environmentId" (ngModelChange)="onConfigMutated()" />
+        </div>
+        <div class="form-group">
+          <label>Alias</label>
+          <input class="form-control" [(ngModel)]="config.tenant.alias" (ngModelChange)="onConfigMutated()" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="config.tenant.description" (ngModelChange)="onConfigMutated()"></textarea>
+        </div>
+      </div>
+
+      <!-- Firewalls List + Detail -->
+      <div *ngIf="activeTab === 'firewalls'">
+        <div class="d-flex mb-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="addFirewall()">Add Firewall</button>
+        </div>
+        <ul class="list-group mb-2">
+          <li
+            class="list-group-item p-2"
+            *ngFor="let fw of config.externalFirewalls; let i = index; trackBy: trackByIdx"
+            [class.active]="i === selectedFirewallIdx"
+            (click)="selectedFirewallIdx = i"
+            style="cursor: pointer"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ fw.name || '(unnamed)' }}</strong> <small class="text-muted">{{ fw.validationId }}</small>
+              </div>
+              <button class="btn btn-sm btn-outline-danger" (click)="$event.stopPropagation(); removeFirewall(i)">Remove</button>
+            </div>
+          </li>
+        </ul>
+        <div *ngIf="config.externalFirewalls.length">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">Firewall Details</h6>
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label>Name</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].name"
+                    (ngModelChange)="onConfigMutated()"
+                  />
+                </div>
+                <div class="form-group col-6">
+                  <label>Device Type</label>
+                  <select
+                    class="form-control"
+                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].firewallDeviceType"
+                    (ngModelChange)="onConfigMutated()"
+                  >
+                    <option>PaloAlto</option>
+                    <option>CiscoAsa</option>
+                  </select>
+                </div>
+                <div class="form-group col-6">
+                  <label>VSYS Name</label>
+                  <input
+                    class="form-control"
+                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].vsysName"
+                    (ngModelChange)="onConfigMutated()"
+                  />
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <h6 class="mb-0">External VRF Connections</h6>
+                <button class="btn btn-sm btn-outline-primary" (click)="addConn(selectedFirewallIdx)">Add Connection</button>
+              </div>
+              <div class="mt-2" *ngFor="let c of config.externalFirewalls[selectedFirewallIdx].externalVrfConnections; let j = index">
+                <div class="border rounded p-2 mb-2">
+                  <div class="form-row">
+                    <div class="form-group col-6">
+                      <label>Name</label>
+                      <input class="form-control" [(ngModel)]="c.name" (ngModelChange)="onConfigMutated()" />
+                    </div>
+                    <div class="form-group col-6">
+                      <label>External VRF</label>
+                      <select class="form-control" [(ngModel)]="c.externalVrf" (ngModelChange)="onConfigMutated()">
+                        <option value="">(select)</option>
+                        <option *ngFor="let vrf of externalVrfOptions" [value]="vrf">{{ vrf }}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-6">
+                      <div class="form-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [id]="'defrt' + j"
+                          [(ngModel)]="c.injectDefaultRouteFromExternalVrf"
+                          (ngModelChange)="onConfigMutated()"
+                        />
+                        <label class="form-check-label" [for]="'defrt' + j">Inject Default Route</label>
+                      </div>
+                    </div>
+                    <div class="form-group col-6">
+                      <div class="form-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [id]="'allow' + j"
+                          [(ngModel)]="c.allowAllRoutesFromExternalVrf"
+                          (ngModelChange)="onConfigMutated()"
+                        />
+                        <label class="form-check-label" [for]="'allow' + j">Allow All Routes From External VRF</label>
+                      </div>
+                    </div>
+                    <div class="form-group col-6">
+                      <div class="form-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [id]="'host' + j"
+                          [(ngModel)]="c.advertiseHostBasedRoutesToExternalVrf"
+                          (ngModelChange)="onConfigMutated()"
+                        />
+                        <label class="form-check-label" [for]="'host' + j">Advertise Host-Based Routes</label>
+                      </div>
+                    </div>
+                    <div class="form-group col-6">
+                      <div class="form-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [id]="'all' + j"
+                          [(ngModel)]="c.advertiseAllRoutesToExternalVrf"
+                          (ngModelChange)="onConfigMutated()"
+                        />
+                        <label class="form-check-label" [for]="'all' + j">Advertise All Routes</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeConn(selectedFirewallIdx, j)">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VRFs List + Detail -->
+      <div *ngIf="activeTab === 'vrfs'">
+        <div class="d-flex mb-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="addVrf()">Add VRF</button>
+        </div>
+        <ul class="list-group mb-2">
+          <li
+            class="list-group-item p-2"
+            *ngFor="let v of config.vrfs; let i = index; trackBy: trackByIdx"
+            [class.active]="i === selectedVrfIdx"
+            (click)="selectedVrfIdx = i"
+            style="cursor: pointer"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ v.name || '(unnamed)' }}</strong> <small class="text-muted">{{ v.validationId }}</small>
+              </div>
+              <button class="btn btn-sm btn-outline-danger" (click)="$event.stopPropagation(); removeVrf(i)">Remove</button>
+            </div>
+          </li>
+        </ul>
+        <div *ngIf="config.vrfs.length">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">VRF Details</h6>
+              <div class="form-row">
+                <div class="form-group col-4">
+                  <label>Name</label>
+                  <input class="form-control" [(ngModel)]="config.vrfs[selectedVrfIdx].name" (ngModelChange)="onConfigMutated()" />
+                </div>
+                <div class="form-group col-4">
+                  <label>Alias</label>
+                  <input class="form-control" [(ngModel)]="config.vrfs[selectedVrfIdx].alias" (ngModelChange)="onConfigMutated()" />
+                </div>
+                <div class="form-group col-4">
+                  <label>Max External Routes</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="config.vrfs[selectedVrfIdx].maxExternalRoutes"
+                    (ngModelChange)="onConfigMutated()"
+                  />
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <h6 class="mb-0">Service Graphs</h6>
+                <button class="btn btn-sm btn-outline-primary" (click)="addSg(selectedVrfIdx)">Add Service Graph</button>
+              </div>
+              <div class="mt-2" *ngFor="let sg of config.vrfs[selectedVrfIdx].serviceGraphs; let j = index">
+                <div class="border rounded p-2 mb-2">
+                  <div class="form-row">
+                    <div class="form-group col-6">
+                      <label>Name</label>
+                      <input class="form-control" [(ngModel)]="sg.name" (ngModelChange)="onConfigMutated()" />
+                    </div>
+                    <div class="form-group col-6">
+                      <label>Firewall Name</label>
+                      <input class="form-control" [(ngModel)]="sg.firewall.name" (ngModelChange)="onConfigMutated()" />
+                    </div>
+                    <div class="form-group col-6">
+                      <label>Device Type</label>
+                      <select class="form-control" [(ngModel)]="sg.firewall.firewallDeviceType" (ngModelChange)="onConfigMutated()">
+                        <option>PaloAlto</option>
+                        <option>CiscoAsa</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-6">
+                      <label>VSYS Name</label>
+                      <input class="form-control" [(ngModel)]="sg.firewall.vsysName" (ngModelChange)="onConfigMutated()" />
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeSg(selectedVrfIdx, j)">Remove</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <h6 class="mb-0">L3Outs</h6>
+                <button class="btn btn-sm btn-outline-primary" (click)="addL3(selectedVrfIdx)">Add L3Out</button>
+              </div>
+              <div class="mt-2" *ngFor="let l3 of config.vrfs[selectedVrfIdx].l3outs; let j = index">
+                <div class="border rounded p-2 mb-2">
+                  <div class="form-row">
+                    <div class="form-group col-3">
+                      <label>Name</label>
+                      <input class="form-control" [(ngModel)]="l3.name" (ngModelChange)="onConfigMutated()" />
+                    </div>
+                    <div class="form-group col-3">
+                      <label>Type</label>
+                      <select class="form-control" [(ngModel)]="l3.l3outType" (ngModelChange)="onConfigMutated()">
+                        <option value="external">external</option>
+                        <option value="intervrf">intervrf</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-3">
+                      <label>Propagate External Routes</label>
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [(ngModel)]="l3.propagateExternalRoutes"
+                        (ngModelChange)="onConfigMutated()"
+                      />
+                    </div>
+                    <div class="form-group col-3">
+                      <label>Firewall (ref)</label>
+                      <select class="form-control" [(ngModel)]="l3.firewall" (ngModelChange)="onConfigMutated()">
+                        <option [ngValue]="''">(none)</option>
+                        <option *ngFor="let fw of config.externalFirewalls" [ngValue]="fw.name">{{ fw.name }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeL3(selectedVrfIdx, j)">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8 col-md-7">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="btn-group btn-group-sm" role="group">
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="rightPanelView === 'config'"
+            [class.btn-outline-secondary]="rightPanelView !== 'config'"
+            (click)="showConfig()"
+          >
+            Configuration
+          </button>
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="rightPanelView === 'graph'"
+            [class.btn-outline-secondary]="rightPanelView !== 'graph'"
+            [disabled]="!graph"
+          >
+            Graph
+          </button>
+        </div>
+        <div class="btn-group btn-group-sm" role="group" *ngIf="rightPanelView === 'config'">
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="previewFormat === 'json'"
+            [class.btn-outline-secondary]="previewFormat !== 'json'"
+            (click)="previewFormat = 'json'; onFormatChange()"
+          >
+            JSON
+          </button>
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="previewFormat === 'yaml'"
+            [class.btn-outline-secondary]="previewFormat !== 'yaml'"
+            (click)="previewFormat = 'yaml'; onFormatChange()"
+          >
+            YAML
+          </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="copyToClipboard()" title="Copy to clipboard">
+            Copy to Clipboard
+          </button>
+        </div>
+      </div>
+
+      <!-- Configuration View -->
+      <div *ngIf="rightPanelView === 'config'">
+        <textarea class="form-control" rows="26" [(ngModel)]="rawJson" (ngModelChange)="onTextChange()"></textarea>
+        <small *ngIf="parseError" class="text-danger">{{ parseError }}</small>
+
+        <h5 class="mt-3">Validation Result</h5>
+        <div *ngIf="!validation" class="text-muted">No validation run yet.</div>
+        <div *ngIf="validation" class="card">
+          <div class="card-body">
+            <div>
+              <strong>Status:</strong>
+              <span [ngClass]="validation.success ? 'text-success' : 'text-danger'">
+                {{ validation.success ? 'Valid' : 'Invalid' }}
+              </span>
+            </div>
+            <div class="mt-2" *ngIf="validation.errors?.length">
+              <strong>Errors ({{ validation.errors.length }})</strong>
+              <ul class="mb-0">
+                <li *ngFor="let err of validation.errors">
+                  <span class="text-muted">[{{ err.validationId || '-' }}-{{ err.path || '$' }}]</span>
+                  <span> {{ err.message }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-2" *ngIf="validation.warnings?.length">
+              <strong>Warnings ({{ validation.warnings.length }})</strong>
+              <ul class="mb-0">
+                <li *ngFor="let warn of validation.warnings">
+                  <span class="text-muted">[{{ warn.validationId || '-' }}-{{ warn.path || '$' }}]</span>
+                  <span> {{ warn.message }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graph View -->
+      <div *ngIf="rightPanelView === 'graph'" id="graphContainer" style="height: 600px; border: 1px solid #dee2e6; border-radius: 4px">
+        <svg id="graphSvg" width="100%" height="100%"></svg>
+        <div *ngIf="!graph" class="d-flex align-items-center justify-content-center h-100 text-muted">
+          Click "Graph" button to generate visualization
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

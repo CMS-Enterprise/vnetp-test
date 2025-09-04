@@ -70,8 +70,7 @@ const routes: Routes = [
           breadcrumb: 'Tenant Infrastructure',
           title: 'Tenant Infrastructure',
         },
-        loadChildren: () =>
-          import('../tenant-v2/tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
+        loadChildren: () => import('./tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
       },
       {
         path: 'tenant-infrastructure/edit/:id',
@@ -80,8 +79,7 @@ const routes: Routes = [
           breadcrumb: 'Tenant Infrastructure',
           title: 'Tenant Infrastructure',
         },
-        loadChildren: () =>
-          import('../tenant-v2/tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
+        loadChildren: () => import('./tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
       },
       {
         path: 'wan-form-request',

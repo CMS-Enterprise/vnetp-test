@@ -16,7 +16,7 @@ export interface FirewallConfigDto {
     name: string;
     validationId: string;
     firewallDeviceType: FirewallConfigDtoFirewallDeviceTypeEnum;
-    vsysName?: string;
+    vsysName: string;
     contextName?: string;
     bgpAsn?: number;
     bgpAsnAutoGenerate?: boolean;

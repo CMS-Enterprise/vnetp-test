@@ -13,35 +13,35 @@
 
 export interface GraphIndexes { 
     /**
-     * Nodes by type
+     * Nodes by type (serialized from Map<string, Set<string>> to object with arrays)
      */
     nodesByType: { [key: string]: Array<string>; };
     /**
-     * Nodes by tenant
+     * Nodes by tenant (serialized from Map<string, Set<string>> to object with arrays)
      */
     nodesByTenant: { [key: string]: Array<string>; };
     /**
-     * Edges by type
+     * Edges by type (serialized from Map<string, Set<string>> to object with arrays)
      */
     edgesByType: { [key: string]: Array<string>; };
     /**
-     * Edges by source node
+     * Edges by source node (serialized from Map<string, Set<string>> to object with arrays)
      */
     edgesBySource: { [key: string]: Array<string>; };
     /**
-     * Edges by target node
+     * Edges by target node (serialized from Map<string, Set<string>> to object with arrays)
      */
     edgesByTarget: { [key: string]: Array<string>; };
     /**
-     * External VRF to VRF nodes mapping
+     * External VRF to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)
      */
     externalVrfToVrfs: { [key: string]: Array<string>; };
     /**
-     * Firewall to VRF nodes mapping
+     * Firewall to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)
      */
     firewallToVrfs: { [key: string]: Array<string>; };
     /**
-     * VRF to firewall nodes mapping
+     * VRF to firewall nodes mapping (serialized from Map<string, Set<string>> to object with arrays)
      */
     vrfToFirewalls: { [key: string]: Array<string>; };
 }

@@ -26659,7 +26659,27 @@
             ]
           },
           "externalVrf": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "cms-entsrv-inet",
+              "cms-entsrv-ldapdns",
+              "cms-entsrv-mgmt",
+              "cms-entsrv-mon",
+              "cms-entsrv-pres",
+              "cms-entsrv-sec",
+              "cms-entsrv-vpn",
+              "cmsnet_appdev",
+              "cmsnet_appprod",
+              "cmsnet_datadev",
+              "cmsnet_dataprod",
+              "cmsnet_edc_vpn",
+              "cmsnet_edcmgmt",
+              "cmsnet_presdev",
+              "cmsnet_presprod",
+              "cmsnet_sec",
+              "cmsnet_transport"
+            ],
+            "description": "The external VRF that this connection attaches to the external firewall."
           },
           "injectDefaultRouteFromExternalVrf": {
             "type": "boolean"
@@ -33618,7 +33638,11 @@
         "required": [
           "name",
           "validationId",
-          "externalVrf"
+          "externalVrf",
+          "injectDefaultRouteFromExternalVrf",
+          "allowAllRoutesFromExternalVrf",
+          "advertiseHostBasedRoutesToExternalVrf",
+          "advertiseAllRoutesToExternalVrf"
         ]
       },
       "FirewallConfigDto": {
@@ -33638,7 +33662,8 @@
             ]
           },
           "vsysName": {
-            "type": "string"
+            "type": "string",
+            "example": "vsys1"
           },
           "contextName": {
             "type": "string"
@@ -33660,6 +33685,7 @@
           "name",
           "validationId",
           "firewallDeviceType",
+          "vsysName",
           "externalVrfConnections"
         ]
       },
@@ -33927,37 +33953,64 @@
         "properties": {
           "nodesByType": {
             "type": "object",
-            "description": "Nodes by type",
+            "description": "Nodes by type (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "example": {
+              "TENANT": [
+                "tenant:tenant1"
+              ],
+              "VRF": [
+                "vrf:tenant1:production",
+                "vrf:tenant1:staging"
+              ],
+              "EXTERNAL_FIREWALL": [
+                "external-firewall:fw1"
+              ]
             }
           },
           "nodesByTenant": {
             "type": "object",
-            "description": "Nodes by tenant",
+            "description": "Nodes by tenant (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "example": {
+              "tenant1": [
+                "tenant:tenant1",
+                "vrf:tenant1:production",
+                "vrf:tenant1:staging"
+              ]
             }
           },
           "edgesByType": {
             "type": "object",
-            "description": "Edges by type",
+            "description": "Edges by type (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "example": {
+              "VRF_TO_L3OUT": [
+                "vrf:tenant1:production-to-l3out:tenant1:production:external"
+              ],
+              "TENANT_CONTAINS_VRF": [
+                "tenant:tenant1-to-vrf:tenant1:production"
+              ]
             }
           },
           "edgesBySource": {
             "type": "object",
-            "description": "Edges by source node",
+            "description": "Edges by source node (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -33967,7 +34020,7 @@
           },
           "edgesByTarget": {
             "type": "object",
-            "description": "Edges by target node",
+            "description": "Edges by target node (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -33977,32 +34030,51 @@
           },
           "externalVrfToVrfs": {
             "type": "object",
-            "description": "External VRF to VRF nodes mapping",
+            "description": "External VRF to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "example": {
+              "cms-entsrv-inet": [
+                "vrf:tenant1:production"
+              ],
+              "cmsnet-transport": [
+                "vrf:tenant1:staging"
+              ]
             }
           },
           "firewallToVrfs": {
             "type": "object",
-            "description": "Firewall to VRF nodes mapping",
+            "description": "Firewall to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "example": {
+              "external-firewall:fw1": [
+                "vrf:tenant1:production",
+                "vrf:tenant1:staging"
+              ]
             }
           },
           "vrfToFirewalls": {
             "type": "object",
-            "description": "VRF to firewall nodes mapping",
+            "description": "VRF to firewall nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
             "additionalProperties": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            "example": {
+              "vrf:tenant1:production": [
+                "external-firewall:fw1"
+              ]
             }
           }
         },
@@ -34096,9 +34168,51 @@
           },
           "vrfConnectivityMatrix": {
             "type": "object",
-            "description": "VRF connectivity matrix",
+            "description": "VRF connectivity matrix (serialized from Map<string, Map<string, ConnectionPath>> to nested objects)",
             "additionalProperties": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "edges": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "weight": {
+                    "type": "number"
+                  },
+                  "allowsExternalRoutePropagation": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "example": {
+              "vrf:tenant1:production": {
+                "vrf:tenant1:staging": {
+                  "path": [
+                    "vrf:tenant1:production",
+                    "l3out:tenant1:production:intervrf",
+                    "external-firewall:fw1",
+                    "l3out:tenant1:staging:intervrf",
+                    "vrf:tenant1:staging"
+                  ],
+                  "edges": [
+                    "vrf:tenant1:production-to-l3out:tenant1:production:intervrf",
+                    "l3out:tenant1:production:intervrf-to-external-firewall:fw1"
+                  ],
+                  "weight": 2,
+                  "allowsExternalRoutePropagation": true
+                }
+              }
             }
           },
           "potentialRoutingLoops": {
@@ -34198,9 +34312,60 @@
         "properties": {
           "nodes": {
             "type": "object",
-            "description": "All nodes in the graph - keyed by node ID",
+            "description": "All nodes in the graph - keyed by node ID (serialized from Map to object)",
             "additionalProperties": {
-              "$ref": "#/components/schemas/GraphNodeDto"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TENANT",
+                    "VRF",
+                    "L3OUT",
+                    "EXTERNAL_FIREWALL",
+                    "SERVICE_GRAPH",
+                    "SERVICE_GRAPH_FIREWALL",
+                    "EXTERNAL_VRF_CONNECTION",
+                    "EXTERNAL_VRF",
+                    "CONTRACT",
+                    "SUBJECT",
+                    "FILTER",
+                    "FILTER_ENTRY",
+                    "ENDPOINT_GROUP",
+                    "ENDPOINT_SECURITY_GROUP",
+                    "BRIDGE_DOMAIN",
+                    "SUBNET",
+                    "APPLICATION_PROFILE"
+                  ]
+                },
+                "validationId": {
+                  "type": "string"
+                },
+                "config": {
+                  "type": "object"
+                },
+                "entityId": {
+                  "type": "string"
+                },
+                "tenantId": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object"
+                },
+                "connectivity": {
+                  "type": "object"
+                },
+                "validationContext": {
+                  "type": "object"
+                }
+              }
             },
             "example": {
               "tenant:tenant1": {
@@ -34233,9 +34398,49 @@
           },
           "edges": {
             "type": "object",
-            "description": "All edges in the graph - keyed by edge ID",
+            "description": "All edges in the graph - keyed by edge ID (serialized from Map to object)",
             "additionalProperties": {
-              "$ref": "#/components/schemas/GraphEdgeDto"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "sourceNodeId": {
+                  "type": "string"
+                },
+                "targetNodeId": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TENANT_CONTAINS_VRF",
+                    "TENANT_CONTAINS_FIREWALL",
+                    "VRF_TO_L3OUT",
+                    "L3OUT_TO_FIREWALL",
+                    "FIREWALL_TO_EXTERNAL_VRF_CONNECTION",
+                    "EXTERNAL_VRF_CONNECTION_TO_EXTERNAL_VRF",
+                    "VRF_TO_SERVICE_GRAPH",
+                    "SERVICE_GRAPH_TO_FIREWALL",
+                    "VRF_INTERVRF_CONNECTIVITY"
+                  ]
+                },
+                "validationId": {
+                  "type": "string"
+                },
+                "weight": {
+                  "type": "number"
+                },
+                "bidirectional": {
+                  "type": "boolean"
+                },
+                "properties": {
+                  "type": "object"
+                },
+                "metadata": {
+                  "type": "object"
+                }
+              }
             },
             "example": {
               "tenant:tenant1-to-vrf:tenant1:production": {

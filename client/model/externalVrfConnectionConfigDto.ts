@@ -15,10 +15,10 @@ export interface ExternalVrfConnectionConfigDto {
     name: string;
     validationId: string;
     externalVrf: ExternalVrfConnectionConfigDtoExternalVrfEnum;
-    injectDefaultRouteFromExternalVrf?: boolean;
-    allowAllRoutesFromExternalVrf?: boolean;
-    advertiseHostBasedRoutesToExternalVrf?: boolean;
-    advertiseAllRoutesToExternalVrf?: boolean;
+    injectDefaultRouteFromExternalVrf: boolean;
+    allowAllRoutesFromExternalVrf: boolean;
+    advertiseHostBasedRoutesToExternalVrf: boolean;
+    advertiseAllRoutesToExternalVrf: boolean;
 }
 export enum ExternalVrfConnectionConfigDtoExternalVrfEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

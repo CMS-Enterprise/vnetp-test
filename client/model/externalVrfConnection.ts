@@ -23,7 +23,10 @@ export interface ExternalVrfConnection {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     readonly firewall?: ExternalFirewall;
-    externalVrf: string;
+    /**
+     * The external VRF that this connection attaches to the external firewall.
+     */
+    externalVrf: ExternalVrfConnectionExternalVrfEnum;
     injectDefaultRouteFromExternalVrf: boolean;
     allowAllRoutesFromExternalVrf: boolean;
     advertiseHostBasedRoutesToExternalVrf: boolean;
@@ -36,4 +39,25 @@ export interface ExternalVrfConnection {
     readonly externalFirewall?: ExternalFirewall;
     externalFirewallId?: string;
 }
+export enum ExternalVrfConnectionExternalVrfEnum {
+    CmsEntsrvInet = 'cms-entsrv-inet',
+    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
+    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
+    CmsEntsrvMon = 'cms-entsrv-mon',
+    CmsEntsrvPres = 'cms-entsrv-pres',
+    CmsEntsrvSec = 'cms-entsrv-sec',
+    CmsEntsrvVpn = 'cms-entsrv-vpn',
+    CmsnetAppdev = 'cmsnet_appdev',
+    CmsnetAppprod = 'cmsnet_appprod',
+    CmsnetDatadev = 'cmsnet_datadev',
+    CmsnetDataprod = 'cmsnet_dataprod',
+    CmsnetEdcVpn = 'cmsnet_edc_vpn',
+    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
+    CmsnetPresdev = 'cmsnet_presdev',
+    CmsnetPresprod = 'cmsnet_presprod',
+    CmsnetSec = 'cmsnet_sec',
+    CmsnetTransport = 'cmsnet_transport'
+};
+
+
 

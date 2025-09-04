@@ -302,6 +302,8 @@ model/tenantAdminDto.ts
 model/tenantBasicUpdateDto.ts
 model/tenantConfigDto.ts
 model/tenantConnectivityGraph.ts
+model/tenantConnectivityGraphEdges.ts
+model/tenantConnectivityGraphNodes.ts
 model/tenantInfrastructureConfigDto.ts
 model/tenantInfrastructureResponse.ts
 model/tenantInfrastructureValidationError.ts

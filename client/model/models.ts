@@ -230,6 +230,8 @@ export * from './tenantAdminDto';
 export * from './tenantBasicUpdateDto';
 export * from './tenantConfigDto';
 export * from './tenantConnectivityGraph';
+export * from './tenantConnectivityGraphEdges';
+export * from './tenantConnectivityGraphNodes';
 export * from './tenantInfrastructureConfigDto';
 export * from './tenantInfrastructureResponse';
 export * from './tenantInfrastructureValidationError';

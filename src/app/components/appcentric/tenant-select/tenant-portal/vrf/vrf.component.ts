@@ -142,10 +142,7 @@ export class VrfComponent implements OnInit {
       }
     }
 
-    const relations =
-      this.applicationMode === ApplicationMode.NETCENTRIC
-        ? []
-        : ['wanForm', 'wanForm.internalRoutes', 'wanForm.internalRoutes.appcentricSubnet', 'wanForm.externalRoutes'];
+    const relations = this.applicationMode === ApplicationMode.NETCENTRIC ? [] : [];
 
     this.vrfService
       .getManyVrf({
