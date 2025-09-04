@@ -34,6 +34,10 @@ export interface ConfigureTenantInfrastructureRequestParams {
     tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
+export interface GetTenantInfrastructureGraphRequestParams {
+    id: string;
+}
+
 export interface ValidateTenantInfrastructureRequestParams {
     tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
@@ -203,6 +207,53 @@ export class V2AdminTenantOrchestratorService {
 
         return this.httpClient.post<TenantInfrastructureResponse>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/configure`,
             tenantInfrastructureConfigDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get tenant infrastructure graph
+     * Get tenant infrastructure graph
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
+    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
+    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
+    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getTenantInfrastructureGraph.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<TenantConnectivityGraph>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/generate-graph/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

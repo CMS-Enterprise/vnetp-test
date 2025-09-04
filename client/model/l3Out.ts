@@ -36,8 +36,8 @@ export interface L3Out {
     readonly endpointSecurityGroups?: Array<L3Out>;
     l3outType: string;
     propagateExternalRoutes?: boolean;
-    readonly firewall?: ExternalFirewall;
-    firewallId?: string;
+    readonly externalFirewall?: ExternalFirewall;
+    externalFirewallId?: string;
     underlayIpv4Network: string;
     underlayIpv6Network: string;
     underlayVlan: number;

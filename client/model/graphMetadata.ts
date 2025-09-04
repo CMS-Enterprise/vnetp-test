@@ -32,5 +32,9 @@ export interface GraphMetadata {
      * Additional build metadata
      */
     buildMetadata?: object;
+    /**
+     * Build options used to build the graph
+     */
+    options?: object;
 }
 

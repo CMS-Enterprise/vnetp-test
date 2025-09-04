@@ -22,8 +22,9 @@ export interface ServiceGraph {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    readonly firewall?: ServiceGraphFirewall;
-    firewallId?: string;
+    name: string;
+    readonly serviceGraphFirewall?: ServiceGraphFirewall;
+    serviceGraphFirewallId?: string;
     underlayIpv4Network: string;
     underlayIpv6Network: string;
     underlayVlan: number;

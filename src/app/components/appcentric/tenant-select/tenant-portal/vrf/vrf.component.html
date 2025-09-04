@@ -1,4 +1,4 @@
-<!-- <ng-container [ngSwitch]="currentView">
+<ng-container [ngSwitch]="currentView">
   <ng-container *ngSwitchCase="'vrf'">
     <ng-container *ngIf="!isLoading; else loading">
       <section class="btn-toolbar" role="toolbar">
@@ -31,7 +31,7 @@
     </ng-container>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'subnets'">
+  <!-- <ng-container *ngSwitchCase="'subnets'">
     <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
       <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
       <span>Back to VRF List</span>
@@ -49,8 +49,8 @@
       [vrfId]="selectedVrf.id"
       [environmentId]="tenant?.environmentId"
     ></app-external-route>
-  </ng-container>
-</ng-container> -->
+  </ng-container> -->
+</ng-container>
 
 <ng-template #actionsTemplate let-vrf="datum">
   <section class="table__actions">
@@ -77,13 +77,13 @@
       (handleClick)="deleteVrf(vrf)"
     ></app-icon-button>
 
-    <app-icon-button
+    <!-- <app-icon-button
       *ngIf="vrf?.provisionedAt"
       icon="download"
       label="Deprovision VRF"
       type="danger"
       (handleClick)="deprovisionVrf(vrf)"
-    ></app-icon-button>
+    ></app-icon-button> -->
 
     <app-icon-button icon="expand" label="Expand Row" (click)="expandedRow = expandedRow === vrf ? null : vrf"></app-icon-button>
   </section>

@@ -14,7 +14,6 @@ import { ExternalVrfConnectionConfigDto } from './externalVrfConnectionConfigDto
 
 export interface FirewallConfigDto { 
     name: string;
-    validationId: string;
     firewallDeviceType: FirewallConfigDtoFirewallDeviceTypeEnum;
     vsysName: string;
     contextName?: string;

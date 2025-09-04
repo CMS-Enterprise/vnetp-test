@@ -442,7 +442,15 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tenantService
       .getOneTenant({
         id: this.tenantId,
-        join: ['vrfs', 'vrfs.internalNetworkServicesTier', 'vrfs.externalNetworkServicesTier'],
+        join: [
+          'vrfs',
+          'vrfs.serviceGraphs',
+          'vrfs.serviceGraphs.serviceGraphFirewall',
+          'vrfs.l3outs',
+          'vrfs.l3outs.externalFirewall',
+          'externalFirewalls',
+          'externalFirewalls.externalVrfConnections',
+        ],
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -454,7 +462,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.applicationMode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
             this.tenantVrfs = response.vrfs || [];
             this.initializeVrfSelection();
-            this.getNetworkServicesContainerDatacenter(response.datacenterId);
+            // this.getNetworkServicesContainerDatacenter(response.datacenterId);
           }
         },
         () => {

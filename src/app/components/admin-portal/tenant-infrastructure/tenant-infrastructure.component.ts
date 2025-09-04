@@ -7,9 +7,11 @@ import {
   TenantInfrastructureValidationResponse,
   ExternalVrfConnectionExternalVrfEnum,
   TenantConnectivityGraph,
+  TenantInfrastructureResponse,
 } from 'client';
 import * as yaml from 'js-yaml';
 import * as d3 from 'd3';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-tenant-infrastructure',
@@ -27,13 +29,18 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   parsedConfig: TenantInfrastructureConfigDto | null = null;
   config: TenantInfrastructureConfigDto;
   validation: TenantInfrastructureValidationResponse | null = null;
+  saveResponse: TenantInfrastructureResponse | null = null;
   isSubmitting = false;
+  isGeneratingGraph = false;
+  hasValidated = false;
   activeTab: 'tenant' | 'firewalls' | 'vrfs' = 'tenant';
   selectedFirewallIdx = 0;
   selectedVrfIdx = 0;
   externalVrfOptions = Object.values(ExternalVrfConnectionExternalVrfEnum);
   previewFormat: 'json' | 'yaml' = 'json';
-  rightPanelView: 'config' | 'graph' = 'config';
+  rightPanelView: 'config' | 'graph' | 'response' = 'config';
+  private graphUpdateSubject = new Subject<void>();
+  private graphUpdateSubscription?: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private orchestrator: V2AdminTenantOrchestratorService) {}
 
@@ -47,34 +54,50 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       }) || undefined;
 
     // Seed example JSON/config
-    this.config = {
-      tenant: {
-        validationId: 'tenant1',
-        name: 'tenant1',
-        environmentId: '12345678-1234-1234-1234-123456789012',
-        alias: 'Tenant 1',
-        description: '',
-      },
-      externalFirewalls: [
-        { validationId: 'fw1', name: 'fw1', firewallDeviceType: 'PaloAlto', vsysName: 'vsys1', externalVrfConnections: [] as any[] },
-        { validationId: 'fw2', name: 'fw2', firewallDeviceType: 'PaloAlto', vsysName: 'vsys2', externalVrfConnections: [] as any[] },
-      ],
-      vrfs: [
-        {
-          validationId: 'default_vrf',
-          name: 'default_vrf',
-          alias: 'Default VRF',
-          maxExternalRoutes: 150,
-          serviceGraphs: [] as any[],
-          l3outs: [{ validationId: 'l3out', name: 'l3out1', l3outType: 'external', firewall: 'fw1' }] as any[],
+    if (this.mode === 'create') {
+      this.config = {
+        tenant: {
+          name: 'tenant1',
+          environmentId: '12345678-1234-1234-1234-123456789012',
+          alias: 'Tenant 1',
+          description: '',
         },
-      ],
-    } as TenantInfrastructureConfigDto;
+        externalFirewalls: [
+          {
+            name: 'fw1',
+            firewallDeviceType: 'PaloAlto',
+            vsysName: 'vsys1',
+            bgpAsn: null,
+            bgpAsnAutoGenerate: true,
+            externalVrfConnections: [] as any[],
+          },
+        ],
+        vrfs: [
+          {
+            name: 'default_vrf',
+            alias: 'Default VRF',
+            maxExternalRoutes: 150,
+            bgpAsn: null,
+            bgpAsnAutoGenerate: true,
+            serviceGraphs: [] as any[],
+            l3outs: [{ name: 'l3out1', l3outType: 'external', externalFirewall: 'fw1' }] as any[],
+          },
+        ],
+      } as TenantInfrastructureConfigDto;
+    }
     this.updateRawFromConfig();
+
+    // Setup debounced graph updates
+    this.graphUpdateSubscription = this.graphUpdateSubject.pipe(debounceTime(1000)).subscribe(() => {
+      if (this.rightPanelView === 'graph') {
+        this.generateGraphInternal();
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.graphUpdateSubscription?.unsubscribe();
   }
 
   goBack(): void {
@@ -109,8 +132,59 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     }
   }
 
+  get formErrors(): string[] {
+    const errors: string[] = [];
+
+    // Check tenant required fields
+    if (!this.config.tenant?.name) {
+      errors.push('Tenant name is required');
+    }
+    if (!this.config.tenant?.environmentId) {
+      errors.push('Tenant environment ID is required');
+    }
+
+    // Check external firewalls
+    this.config.externalFirewalls.forEach((fw, i) => {
+      if (!fw.name) {
+        errors.push(`External Firewall ${i + 1}: name is required`);
+      }
+      if (!fw.firewallDeviceType) {
+        errors.push(`External Firewall ${i + 1}: device type is required`);
+      }
+      // BGP: either bgpAsn > 0 OR bgpAsnAutoGenerate = true
+      const hasBgpAsn = (fw as any).bgpAsn && (fw as any).bgpAsn > 0;
+      const hasAutoGenerate = (fw as any).bgpAsnAutoGenerate;
+      if (!hasBgpAsn && !hasAutoGenerate) {
+        errors.push(`External Firewall ${i + 1}: must specify BGP ASN or enable auto-generate`);
+      }
+    });
+
+    // Check VRFs
+    this.config.vrfs.forEach((vrf, i) => {
+      if (!vrf.name) {
+        errors.push(`VRF ${i + 1}: name is required`);
+      }
+      // BGP: either bgpAsn > 0 OR bgpAsnAutoGenerate = true
+      const hasBgpAsn = (vrf as any).bgpAsn && (vrf as any).bgpAsn > 0;
+      const hasAutoGenerate = (vrf as any).bgpAsnAutoGenerate;
+      if (!hasBgpAsn && !hasAutoGenerate) {
+        errors.push(`VRF ${i + 1}: must specify BGP ASN or enable auto-generate`);
+      }
+    });
+
+    return errors;
+  }
+
+  get isFormValid(): boolean {
+    return this.formErrors.length === 0;
+  }
+
+  get canSave(): boolean {
+    return this.isFormValid && this.hasValidated && this.validation?.success === true;
+  }
+
   validate(): void {
-    if (!this.config || this.isSubmitting) {
+    if (!this.isFormValid || this.isSubmitting) {
       return;
     }
     this.isSubmitting = true;
@@ -118,6 +192,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.orchestrator.validateTenantInfrastructure({ tenantInfrastructureConfigDto: this.config }).subscribe({
       next: res => {
         this.validation = res as TenantInfrastructureValidationResponse;
+        this.hasValidated = true;
         this.showConfig();
       },
       error: err => {
@@ -125,54 +200,76 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
           success: false,
           errors: [
             {
-              validationId: 'request',
               path: '$',
               message: err?.message || 'Request failed',
             } as any,
           ],
         } as TenantInfrastructureValidationResponse;
+        this.hasValidated = false;
       },
       complete: () => (this.isSubmitting = false),
     });
   }
 
   getGraph(): void {
+    if (!this.isFormValid) {
+      return;
+    }
+    this.rightPanelView = 'graph';
+    this.graphUpdateSubject.next();
+  }
+
+  private generateGraphInternal(): void {
+    this.isGeneratingGraph = true;
     this.orchestrator.buildTenantInfrastructureGraph({ tenantInfrastructureConfigDto: this.config }).subscribe({
       next: res => {
         this.graph = res as TenantConnectivityGraph;
-        console.log('Graph data:', this.graph); // Debug: check actual graph structure
-        this.rightPanelView = 'graph';
-        setTimeout(() => this.renderGraph(), 500); // Allow DOM to update
+        console.log('Graph data:', this.graph);
+        setTimeout(() => this.renderGraph(), 100);
       },
       error: err => {
         console.error(err);
+        this.isGeneratingGraph = false;
+      },
+      complete: () => {
+        this.isGeneratingGraph = false;
       },
     });
   }
 
   saveConfig(): void {
+    if (!this.canSave) {
+      return;
+    }
+    this.isSubmitting = true;
     this.orchestrator.configureTenantInfrastructure({ tenantInfrastructureConfigDto: this.config }).subscribe({
       next: res => {
         console.log('Config saved:', res);
-        this.showConfig();
+        this.saveResponse = res as TenantInfrastructureResponse;
+        this.rightPanelView = 'response';
       },
       error: err => {
         this.validation = {
           success: false,
           errors: [
             {
-              validationId: 'request',
               path: '$',
               message: err?.message || 'Request failed',
             } as any,
           ],
         } as TenantInfrastructureValidationResponse;
+        this.showConfig();
       },
+      complete: () => (this.isSubmitting = false),
     });
   }
 
   showConfig(): void {
     this.rightPanelView = 'config';
+  }
+
+  showResponse(): void {
+    this.rightPanelView = 'response';
   }
 
   private renderGraph(): void {
@@ -197,7 +294,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       id: graphNode.id,
       name: graphNode.name,
       type: graphNode.type,
-      validationId: graphNode.validationId,
     }));
 
     const links = Object.values(this.graph.edges)
@@ -223,7 +319,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       VRF: 2,
       SERVICE_GRAPH: 3,
       L3OUT: 3,
-      SG_FIREWALL: 4,
+      SERVICE_GRAPH_FIREWALL: 4,
       EXTERNAL_FIREWALL: 4,
       EXTERNAL_VRF_CONNECTION: 5,
       EXTERNAL_VRF: 6,
@@ -548,7 +644,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       { type: 'L3OUT', color: '#6f42c1', label: 'L3Out' },
       { type: 'EXTERNAL_FIREWALL', color: '#e83e8c', label: 'External Firewall' },
       { type: 'SERVICE_GRAPH', color: '#ffc107', label: 'Service Graph' },
-      { type: 'SG_FIREWALL', color: '#dc3545', label: 'SG Firewall' },
+      { type: 'SERVICE_GRAPH_FIREWALL', color: '#dc3545', label: 'Service Graph Firewall' },
     ];
 
     legendItems.forEach((item, i) => {
@@ -627,7 +723,11 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   // UI helpers
   onConfigMutated(): void {
     this.validation = null;
+    this.hasValidated = false;
     this.updateRawFromConfig();
+    if (this.rightPanelView === 'graph') {
+      this.graphUpdateSubject.next();
+    }
   }
 
   private updateRawFromConfig(): void {
@@ -673,10 +773,11 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   // Firewalls
   addFirewall(): void {
     this.config.externalFirewalls.push({
-      validationId: this.genId('fw'),
       name: 'new-firewall',
       firewallDeviceType: 'PaloAlto',
       vsysName: '',
+      bgpAsn: null,
+      bgpAsnAutoGenerate: true,
       externalVrfConnections: [] as any[],
     } as any);
     this.selectedFirewallIdx = this.config.externalFirewalls.length - 1;
@@ -689,10 +790,9 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     }
     this.onConfigMutated();
   }
-  addConn(fwIdx: number): void {
+  addExternalVrfConnection(fwIdx: number): void {
     const fw = this.config.externalFirewalls[fwIdx] as any;
     fw.externalVrfConnections.push({
-      validationId: this.genId('conn'),
       name: 'connection',
       externalVrf: '',
       injectDefaultRouteFromExternalVrf: false,
@@ -702,7 +802,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     });
     this.onConfigMutated();
   }
-  removeConn(fwIdx: number, i: number): void {
+  removeExternalVrfConnection(fwIdx: number, i: number): void {
     const fw = this.config.externalFirewalls[fwIdx] as any;
     fw.externalVrfConnections.splice(i, 1);
     this.onConfigMutated();
@@ -711,10 +811,11 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   // VRFs
   addVrf(): void {
     this.config.vrfs.push({
-      validationId: this.genId('vrf'),
       name: 'new-vrf',
       alias: '',
       maxExternalRoutes: 0,
+      bgpAsn: null,
+      bgpAsnAutoGenerate: true,
       serviceGraphs: [] as any[],
       l3outs: [] as any[],
     } as any);
@@ -728,26 +829,25 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     }
     this.onConfigMutated();
   }
-  addSg(vrfIdx: number): void {
+  addServiceGraph(vrfIdx: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
     vrf.serviceGraphs.push({
-      validationId: this.genId('sg'),
       name: 'new-sg',
-      firewall: { validationId: this.genId('sgfw'), name: '', firewallDeviceType: 'PaloAlto', vsysName: '' },
+      serviceGraphFirewall: { name: 'new-sg-fw', firewallDeviceType: 'PaloAlto', vsysName: '' },
     });
     this.onConfigMutated();
   }
-  removeSg(vrfIdx: number, i: number): void {
+  removeServiceGraph(vrfIdx: number, i: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
     vrf.serviceGraphs.splice(i, 1);
     this.onConfigMutated();
   }
-  addL3(vrfIdx: number): void {
+  addL3Out(vrfIdx: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
-    vrf.l3outs.push({ validationId: this.genId('l3'), name: 'new-l3out', l3outType: 'external', firewall: '' });
+    vrf.l3outs.push({ name: 'new-l3out', l3outType: 'external', externalFirewall: '' });
     this.onConfigMutated();
   }
-  removeL3(vrfIdx: number, i: number): void {
+  removeL3Out(vrfIdx: number, i: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
     vrf.l3outs.splice(i, 1);
     this.onConfigMutated();
@@ -755,9 +855,5 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
   trackByIdx(_i: number): any {
     return _i;
-  }
-
-  private genId(prefix: string): string {
-    return `${prefix}-${Date.now().toString(36)}`;
   }
 }

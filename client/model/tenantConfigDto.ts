@@ -12,7 +12,6 @@
 
 
 export interface TenantConfigDto { 
-    validationId: string;
     name: string;
     environmentId: string;
     alias?: string;

@@ -15949,6 +15949,38 @@
         ]
       }
     },
+    "/v2/admin/tenant/orchestrator/generate-graph/{id}": {
+      "get": {
+        "operationId": "getTenantInfrastructureGraph",
+        "summary": "Get tenant infrastructure graph",
+        "description": "Get tenant infrastructure graph",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantConnectivityGraph"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/admin/tenant/orchestrator"
+        ]
+      }
+    },
     "/v2/admin/tenant/orchestrator/generate-graph": {
       "post": {
         "operationId": "buildTenantInfrastructureGraph",
@@ -26650,13 +26682,8 @@
             "type": "number",
             "readOnly": true
           },
-          "firewall": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExternalFirewall"
-              }
-            ]
+          "name": {
+            "type": "string"
           },
           "externalVrf": {
             "type": "string",
@@ -26726,9 +26753,13 @@
           },
           "externalFirewallId": {
             "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
           }
         },
         "required": [
+          "name",
           "externalVrf",
           "injectDefaultRouteFromExternalVrf",
           "allowAllRoutesFromExternalVrf",
@@ -26780,13 +26811,15 @@
           "firewallDeviceType": {
             "type": "string"
           },
+          "vsysName": {
+            "type": "string"
+          },
           "externalVrfConnections": {
             "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExternalVrfConnection"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalVrfConnection"
+            }
           },
           "uniqueZonePerExternalVrfConnection": {
             "type": "boolean"
@@ -26798,9 +26831,6 @@
                 "$ref": "#/components/schemas/L3Out"
               }
             ]
-          },
-          "l3outId": {
-            "type": "string"
           },
           "tenant": {
             "readOnly": true,
@@ -26816,7 +26846,10 @@
           "bgpAsn": {
             "type": "number"
           }
-        }
+        },
+        "required": [
+          "vsysName"
+        ]
       },
       "L3Out": {
         "type": "object",
@@ -26920,7 +26953,7 @@
           "propagateExternalRoutes": {
             "type": "boolean"
           },
-          "firewall": {
+          "externalFirewall": {
             "readOnly": true,
             "allOf": [
               {
@@ -26928,7 +26961,7 @@
               }
             ]
           },
-          "firewallId": {
+          "externalFirewallId": {
             "type": "string"
           },
           "underlayIpv4Network": {
@@ -26999,9 +27032,6 @@
               }
             ]
           },
-          "serviceGraphId": {
-            "type": "string"
-          },
           "tenant": {
             "readOnly": true,
             "allOf": [
@@ -27012,8 +27042,14 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "vsysName": {
+            "type": "string"
           }
-        }
+        },
+        "required": [
+          "vsysName"
+        ]
       },
       "ServiceGraph": {
         "type": "object",
@@ -27050,7 +27086,10 @@
             "type": "number",
             "readOnly": true
           },
-          "firewall": {
+          "name": {
+            "type": "string"
+          },
+          "serviceGraphFirewall": {
             "readOnly": true,
             "allOf": [
               {
@@ -27058,7 +27097,7 @@
               }
             ]
           },
-          "firewallId": {
+          "serviceGraphFirewallId": {
             "type": "string"
           },
           "underlayIpv4Network": {
@@ -27094,6 +27133,7 @@
           }
         },
         "required": [
+          "name",
           "underlayIpv4Network",
           "underlayIpv6Network",
           "underlayVlan"
@@ -29173,6 +29213,27 @@
               "APPROVED",
               "ACTIVE"
             ]
+          },
+          "externalFirewalls": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalFirewall"
+            }
+          },
+          "externalVrfConnections": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalVrfConnection"
+            }
+          },
+          "serviceGraphFirewalls": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGraphFirewall"
+            }
           }
         },
         "required": [
@@ -33515,7 +33576,8 @@
               "SUBJECT_TO_FILTER",
               "EPG_TO_CONTRACT",
               "EPG_TO_BRIDGE_DOMAIN",
-              "TENANT_CONTAINS",
+              "TENANT_CONTAINS_VRF",
+              "TENANT_CONTAINS_FIREWALL",
               "VRF_CONTAINS",
               "APPLICATION_PROFILE_CONTAINS"
             ],
@@ -33563,9 +33625,6 @@
       "TenantConfigDto": {
         "type": "object",
         "properties": {
-          "validationId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
@@ -33586,7 +33645,6 @@
           }
         },
         "required": [
-          "validationId",
           "name",
           "environmentId"
         ]
@@ -33595,9 +33653,6 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
-          },
-          "validationId": {
             "type": "string"
           },
           "externalVrf": {
@@ -33637,7 +33692,6 @@
         },
         "required": [
           "name",
-          "validationId",
           "externalVrf",
           "injectDefaultRouteFromExternalVrf",
           "allowAllRoutesFromExternalVrf",
@@ -33649,9 +33703,6 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
-          },
-          "validationId": {
             "type": "string"
           },
           "firewallDeviceType": {
@@ -33683,7 +33734,6 @@
         },
         "required": [
           "name",
-          "validationId",
           "firewallDeviceType",
           "vsysName",
           "externalVrfConnections"
@@ -33692,9 +33742,6 @@
       "L3OutConfigDto": {
         "type": "object",
         "properties": {
-          "validationId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
@@ -33708,7 +33755,7 @@
           "propagateExternalRoutes": {
             "type": "boolean"
           },
-          "firewall": {
+          "externalFirewall": {
             "type": "string"
           },
           "description": {
@@ -33716,18 +33763,14 @@
           }
         },
         "required": [
-          "validationId",
           "name",
           "l3outType",
-          "firewall"
+          "externalFirewall"
         ]
       },
       "ServiceGraphFirewallConfigDto": {
         "type": "object",
         "properties": {
-          "validationId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
@@ -33743,7 +33786,6 @@
           }
         },
         "required": [
-          "validationId",
           "name",
           "firewallDeviceType"
         ]
@@ -33754,25 +33796,18 @@
           "name": {
             "type": "string"
           },
-          "validationId": {
-            "type": "string"
-          },
-          "firewall": {
+          "serviceGraphFirewall": {
             "$ref": "#/components/schemas/ServiceGraphFirewallConfigDto"
           }
         },
         "required": [
           "name",
-          "validationId",
-          "firewall"
+          "serviceGraphFirewall"
         ]
       },
       "VrfConfigDto": {
         "type": "object",
         "properties": {
-          "validationId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
@@ -33791,6 +33826,14 @@
           "description": {
             "type": "string"
           },
+          "policyControlEnforced": {
+            "type": "boolean",
+            "default": true
+          },
+          "policyControlEnforcementIngress": {
+            "type": "boolean",
+            "default": true
+          },
           "l3outs": {
             "type": "array",
             "items": {
@@ -33808,7 +33851,6 @@
           }
         },
         "required": [
-          "validationId",
           "name"
         ]
       },
@@ -33893,9 +33935,6 @@
       "TenantInfrastructureValidationError": {
         "type": "object",
         "properties": {
-          "validationId": {
-            "type": "string"
-          },
           "entityType": {
             "type": "string"
           },
@@ -33916,7 +33955,6 @@
           }
         },
         "required": [
-          "validationId",
           "entityType",
           "entityName",
           "field",
@@ -34252,6 +34290,10 @@
           "buildMetadata": {
             "type": "object",
             "description": "Additional build metadata"
+          },
+          "options": {
+            "type": "object",
+            "description": "Build options used to build the graph"
           }
         },
         "required": [

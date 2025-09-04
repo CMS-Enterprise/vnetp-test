@@ -12,7 +12,6 @@
 
 
 export interface ServiceGraphFirewallConfigDto { 
-    validationId: string;
     name: string;
     firewallDeviceType: ServiceGraphFirewallConfigDtoFirewallDeviceTypeEnum;
     vsysName?: string;

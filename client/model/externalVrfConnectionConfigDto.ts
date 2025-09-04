@@ -13,7 +13,6 @@
 
 export interface ExternalVrfConnectionConfigDto { 
     name: string;
-    validationId: string;
     externalVrf: ExternalVrfConnectionConfigDtoExternalVrfEnum;
     injectDefaultRouteFromExternalVrf: boolean;
     allowAllRoutesFromExternalVrf: boolean;

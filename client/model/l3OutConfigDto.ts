@@ -12,11 +12,10 @@
 
 
 export interface L3OutConfigDto { 
-    validationId: string;
     name: string;
     l3outType: L3OutConfigDtoL3outTypeEnum;
     propagateExternalRoutes?: boolean;
-    firewall: string;
+    externalFirewall: string;
     description?: string;
 }
 export enum L3OutConfigDtoL3outTypeEnum {

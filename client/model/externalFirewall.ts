@@ -24,10 +24,10 @@ export interface ExternalFirewall {
     readonly provisionedVersion?: number;
     name?: string;
     firewallDeviceType?: string;
-    readonly externalVrfConnections?: ExternalVrfConnection;
+    vsysName: string;
+    readonly externalVrfConnections?: Array<ExternalVrfConnection>;
     uniqueZonePerExternalVrfConnection?: boolean;
     readonly l3outs?: L3Out;
-    l3outId?: string;
     readonly tenant?: Tenant;
     tenantId?: string;
     bgpAsn?: number;

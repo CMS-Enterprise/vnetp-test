@@ -68,7 +68,8 @@ export enum GraphEdgeDtoTypeEnum {
     SubjectToFilter = 'SUBJECT_TO_FILTER',
     EpgToContract = 'EPG_TO_CONTRACT',
     EpgToBridgeDomain = 'EPG_TO_BRIDGE_DOMAIN',
-    TenantContains = 'TENANT_CONTAINS',
+    TenantContainsVrf = 'TENANT_CONTAINS_VRF',
+    TenantContainsFirewall = 'TENANT_CONTAINS_FIREWALL',
     VrfContains = 'VRF_CONTAINS',
     ApplicationProfileContains = 'APPLICATION_PROFILE_CONTAINS'
 };

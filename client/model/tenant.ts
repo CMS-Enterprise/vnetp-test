@@ -10,13 +10,16 @@
  * Do not edit the class manually.
  */
 import { L3Out } from './l3Out';
+import { ServiceGraphFirewall } from './serviceGraphFirewall';
 import { EndpointGroup } from './endpointGroup';
+import { ExternalVrfConnection } from './externalVrfConnection';
 import { Workflow } from './workflow';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 import { AuditLog } from './auditLog';
 import { Subject } from './subject';
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
+import { ExternalFirewall } from './externalFirewall';
 import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
 import { Datacenter } from './datacenter';
@@ -59,6 +62,9 @@ export interface Tenant {
     readonly tenantVersion?: number;
     readonly environmentId: string;
     readonly wanFormStatus?: TenantWanFormStatusEnum;
+    readonly externalFirewalls?: Array<ExternalFirewall>;
+    readonly externalVrfConnections?: Array<ExternalVrfConnection>;
+    readonly serviceGraphFirewalls?: Array<ServiceGraphFirewall>;
 }
 export enum TenantWanFormStatusEnum {
     Pending = 'PENDING',

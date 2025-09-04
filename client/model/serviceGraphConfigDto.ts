@@ -14,7 +14,6 @@ import { ServiceGraphFirewallConfigDto } from './serviceGraphFirewallConfigDto';
 
 export interface ServiceGraphConfigDto { 
     name: string;
-    validationId: string;
-    firewall: ServiceGraphFirewallConfigDto;
+    serviceGraphFirewall: ServiceGraphFirewallConfigDto;
 }
 

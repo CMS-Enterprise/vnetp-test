@@ -12,7 +12,6 @@
 
 
 export interface TenantInfrastructureValidationError { 
-    validationId: string;
     entityType: string;
     entityName: string;
     field: string;

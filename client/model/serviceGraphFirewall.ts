@@ -24,8 +24,8 @@ export interface ServiceGraphFirewall {
     name?: string;
     firewallDeviceType?: string;
     readonly serviceGraph?: ServiceGraph;
-    serviceGraphId?: string;
     readonly tenant?: Tenant;
     tenantId?: string;
+    vsysName: string;
 }
 

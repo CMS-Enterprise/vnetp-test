@@ -14,13 +14,14 @@ import { L3OutConfigDto } from './l3OutConfigDto';
 
 
 export interface VrfConfigDto { 
-    validationId: string;
     name: string;
     maxExternalRoutes?: number;
     bgpAsn?: number;
     bgpAsnAutoGenerate?: boolean;
     alias?: string;
     description?: string;
+    policyControlEnforced?: boolean;
+    policyControlEnforcementIngress?: boolean;
     l3outs?: Array<L3OutConfigDto>;
     serviceGraphs?: Array<ServiceGraphConfigDto>;
     allowServiceGraphBypass?: boolean;
