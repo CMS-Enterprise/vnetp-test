@@ -15949,6 +15949,38 @@
         ]
       }
     },
+    "/v2/admin/tenant/orchestrator/config/{id}": {
+      "get": {
+        "operationId": "getTenantInfrastructureConfig",
+        "summary": "Get tenant infrastructure configuration",
+        "description": "Get tenant infrastructure configuration from existing tenant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantInfrastructureConfigDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/admin/tenant/orchestrator"
+        ]
+      }
+    },
     "/v2/admin/tenant/orchestrator/generate-graph/{id}": {
       "get": {
         "operationId": "getTenantInfrastructureGraph",
@@ -33716,14 +33748,13 @@
             "type": "string",
             "example": "vsys1"
           },
-          "contextName": {
-            "type": "string"
-          },
           "bgpAsn": {
-            "type": "number"
+            "type": "number",
+            "description": "BGP ASN for this firewall. Required if bgpAsnAutoGenerate is not true."
           },
           "bgpAsnAutoGenerate": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Auto-generate BGP ASN for this firewall. Required if bgpAsn is not provided."
           },
           "externalVrfConnections": {
             "type": "array",
@@ -33787,7 +33818,8 @@
         },
         "required": [
           "name",
-          "firewallDeviceType"
+          "firewallDeviceType",
+          "vsysName"
         ]
       },
       "ServiceGraphConfigDto": {
@@ -33815,10 +33847,12 @@
             "type": "number"
           },
           "bgpAsn": {
-            "type": "number"
+            "type": "number",
+            "description": "BGP ASN for this VRF. Required if bgpAsnAutoGenerate is not true."
           },
           "bgpAsnAutoGenerate": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Auto-generate BGP ASN for this VRF. Required if bgpAsn is not provided."
           },
           "alias": {
             "type": "string"

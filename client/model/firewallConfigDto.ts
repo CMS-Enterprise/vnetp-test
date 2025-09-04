@@ -16,8 +16,13 @@ export interface FirewallConfigDto {
     name: string;
     firewallDeviceType: FirewallConfigDtoFirewallDeviceTypeEnum;
     vsysName: string;
-    contextName?: string;
+    /**
+     * BGP ASN for this firewall. Required if bgpAsnAutoGenerate is not true.
+     */
     bgpAsn?: number;
+    /**
+     * Auto-generate BGP ASN for this firewall. Required if bgpAsn is not provided.
+     */
     bgpAsnAutoGenerate?: boolean;
     externalVrfConnections: Array<ExternalVrfConnectionConfigDto>;
 }

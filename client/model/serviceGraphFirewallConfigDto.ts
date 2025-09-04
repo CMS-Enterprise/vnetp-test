@@ -14,7 +14,7 @@
 export interface ServiceGraphFirewallConfigDto { 
     name: string;
     firewallDeviceType: ServiceGraphFirewallConfigDtoFirewallDeviceTypeEnum;
-    vsysName?: string;
+    vsysName: string;
 }
 export enum ServiceGraphFirewallConfigDtoFirewallDeviceTypeEnum {
     PaloAlto = 'PaloAlto',

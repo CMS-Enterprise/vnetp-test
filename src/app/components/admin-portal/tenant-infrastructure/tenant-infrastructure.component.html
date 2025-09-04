@@ -2,15 +2,15 @@
   <div class="toolbar">
     <button class="btn btn-light" (click)="goBack()">← Back to Tenant Select</button>
     <div class="ml-2">
-      <button class="btn btn-primary" (click)="validate()">
+      <button class="btn btn-primary" *ngIf="mode === 'create'" (click)="validate()">
         <fa-icon class="icon" [icon]="['fas', 'check']"></fa-icon>
         Validate
       </button>
-      <button class="btn btn-primary" [disabled]="!isFormValid || isSubmitting" (click)="getGraph()">
+      <button class="btn btn-primary" (click)="getGraph()">
         <fa-icon class="icon" [icon]="['fas', 'chart-line']"></fa-icon>
         Graph
       </button>
-      <button class="btn btn-success" (click)="saveConfig()">
+      <button class="btn btn-success" *ngIf="mode === 'create'" (click)="saveConfig()">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         Save
       </button>
@@ -18,51 +18,96 @@
   </div>
   <h2>Tenant Infrastructure ({{ mode | uppercase }})</h2>
   <p *ngIf="mode === 'edit'">
-    Editing tenant: <strong>{{ tenantId }}</strong>
+    Viewing tenant: <strong>{{ tenantId }}</strong> <span class="badge badge-info">Read Only</span>
   </p>
   <p *ngIf="mode === 'create'">Creating a new tenant configuration.</p>
 
-  <!-- Form Validation Errors -->
-  <div *ngIf="formErrors.length > 0" class="alert alert-warning">
-    <h6>Form Validation Issues:</h6>
-    <ul class="mb-0">
-      <li *ngFor="let error of formErrors">{{ error }}</li>
-    </ul>
+  <!-- Loading indicator for edit mode -->
+  <div *ngIf="isLoadingConfig" class="text-center py-4">
+    <fa-icon class="icon text-primary" [icon]="['fas', 'spinner']" [spin]="true" style="font-size: 2rem"></fa-icon>
+    <div class="mt-2 text-muted">Loading tenant configuration...</div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="!isLoadingConfig">
     <div class="col-lg-4 col-md-5">
       <ul class="nav nav-tabs mb-3">
-        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'tenant'" (click)="setActiveTab('tenant')">Tenant</a></li>
         <li class="nav-item">
-          <a class="nav-link" [class.active]="activeTab === 'firewalls'" (click)="setActiveTab('firewalls')">External Firewalls</a>
+          <a
+            class="nav-link"
+            [class.active]="activeTab === 'tenant'"
+            [class.text-danger]="tenantTabHasErrors"
+            (click)="setActiveTab('tenant')"
+          >
+            Tenant
+            <span *ngIf="tenantTabHasErrors" class="badge badge-danger ml-1">!</span>
+          </a>
         </li>
-        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'vrfs'" (click)="setActiveTab('vrfs')">VRFs</a></li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeTab === 'firewalls'"
+            [class.text-danger]="firewallsTabHasErrors"
+            (click)="setActiveTab('firewalls')"
+          >
+            External Firewalls
+            <span *ngIf="firewallsTabHasErrors" class="badge badge-danger ml-1">!</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="activeTab === 'vrfs'" [class.text-danger]="vrfsTabHasErrors" (click)="setActiveTab('vrfs')">
+            VRFs
+            <span *ngIf="vrfsTabHasErrors" class="badge badge-danger ml-1">!</span>
+          </a>
+        </li>
       </ul>
 
       <!-- Tenant Form -->
       <div *ngIf="activeTab === 'tenant'">
         <div class="form-group">
           <label>Name</label>
-          <input class="form-control" [(ngModel)]="config.tenant.name" (ngModelChange)="onConfigMutated()" />
+          <input
+            class="form-control"
+            [class.is-invalid]="hasFieldError('tenant.name')"
+            [disabled]="mode === 'edit'"
+            [(ngModel)]="config.tenant.name"
+            (ngModelChange)="onConfigMutated()"
+          />
+          <div *ngIf="hasFieldError('tenant.name')" class="invalid-feedback d-block">
+            {{ getFieldError('tenant.name') }}
+          </div>
         </div>
         <div class="form-group">
           <label>Environment ID</label>
-          <input class="form-control" [(ngModel)]="config.tenant.environmentId" (ngModelChange)="onConfigMutated()" />
+          <input
+            class="form-control"
+            [class.is-invalid]="hasFieldError('tenant.environmentId')"
+            [disabled]="mode === 'edit'"
+            [(ngModel)]="config.tenant.environmentId"
+            (ngModelChange)="onConfigMutated()"
+          />
+          <div *ngIf="hasFieldError('tenant.environmentId')" class="invalid-feedback d-block">
+            {{ getFieldError('tenant.environmentId') }}
+          </div>
         </div>
         <div class="form-group">
           <label>Alias</label>
-          <input class="form-control" [(ngModel)]="config.tenant.alias" (ngModelChange)="onConfigMutated()" />
+          <input class="form-control" [disabled]="mode === 'edit'" [(ngModel)]="config.tenant.alias" (ngModelChange)="onConfigMutated()" />
         </div>
         <div class="form-group">
           <label>Description</label>
-          <textarea class="form-control" rows="3" [(ngModel)]="config.tenant.description" (ngModelChange)="onConfigMutated()"></textarea>
+          <textarea
+            class="form-control"
+            rows="3"
+            [disabled]="mode === 'edit'"
+            [(ngModel)]="config.tenant.description"
+            (ngModelChange)="onConfigMutated()"
+          ></textarea>
         </div>
       </div>
 
       <!-- Firewalls List + Detail -->
       <div *ngIf="activeTab === 'firewalls'">
-        <div class="d-flex mb-2">
+        <div class="d-flex mb-2" *ngIf="mode === 'create'">
           <button class="btn btn-sm btn-outline-primary" (click)="addFirewall()">Add Firewall</button>
         </div>
         <ul class="list-group mb-2">
@@ -70,14 +115,18 @@
             class="list-group-item p-2"
             *ngFor="let fw of config.externalFirewalls; let i = index; trackBy: trackByIdx"
             [class.active]="i === selectedFirewallIdx"
+            [class.border-danger]="hasFirewallErrors(i)"
             (click)="selectedFirewallIdx = i"
             style="cursor: pointer"
           >
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <strong>{{ fw.name || '(unnamed)' }}</strong>
+                <span *ngIf="hasFirewallErrors(i)" class="badge badge-danger ml-1">!</span>
               </div>
-              <button class="btn btn-sm btn-outline-danger" (click)="$event.stopPropagation(); removeFirewall(i)">Remove</button>
+              <button class="btn btn-sm btn-outline-danger" *ngIf="mode === 'create'" (click)="$event.stopPropagation(); removeFirewall(i)">
+                Remove
+              </button>
             </div>
           </li>
         </ul>
@@ -90,38 +139,60 @@
                   <label>Name</label>
                   <input
                     class="form-control"
+                    [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.name')"
+                    [disabled]="mode === 'edit'"
                     [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].name"
                     (ngModelChange)="onConfigMutated()"
                   />
+                  <!-- Debug: checking path externalFirewalls.{{selectedFirewallIdx}}.name -->
+                  <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.name')" class="invalid-feedback d-block">
+                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.name') }}
+                  </div>
                 </div>
                 <div class="form-group col-6">
                   <label>Device Type</label>
                   <select
                     class="form-control"
+                    [disabled]="mode === 'edit'"
                     [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].firewallDeviceType"
                     (ngModelChange)="onConfigMutated()"
                   >
                     <option>PaloAlto</option>
                     <option>CiscoAsa</option>
                   </select>
+                  <div
+                    *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.firewallDeviceType')"
+                    class="invalid-feedback d-block"
+                  >
+                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.firewallDeviceType') }}
+                  </div>
                 </div>
                 <div class="form-group col-6">
                   <label>VSYS/Context Name</label>
                   <input
                     class="form-control"
+                    [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.vsysName')"
+                    [disabled]="mode === 'edit'"
                     [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].vsysName"
                     (ngModelChange)="onConfigMutated()"
                   />
+                  <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.vsysName')" class="invalid-feedback d-block">
+                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.vsysName') }}
+                  </div>
                 </div>
                 <div class="form-group col-6">
                   <label>BGP ASN</label>
                   <input
                     type="number"
                     class="form-control"
+                    [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')"
                     [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].bgpAsn"
                     (ngModelChange)="onConfigMutated()"
                     [disabled]="config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate"
                   />
+                  <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')" class="invalid-feedback d-block">
+                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn') }}
+                  </div>
                 </div>
                 <div class="form-group col-6">
                   <div class="form-check mt-4">
@@ -129,6 +200,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="fwBgpAuto"
+                      [disabled]="mode === 'edit'"
                       [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate"
                       (ngModelChange)="onConfigMutated()"
                     />
@@ -139,23 +211,53 @@
 
               <div class="d-flex justify-content-between align-items-center mt-2">
                 <h6 class="mb-0">External VRF Connections</h6>
-                <button class="btn btn-sm btn-outline-primary" (click)="addExternalVrfConnection(selectedFirewallIdx)">
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  *ngIf="mode === 'create'"
+                  (click)="addExternalVrfConnection(selectedFirewallIdx)"
+                >
                   Add Connection
                 </button>
               </div>
               <div class="mt-2" *ngFor="let c of config.externalFirewalls[selectedFirewallIdx].externalVrfConnections; let j = index">
-                <div class="border rounded p-2 mb-2">
+                <div class="border rounded p-2 mb-2" [class.border-danger]="hasExternalVrfConnectionErrors(selectedFirewallIdx, j)">
                   <div class="form-row">
                     <div class="form-group col-6">
                       <label>Name</label>
-                      <input class="form-control" [(ngModel)]="c.name" (ngModelChange)="onConfigMutated()" />
+                      <input
+                        class="form-control"
+                        [class.is-invalid]="
+                          hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.name')
+                        "
+                        [(ngModel)]="c.name"
+                        (ngModelChange)="onConfigMutated()"
+                      />
+                      <div
+                        *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.name')"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.name') }}
+                      </div>
                     </div>
                     <div class="form-group col-6">
                       <label>External VRF</label>
-                      <select class="form-control" [(ngModel)]="c.externalVrf" (ngModelChange)="onConfigMutated()">
+                      <select
+                        class="form-control"
+                        [class.is-invalid]="
+                          hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.externalVrf')
+                        "
+                        [(ngModel)]="c.externalVrf"
+                        (ngModelChange)="onConfigMutated()"
+                      >
                         <option value="">(select)</option>
                         <option *ngFor="let vrf of externalVrfOptions" [value]="vrf">{{ vrf }}</option>
                       </select>
+                      <div
+                        *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.externalVrf')"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.externalVrf') }}
+                      </div>
                     </div>
                     <div class="form-group col-6">
                       <div class="form-check">
@@ -163,6 +265,7 @@
                           type="checkbox"
                           class="form-check-input"
                           [id]="'defrt' + j"
+                          [disabled]="mode === 'edit'"
                           [(ngModel)]="c.injectDefaultRouteFromExternalVrf"
                           (ngModelChange)="onConfigMutated()"
                         />
@@ -175,6 +278,7 @@
                           type="checkbox"
                           class="form-check-input"
                           [id]="'allow' + j"
+                          [disabled]="mode === 'edit'"
                           [(ngModel)]="c.allowAllRoutesFromExternalVrf"
                           (ngModelChange)="onConfigMutated()"
                         />
@@ -187,6 +291,7 @@
                           type="checkbox"
                           class="form-check-input"
                           [id]="'host' + j"
+                          [disabled]="mode === 'edit'"
                           [(ngModel)]="c.advertiseHostBasedRoutesToExternalVrf"
                           (ngModelChange)="onConfigMutated()"
                         />
@@ -199,6 +304,7 @@
                           type="checkbox"
                           class="form-check-input"
                           [id]="'all' + j"
+                          [disabled]="mode === 'edit'"
                           [(ngModel)]="c.advertiseAllRoutesToExternalVrf"
                           (ngModelChange)="onConfigMutated()"
                         />
@@ -207,7 +313,11 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeExternalVrfConnection(selectedFirewallIdx, j)">
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      *ngIf="mode === 'create'"
+                      (click)="removeExternalVrfConnection(selectedFirewallIdx, j)"
+                    >
                       Remove
                     </button>
                   </div>
@@ -220,7 +330,7 @@
 
       <!-- VRFs List + Detail -->
       <div *ngIf="activeTab === 'vrfs'">
-        <div class="d-flex mb-2">
+        <div class="d-flex mb-2" *ngIf="mode === 'create'">
           <button class="btn btn-sm btn-outline-primary" (click)="addVrf()">Add VRF</button>
         </div>
         <ul class="list-group mb-2">
@@ -228,14 +338,18 @@
             class="list-group-item p-2"
             *ngFor="let v of config.vrfs; let i = index; trackBy: trackByIdx"
             [class.active]="i === selectedVrfIdx"
+            [class.border-danger]="hasVrfErrors(i)"
             (click)="selectedVrfIdx = i"
             style="cursor: pointer"
           >
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <strong>{{ v.name || '(unnamed)' }}</strong>
+                <span *ngIf="hasVrfErrors(i)" class="badge badge-danger ml-1">!</span>
               </div>
-              <button class="btn btn-sm btn-outline-danger" (click)="$event.stopPropagation(); removeVrf(i)">Remove</button>
+              <button class="btn btn-sm btn-outline-danger" *ngIf="mode === 'create'" (click)="$event.stopPropagation(); removeVrf(i)">
+                Remove
+              </button>
             </div>
           </li>
         </ul>
@@ -246,17 +360,31 @@
               <div class="form-row">
                 <div class="form-group col-4">
                   <label>Name</label>
-                  <input class="form-control" [(ngModel)]="config.vrfs[selectedVrfIdx].name" (ngModelChange)="onConfigMutated()" />
+                  <input
+                    class="form-control"
+                    [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.name')"
+                    [(ngModel)]="config.vrfs[selectedVrfIdx].name"
+                    (ngModelChange)="onConfigMutated()"
+                  />
+                  <div *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.name')" class="invalid-feedback d-block">
+                    {{ getFieldError('vrfs.' + selectedVrfIdx + '.name') }}
+                  </div>
                 </div>
                 <div class="form-group col-4">
                   <label>Alias</label>
-                  <input class="form-control" [(ngModel)]="config.vrfs[selectedVrfIdx].alias" (ngModelChange)="onConfigMutated()" />
+                  <input
+                    class="form-control"
+                    [disabled]="mode === 'edit'"
+                    [(ngModel)]="config.vrfs[selectedVrfIdx].alias"
+                    (ngModelChange)="onConfigMutated()"
+                  />
                 </div>
                 <div class="form-group col-4">
                   <label>Max External Routes</label>
                   <input
                     type="number"
                     class="form-control"
+                    [disabled]="mode === 'edit'"
                     [(ngModel)]="config.vrfs[selectedVrfIdx].maxExternalRoutes"
                     (ngModelChange)="onConfigMutated()"
                   />
@@ -266,10 +394,14 @@
                   <input
                     type="number"
                     class="form-control"
+                    [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')"
                     [(ngModel)]="config.vrfs[selectedVrfIdx].bgpAsn"
                     (ngModelChange)="onConfigMutated()"
                     [disabled]="config.vrfs[selectedVrfIdx].bgpAsnAutoGenerate"
                   />
+                  <div *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')" class="invalid-feedback d-block">
+                    {{ getFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn') }}
+                  </div>
                 </div>
                 <div class="form-group col-6">
                   <div class="form-check mt-4">
@@ -277,6 +409,7 @@
                       type="checkbox"
                       class="form-check-input"
                       id="vrfBgpAuto"
+                      [disabled]="mode === 'edit'"
                       [(ngModel)]="config.vrfs[selectedVrfIdx].bgpAsnAutoGenerate"
                       (ngModelChange)="onConfigMutated()"
                     />
@@ -287,23 +420,51 @@
 
               <div class="d-flex justify-content-between align-items-center mt-2">
                 <h6 class="mb-0">Service Graphs</h6>
-                <button class="btn btn-sm btn-outline-primary" (click)="addServiceGraph(selectedVrfIdx)">Add Service Graph</button>
+                <button class="btn btn-sm btn-outline-primary" *ngIf="mode === 'create'" (click)="addServiceGraph(selectedVrfIdx)">
+                  Add Service Graph
+                </button>
               </div>
               <div class="mt-2" *ngFor="let sg of config.vrfs[selectedVrfIdx].serviceGraphs; let j = index">
-                <div class="border rounded p-2 mb-2">
+                <div class="border rounded p-2 mb-2" [class.border-danger]="hasServiceGraphErrors(selectedVrfIdx, j)">
                   <div class="form-row">
                     <div class="form-group col-6">
                       <label>Name</label>
-                      <input class="form-control" [(ngModel)]="sg.name" (ngModelChange)="onConfigMutated()" />
+                      <input
+                        class="form-control"
+                        [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.name')"
+                        [disabled]="mode === 'edit'"
+                        [(ngModel)]="sg.name"
+                        (ngModelChange)="onConfigMutated()"
+                      />
+                      <div
+                        *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.name')"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ getFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.name') }}
+                      </div>
                     </div>
+
                     <div class="form-group col-6">
                       <label>Firewall Name</label>
-                      <input class="form-control" [(ngModel)]="sg.serviceGraphFirewall.name" (ngModelChange)="onConfigMutated()" />
+                      <input
+                        class="form-control"
+                        [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.name')"
+                        [disabled]="mode === 'edit'"
+                        [(ngModel)]="sg.serviceGraphFirewall.name"
+                        (ngModelChange)="onConfigMutated()"
+                      />
+                      <div
+                        *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.name')"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ getFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.name') }}
+                      </div>
                     </div>
                     <div class="form-group col-6">
                       <label>Device Type</label>
                       <select
                         class="form-control"
+                        [disabled]="mode === 'edit'"
                         [(ngModel)]="sg.serviceGraphFirewall.firewallDeviceType"
                         (ngModelChange)="onConfigMutated()"
                       >
@@ -313,29 +474,61 @@
                     </div>
                     <div class="form-group col-6">
                       <label>VSYS/Context Name</label>
-                      <input class="form-control" [(ngModel)]="sg.serviceGraphFirewall.vsysName" (ngModelChange)="onConfigMutated()" />
+                      <input
+                        class="form-control"
+                        [class.is-invalid]="
+                          hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.vsysName')
+                        "
+                        [disabled]="mode === 'edit'"
+                        [(ngModel)]="sg.serviceGraphFirewall.vsysName"
+                        (ngModelChange)="onConfigMutated()"
+                      />
+                      <div
+                        *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.vsysName')"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ getFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.vsysName') }}
+                      </div>
                     </div>
                   </div>
                   <div class="text-right">
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeServiceGraph(selectedVrfIdx, j)">Remove</button>
+                    <button class="btn btn-sm btn-outline-danger" *ngIf="mode === 'create'" (click)="removeServiceGraph(selectedVrfIdx, j)">
+                      Remove
+                    </button>
                   </div>
                 </div>
               </div>
 
               <div class="d-flex justify-content-between align-items-center mt-3">
                 <h6 class="mb-0">L3Outs</h6>
-                <button class="btn btn-sm btn-outline-primary" (click)="addL3Out(selectedVrfIdx)">Add L3Out</button>
+                <button class="btn btn-sm btn-outline-primary" *ngIf="mode === 'create'" (click)="addL3Out(selectedVrfIdx)">
+                  Add L3Out
+                </button>
               </div>
               <div class="mt-2" *ngFor="let l3 of config.vrfs[selectedVrfIdx].l3outs; let j = index">
-                <div class="border rounded p-2 mb-2">
+                <div class="border rounded p-2 mb-2" [class.border-danger]="hasL3OutErrors(selectedVrfIdx, j)">
                   <div class="form-row">
                     <div class="form-group col-3">
                       <label>Name</label>
-                      <input class="form-control" [(ngModel)]="l3.name" (ngModelChange)="onConfigMutated()" />
+                      <input
+                        class="form-control"
+                        [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.name')"
+                        [disabled]="mode === 'edit'"
+                        [(ngModel)]="l3.name"
+                        (ngModelChange)="onConfigMutated()"
+                      />
+                      <div *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.name')" class="invalid-feedback d-block">
+                        {{ getFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.name') }}
+                      </div>
                     </div>
                     <div class="form-group col-3">
                       <label>Type</label>
-                      <select class="form-control" [(ngModel)]="l3.l3outType" (ngModelChange)="onConfigMutated()">
+                      <select
+                        class="form-control"
+                        [disabled]="mode === 'edit'"
+                        [(ngModel)]="l3.l3outType"
+                        (ngModelChange)="onConfigMutated()"
+                      >
                         <option value="external">external</option>
                         <option value="intervrf">intervrf</option>
                       </select>
@@ -345,20 +538,34 @@
                       <input
                         type="checkbox"
                         class="form-check-input"
+                        [disabled]="mode === 'edit'"
                         [(ngModel)]="l3.propagateExternalRoutes"
                         (ngModelChange)="onConfigMutated()"
                       />
                     </div>
                     <div class="form-group col-3">
                       <label>Firewall</label>
-                      <select class="form-control" [(ngModel)]="l3.externalFirewall" (ngModelChange)="onConfigMutated()">
+                      <select
+                        class="form-control"
+                        [disabled]="mode === 'edit'"
+                        [(ngModel)]="l3.externalFirewall"
+                        (ngModelChange)="onConfigMutated()"
+                      >
                         <option [ngValue]="''">(none)</option>
                         <option *ngFor="let fw of config.externalFirewalls" [ngValue]="fw.name">{{ fw.name }}</option>
                       </select>
+                      <div
+                        *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.externalFirewall')"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ getFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.externalFirewall') }}
+                      </div>
                     </div>
                   </div>
                   <div class="text-right">
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeL3Out(selectedVrfIdx, j)">Remove</button>
+                    <button class="btn btn-sm btn-outline-danger" *ngIf="mode === 'create'" (click)="removeL3Out(selectedVrfIdx, j)">
+                      Remove
+                    </button>
                   </div>
                 </div>
               </div>
@@ -459,20 +666,6 @@
               </ul>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Graph View -->
-      <div *ngIf="rightPanelView === 'graph'" id="graphContainer" style="height: 600px; border: 1px solid #dee2e6; border-radius: 4px">
-        <svg id="graphSvg" width="100%" height="100%"></svg>
-        <div *ngIf="isGeneratingGraph" class="d-flex align-items-center justify-content-center h-100">
-          <div class="text-center">
-            <fa-icon class="icon text-primary" [icon]="['fas', 'spinner']" [spin]="true" style="font-size: 2rem"></fa-icon>
-            <div class="mt-2 text-muted">Generating graph...</div>
-          </div>
-        </div>
-        <div *ngIf="!graph && !isGeneratingGraph" class="d-flex align-items-center justify-content-center h-100 text-muted">
-          Click "Graph" button to generate visualization
         </div>
       </div>
 

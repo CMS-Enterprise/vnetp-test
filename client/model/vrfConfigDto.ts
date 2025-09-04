@@ -16,7 +16,13 @@ import { L3OutConfigDto } from './l3OutConfigDto';
 export interface VrfConfigDto { 
     name: string;
     maxExternalRoutes?: number;
+    /**
+     * BGP ASN for this VRF. Required if bgpAsnAutoGenerate is not true.
+     */
     bgpAsn?: number;
+    /**
+     * Auto-generate BGP ASN for this VRF. Required if bgpAsn is not provided.
+     */
     bgpAsnAutoGenerate?: boolean;
     alias?: string;
     description?: string;

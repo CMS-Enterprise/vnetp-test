@@ -34,6 +34,10 @@ export interface ConfigureTenantInfrastructureRequestParams {
     tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
+export interface GetTenantInfrastructureConfigRequestParams {
+    id: string;
+}
+
 export interface GetTenantInfrastructureGraphRequestParams {
     id: string;
 }
@@ -207,6 +211,53 @@ export class V2AdminTenantOrchestratorService {
 
         return this.httpClient.post<TenantInfrastructureResponse>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/configure`,
             tenantInfrastructureConfigDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get tenant infrastructure configuration
+     * Get tenant infrastructure configuration from existing tenant
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureConfigDto>;
+    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureConfigDto>>;
+    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureConfigDto>>;
+    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getTenantInfrastructureConfig.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<TenantInfrastructureConfigDto>(`${this.configuration.basePath}/v2/admin/tenant/orchestrator/config/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
