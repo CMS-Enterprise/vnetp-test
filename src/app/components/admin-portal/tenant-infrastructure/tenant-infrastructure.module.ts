@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TenantInfrastructureComponent } from './tenant-infrastructure.component';
 
 const routes: Routes = [{ path: '', component: TenantInfrastructureComponent }];
 
 @NgModule({
   declarations: [TenantInfrastructureComponent],
-  imports: [CommonModule, FormsModule, FontAwesomeModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, ClipboardModule, RouterModule.forChild(routes)],
 })
 export class TenantInfrastructureModule {}

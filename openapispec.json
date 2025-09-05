@@ -26717,14 +26717,6 @@
           "name": {
             "type": "string"
           },
-          "firewall": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExternalFirewall"
-              }
-            ]
-          },
           "externalVrf": {
             "type": "string",
             "enum": [
@@ -26806,7 +26798,9 @@
           "advertiseAllRoutesToExternalVrf",
           "underlayIpv4Network",
           "underlayIpv6Network",
-          "underlayVlan"
+          "underlayVlan",
+          "externalFirewallId",
+          "tenantId"
         ]
       },
       "ExternalFirewall": {
@@ -27291,6 +27285,9 @@
             "type": "number"
           },
           "bgpAsn": {
+            "type": "number"
+          },
+          "displayOrder": {
             "type": "number"
           }
         },
@@ -33857,6 +33854,9 @@
           "description": {
             "type": "string"
           },
+          "displayOrder": {
+            "type": "number"
+          },
           "policyControlEnforced": {
             "type": "boolean",
             "default": true
@@ -34607,15 +34607,6 @@
             "type": "string"
           },
           "tenantId": {
-            "type": "string"
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "tierId": {
             "type": "string"
           },
           "globalBgpRangeId": {

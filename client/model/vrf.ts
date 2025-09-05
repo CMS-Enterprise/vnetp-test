@@ -45,5 +45,6 @@ export interface Vrf {
     readonly tenantVersion?: number;
     maxExternalRoutes?: number;
     bgpAsn?: number;
+    displayOrder?: number;
 }
 

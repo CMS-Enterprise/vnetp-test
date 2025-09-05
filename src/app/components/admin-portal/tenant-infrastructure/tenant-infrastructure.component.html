@@ -180,22 +180,8 @@
                     {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.vsysName') }}
                   </div>
                 </div>
-                <div class="form-group col-6">
-                  <label>BGP ASN</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')"
-                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].bgpAsn"
-                    (ngModelChange)="onConfigMutated()"
-                    [disabled]="config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate"
-                  />
-                  <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')" class="invalid-feedback d-block">
-                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn') }}
-                  </div>
-                </div>
-                <div class="form-group col-6">
-                  <div class="form-check mt-4">
+                <div class="form-group" [ngClass]="config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate ? 'col-12' : 'col-8'">
+                  <div class="form-check">
                     <input
                       type="checkbox"
                       class="form-check-input"
@@ -205,6 +191,22 @@
                       (ngModelChange)="onConfigMutated()"
                     />
                     <label class="form-check-label" for="fwBgpAuto">Auto-allocate BGP ASN</label>
+                  </div>
+                </div>
+                <div class="form-group col-4" *ngIf="!config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate">
+                  <label>BGP ASN</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')"
+                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].bgpAsn"
+                    (ngModelChange)="onConfigMutated()"
+                    min="1"
+                    max="4294967294"
+                    placeholder="e.g. 65001"
+                  />
+                  <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')" class="invalid-feedback d-block">
+                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn') }}
                   </div>
                 </div>
               </div>
@@ -347,9 +349,25 @@
                 <strong>{{ v.name || '(unnamed)' }}</strong>
                 <span *ngIf="hasVrfErrors(i)" class="badge badge-danger ml-1">!</span>
               </div>
-              <button class="btn btn-sm btn-outline-danger" *ngIf="mode === 'create'" (click)="$event.stopPropagation(); removeVrf(i)">
-                Remove
-              </button>
+              <div *ngIf="mode === 'create'" class="btn-group btn-group-sm">
+                <button
+                  class="btn btn-outline-secondary"
+                  [disabled]="i === 0"
+                  (click)="$event.stopPropagation(); moveVrfUp(i)"
+                  title="Move up"
+                >
+                  ↑
+                </button>
+                <button
+                  class="btn btn-outline-secondary"
+                  [disabled]="i === config.vrfs.length - 1"
+                  (click)="$event.stopPropagation(); moveVrfDown(i)"
+                  title="Move down"
+                >
+                  ↓
+                </button>
+                <button class="btn btn-outline-danger" (click)="$event.stopPropagation(); removeVrf(i)">Remove</button>
+              </div>
             </div>
           </li>
         </ul>
@@ -389,22 +407,8 @@
                     (ngModelChange)="onConfigMutated()"
                   />
                 </div>
-                <div class="form-group col-6">
-                  <label>BGP ASN</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')"
-                    [(ngModel)]="config.vrfs[selectedVrfIdx].bgpAsn"
-                    (ngModelChange)="onConfigMutated()"
-                    [disabled]="config.vrfs[selectedVrfIdx].bgpAsnAutoGenerate"
-                  />
-                  <div *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')" class="invalid-feedback d-block">
-                    {{ getFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn') }}
-                  </div>
-                </div>
-                <div class="form-group col-6">
-                  <div class="form-check mt-4">
+                <div class="form-group" [ngClass]="config.vrfs[selectedVrfIdx].bgpAsnAutoGenerate ? 'col-12' : 'col-8'">
+                  <div class="form-check">
                     <input
                       type="checkbox"
                       class="form-check-input"
@@ -414,6 +418,22 @@
                       (ngModelChange)="onConfigMutated()"
                     />
                     <label class="form-check-label" for="vrfBgpAuto">Auto-allocate BGP ASN</label>
+                  </div>
+                </div>
+                <div class="form-group col-4" *ngIf="!config.vrfs[selectedVrfIdx].bgpAsnAutoGenerate">
+                  <label>BGP ASN</label>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')"
+                    [(ngModel)]="config.vrfs[selectedVrfIdx].bgpAsn"
+                    (ngModelChange)="onConfigMutated()"
+                    min="1"
+                    max="4294967294"
+                    placeholder="e.g. 65001"
+                  />
+                  <div *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')" class="invalid-feedback d-block">
+                    {{ getFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn') }}
                   </div>
                 </div>
               </div>
@@ -533,17 +553,21 @@
                         <option value="intervrf">intervrf</option>
                       </select>
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-3" *ngIf="l3.l3outType === 'intervrf'">
                       <label>Propagate External Routes</label>
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        [disabled]="mode === 'edit'"
-                        [(ngModel)]="l3.propagateExternalRoutes"
-                        (ngModelChange)="onConfigMutated()"
-                      />
+                      <div class="form-check mt-2">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [id]="'propagate' + j"
+                          [disabled]="mode === 'edit'"
+                          [(ngModel)]="l3.propagateExternalRoutes"
+                          (ngModelChange)="onConfigMutated()"
+                        />
+                        <label class="form-check-label" [for]="'propagate' + j">Enable</label>
+                      </div>
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group" [ngClass]="l3.l3outType === 'intervrf' ? 'col-3' : 'col-6'">
                       <label>Firewall</label>
                       <select
                         class="form-control"
@@ -635,7 +659,7 @@
 
       <!-- Configuration View -->
       <div *ngIf="rightPanelView === 'config'">
-        <textarea class="form-control" rows="26" [(ngModel)]="rawJson" (ngModelChange)="onTextChange()"></textarea>
+        <textarea class="form-control" rows="26" [(ngModel)]="displayConfig" (ngModelChange)="onTextChange()"></textarea>
         <small *ngIf="parseError" class="text-danger">{{ parseError }}</small>
 
         <h5 class="mt-3">Validation Result</h5>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Clipboard } from '@angular/cdk/clipboard';
 import {
   V2AdminTenantOrchestratorService,
   TenantInfrastructureConfigDto,
@@ -24,7 +25,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   tenantId?: string;
   private sub?: Subscription;
 
-  rawJson = '';
+  displayConfig = '';
   parseError: string | null = null;
   parsedConfig: TenantInfrastructureConfigDto | null = null;
   config: TenantInfrastructureConfigDto;
@@ -48,6 +49,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     private router: Router,
     private orchestrator: V2AdminTenantOrchestratorService,
     private tenantGraphRenderer: TenantGraphRenderingService,
+    private clipboard: Clipboard,
   ) {}
 
   ngOnInit(): void {
@@ -82,6 +84,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
           {
             name: 'default_vrf',
             alias: 'Default VRF',
+            displayOrder: null,
             maxExternalRoutes: 150,
             bgpAsn: null,
             bgpAsnAutoGenerate: true,
@@ -136,9 +139,9 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     try {
       let obj: any;
       if (this.previewFormat === 'json') {
-        obj = JSON.parse(this.rawJson);
+        obj = JSON.parse(this.displayConfig);
       } else {
-        obj = yaml.load(this.rawJson);
+        obj = yaml.load(this.displayConfig);
       }
       this.parsedConfig = obj as TenantInfrastructureConfigDto;
       this.config = this.parsedConfig;
@@ -322,7 +325,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         graph: this.graph,
         containerSelector: '#graphContainer',
         svgSelector: '#graphSvg',
-        hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL'],
+        hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL', 'INTERVRF_CONNECTION'],
       });
     }, 100);
   }
@@ -383,9 +386,9 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   private updateRawFromConfig(): void {
     try {
       if (this.previewFormat === 'json') {
-        this.rawJson = JSON.stringify(this.config, null, 2);
+        this.displayConfig = JSON.stringify(this.config, null, 2);
       } else {
-        this.rawJson = yaml.dump(this.config, { noRefs: true, indent: 2 });
+        this.displayConfig = yaml.dump(this.config, { noRefs: true, indent: 2 });
       }
       this.parseError = null;
     } catch (e: any) {
@@ -398,22 +401,48 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   }
 
   copyToClipboard(): void {
-    navigator.clipboard
-      ?.writeText(this.rawJson)
-      .then(() => {
-        // Could add a toast notification here
-        console.log('Configuration copied to clipboard');
-      })
-      .catch(() => {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = this.rawJson;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        console.log('Configuration copied to clipboard (fallback)');
-      });
+    // Validate that there's content to copy
+    if (!this.displayConfig || this.displayConfig.trim() === '') {
+      console.error('No configuration content to copy');
+      this.showCopyFeedback('No configuration content to copy', 'error');
+      return;
+    }
+
+    // Use Angular CDK Clipboard service
+    const successful = this.clipboard.copy(this.displayConfig);
+
+    if (successful) {
+      console.log('Configuration copied to clipboard');
+      this.showCopyFeedback('Configuration copied to clipboard!', 'success');
+    } else {
+      console.error('Failed to copy to clipboard');
+      this.showCopyFeedback('Failed to copy to clipboard. Please copy manually.', 'error');
+    }
+  }
+
+  private showCopyFeedback(message: string, type: 'success' | 'error'): void {
+    // Simple feedback mechanism - you can enhance this with toast notifications
+    const button = document.querySelector('button[title="Copy to clipboard"]') as HTMLElement;
+    if (button) {
+      const originalText = button.textContent;
+      const originalClass = button.className;
+
+      // Update button appearance temporarily
+      button.textContent = type === 'success' ? '✓ Copied!' : '✗ Failed';
+      button.className =
+        type === 'success'
+          ? button.className.replace('btn-outline-secondary', 'btn-success')
+          : button.className.replace('btn-outline-secondary', 'btn-danger');
+
+      // Reset after 2 seconds
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.className = originalClass;
+      }, 2000);
+    }
+
+    // Also log for debugging
+    console.log(`Copy feedback: ${message}`);
   }
 
   setActiveTab(tab: 'tenant' | 'firewalls' | 'vrfs'): void {
@@ -463,6 +492,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.config.vrfs.push({
       name: 'new-vrf',
       alias: '',
+      displayOrder: null,
       maxExternalRoutes: 0,
       bgpAsn: null,
       bgpAsnAutoGenerate: true,
@@ -470,14 +500,62 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       l3outs: [] as any[],
     } as any);
     this.selectedVrfIdx = this.config.vrfs.length - 1;
+    this.updateVrfDisplayOrders();
     this.onConfigMutated();
   }
+
   removeVrf(i: number): void {
     this.config.vrfs.splice(i, 1);
     if (this.selectedVrfIdx >= this.config.vrfs.length) {
       this.selectedVrfIdx = 0;
     }
+    this.updateVrfDisplayOrders();
     this.onConfigMutated();
+  }
+
+  moveVrfUp(i: number): void {
+    if (i > 0) {
+      // Swap with previous VRF
+      const temp = this.config.vrfs[i];
+      this.config.vrfs[i] = this.config.vrfs[i - 1];
+      this.config.vrfs[i - 1] = temp;
+
+      // Update selected index if needed
+      if (this.selectedVrfIdx === i) {
+        this.selectedVrfIdx = i - 1;
+      } else if (this.selectedVrfIdx === i - 1) {
+        this.selectedVrfIdx = i;
+      }
+
+      this.updateVrfDisplayOrders();
+      this.onConfigMutated();
+    }
+  }
+
+  moveVrfDown(i: number): void {
+    if (i < this.config.vrfs.length - 1) {
+      // Swap with next VRF
+      const temp = this.config.vrfs[i];
+      this.config.vrfs[i] = this.config.vrfs[i + 1];
+      this.config.vrfs[i + 1] = temp;
+
+      // Update selected index if needed
+      if (this.selectedVrfIdx === i) {
+        this.selectedVrfIdx = i + 1;
+      } else if (this.selectedVrfIdx === i + 1) {
+        this.selectedVrfIdx = i;
+      }
+
+      this.updateVrfDisplayOrders();
+      this.onConfigMutated();
+    }
+  }
+
+  private updateVrfDisplayOrders(): void {
+    // Update displayOrder based on array position (1-based indexing)
+    this.config.vrfs.forEach((vrf: any, index: number) => {
+      vrf.displayOrder = index + 1;
+    });
   }
   addServiceGraph(vrfIdx: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
