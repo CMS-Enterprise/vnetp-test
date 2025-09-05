@@ -46,8 +46,6 @@ export class VrfComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
-
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
     { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
@@ -68,7 +66,6 @@ export class VrfComponent implements OnInit {
       { name: 'External BGP ASN', property: 'externalBgpAsn' },
       { name: '', template: () => this.actionsTemplate },
     ],
-    expandableRows: () => this.expandableRows,
   };
 
   constructor(
