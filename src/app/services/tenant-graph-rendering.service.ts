@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { TenantConnectivityGraph, TenantConnectivityGraphNodes, TenantConnectivityGraphEdges } from 'client';
 import * as d3 from 'd3';
 
+// TODO: Make legend sizing dynamic
+// TODO: Make graph level labels dynamic based on what levels various entities are pinned to.
+// TODO: Add search function that filters nodes based on type and shows relations.
+// TODO: Add context menu support with dynamic actions like "Edit Rule Group" which would navigate
+// the user to rule group editor.
+
 export interface TenantNodeColorMap {
   TENANT: string;
   VRF: string;
@@ -572,7 +578,7 @@ export class TenantGraphRenderingService {
     legend
       .append('rect')
       .attr('width', 150)
-      .attr('height', 195)
+      .attr('height', 200)
       .attr('fill', 'rgba(255,255,255,0.95)')
       .attr('stroke', '#dee2e6')
       .attr('rx', 4);
