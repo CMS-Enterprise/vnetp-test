@@ -68,11 +68,13 @@ export interface TenantGraphRenderConfig {
   nodeColors?: Partial<TenantNodeColorMap>;
   edgeStyles?: Partial<TenantEdgeStyleMap>;
   levelLabels?: Record<number, string>;
+  customNodeLevels?: Record<string, number>;
   nodeRadius?: number;
   fontSize?: number;
   enableZoom?: boolean;
   zoomExtent?: [number, number];
   enableDrag?: boolean;
+  enableOptimization?: boolean; // Simplified: enable/disable all optimizations
   onNodeClick?: (node: TenantConnectivityGraphNodes) => void;
   onEdgeClick?: (edge: TenantConnectivityGraphEdges) => void;
   forceConfig?: Partial<TenantForceConfig>;
@@ -171,8 +173,8 @@ export class TenantGraphRenderingService {
     const nodeColors = { ...this.DEFAULT_NODE_COLORS, ...config.nodeColors };
     const edgeStyles = { ...this.DEFAULT_EDGE_STYLES, ...config.edgeStyles };
     const levelLabels = { ...this.DEFAULT_LEVEL_LABELS, ...config.levelLabels };
+    const nodeLevels = { ...this.NODE_LEVELS, ...config.customNodeLevels };
     const forceConfig = { ...this.DEFAULT_FORCE_CONFIG, ...config.forceConfig };
-    console.log('hideEdgeTypes', config.hideEdgeTypes);
     const hideEdgeTypes = config.hideEdgeTypes || ['TENANT_CONTAINS_FIREWALL'];
     const nodeRadius = config.nodeRadius || 8;
     const fontSize = config.fontSize || 11;
@@ -210,10 +212,18 @@ export class TenantGraphRenderingService {
         originalEdge: edge,
       }));
 
-    console.log('links', links);
-
     // Calculate layout
-    const { clusterCenters, yForType } = this.calculateLayout(nodes, links, width, height, margins, clusterConfig, levelLabels);
+    const { clusterCenters, yForType } = this.calculateLayout(
+      nodes,
+      links,
+      width,
+      height,
+      margins,
+      clusterConfig,
+      levelLabels,
+      nodeLevels,
+      config.enableOptimization,
+    );
 
     // Create zoom group
     const zoomGroup = svg.append('g');
@@ -266,13 +276,15 @@ export class TenantGraphRenderingService {
     margins: { top: number; bottom: number },
     clusterConfig: { widthPercent: number; startPercent: number },
     levelLabels: Record<number, string>,
+    nodeLevels: Record<string, number>,
+    enableOptimization?: boolean,
   ) {
     const maxLevel = Math.max(...Object.keys(levelLabels).map(k => parseInt(k, 10)));
     const laneCount = Math.max(maxLevel, 6);
     const innerH = Math.max(0, height - margins.top - margins.bottom);
     const laneH = innerH / laneCount;
     const yForLevel = (lvl: number) => margins.top + (lvl - 0.5) * laneH;
-    const yForType = (type: string) => yForLevel(this.NODE_LEVELS[type as keyof typeof this.NODE_LEVELS] || 3);
+    const yForType = (type: string) => yForLevel(nodeLevels[type] || 3);
 
     // Build comprehensive relationship maps
     const relationshipData = this.buildRelationshipMaps(nodes, links);
@@ -280,7 +292,7 @@ export class TenantGraphRenderingService {
     // Group nodes by level
     const nodesByLevel = new Map<number, any[]>();
     nodes.forEach(node => {
-      const level = this.NODE_LEVELS[node.type as keyof typeof this.NODE_LEVELS] || 3;
+      const level = nodeLevels[node.type] || 3;
       if (!nodesByLevel.has(level)) {
         nodesByLevel.set(level, []);
       }
@@ -290,14 +302,10 @@ export class TenantGraphRenderingService {
     // Calculate optimized positions level by level
     const clusterCenters = this.calculateHierarchicalPositions(nodesByLevel, relationshipData, width, clusterConfig);
 
-    // Apply cross-layer optimization to minimize edge crossings
-    this.optimizeCrossLayerConnections(nodesByLevel, clusterCenters, relationshipData, width);
-
-    // Apply back-propagation optimization to adjust parent positions based on children
-    this.applyBackPropagationOptimization(nodesByLevel, clusterCenters, relationshipData, width);
-
-    // Apply enhanced lower-level optimization for bottom levels
-    this.optimizeLowerLevels(nodesByLevel, clusterCenters, relationshipData, width);
+    // Apply unified optimization (combines cross-layer, back-propagation, and lower-level optimization)
+    if (enableOptimization !== false) {
+      this.applyUnifiedOptimization(nodesByLevel, clusterCenters, relationshipData, width);
+    }
 
     // Apply cluster positions to nodes
     nodes.forEach(node => {
@@ -628,7 +636,7 @@ export class TenantGraphRenderingService {
     const nodeCount = nodes.length;
 
     // Calculate tighter spacing for shared connections
-    const baseSpacing = Math.min(40, 300 / Math.max(1, nodeCount)); // Tighter spacing
+    const baseSpacing = Math.min(30, 250 / Math.max(1, nodeCount)); // Even tighter spacing
 
     // Sort nodes by their connection similarity (nodes with similar targets should be closer)
     const sortedNodes = this.sortNodesByConnectionSimilarity(nodes, nodeToTargets);
@@ -661,27 +669,6 @@ export class TenantGraphRenderingService {
       }
       return a.name.localeCompare(b.name);
     });
-  }
-
-  private groupNodesByRelationships(
-    levelNodes: any[],
-    parentMap: Map<string, string>,
-    connectionsMap: Map<string, string[]>,
-    clusterCenters: Map<string, number>,
-  ): Map<string, any[]> {
-    const groups = new Map<string, any[]>();
-
-    levelNodes.forEach(node => {
-      // Find the best grouping key for this node
-      const groupKey = this.findBestGroupKey(node, parentMap, connectionsMap, clusterCenters);
-
-      if (!groups.has(groupKey)) {
-        groups.set(groupKey, []);
-      }
-      groups.get(groupKey)?.push(node);
-    });
-
-    return groups;
   }
 
   private findBestGroupKey(
@@ -748,7 +735,7 @@ export class TenantGraphRenderingService {
 
   private distributeNodesAroundCenter(nodes: any[], centerX: number, clusterCenters: Map<string, number>): void {
     const nodeCount = nodes.length;
-    const spacing = Math.min(60, 400 / Math.max(1, nodeCount)); // Adaptive spacing
+    const spacing = Math.min(40, 300 / Math.max(1, nodeCount)); // Tighter adaptive spacing
 
     nodes.forEach((node, index) => {
       if (nodeCount === 1) {
@@ -758,30 +745,6 @@ export class TenantGraphRenderingService {
         clusterCenters.set(node.id, centerX + offset);
       }
     });
-  }
-
-  private optimizeCrossLayerConnections(
-    nodesByLevel: Map<number, any[]>,
-    clusterCenters: Map<string, number>,
-    relationshipData: any,
-    width: number,
-  ): void {
-    const { connectionsMap } = relationshipData;
-    const levels = Array.from(nodesByLevel.keys()).sort((a, b) => a - b);
-
-    // Perform multiple optimization passes
-    for (let pass = 0; pass < 2; pass++) {
-      // Process each level pair
-      for (let i = 0; i < levels.length - 1; i++) {
-        const upperLevel = levels[i];
-        const lowerLevel = levels[i + 1];
-
-        const upperNodes = nodesByLevel.get(upperLevel) || [];
-        const lowerNodes = nodesByLevel.get(lowerLevel) || [];
-
-        this.optimizeLayerPair(upperNodes, lowerNodes, clusterCenters, connectionsMap, width);
-      }
-    }
   }
 
   private optimizeLayerPair(
@@ -1025,9 +988,15 @@ export class TenantGraphRenderingService {
     return Math.abs(constrainedPosition - currentPosition) > movementThreshold ? constrainedPosition : null;
   }
 
-  private isDownstreamNode(parentNode: any, childNodeId: string, clusterCenters: Map<string, number>): boolean {
+  private isDownstreamNode(
+    parentNode: any,
+    childNodeId: string,
+    clusterCenters: Map<string, number>,
+    nodeLevels?: Record<string, number>,
+  ): boolean {
     // Check if child is in a lower level (higher level number) than parent
-    const parentLevel = this.NODE_LEVELS[parentNode.type as keyof typeof this.NODE_LEVELS] || 3;
+    const levels = nodeLevels || this.NODE_LEVELS;
+    const parentLevel = levels[parentNode.type] || 3;
 
     // Try to determine child level from node ID pattern or assume it's downstream
     // This is a heuristic - in practice, you might want to store level info with nodes
@@ -1056,264 +1025,205 @@ export class TenantGraphRenderingService {
     return (baseStrength + childrenBonus) * typeMultiplier;
   }
 
-  private optimizeLowerLevels(
+  private applyUnifiedOptimization(
     nodesByLevel: Map<number, any[]>,
     clusterCenters: Map<string, number>,
     relationshipData: any,
     width: number,
   ): void {
-    const { connectionsMap } = relationshipData;
-    const levels = Array.from(nodesByLevel.keys()).sort((a, b) => b - a); // Bottom-up
+    const { childrenMap, connectionsMap } = relationshipData;
+    const levels = Array.from(nodesByLevel.keys()).sort((a, b) => a - b);
 
-    // Focus on the bottom 3 levels where overlap is most problematic
-    const lowerLevels = levels.slice(0, 3);
+    // Single unified optimization pass that combines all previous optimizations
+    for (let pass = 0; pass < 2; pass++) {
+      // Forward pass: optimize based on cross-layer connections
+      for (let i = 0; i < levels.length - 1; i++) {
+        const upperLevel = levels[i];
+        const lowerLevel = levels[i + 1];
+        const upperNodes = nodesByLevel.get(upperLevel) || [];
+        const lowerNodes = nodesByLevel.get(lowerLevel) || [];
 
-    // Perform multiple optimization passes for lower levels
-    for (let pass = 0; pass < 3; pass++) {
-      lowerLevels.forEach(level => {
+        this.optimizeLayerPair(upperNodes, lowerNodes, clusterCenters, connectionsMap, width);
+      }
+
+      // Backward pass: back-propagate child positions to parents
+      const reverseLevels = [...levels].reverse();
+      reverseLevels.forEach(level => {
         const levelNodes = nodesByLevel.get(level) || [];
-
-        if (levelNodes.length > 1) {
-          this.optimizeLevelForConnectionDensity(levelNodes, clusterCenters, connectionsMap, width, level);
-        }
+        levelNodes.forEach(node => {
+          const optimizedPosition = this.calculateBackPropagatedPosition(node, clusterCenters, childrenMap, connectionsMap, width);
+          if (optimizedPosition !== null) {
+            clusterCenters.set(node.id, optimizedPosition);
+          }
+        });
       });
 
-      // After each pass, apply multi-level edge crossing reduction
-      this.reduceMultiLevelCrossings(lowerLevels, nodesByLevel, clusterCenters, connectionsMap, width);
+      // Generic tree optimization: handle all levels with multiple nodes
+      levels.forEach(level => {
+        const levelNodes = nodesByLevel.get(level) || [];
+        if (levelNodes.length > 1 && !levelNodes.some(node => this.hasValidDisplayOrder(node))) {
+          this.optimizeTreeLevelConnections(levelNodes, clusterCenters, connectionsMap, width);
+        }
+      });
     }
   }
 
-  private optimizeLevelForConnectionDensity(
+  private optimizeTreeLevelConnections(
     levelNodes: any[],
     clusterCenters: Map<string, number>,
     connectionsMap: Map<string, string[]>,
     width: number,
-    level: number,
   ): void {
-    // Skip optimization if nodes have displayOrder (respect explicit ordering)
-    const hasDisplayOrder = levelNodes.some(node => this.hasValidDisplayOrder(node));
-    if (hasDisplayOrder) {
-      return; // Don't override explicit displayOrder positioning
-    }
+    // Generic tree optimization based on connection patterns, not node types
 
-    // Analyze connection density for each node
-    const connectionAnalysis = this.analyzeConnectionDensity(levelNodes, clusterCenters, connectionsMap);
+    // 1. Analyze downstream connections (connections to lower levels)
+    const downstreamAnalysis = this.analyzeDownstreamConnections(levelNodes, connectionsMap, clusterCenters, width);
 
-    // Sort nodes by connection density and incoming connection positions
-    const optimizedOrder = this.calculateOptimalOrder(levelNodes, connectionAnalysis);
+    // 2. Group nodes by shared downstream targets
+    const sharedTargetGroups = this.groupBySharedDownstreamTargets(levelNodes, downstreamAnalysis);
 
-    // Redistribute nodes with enhanced spacing based on density
-    this.redistributeNodesForDensity(optimizedOrder, clusterCenters, connectionAnalysis, width, level);
+    // 3. Optimize positioning within each group and between groups
+    this.repositionForMinimalCrossings(sharedTargetGroups, clusterCenters, downstreamAnalysis, width);
   }
 
-  private analyzeConnectionDensity(
+  private analyzeDownstreamConnections(
     levelNodes: any[],
-    clusterCenters: Map<string, number>,
     connectionsMap: Map<string, string[]>,
+    clusterCenters: Map<string, number>,
+    width: number,
   ): Map<string, any> {
-    const nodeAnalysis = new Map<string, any>();
+    const analysis = new Map<string, any>();
 
     levelNodes.forEach(node => {
-      const connections = connectionsMap.get(node.id) || [];
-      const incomingConnections = connections.filter(connId => clusterCenters.has(connId));
-      const incomingPositions = incomingConnections.map(connId => clusterCenters.get(connId)).filter(pos => pos !== undefined) as number[];
+      const allConnections = connectionsMap.get(node.id) || [];
 
-      const avgIncomingPosition =
-        incomingPositions.length > 0
-          ? incomingPositions.reduce((sum, pos) => sum + pos, 0) / incomingPositions.length
-          : clusterCenters.get(node.id) || 0;
+      // Find downstream connections (nodes positioned in later levels or not yet positioned)
+      const downstreamConnections = allConnections.filter(connId => {
+        const connPosition = clusterCenters.get(connId);
+        // Consider it downstream if not positioned yet OR if it's positioned and we can determine it's lower
+        return connPosition === undefined || this.isLikelyDownstream(node, connId);
+      });
 
-      nodeAnalysis.set(node.id, {
+      // Find upstream connections (already positioned nodes)
+      const upstreamConnections = allConnections.filter(connId => clusterCenters.has(connId) && !downstreamConnections.includes(connId));
+
+      // Calculate centroid of upstream connections
+      const upstreamPositions = upstreamConnections.map(connId => clusterCenters.get(connId)).filter(pos => pos !== undefined) as number[];
+
+      const upstreamCentroid =
+        upstreamPositions.length > 0 ? upstreamPositions.reduce((sum, pos) => sum + pos, 0) / upstreamPositions.length : width / 2;
+
+      analysis.set(node.id, {
         node,
-        connectionCount: incomingConnections.length,
-        avgIncomingPosition,
-        incomingPositions,
-        currentPosition: clusterCenters.get(node.id) || 0,
+        downstreamConnections,
+        upstreamConnections,
+        upstreamCentroid,
+        connectionDensity: allConnections.length,
+        currentPosition: clusterCenters.get(node.id) || width / 2,
       });
     });
 
-    return nodeAnalysis;
+    return analysis;
   }
 
-  private calculateOptimalOrder(levelNodes: any[], connectionAnalysis: Map<string, any>): any[] {
-    // Sort nodes by their optimal position based on incoming connections
-    return [...levelNodes].sort((a, b) => {
-      const aAnalysis = connectionAnalysis.get(a.id);
-      const bAnalysis = connectionAnalysis.get(b.id);
+  private isLikelyDownstream(sourceNode: any, targetId: string): boolean {
+    // Generic heuristic: if target ID suggests it's at a higher level number, it's downstream
+    // This works for any tree structure without hardcoding specific types
 
-      if (!aAnalysis || !bAnalysis) {
-        return a.name.localeCompare(b.name);
-      }
+    // Simple heuristic: longer, more complex IDs tend to be deeper in the tree
+    const sourceIdComplexity = sourceNode.id.split(':').length;
+    const targetIdComplexity = targetId.split(':').length;
 
-      // Primary sort: by average incoming position
-      const positionDiff = aAnalysis.avgIncomingPosition - bAnalysis.avgIncomingPosition;
-      if (Math.abs(positionDiff) > 10) {
-        return positionDiff;
-      }
-
-      // Secondary sort: by connection count (more connections = more stable)
-      const connectionDiff = bAnalysis.connectionCount - aAnalysis.connectionCount;
-      if (connectionDiff !== 0) {
-        return connectionDiff;
-      }
-
-      // Tertiary sort: by name for consistency
-      return a.name.localeCompare(b.name);
-    });
+    return targetIdComplexity >= sourceIdComplexity;
   }
 
-  private redistributeNodesForDensity(
-    orderedNodes: any[],
-    clusterCenters: Map<string, number>,
-    connectionAnalysis: Map<string, any>,
-    width: number,
-    level: number,
-  ): void {
-    const nodeCount = orderedNodes.length;
-    if (nodeCount <= 1) {
-      return;
-    }
+  private groupBySharedDownstreamTargets(levelNodes: any[], downstreamAnalysis: Map<string, any>): Map<string, any[]> {
+    const sharedTargetGroups = new Map<string, any[]>();
+    const targetToNodes = new Map<string, string[]>();
 
-    // Calculate dynamic spacing based on level and connection density
-    const baseSpacing = this.calculateDynamicSpacing(orderedNodes, connectionAnalysis, level);
-    const totalWidth = (nodeCount - 1) * baseSpacing;
-    const startX = Math.max(50, (width - totalWidth) / 2);
-
-    orderedNodes.forEach((node, index) => {
-      const analysis = connectionAnalysis.get(node.id);
-      if (!analysis) {
-        return;
-      }
-
-      // Base position from even distribution
-      const evenPosition = startX + index * baseSpacing;
-
-      // Bias toward incoming connections
-      const incomingBias = analysis.avgIncomingPosition;
-      const biasStrength = Math.min(0.4, analysis.connectionCount * 0.1); // Up to 40% bias
-
-      const optimizedPosition = evenPosition * (1 - biasStrength) + incomingBias * biasStrength;
-      const constrainedPosition = Math.max(50, Math.min(width - 50, optimizedPosition));
-
-      clusterCenters.set(node.id, constrainedPosition);
-    });
-  }
-
-  private calculateDynamicSpacing(orderedNodes: any[], connectionAnalysis: Map<string, any>, level: number): number {
-    // Base spacing increases for lower levels (more crowded)
-    const levelMultiplier = Math.max(1, level - 2); // Levels 3+ get extra spacing
-    let baseSpacing = 50 + levelMultiplier * 15;
-
-    // Reduce spacing if we have many high-connection nodes (they need to be closer to their sources)
-    const avgConnectionCount =
-      orderedNodes.reduce((sum, node) => {
-        const analysis = connectionAnalysis.get(node.id);
-        return sum + (analysis?.connectionCount || 0);
-      }, 0) / orderedNodes.length;
-
-    if (avgConnectionCount > 2) {
-      baseSpacing *= 0.8; // Reduce spacing by 20% for highly connected levels
-    }
-
-    return Math.max(35, baseSpacing); // Minimum spacing of 35px
-  }
-
-  private reduceMultiLevelCrossings(
-    lowerLevels: number[],
-    nodesByLevel: Map<number, any[]>,
-    clusterCenters: Map<string, number>,
-    connectionsMap: Map<string, string[]>,
-    width: number,
-  ): void {
-    // Check for crossings that span multiple levels
-    for (let i = 0; i < lowerLevels.length - 1; i++) {
-      const upperLevel = lowerLevels[i + 1]; // Higher in hierarchy (lower number)
-      const lowerLevel = lowerLevels[i]; // Lower in hierarchy (higher number)
-
-      const upperNodes = nodesByLevel.get(upperLevel) || [];
-      const lowerNodes = nodesByLevel.get(lowerLevel) || [];
-
-      // Find and resolve multi-level crossings
-      const crossingImprovements = this.findMultiLevelCrossingImprovements(upperNodes, lowerNodes, clusterCenters, connectionsMap, width);
-
-      // Apply improvements
-      crossingImprovements.forEach((newPosition, nodeId) => {
-        clusterCenters.set(nodeId, newPosition);
-      });
-    }
-  }
-
-  private findMultiLevelCrossingImprovements(
-    upperNodes: any[],
-    lowerNodes: any[],
-    clusterCenters: Map<string, number>,
-    connectionsMap: Map<string, string[]>,
-    width: number,
-  ): Map<string, number> {
-    const improvements = new Map<string, number>();
-
-    // Build connection map between these levels
-    const connections: Array<{ upper: string; lower: string; upperX: number; lowerX: number }> = [];
-
-    upperNodes.forEach(upperNode => {
-      const upperConnections = connectionsMap.get(upperNode.id) || [];
-      upperConnections.forEach(connId => {
-        if (lowerNodes.some(n => n.id === connId)) {
-          const upperX = clusterCenters.get(upperNode.id) || 0;
-          const lowerX = clusterCenters.get(connId) || 0;
-          connections.push({
-            upper: upperNode.id,
-            lower: connId,
-            upperX,
-            lowerX,
-          });
-        }
-      });
-    });
-
-    // Find the most problematic crossings and suggest improvements
-    const crossingCount = this.countCrossings(connections);
-    if (crossingCount > 0) {
-      // Try to improve by adjusting lower level positions toward their connections
-      lowerNodes.forEach(lowerNode => {
-        const nodeConnections = connections.filter(c => c.lower === lowerNode.id);
-        if (nodeConnections.length > 0) {
-          const avgUpperX = nodeConnections.reduce((sum, c) => sum + c.upperX, 0) / nodeConnections.length;
-          const currentX = clusterCenters.get(lowerNode.id) || 0;
-
-          // Move 25% toward the average position of connected upper nodes
-          const improvedX = currentX * 0.75 + avgUpperX * 0.25;
-          const constrainedX = Math.max(50, Math.min(width - 50, improvedX));
-
-          if (Math.abs(constrainedX - currentX) > 15) {
-            improvements.set(lowerNode.id, constrainedX);
+    // Build target -> nodes mapping
+    levelNodes.forEach(node => {
+      const analysis = downstreamAnalysis.get(node.id);
+      if (analysis) {
+        analysis.downstreamConnections.forEach((targetId: string) => {
+          if (!targetToNodes.has(targetId)) {
+            targetToNodes.set(targetId, []);
           }
-        }
-      });
-    }
+          targetToNodes.get(targetId)?.push(node.id);
+        });
+      }
+    });
 
-    return improvements;
+    // Create groups for shared targets
+    const processedNodes = new Set<string>();
+
+    targetToNodes.forEach((nodeIds, targetId) => {
+      if (nodeIds.length > 1) {
+        // Multiple nodes share this target - group them
+        const groupKey = `shared-target:${targetId}`;
+        const groupNodes = nodeIds.map(id => levelNodes.find(n => n.id === id)).filter(n => n);
+        sharedTargetGroups.set(groupKey, groupNodes);
+        groupNodes.forEach(node => processedNodes.add(node.id));
+      }
+    });
+
+    // Add remaining nodes as individual groups
+    levelNodes.forEach(node => {
+      if (!processedNodes.has(node.id)) {
+        sharedTargetGroups.set(`individual:${node.id}`, [node]);
+      }
+    });
+
+    return sharedTargetGroups;
   }
 
-  private countCrossings(connections: Array<{ upper: string; lower: string; upperX: number; lowerX: number }>): number {
-    let crossings = 0;
+  private repositionForMinimalCrossings(
+    sharedTargetGroups: Map<string, any[]>,
+    clusterCenters: Map<string, number>,
+    downstreamAnalysis: Map<string, any>,
+    width: number,
+  ): void {
+    // Calculate optimal positions for each group based on their upstream connections
+    const groupPositions = new Map<string, number>();
 
-    for (let i = 0; i < connections.length; i++) {
-      for (let j = i + 1; j < connections.length; j++) {
-        const c1 = connections[i];
-        const c2 = connections[j];
+    sharedTargetGroups.forEach((groupNodes, groupKey) => {
+      // Calculate group's optimal position based on upstream centroids
+      const groupCentroid =
+        groupNodes.reduce((sum, node) => {
+          const analysis = downstreamAnalysis.get(node.id);
+          return sum + (analysis?.upstreamCentroid || width / 2);
+        }, 0) / groupNodes.length;
 
-        // Check if these connections cross
-        const cross1 = c1.upperX < c2.upperX && c1.lowerX > c2.lowerX;
-        const cross2 = c1.upperX > c2.upperX && c1.lowerX < c2.lowerX;
+      groupPositions.set(groupKey, groupCentroid);
+    });
 
-        if (cross1 || cross2) {
-          crossings++;
-        }
+    // Sort groups by their optimal positions
+    const sortedGroups = Array.from(sharedTargetGroups.entries()).sort((a, b) => {
+      const posA = groupPositions.get(a[0]) || 0;
+      const posB = groupPositions.get(b[0]) || 0;
+      return posA - posB;
+    });
+
+    // Redistribute groups across available width with tighter spacing
+    const totalGroups = sortedGroups.length;
+    const groupSpacing = totalGroups > 1 ? (width * 0.4) / (totalGroups - 1) : 0; // Further reduced to 0.4
+    const startX = width * 0.3; // 30% margin (more centered)
+
+    sortedGroups.forEach(([, groupNodes], groupIndex) => {
+      const groupCenterX = startX + groupIndex * groupSpacing;
+
+      // Position nodes within the group
+      if (groupNodes.length === 1) {
+        clusterCenters.set(groupNodes[0].id, groupCenterX);
+      } else {
+        // For shared target groups, use tighter spacing
+        const nodeSpacing = Math.min(20, 80 / groupNodes.length); // Further reduced spacing
+        groupNodes.forEach((node, nodeIndex) => {
+          const offset = (nodeIndex - (groupNodes.length - 1) / 2) * nodeSpacing;
+          clusterCenters.set(node.id, groupCenterX + offset);
+        });
       }
-    }
-
-    return crossings;
+    });
   }
 
   private renderLaneGuides(
