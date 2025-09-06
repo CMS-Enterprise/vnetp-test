@@ -15296,6 +15296,38 @@
         ]
       }
     },
+    "/v2/app-centric/tenants/{id}/generate-full-graph": {
+      "get": {
+        "operationId": "buildTenantFullGraph",
+        "summary": "Build tenant full graph",
+        "description": "Build tenant full graph",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantConnectivityGraph"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
     "/v2/app-centric/tenants": {
       "post": {
         "operationId": "createOneTenant",
@@ -15759,117 +15791,6 @@
         },
         "tags": [
           "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/admin/v2/app-centric/tenants/{id}": {
-      "put": {
-        "operationId": "updateTenantAdmin",
-        "summary": "Update tenant (Admin Only)",
-        "description": "Update tenant including sensitive properties. Only accessible to GlobalAdmin users.",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Tenant ID",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TenantAdminDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "admin/v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/admin/v2/app-centric/tenants/{id}/basic": {
-      "put": {
-        "operationId": "updateTenantBasic",
-        "summary": "Update tenant basic properties",
-        "description": "Update only non-sensitive tenant properties (alias, description).",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Tenant ID",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TenantBasicUpdateDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "admin/v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/admin/v2/app-centric/tenants/{id}/cascade": {
-      "delete": {
-        "operationId": "cascadeDeleteTenantTenantAdmin",
-        "summary": "",
-        "description": "Cascade Delete Tenant",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "admin/v2/app-centric/tenants"
         ]
       }
     },
@@ -25200,7 +25121,7 @@
         ]
       }
     },
-    "/v3/global/environment": {
+    "/v3/global/environments": {
       "post": {
         "operationId": "createOneEnvironment",
         "summary": "Create one Environment",
@@ -25228,7 +25149,7 @@
           }
         },
         "tags": [
-          "v3/global/environment"
+          "v3/global/environments"
         ]
       },
       "get": {
@@ -25251,11 +25172,11 @@
           }
         },
         "tags": [
-          "v3/global/environment"
+          "v3/global/environments"
         ]
       }
     },
-    "/v3/global/environment/{id}": {
+    "/v3/global/environments/{id}": {
       "put": {
         "operationId": "updateOneEnvironment",
         "summary": "Update one Environment",
@@ -25292,7 +25213,7 @@
           }
         },
         "tags": [
-          "v3/global/environment"
+          "v3/global/environments"
         ]
       },
       "get": {
@@ -25321,11 +25242,11 @@
           }
         },
         "tags": [
-          "v3/global/environment"
+          "v3/global/environments"
         ]
       }
     },
-    "/v3/global/environment/summary": {
+    "/v3/global/environments/summary": {
       "get": {
         "operationId": "getManyEnvironmentSummaries",
         "summary": "Get many Environment Summaries",
@@ -25346,11 +25267,11 @@
           }
         },
         "tags": [
-          "v3/global/environment"
+          "v3/global/environments"
         ]
       }
     },
-    "/v3/global/environment/{id}/summary": {
+    "/v3/global/environments/{id}/summary": {
       "get": {
         "operationId": "getOneEnvironmentSummary",
         "summary": "Get one Environment Summary",
@@ -25377,7 +25298,7 @@
           }
         },
         "tags": [
-          "v3/global/environment"
+          "v3/global/environments"
         ]
       }
     },
@@ -29061,6 +28982,107 @@
           "name"
         ]
       },
+      "EndpointIpAddress": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "IP Address ID",
+            "readOnly": true
+          },
+          "address": {
+            "type": "string",
+            "description": "IP address",
+            "readOnly": true
+          },
+          "endpoint": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            ]
+          },
+          "lastSeen": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Endpoint last seen",
+            "readOnly": true
+          },
+          "endpointId": {
+            "type": "string",
+            "description": "Endpoint ID",
+            "readOnly": true
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID",
+            "readOnly": true
+          }
+        }
+      },
+      "Endpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Endpoint ID",
+            "readOnly": true
+          },
+          "macAddress": {
+            "type": "string",
+            "description": "Endpoint MAC address",
+            "readOnly": true
+          },
+          "ipAddresses": {
+            "description": "IP addresses associated with this endpoint",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointIpAddress"
+            }
+          },
+          "lastSeen": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Endpoint last seen",
+            "readOnly": true
+          },
+          "endpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "endpointGroupId": {
+            "type": "string",
+            "description": "Endpoint endpoint group ID",
+            "readOnly": true
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
       "Tenant": {
         "type": "object",
         "properties": {
@@ -29219,14 +29241,6 @@
               }
             ]
           },
-          "multiVrf": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "multiL3out": {
-            "type": "boolean",
-            "readOnly": true
-          },
           "allowServiceGraphBypass": {
             "type": "boolean",
             "readOnly": true
@@ -29270,103 +29284,34 @@
             "items": {
               "$ref": "#/components/schemas/ServiceGraphFirewall"
             }
+          },
+          "serviceGraphs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGraph"
+            }
+          },
+          "endpoints": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Endpoint"
+            }
+          },
+          "endpointIpAddresses": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointIpAddress"
+            }
           }
         },
         "required": [
           "datacenter",
-          "multiVrf",
-          "multiL3out",
           "allowServiceGraphBypass",
           "environmentId"
         ]
-      },
-      "IpAddress": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "IP Address ID",
-            "readOnly": true
-          },
-          "address": {
-            "type": "string",
-            "description": "IP address",
-            "readOnly": true
-          },
-          "endpoint": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Endpoint"
-              }
-            ]
-          },
-          "orphanedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Endpoint last seen",
-            "readOnly": true
-          },
-          "endpointId": {
-            "type": "string",
-            "description": "Endpoint ID",
-            "readOnly": true
-          }
-        }
-      },
-      "Endpoint": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Endpoint ID",
-            "readOnly": true
-          },
-          "macAddress": {
-            "type": "string",
-            "description": "Endpoint MAC address",
-            "readOnly": true
-          },
-          "ipAddresses": {
-            "description": "IP addresses associated with this endpoint",
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/IpAddress"
-            }
-          },
-          "orphanedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Endpoint last seen",
-            "readOnly": true
-          },
-          "endpointGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            ]
-          },
-          "endpointGroupId": {
-            "type": "string",
-            "description": "Endpoint endpoint group ID",
-            "readOnly": true
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string",
-            "readOnly": true
-          }
-        }
       },
       "EndpointGroup": {
         "type": "object",
@@ -33284,58 +33229,572 @@
           "failed"
         ]
       },
-      "TenantAdminDto": {
+      "GraphIndexes": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
+          "nodesByType": {
+            "type": "object",
+            "description": "Nodes by type (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "TENANT": [
+                "tenant:tenant1"
+              ],
+              "VRF": [
+                "vrf:tenant1:production",
+                "vrf:tenant1:staging"
+              ],
+              "EXTERNAL_FIREWALL": [
+                "external-firewall:fw1"
+              ]
+            }
           },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
+          "nodesByTenant": {
+            "type": "object",
+            "description": "Nodes by tenant (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "tenant1": [
+                "tenant:tenant1",
+                "vrf:tenant1:production",
+                "vrf:tenant1:staging"
+              ]
+            }
           },
-          "description": {
-            "type": "string",
-            "maxLength": 500
+          "edgesByType": {
+            "type": "object",
+            "description": "Edges by type (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "VRF_TO_L3OUT": [
+                "vrf:tenant1:production-to-l3out:tenant1:production:external"
+              ],
+              "TENANT_CONTAINS_VRF": [
+                "tenant:tenant1-to-vrf:tenant1:production"
+              ]
+            }
           },
-          "multiVrf": {
-            "type": "boolean",
-            "description": "Allows tenants to create multiple VRFs",
-            "default": true
+          "edgesBySource": {
+            "type": "object",
+            "description": "Edges by source node (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           },
-          "multiL3out": {
-            "type": "boolean",
-            "description": "Allows tenants to attach multiple L3Outs to a single VRF",
-            "default": false
+          "edgesByTarget": {
+            "type": "object",
+            "description": "Edges by target node (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           },
-          "allowServiceGraphBypass": {
-            "type": "boolean",
-            "description": "Allows tenants to create custom contract subjects, filters and filter entries",
-            "default": false
+          "externalVrfToVrfs": {
+            "type": "object",
+            "description": "External VRF to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "cms-entsrv-inet": [
+                "vrf:tenant1:production"
+              ],
+              "cmsnet-transport": [
+                "vrf:tenant1:staging"
+              ]
+            }
           },
-          "environmentId": {
-            "type": "string",
-            "description": "Environment ID for cross-database relationship"
+          "firewallToVrfs": {
+            "type": "object",
+            "description": "Firewall to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "external-firewall:fw1": [
+                "vrf:tenant1:production",
+                "vrf:tenant1:staging"
+              ]
+            }
+          },
+          "vrfToFirewalls": {
+            "type": "object",
+            "description": "VRF to firewall nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "vrf:tenant1:production": [
+                "external-firewall:fw1"
+              ]
+            }
           }
         },
         "required": [
-          "name"
+          "nodesByType",
+          "nodesByTenant",
+          "edgesByType",
+          "edgesBySource",
+          "edgesByTarget",
+          "externalVrfToVrfs",
+          "firewallToVrfs",
+          "vrfToFirewalls"
         ]
       },
-      "TenantBasicUpdateDto": {
+      "DefaultRoutePath": {
         "type": "object",
         "properties": {
-          "alias": {
+          "sourceVrfId": {
             "type": "string",
-            "maxLength": 100
+            "description": "Source VRF node ID"
           },
-          "description": {
+          "externalVrf": {
             "type": "string",
-            "maxLength": 500
+            "description": "External VRF providing the default route"
+          },
+          "path": {
+            "description": "Path of node IDs from VRF to external VRF",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether this path is currently active"
           }
-        }
+        },
+        "required": [
+          "sourceVrfId",
+          "externalVrf",
+          "path",
+          "isActive"
+        ]
+      },
+      "RoutingLoop": {
+        "type": "object",
+        "properties": {
+          "nodeIds": {
+            "description": "Nodes involved in the loop",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "edgeIds": {
+            "description": "Edges involved in the loop",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "loopType": {
+            "type": "string",
+            "description": "Type of loop (default route, BGP, etc.)"
+          },
+          "severity": {
+            "type": "string",
+            "description": "Severity of the loop",
+            "enum": [
+              "WARNING",
+              "ERROR"
+            ]
+          }
+        },
+        "required": [
+          "nodeIds",
+          "edgeIds",
+          "loopType",
+          "severity"
+        ]
+      },
+      "RoutingPaths": {
+        "type": "object",
+        "properties": {
+          "defaultRoutePaths": {
+            "description": "Default route paths in the graph",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DefaultRoutePath"
+            }
+          },
+          "vrfConnectivityMatrix": {
+            "type": "object",
+            "description": "VRF connectivity matrix (serialized from Map<string, Map<string, ConnectionPath>> to nested objects)",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "edges": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "weight": {
+                    "type": "number"
+                  },
+                  "allowsExternalRoutePropagation": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "example": {
+              "vrf:tenant1:production": {
+                "vrf:tenant1:staging": {
+                  "path": [
+                    "vrf:tenant1:production",
+                    "l3out:tenant1:production:intervrf",
+                    "external-firewall:fw1",
+                    "l3out:tenant1:staging:intervrf",
+                    "vrf:tenant1:staging"
+                  ],
+                  "edges": [
+                    "vrf:tenant1:production-to-l3out:tenant1:production:intervrf",
+                    "l3out:tenant1:production:intervrf-to-external-firewall:fw1"
+                  ],
+                  "weight": 2,
+                  "allowsExternalRoutePropagation": true
+                }
+              }
+            }
+          },
+          "potentialRoutingLoops": {
+            "description": "Potential routing loops detected",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoutingLoop"
+            }
+          }
+        },
+        "required": [
+          "defaultRoutePaths",
+          "vrfConnectivityMatrix",
+          "potentialRoutingLoops"
+        ]
+      },
+      "GraphMetadata": {
+        "type": "object",
+        "properties": {
+          "buildTimestamp": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the graph was built"
+          },
+          "configHash": {
+            "type": "string",
+            "description": "Hash of the configuration used to build the graph"
+          },
+          "buildDurationMs": {
+            "type": "number",
+            "description": "Time taken to build the graph"
+          },
+          "builderVersion": {
+            "type": "string",
+            "description": "Version of the graph builder used"
+          },
+          "buildMetadata": {
+            "type": "object",
+            "description": "Additional build metadata"
+          },
+          "options": {
+            "type": "object",
+            "description": "Build options used to build the graph"
+          }
+        },
+        "required": [
+          "buildTimestamp",
+          "configHash",
+          "buildDurationMs",
+          "builderVersion"
+        ]
+      },
+      "GraphUtils": {
+        "type": "object",
+        "properties": {
+          "availableMethods": {
+            "type": "object",
+            "description": "Available utility methods for graph queries and analysis",
+            "example": {
+              "nodeQueries": [
+                "getNode",
+                "getNodesByType",
+                "getNodesByTenant"
+              ],
+              "edgeQueries": [
+                "getEdge",
+                "getEdgesByType",
+                "getEdgesFromNode",
+                "getEdgesToNode"
+              ],
+              "connectivityQueries": [
+                "getConnectedNodes",
+                "getShortestPath",
+                "getReachableNodes"
+              ],
+              "vrfQueries": [
+                "getVrfsThatCanReach",
+                "getVrfsReachableFrom",
+                "getExternalVrfsForVrf"
+              ],
+              "firewallQueries": [
+                "getHubFirewalls",
+                "getFirewallsByVrf"
+              ],
+              "validation": [
+                "validateRouteAdvertisement"
+              ],
+              "impactAnalysis": [
+                "getImpactOfNodeRemoval",
+                "getImpactOfEdgeRemoval"
+              ]
+            }
+          }
+        },
+        "required": [
+          "availableMethods"
+        ]
+      },
+      "TenantConnectivityGraph": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "object",
+            "description": "All nodes in the graph - keyed by node ID (serialized from Map to object)",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TENANT",
+                    "VRF",
+                    "L3OUT",
+                    "EXTERNAL_FIREWALL",
+                    "SERVICE_GRAPH",
+                    "SERVICE_GRAPH_FIREWALL",
+                    "EXTERNAL_VRF_CONNECTION",
+                    "EXTERNAL_VRF",
+                    "CONTRACT",
+                    "SUBJECT",
+                    "FILTER",
+                    "FILTER_ENTRY",
+                    "ENDPOINT_GROUP",
+                    "ENDPOINT_SECURITY_GROUP",
+                    "BRIDGE_DOMAIN",
+                    "SUBNET",
+                    "APPLICATION_PROFILE"
+                  ]
+                },
+                "config": {
+                  "type": "object"
+                },
+                "entityId": {
+                  "type": "string"
+                },
+                "tenantId": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object"
+                },
+                "connectivity": {
+                  "type": "object"
+                },
+                "validationContext": {
+                  "type": "object"
+                }
+              }
+            },
+            "example": {
+              "tenant:tenant1": {
+                "id": "tenant:tenant1",
+                "name": "tenant1",
+                "type": "TENANT",
+                "metadata": {
+                  "environmentId": "prod"
+                }
+              },
+              "vrf:tenant1:production": {
+                "id": "vrf:tenant1:production",
+                "name": "production",
+                "type": "VRF",
+                "metadata": {
+                  "bgpAsn": 65001,
+                  "bgpAsnAutoGenerate": false
+                }
+              },
+              "external-firewall:fw1": {
+                "id": "external-firewall:fw1",
+                "name": "fw1",
+                "type": "EXTERNAL_FIREWALL",
+                "metadata": {
+                  "firewallDeviceType": "PANOS",
+                  "vsysName": "vsys1"
+                }
+              }
+            }
+          },
+          "edges": {
+            "type": "object",
+            "description": "All edges in the graph - keyed by edge ID (serialized from Map to object)",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "sourceNodeId": {
+                  "type": "string"
+                },
+                "targetNodeId": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "TENANT_CONTAINS_VRF",
+                    "TENANT_CONTAINS_FIREWALL",
+                    "VRF_TO_L3OUT",
+                    "L3OUT_TO_FIREWALL",
+                    "FIREWALL_TO_EXTERNAL_VRF_CONNECTION",
+                    "EXTERNAL_VRF_CONNECTION_TO_EXTERNAL_VRF",
+                    "VRF_TO_SERVICE_GRAPH",
+                    "SERVICE_GRAPH_TO_FIREWALL",
+                    "VRF_INTERVRF_CONNECTIVITY"
+                  ]
+                },
+                "weight": {
+                  "type": "number"
+                },
+                "bidirectional": {
+                  "type": "boolean"
+                },
+                "properties": {
+                  "type": "object"
+                },
+                "metadata": {
+                  "type": "object"
+                }
+              }
+            },
+            "example": {
+              "tenant:tenant1-to-vrf:tenant1:production": {
+                "id": "tenant:tenant1-to-vrf:tenant1:production",
+                "sourceNodeId": "tenant:tenant1",
+                "targetNodeId": "vrf:tenant1:production",
+                "type": "TENANT_CONTAINS_VRF",
+                "bidirectional": false
+              },
+              "vrf:tenant1:production-to-l3out:tenant1:production:external": {
+                "id": "vrf:tenant1:production-to-l3out:tenant1:production:external",
+                "sourceNodeId": "vrf:tenant1:production",
+                "targetNodeId": "l3out:tenant1:production:external",
+                "type": "VRF_TO_L3OUT",
+                "properties": {
+                  "propagateExternalRoutes": true
+                }
+              }
+            }
+          },
+          "buildStrategy": {
+            "type": "string",
+            "description": "Strategy used to build this graph",
+            "enum": [
+              "FROM_CONFIG",
+              "FROM_INFRASTRUCTURE",
+              "FROM_ENVIRONMENT"
+            ]
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID this graph represents"
+          },
+          "indexes": {
+            "description": "Performance indexes for fast lookups",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GraphIndexes"
+              }
+            ]
+          },
+          "routingPaths": {
+            "description": "Routing analysis results",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RoutingPaths"
+              }
+            ]
+          },
+          "metadata": {
+            "description": "Graph metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GraphMetadata"
+              }
+            ]
+          },
+          "utils": {
+            "description": "Graph utilities for queries and analysis",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GraphUtils"
+              }
+            ]
+          }
+        },
+        "required": [
+          "nodes",
+          "edges",
+          "buildStrategy",
+          "indexes",
+          "routingPaths",
+          "metadata",
+          "utils"
+        ]
       },
       "NodeConnectivity": {
         "type": "object",
@@ -34015,573 +34474,6 @@
         "required": [
           "success",
           "errors"
-        ]
-      },
-      "GraphIndexes": {
-        "type": "object",
-        "properties": {
-          "nodesByType": {
-            "type": "object",
-            "description": "Nodes by type (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": {
-              "TENANT": [
-                "tenant:tenant1"
-              ],
-              "VRF": [
-                "vrf:tenant1:production",
-                "vrf:tenant1:staging"
-              ],
-              "EXTERNAL_FIREWALL": [
-                "external-firewall:fw1"
-              ]
-            }
-          },
-          "nodesByTenant": {
-            "type": "object",
-            "description": "Nodes by tenant (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": {
-              "tenant1": [
-                "tenant:tenant1",
-                "vrf:tenant1:production",
-                "vrf:tenant1:staging"
-              ]
-            }
-          },
-          "edgesByType": {
-            "type": "object",
-            "description": "Edges by type (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": {
-              "VRF_TO_L3OUT": [
-                "vrf:tenant1:production-to-l3out:tenant1:production:external"
-              ],
-              "TENANT_CONTAINS_VRF": [
-                "tenant:tenant1-to-vrf:tenant1:production"
-              ]
-            }
-          },
-          "edgesBySource": {
-            "type": "object",
-            "description": "Edges by source node (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          "edgesByTarget": {
-            "type": "object",
-            "description": "Edges by target node (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          "externalVrfToVrfs": {
-            "type": "object",
-            "description": "External VRF to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": {
-              "cms-entsrv-inet": [
-                "vrf:tenant1:production"
-              ],
-              "cmsnet-transport": [
-                "vrf:tenant1:staging"
-              ]
-            }
-          },
-          "firewallToVrfs": {
-            "type": "object",
-            "description": "Firewall to VRF nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": {
-              "external-firewall:fw1": [
-                "vrf:tenant1:production",
-                "vrf:tenant1:staging"
-              ]
-            }
-          },
-          "vrfToFirewalls": {
-            "type": "object",
-            "description": "VRF to firewall nodes mapping (serialized from Map<string, Set<string>> to object with arrays)",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": {
-              "vrf:tenant1:production": [
-                "external-firewall:fw1"
-              ]
-            }
-          }
-        },
-        "required": [
-          "nodesByType",
-          "nodesByTenant",
-          "edgesByType",
-          "edgesBySource",
-          "edgesByTarget",
-          "externalVrfToVrfs",
-          "firewallToVrfs",
-          "vrfToFirewalls"
-        ]
-      },
-      "DefaultRoutePath": {
-        "type": "object",
-        "properties": {
-          "sourceVrfId": {
-            "type": "string",
-            "description": "Source VRF node ID"
-          },
-          "externalVrf": {
-            "type": "string",
-            "description": "External VRF providing the default route"
-          },
-          "path": {
-            "description": "Path of node IDs from VRF to external VRF",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "isActive": {
-            "type": "boolean",
-            "description": "Whether this path is currently active"
-          }
-        },
-        "required": [
-          "sourceVrfId",
-          "externalVrf",
-          "path",
-          "isActive"
-        ]
-      },
-      "RoutingLoop": {
-        "type": "object",
-        "properties": {
-          "nodeIds": {
-            "description": "Nodes involved in the loop",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "edgeIds": {
-            "description": "Edges involved in the loop",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "loopType": {
-            "type": "string",
-            "description": "Type of loop (default route, BGP, etc.)"
-          },
-          "severity": {
-            "type": "string",
-            "description": "Severity of the loop",
-            "enum": [
-              "WARNING",
-              "ERROR"
-            ]
-          }
-        },
-        "required": [
-          "nodeIds",
-          "edgeIds",
-          "loopType",
-          "severity"
-        ]
-      },
-      "RoutingPaths": {
-        "type": "object",
-        "properties": {
-          "defaultRoutePaths": {
-            "description": "Default route paths in the graph",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DefaultRoutePath"
-            }
-          },
-          "vrfConnectivityMatrix": {
-            "type": "object",
-            "description": "VRF connectivity matrix (serialized from Map<string, Map<string, ConnectionPath>> to nested objects)",
-            "additionalProperties": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "edges": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "weight": {
-                    "type": "number"
-                  },
-                  "allowsExternalRoutePropagation": {
-                    "type": "boolean"
-                  }
-                }
-              }
-            },
-            "example": {
-              "vrf:tenant1:production": {
-                "vrf:tenant1:staging": {
-                  "path": [
-                    "vrf:tenant1:production",
-                    "l3out:tenant1:production:intervrf",
-                    "external-firewall:fw1",
-                    "l3out:tenant1:staging:intervrf",
-                    "vrf:tenant1:staging"
-                  ],
-                  "edges": [
-                    "vrf:tenant1:production-to-l3out:tenant1:production:intervrf",
-                    "l3out:tenant1:production:intervrf-to-external-firewall:fw1"
-                  ],
-                  "weight": 2,
-                  "allowsExternalRoutePropagation": true
-                }
-              }
-            }
-          },
-          "potentialRoutingLoops": {
-            "description": "Potential routing loops detected",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoutingLoop"
-            }
-          }
-        },
-        "required": [
-          "defaultRoutePaths",
-          "vrfConnectivityMatrix",
-          "potentialRoutingLoops"
-        ]
-      },
-      "GraphMetadata": {
-        "type": "object",
-        "properties": {
-          "buildTimestamp": {
-            "format": "date-time",
-            "type": "string",
-            "description": "When the graph was built"
-          },
-          "configHash": {
-            "type": "string",
-            "description": "Hash of the configuration used to build the graph"
-          },
-          "buildDurationMs": {
-            "type": "number",
-            "description": "Time taken to build the graph"
-          },
-          "builderVersion": {
-            "type": "string",
-            "description": "Version of the graph builder used"
-          },
-          "buildMetadata": {
-            "type": "object",
-            "description": "Additional build metadata"
-          },
-          "options": {
-            "type": "object",
-            "description": "Build options used to build the graph"
-          }
-        },
-        "required": [
-          "buildTimestamp",
-          "configHash",
-          "buildDurationMs",
-          "builderVersion"
-        ]
-      },
-      "GraphUtils": {
-        "type": "object",
-        "properties": {
-          "availableMethods": {
-            "type": "object",
-            "description": "Available utility methods for graph queries and analysis",
-            "example": {
-              "nodeQueries": [
-                "getNode",
-                "getNodesByType",
-                "getNodesByTenant"
-              ],
-              "edgeQueries": [
-                "getEdge",
-                "getEdgesByType",
-                "getEdgesFromNode",
-                "getEdgesToNode"
-              ],
-              "connectivityQueries": [
-                "getConnectedNodes",
-                "getShortestPath",
-                "getReachableNodes"
-              ],
-              "vrfQueries": [
-                "getVrfsThatCanReach",
-                "getVrfsReachableFrom",
-                "getExternalVrfsForVrf"
-              ],
-              "firewallQueries": [
-                "getHubFirewalls",
-                "getFirewallsByVrf"
-              ],
-              "validation": [
-                "validateRouteAdvertisement"
-              ],
-              "impactAnalysis": [
-                "getImpactOfNodeRemoval",
-                "getImpactOfEdgeRemoval"
-              ]
-            }
-          }
-        },
-        "required": [
-          "availableMethods"
-        ]
-      },
-      "TenantConnectivityGraph": {
-        "type": "object",
-        "properties": {
-          "nodes": {
-            "type": "object",
-            "description": "All nodes in the graph - keyed by node ID (serialized from Map to object)",
-            "additionalProperties": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "TENANT",
-                    "VRF",
-                    "L3OUT",
-                    "EXTERNAL_FIREWALL",
-                    "SERVICE_GRAPH",
-                    "SERVICE_GRAPH_FIREWALL",
-                    "EXTERNAL_VRF_CONNECTION",
-                    "EXTERNAL_VRF",
-                    "CONTRACT",
-                    "SUBJECT",
-                    "FILTER",
-                    "FILTER_ENTRY",
-                    "ENDPOINT_GROUP",
-                    "ENDPOINT_SECURITY_GROUP",
-                    "BRIDGE_DOMAIN",
-                    "SUBNET",
-                    "APPLICATION_PROFILE"
-                  ]
-                },
-                "config": {
-                  "type": "object"
-                },
-                "entityId": {
-                  "type": "string"
-                },
-                "tenantId": {
-                  "type": "string"
-                },
-                "metadata": {
-                  "type": "object"
-                },
-                "connectivity": {
-                  "type": "object"
-                },
-                "validationContext": {
-                  "type": "object"
-                }
-              }
-            },
-            "example": {
-              "tenant:tenant1": {
-                "id": "tenant:tenant1",
-                "name": "tenant1",
-                "type": "TENANT",
-                "metadata": {
-                  "environmentId": "prod"
-                }
-              },
-              "vrf:tenant1:production": {
-                "id": "vrf:tenant1:production",
-                "name": "production",
-                "type": "VRF",
-                "metadata": {
-                  "bgpAsn": 65001,
-                  "bgpAsnAutoGenerate": false
-                }
-              },
-              "external-firewall:fw1": {
-                "id": "external-firewall:fw1",
-                "name": "fw1",
-                "type": "EXTERNAL_FIREWALL",
-                "metadata": {
-                  "firewallDeviceType": "PANOS",
-                  "vsysName": "vsys1"
-                }
-              }
-            }
-          },
-          "edges": {
-            "type": "object",
-            "description": "All edges in the graph - keyed by edge ID (serialized from Map to object)",
-            "additionalProperties": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "sourceNodeId": {
-                  "type": "string"
-                },
-                "targetNodeId": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "TENANT_CONTAINS_VRF",
-                    "TENANT_CONTAINS_FIREWALL",
-                    "VRF_TO_L3OUT",
-                    "L3OUT_TO_FIREWALL",
-                    "FIREWALL_TO_EXTERNAL_VRF_CONNECTION",
-                    "EXTERNAL_VRF_CONNECTION_TO_EXTERNAL_VRF",
-                    "VRF_TO_SERVICE_GRAPH",
-                    "SERVICE_GRAPH_TO_FIREWALL",
-                    "VRF_INTERVRF_CONNECTIVITY"
-                  ]
-                },
-                "weight": {
-                  "type": "number"
-                },
-                "bidirectional": {
-                  "type": "boolean"
-                },
-                "properties": {
-                  "type": "object"
-                },
-                "metadata": {
-                  "type": "object"
-                }
-              }
-            },
-            "example": {
-              "tenant:tenant1-to-vrf:tenant1:production": {
-                "id": "tenant:tenant1-to-vrf:tenant1:production",
-                "sourceNodeId": "tenant:tenant1",
-                "targetNodeId": "vrf:tenant1:production",
-                "type": "TENANT_CONTAINS_VRF",
-                "bidirectional": false
-              },
-              "vrf:tenant1:production-to-l3out:tenant1:production:external": {
-                "id": "vrf:tenant1:production-to-l3out:tenant1:production:external",
-                "sourceNodeId": "vrf:tenant1:production",
-                "targetNodeId": "l3out:tenant1:production:external",
-                "type": "VRF_TO_L3OUT",
-                "properties": {
-                  "propagateExternalRoutes": true
-                }
-              }
-            }
-          },
-          "buildStrategy": {
-            "type": "string",
-            "description": "Strategy used to build this graph",
-            "enum": [
-              "FROM_CONFIG",
-              "FROM_INFRASTRUCTURE",
-              "FROM_ENVIRONMENT"
-            ]
-          },
-          "tenantId": {
-            "type": "string",
-            "description": "Tenant ID this graph represents"
-          },
-          "indexes": {
-            "description": "Performance indexes for fast lookups",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GraphIndexes"
-              }
-            ]
-          },
-          "routingPaths": {
-            "description": "Routing analysis results",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/RoutingPaths"
-              }
-            ]
-          },
-          "metadata": {
-            "description": "Graph metadata",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GraphMetadata"
-              }
-            ]
-          },
-          "utils": {
-            "description": "Graph utilities for queries and analysis",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GraphUtils"
-              }
-            ]
-          }
-        },
-        "required": [
-          "nodes",
-          "edges",
-          "buildStrategy",
-          "indexes",
-          "routingPaths",
-          "metadata",
-          "utils"
         ]
       },
       "GlobalBgpAsnAllocation": {

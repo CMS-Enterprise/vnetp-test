@@ -1,26 +1,38 @@
 <section class="tenant-infra">
-  <div class="toolbar">
-    <button class="btn btn-light" (click)="goBack()">← Back to Tenant Select</button>
-    <div class="ml-2">
-      <button class="btn btn-primary" *ngIf="mode === 'create'" (click)="validate()">
-        <fa-icon class="icon" [icon]="['fas', 'check']"></fa-icon>
-        Validate
+  <div class="toolbar d-flex justify-content-between align-items-center mb-3 p-3 bg-light border-bottom">
+    <div class="d-flex align-items-center">
+      <button class="btn btn-outline-secondary mr-3" (click)="goBack()">
+        <fa-icon [icon]="['fas', 'arrow-left']" class="mr-2"></fa-icon>
+        Back to Tenant Select
       </button>
-      <button class="btn btn-primary" (click)="getGraph()">
-        <fa-icon class="icon" [icon]="['fas', 'chart-line']"></fa-icon>
-        Graph
+      <div>
+        <h4 class="mb-1">Tenant Infrastructure ({{ mode | uppercase }})</h4>
+        <small class="text-muted" *ngIf="mode === 'edit'">
+          Viewing tenant: <strong>{{ tenantId }}</strong> <span class="badge badge-info">Read Only</span>
+        </small>
+        <small class="text-muted" *ngIf="mode === 'create'">
+          Creating a new tenant configuration
+          <span *ngIf="hasUnsavedChanges" class="badge badge-warning ml-2">Unsaved Changes</span>
+        </small>
+      </div>
+    </div>
+    <div class="d-flex align-items-center">
+      <button class="btn btn-outline-secondary mr-2" (click)="toggleLeftPanel()" title="Toggle input panel">
+        <fa-icon [icon]="leftPanelCollapsed ? ['fas', 'chevron-right'] : ['fas', 'chevron-left']"></fa-icon>
       </button>
-      <button class="btn btn-success" *ngIf="mode === 'create'" (click)="saveConfig()">
-        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-        Save
-      </button>
+      <div class="btn-group mr-2">
+        <button class="btn btn-primary" *ngIf="mode === 'create'" (click)="validate()" [disabled]="isSubmitting">
+          <fa-icon [icon]="['fas', 'check']" class="mr-1"></fa-icon>
+          Validate
+        </button>
+        <button class="btn btn-info" (click)="getGraph()" [disabled]="isSubmitting">Graph</button>
+        <button class="btn btn-success" *ngIf="mode === 'create'" (click)="saveConfig()" [disabled]="isSubmitting">
+          <fa-icon [icon]="['fas', 'save']" class="mr-1"></fa-icon>
+          Save
+        </button>
+      </div>
     </div>
   </div>
-  <h2>Tenant Infrastructure ({{ mode | uppercase }})</h2>
-  <p *ngIf="mode === 'edit'">
-    Viewing tenant: <strong>{{ tenantId }}</strong> <span class="badge badge-info">Read Only</span>
-  </p>
-  <p *ngIf="mode === 'create'">Creating a new tenant configuration.</p>
 
   <!-- Loading indicator for edit mode -->
   <div *ngIf="isLoadingConfig" class="text-center py-4">
@@ -29,7 +41,7 @@
   </div>
 
   <div class="row" *ngIf="!isLoadingConfig">
-    <div class="col-lg-4 col-md-5">
+    <div class="col-lg-4 col-md-5" *ngIf="!leftPanelCollapsed" [@slideInOut]>
       <ul class="nav nav-tabs mb-3">
         <li class="nav-item">
           <a
@@ -77,14 +89,19 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Environment ID</label>
-          <input
-            class="form-control"
-            [class.is-invalid]="hasFieldError('tenant.environmentId')"
+          <label>Environment</label>
+          <ng-select
+            [ngClass]="{ 'is-invalid': hasFieldError('tenant.environmentId') }"
             [disabled]="mode === 'edit'"
             [(ngModel)]="config.tenant.environmentId"
             (ngModelChange)="onConfigMutated()"
-          />
+            [items]="environments"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Select an environment..."
+            [clearable]="false"
+          >
+          </ng-select>
           <div *ngIf="hasFieldError('tenant.environmentId')" class="invalid-feedback d-block">
             {{ getFieldError('tenant.environmentId') }}
           </div>
@@ -243,17 +260,19 @@
                     </div>
                     <div class="form-group col-6">
                       <label>External VRF</label>
-                      <select
-                        class="form-control"
-                        [class.is-invalid]="
-                          hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.externalVrf')
-                        "
+                      <ng-select
+                        [ngClass]="{
+                          'is-invalid': hasFieldError(
+                            'externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.externalVrf'
+                          )
+                        }"
                         [(ngModel)]="c.externalVrf"
                         (ngModelChange)="onConfigMutated()"
+                        [items]="externalVrfOptions"
+                        placeholder="Select an external VRF..."
+                        [clearable]="true"
                       >
-                        <option value="">(select)</option>
-                        <option *ngFor="let vrf of externalVrfOptions" [value]="vrf">{{ vrf }}</option>
-                      </select>
+                      </ng-select>
                       <div
                         *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.externalVrfConnections.' + j + '.externalVrf')"
                         class="invalid-feedback d-block"
@@ -569,15 +588,20 @@
                     </div>
                     <div class="form-group" [ngClass]="l3.l3outType === 'intervrf' ? 'col-3' : 'col-6'">
                       <label>Firewall</label>
-                      <select
-                        class="form-control"
+                      <ng-select
+                        [ngClass]="{
+                          'is-invalid': hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.externalFirewall')
+                        }"
                         [disabled]="mode === 'edit'"
                         [(ngModel)]="l3.externalFirewall"
                         (ngModelChange)="onConfigMutated()"
+                        [items]="config.externalFirewalls"
+                        bindLabel="name"
+                        bindValue="name"
+                        placeholder="Select a firewall..."
+                        [clearable]="true"
                       >
-                        <option [ngValue]="''">(none)</option>
-                        <option *ngFor="let fw of config.externalFirewalls" [ngValue]="fw.name">{{ fw.name }}</option>
-                      </select>
+                      </ng-select>
                       <div
                         *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.externalFirewall')"
                         class="invalid-feedback d-block"
@@ -599,7 +623,7 @@
       </div>
     </div>
 
-    <div class="col-lg-8 col-md-7">
+    <div [class]="leftPanelCollapsed ? 'col-12' : 'col-lg-8 col-md-7'" class="transition-all">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <div class="btn-group btn-group-sm" role="group">
           <button
@@ -701,8 +725,6 @@
         </div>
         <div *ngIf="!graph" class="d-flex align-items-center justify-content-center h-100 text-muted">
           <div class="text-center">
-            <fa-icon class="icon mb-2" [icon]="['fas', 'chart-line']" style="font-size: 3rem; opacity: 0.3"></fa-icon>
-            <div>No graph data available</div>
             <div class="small">Click "Graph" button in toolbar to generate</div>
           </div>
         </div>
@@ -724,4 +746,7 @@
       </div>
     </div>
   </div>
+
+  <!-- Yes/No Modal -->
+  <app-yes-no-modal></app-yes-no-modal>
 </section>

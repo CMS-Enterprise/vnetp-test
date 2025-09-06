@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-  V3GlobalEnvironmentService,
+  V3GlobalEnvironmentsService,
   V3GlobalBgpRangesService,
   CreateGlobalBgpRangeDto,
   UpdateGlobalBgpRangeDto,
@@ -26,7 +26,7 @@ export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private envService: V3GlobalEnvironmentService,
+    private envService: V3GlobalEnvironmentsService,
     private bgpService: V3GlobalBgpRangesService,
     public ngx: NgxSmartModalService,
   ) {}

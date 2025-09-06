@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { V1TiersService, AdminV2AppCentricTenantsService } from 'client';
+import { V1TiersService, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
@@ -11,11 +11,7 @@ export class TypeDeleteModalComponent {
   objectName: string;
   @Input() objectType: string;
   nameMismatch: boolean;
-  constructor(
-    private ngx: NgxSmartModalService,
-    private tierService: V1TiersService,
-    private tenantService: AdminV2AppCentricTenantsService,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService, private tenantService: V2AppCentricTenantsService) {}
 
   deleteTier(): void {
     if (this.objectName === this.objectToDelete.name) {
@@ -29,10 +25,11 @@ export class TypeDeleteModalComponent {
     }
   }
 
+  // TODO: Got rid of admin controller, need to update this.
   deleteTenant(): void {
     if (this.objectName === this.objectToDelete.name) {
       this.nameMismatch = false;
-      this.tenantService.cascadeDeleteTenantTenantAdmin({ id: this.objectToDelete.id }).subscribe(data => {
+      this.tenantService.deleteOneTenant({ id: this.objectToDelete.id }).subscribe(data => {
         this.closeModal();
         return data;
       });
