@@ -2,6 +2,171 @@ import { Injectable } from '@angular/core';
 import { TenantConnectivityGraph, TenantConnectivityGraphNodes, TenantConnectivityGraphEdges } from 'client';
 import * as d3 from 'd3';
 
+/**
+ * # Tenant Graph Rendering Service
+ *
+ * ## Overview
+ *
+ * This Angular service renders interactive network topology graphs for tenant connectivity using D3.js.
+ * It visualizes complex network relationships between various infrastructure components like tenants,
+ * VRFs, firewalls, service graphs, etc.
+ *
+ * ## Main Purpose
+ *
+ * The service takes a backend graph data structure (`TenantConnectivityGraph`) and transforms it into
+ * an interactive, layered visualization that shows:
+ * - **Network hierarchy** (tenants → VRFs → L3Outs/Service Graphs → Firewalls, etc.)
+ * - **Relationships and connections** between network components
+ * - **Visual organization** with nodes positioned in logical layers
+ *
+ * ## High-Level Rendering Process
+ *
+ * ### 1. Data Transformation
+ * - Takes backend graph data (`nodes` and `edges`)
+ * - Converts it to D3-compatible format
+ * - Filters out unwanted edge types based on configuration
+ *
+ * ### 2. Layout Calculation
+ * - **Hierarchical positioning**: Assigns nodes to vertical layers (levels 1-7) based on their type
+ * - **Horizontal clustering**: Groups related nodes together horizontally
+ * - **Relationship analysis**: Builds maps of parent-child and connection relationships
+ * - **Position optimization**: Uses multiple algorithms to minimize edge crossings and improve readability
+ *
+ * ### 3. Visual Rendering
+ * - **Lane guides**: Horizontal lines showing different network layers
+ * - **Nodes**: Colored circles representing network components
+ * - **Edges**: Curved lines showing relationships (solid, dashed, different colors)
+ * - **Labels**: Text labels for each node
+ * - **Legend**: Shows what colors and line styles mean
+ *
+ * ### 4. Interactive Features
+ * - **Zoom and pan**: Users can zoom in/out and pan around
+ * - **Drag nodes**: Nodes can be dragged to different positions
+ * - **Click handlers**: Nodes and edges can trigger custom actions
+ * - **Force simulation**: D3 physics simulation keeps nodes properly spaced
+ *
+ * ## Key Layout Algorithms
+ *
+ * ### Smart Positioning
+ * - **Display order support**: If nodes have `displayOrder` metadata, uses that for positioning
+ * - **Relationship-based clustering**: Groups nodes based on their connections
+ * - **Shared connection optimization**: Nodes that connect to the same targets are positioned closer together
+ * - **Cross-layer optimization**: Minimizes crossing lines between layers
+ * - **Back-propagation**: Parent nodes adjust position based on their children's locations
+ *
+ * ### Multi-pass Optimization
+ * The service runs multiple optimization passes to improve the layout:
+ * 1. **Forward pass**: Optimizes based on parent-child relationships
+ * 2. **Backward pass**: Parents adjust to their children's positions
+ * 3. **Cross-layer optimization**: Reduces edge crossings between adjacent layers
+ *
+ * ## Network Layer Hierarchy
+ *
+ * The default hierarchy represents typical network topology:
+ * 1. **Tenant** (top level)
+ * 2. **VRF** (Virtual Routing and Forwarding)
+ * 3. **Service Graph / L3Out** (routing/services layer)
+ * 4. **Firewalls** (security layer)
+ * 5. **External VRF Connections**
+ * 6. **External VRFs**
+ * 7. **Detailed components** (filters, entries, etc.)
+ *
+ * ## Configuration Options
+ *
+ * The service is highly configurable through `TenantGraphRenderConfig`:
+ *
+ * ### Visual Styling
+ * ```typescript
+ * {
+ *   nodeColors: { TENANT: '#007bff', VRF: '#28a745' }, // Custom node colors
+ *   edgeStyles: { VRF_TO_L3OUT: { color: '#adb5bd', width: 1.5 } }, // Custom edge styles
+ *   nodeRadius: 8, // Node size
+ *   fontSize: 11, // Label font size
+ *   dimensions: { width: 800, height: 600 } // Canvas size
+ * }
+ * ```
+ *
+ * ### Behavior Control
+ * ```typescript
+ * {
+ *   enableZoom: true, // Allow zoom/pan
+ *   enableDrag: true, // Allow node dragging
+ *   enableOptimization: true, // Enable layout optimization algorithms
+ *   zoomExtent: [0.25, 2], // Min/max zoom levels
+ *   showLaneGuides: true, // Show horizontal layer lines
+ *   showLegend: true // Show color/style legend
+ * }
+ * ```
+ *
+ * ### Filtering and Customization
+ * ```typescript
+ * {
+ *   hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL'], // Hide specific edge types
+ *   customNodeLevels: { 'CUSTOM_TYPE': 3 }, // Override default node levels
+ *   levelLabels: { 1: 'Custom Tenant Layer' }, // Custom layer labels
+ *   clusterConfig: { widthPercent: 0.7, startPercent: 0.15 } // Clustering area
+ * }
+ * ```
+ *
+ * ### Event Handlers
+ * ```typescript
+ * {
+ *   onNodeClick: (node) => console.log('Clicked node:', node),
+ *   onEdgeClick: (edge) => console.log('Clicked edge:', edge)
+ * }
+ * ```
+ *
+ * ## Usage Example
+ *
+ * ```typescript
+ * // Inject the service
+ * constructor(private graphRenderer: TenantGraphRenderingService) {}
+ *
+ * // Render a graph
+ * renderTenantGraph(graphData: TenantConnectivityGraph) {
+ *   const config: TenantGraphRenderConfig = {
+ *     graph: graphData,
+ *     containerSelector: '#graph-container',
+ *     svgSelector: '#graph-svg',
+ *     dimensions: { width: 1200, height: 800 },
+ *     showLegend: true,
+ *     enableOptimization: true,
+ *     onNodeClick: (node) => this.handleNodeClick(node),
+ *     nodeColors: {
+ *       TENANT: '#007bff',
+ *       VRF: '#28a745'
+ *     }
+ *   };
+ *
+ *   this.graphRenderer.renderGraph(config);
+ * }
+ * ```
+ *
+ * ## Performance Considerations
+ *
+ * - **Large graphs**: For graphs with 100+ nodes, consider disabling optimization (`enableOptimization: false`)
+ * - **Mobile devices**: Use smaller dimensions and disable drag for touch interfaces
+ * - **Real-time updates**: Clear and re-render rather than trying to update existing elements
+ *
+ * ## Key Interfaces
+ *
+ * - `TenantGraphRenderConfig`: Main configuration interface
+ * - `TenantNodeColorMap`: Defines colors for each node type
+ * - `TenantEdgeStyleMap`: Defines styles for each edge type
+ * - `TenantForceConfig`: Physics simulation parameters
+ *
+ * ## Display Order Support
+ *
+ * Nodes can have a `displayOrder` property in their config or metadata to control positioning:
+ * ```typescript
+ * node.config.displayOrder = 1; // Left-most position
+ * node.metadata.displayOrder = 2; // Second position
+ * ```
+ *
+ * Lower values appear on the left, higher values on the right. Nodes without displayOrder
+ * are positioned after ordered nodes and sorted alphabetically.
+ */
+
 // TODO: Make legend sizing dynamic
 // TODO: Make graph level labels dynamic based on what levels various entities are pinned to.
 // TODO: Add search function that filters nodes based on type and shows relations.
