@@ -40,6 +40,10 @@ import {
   faArrowLeft,
   faChevronUp,
   faPaperPlane,
+  faRocket,
+  faChartBar,
+  faWrench,
+  faProjectDiagram,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -132,11 +136,15 @@ export class AppModule {
       faSearchPlus,
       faFilter,
       faExclamationTriangle,
+      faCog,
+      faRocket,
+      faChartBar,
+      faWrench,
+      faProjectDiagram,
       faAsterisk,
       faClone,
       faCheck,
       faTimes,
-      faCog,
       faChevronLeft,
       faInfoCircle,
       faCogs,

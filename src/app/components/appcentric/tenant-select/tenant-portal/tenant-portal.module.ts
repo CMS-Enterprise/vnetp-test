@@ -5,9 +5,10 @@ import { TenantPortalComponent } from './tenant-portal.component';
 import { TenantPortalRoutingModule } from './tenant-portal-routing.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TenantSidenavModule } from './tenant-sidenav/tenant-sidenav.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, TenantPortalRoutingModule, TabsModule, FontAwesomeModule],
+  imports: [CommonModule, FormsModule, TenantPortalRoutingModule, TabsModule, FontAwesomeModule, TenantSidenavModule],
   declarations: [TenantPortalComponent],
   exports: [TenantPortalComponent],
 })

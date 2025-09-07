@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import {
   Datacenter,
   FirewallRuleGroup,
@@ -11,6 +11,7 @@ import {
   Tenant,
 } from 'client';
 import { Tab, TabsComponent } from 'src/app/common/tabs/tabs.component';
+import { SidenavGroup, SidenavItem } from './tenant-sidenav/tenant-sidenav.component';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { V1DatacentersService } from 'client';
 import { V1TiersService } from 'client';
@@ -18,7 +19,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { RouteDataUtil } from '../../../../utils/route-data.util';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 
 const tabs: Tab[] = [
   { name: 'VRF', route: ['vrf'], id: 'vrf' },
@@ -64,9 +65,88 @@ const tabs: Tab[] = [
   },
 ];
 
+const sidenavGroups: SidenavGroup[] = [
+  {
+    id: 'configure',
+    name: 'Configure',
+    icon: 'cog',
+    items: [
+      { name: 'VRF', route: ['vrf'], id: 'vrf' },
+      { name: 'L3 Outs', route: ['l3-outs'], id: 'l3-outs' },
+      { name: 'Bridge Domain', route: ['bridge-domain'], id: 'bridge-domain' },
+      { name: 'Application Profile', route: ['application-profile'], id: 'application-profile' },
+      { name: 'Endpoint Group', route: ['endpoint-group'], id: 'endpoint-group' },
+      { name: 'Endpoint Security Group', route: ['endpoint-security-group'], id: 'endpoint-security-group' },
+      { name: 'Contract', route: ['contract'], id: 'contract' },
+      { name: 'Filter', route: ['filter'], id: 'filter' },
+      {
+        name: 'Internal Firewall',
+        tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
+        id: 'tv2-internal-firewall',
+        subItems: [
+          { name: 'Firewall Rules', route: ['internal-firewall'], id: 'tv2-internal-firewall-firewall-rules', isSubItem: true },
+          { name: 'NAT Rules', route: ['internal-nat'], id: 'tv2-internal-firewall-nat-rules', isSubItem: true },
+          { name: 'Service Objects', route: ['internal-service-objects'], id: 'tv2-internal-firewall-service-objects', isSubItem: true },
+        ],
+      },
+      {
+        name: 'External Firewall',
+        tooltip: 'These firewall rules are applied between the ACI environment and external networks.',
+        id: 'tv2-external-firewall',
+        subItems: [
+          { name: 'Firewall Rules', route: ['external-firewall'], id: 'tv2-external-firewall-firewall-rules', isSubItem: true },
+          { name: 'NAT Rules', route: ['external-nat'], id: 'tv2-external-firewall-nat-rules', isSubItem: true },
+          { name: 'Network Objects', route: ['external-network-objects'], id: 'tv2-external-firewall-network-objects', isSubItem: true },
+          { name: 'Service Objects', route: ['external-service-objects'], id: 'tv2-external-firewall-service-objects', isSubItem: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'analyze',
+    name: 'Analyze',
+    icon: 'project-diagram',
+    items: [
+      {
+        name: 'Diagram',
+        tooltip: 'Network topology and relationship diagrams.',
+        id: 'tv2-diagram',
+        route: ['diagram'],
+      },
+    ],
+  },
+  {
+    id: 'troubleshoot',
+    name: 'Troubleshoot',
+    icon: 'wrench',
+    items: [
+      {
+        name: 'Endpoint Connectivity Utility',
+        tooltip: 'This utility allows you to test the connectivity between endpoints.',
+        id: 'tv2-endpoint-connectivity-utility',
+        route: ['endpoint-connectivity-utility'],
+      },
+    ],
+  },
+  {
+    id: 'deploy',
+    name: 'Deploy',
+    icon: 'rocket',
+    items: [
+      {
+        name: 'Workflows',
+        tooltip: 'This tab allows you to create and manage workflows for your tenant.',
+        id: 'tv2-workflows',
+        route: ['workflows'],
+      },
+    ],
+  },
+];
+
 @Component({
   selector: 'app-tenant-portal',
   templateUrl: './tenant-portal.component.html',
+  styleUrls: ['./tenant-portal.component.scss'],
 })
 export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tabsRef') tabsComponent: TabsComponent;
@@ -98,6 +178,9 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectedVrfExternalNatRuleGroup: NatRuleGroup | null = null;
 
   public tabs: Tab[] = [];
+  public sidenavGroups: SidenavGroup[] = [];
+  public isSidenavCollapsed = false;
+  public currentRoute = '';
 
   // Subscription management
   private destroy$ = new Subject<void>();
@@ -118,12 +201,24 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
       // Show all tabs including firewalls for V2, preserving subTabs
       this.datacenterContextService.refreshDatacenters();
       this.tabs = [...tabs];
+      this.sidenavGroups = [...sidenavGroups];
     } else {
       // Filter out tenant v2 tabs
       this.tabs = tabs.filter(t => !t?.id?.startsWith('tv2-'));
+      // Filter sidenav groups to exclude V2-specific items
+      this.sidenavGroups = sidenavGroups
+        .map(group => ({
+          ...group,
+          items: group.items.filter(item => !item?.id?.startsWith('tv2-')),
+        }))
+        .filter(group => group.items.length > 0);
     }
     // Set a default current tab to avoid ExpressionChangedAfterItHasBeenCheckedError
     this.currentTab = this.tabs[0]?.name || 'Application Profile';
+
+    // Debug logging
+    console.log('Initialized sidenav groups:', this.sidenavGroups);
+    console.log('Application mode:', this.applicationMode);
   }
 
   /**
@@ -322,6 +417,41 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     if (matchingRoute) {
       this.navigateToRuleGroup(matchingRoute.routePath, matchingRoute.ruleGroupId, matchingRoute.tierId);
     }
+  }
+
+  /**
+   * Handle sidenav navigation changes
+   */
+  public handleNavigationChange(item: SidenavItem): void {
+    // Convert SidenavItem to Tab for compatibility with existing logic
+    const tab: Tab = {
+      name: item.name,
+      route: item.route,
+      id: item.id,
+      tooltip: item.tooltip,
+      isSubTab: item.isSubItem,
+    };
+
+    this.handleTabChange(tab);
+
+    // Update current route after navigation
+    setTimeout(() => {
+      this.updateCurrentRoute();
+    }, 100);
+  }
+
+  /**
+   * Toggle sidenav collapsed state
+   */
+  public toggleSidenav(): void {
+    this.isSidenavCollapsed = !this.isSidenavCollapsed;
+  }
+
+  /**
+   * Update current route for sidenav active state
+   */
+  private updateCurrentRoute(): void {
+    this.currentRoute = this.router.url;
   }
 
   public async handleTabChange(tab: Tab): Promise<any> {
@@ -533,12 +663,36 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+    // Initialize responsive behavior
+    this.initializeResponsiveBehavior();
     // Initialize tabs first so we have something to show during loading
     this.initializeTabs();
+    // Update current route for sidenav
+    this.updateCurrentRoute();
+
+    // Subscribe to router events to keep current route updated
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => {
+        this.updateCurrentRoute();
+      });
+
     // Get initial tab index without calling getTenants() yet
     this.initialTabIndex = this.getInitialTabIndex();
     // Get tenant data
     this.getTenant();
+  }
+
+  /**
+   * Initialize responsive behavior - sidenav starts collapsed on mobile/tablet
+   */
+  private initializeResponsiveBehavior(): void {
+    if (typeof window !== 'undefined') {
+      this.isSidenavCollapsed = window.innerWidth < 1200;
+    }
   }
 
   ngAfterViewInit(): void {

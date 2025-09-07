@@ -1,0 +1,93 @@
+<aside class="tenant-sidenav" [class.collapsed]="isCollapsed">
+  <div class="sidenav-header">
+    <div class="search-container" *ngIf="!isCollapsed">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search navigation..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange($event)"
+        [attr.aria-label]="'Search navigation items'"
+      />
+      <fa-icon class="search-icon" [icon]="['fas', 'search']"></fa-icon>
+    </div>
+    <button
+      class="collapse-toggle"
+      (click)="onToggleCollapse()"
+      [attr.aria-label]="isCollapsed ? 'Expand navigation' : 'Collapse navigation'"
+    >
+      <fa-icon [icon]="isCollapsed ? ['fas', 'chevron-right'] : ['fas', 'chevron-left']"></fa-icon>
+    </button>
+  </div>
+
+  <nav class="sidenav-content" role="navigation" aria-label="Tenant navigation">
+    <div class="nav-group" *ngFor="let group of filteredGroups" [class.expanded]="isGroupExpanded(group.id)">
+      <button
+        class="group-header"
+        [class.active]="isGroupActive(group)"
+        (click)="toggleGroup(group.id)"
+        [attr.aria-expanded]="isGroupExpanded(group.id)"
+        [attr.aria-controls]="group.id + '-items'"
+      >
+        <div class="group-header-content">
+          <fa-icon class="group-icon" [icon]="['fas', group.icon]"></fa-icon>
+          <span class="group-name" *ngIf="!isCollapsed">{{ group.name }}</span>
+        </div>
+        <fa-icon
+          class="expand-icon"
+          [icon]="['fas', isGroupExpanded(group.id) ? 'chevron-down' : 'chevron-right']"
+          *ngIf="!isCollapsed"
+        ></fa-icon>
+      </button>
+
+      <div class="group-items" [id]="group.id + '-items'" [class.expanded]="isGroupExpanded(group.id)" *ngIf="isGroupExpanded(group.id)">
+        <div
+          class="nav-item"
+          *ngFor="let item of group.items"
+          [class.has-subitems]="item.subItems && item.subItems.length > 0"
+          [class.expanded]="item.id && isItemExpanded(item.id)"
+        >
+          <a
+            class="item-link"
+            [class.active]="isActiveRoute(item)"
+            (click)="onItemClick(item, $event)"
+            [attr.aria-expanded]="item.subItems && item.subItems.length > 0 ? item.id && isItemExpanded(item.id) : null"
+            [attr.aria-controls]="item.id ? item.id + '-subitems' : null"
+            role="button"
+            tabindex="0"
+            (keyup.enter)="onItemClick(item, $event)"
+            (keyup.space)="onItemClick(item, $event)"
+          >
+            <span class="item-name" [title]="isCollapsed ? item.name : ''">{{ item.name }}</span>
+            <tooltip *ngIf="item.tooltip && !isCollapsed" [message]="item.tooltip"></tooltip>
+            <fa-icon
+              class="expand-icon"
+              [icon]="['fas', item.id && isItemExpanded(item.id) ? 'chevron-down' : 'chevron-right']"
+              *ngIf="item.subItems && item.subItems.length > 0 && !isCollapsed"
+            ></fa-icon>
+          </a>
+
+          <div
+            class="sub-items"
+            [id]="item.id ? item.id + '-subitems' : ''"
+            *ngIf="item.subItems && item.subItems.length > 0 && item.id && isItemExpanded(item.id)"
+          >
+            <a
+              class="sub-item-link"
+              *ngFor="let subItem of item.subItems"
+              [class.active]="isActiveRoute(subItem)"
+              (click)="onSubItemClick(subItem, $event)"
+              role="button"
+              tabindex="0"
+              (keyup.enter)="onSubItemClick(subItem, $event)"
+              (keyup.space)="onSubItemClick(subItem, $event)"
+            >
+              <span class="sub-item-name" [title]="isCollapsed ? subItem.name : ''">{{ subItem.name }}</span>
+              <tooltip *ngIf="subItem.tooltip && !isCollapsed" [message]="subItem.tooltip"></tooltip>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</aside>

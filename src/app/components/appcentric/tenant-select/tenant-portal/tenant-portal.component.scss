@@ -1,0 +1,145 @@
+.tenant-portal-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.tenant-portal-header {
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .sidenav-toggle {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
+
+    &:hover {
+      background-color: #f8f9fa;
+      color: #495057;
+    }
+
+    &:focus {
+      outline: 2px solid #007bff;
+      outline-offset: 2px;
+    }
+  }
+
+  .portal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #495057;
+
+    .current-section {
+      color: #6c757d;
+      font-weight: 400;
+    }
+  }
+}
+
+.tenant-portal-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tenant-portal-main {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.sidenav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Responsive behavior
+@media (min-width: 1200px) {
+  .tenant-portal-content {
+    app-tenant-sidenav {
+      position: static;
+      transform: none !important;
+    }
+  }
+
+  .sidenav-toggle {
+    display: none !important;
+  }
+
+  .sidenav-overlay {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .tenant-portal-content {
+    position: relative;
+
+    app-tenant-sidenav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1050;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+
+      &.show {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .tenant-portal-main {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .tenant-portal-header {
+    padding: 0.75rem 1rem;
+
+    .portal-title {
+      font-size: 1.25rem;
+
+      .current-section {
+        display: block;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  .tenant-portal-main {
+    padding: 1rem;
+  }
+}
