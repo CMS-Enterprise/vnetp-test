@@ -1,0 +1,25 @@
+<mat-toolbar color="primary" style="margin-bottom: 12px; display: flex; align-items: center;">
+  <mat-icon aria-hidden="true">hub</mat-icon>
+  <span style="font-weight: 600; margin-left: 8px;">External VRFs</span>  
+</mat-toolbar>
+
+<div *ngIf="!externalVrfConnections?.length" class="mat-elevation-z1" style="padding: 12px; color: rgba(0,0,0,0.6);">
+  No External VRF Connections found.
+  <span *ngIf="vrfId" style="margin-left: 4px;">(VRF ID: {{ vrfId }})</span>
+</div>
+
+<mat-accordion *ngIf="externalVrfConnections?.length" multi="true" displayMode="flat">
+  <mat-expansion-panel *ngFor="let conn of externalVrfConnections; trackBy: trackById">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ conn?.name || 'External VRF Connection' }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-external-vrf-route-detail
+      [externalVrfConnection]="conn"
+      [global]="false"
+    ></app-external-vrf-route-detail>
+  </mat-expansion-panel>
+</mat-accordion>
+

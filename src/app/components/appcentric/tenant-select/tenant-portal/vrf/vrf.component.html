@@ -54,6 +54,7 @@
 
 <ng-template #actionsTemplate let-vrf="datum">
   <section class="table__actions">
+    <button type="button" class="btn btn-success" (click)="navigateToRouteConfig(vrf.id)">Test</button>
     <app-icon-button
       *ngIf="!vrf?.deletedAt"
       icon="edit"

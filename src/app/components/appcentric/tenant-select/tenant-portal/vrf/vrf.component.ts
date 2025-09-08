@@ -354,4 +354,8 @@ export class VrfComponent implements OnInit {
     };
     this.showConfirmationModal(title, message, onConfirm);
   }
+
+  public navigateToRouteConfig(l3OutId: string): void {
+    this.router.navigate([`/tenantv2/${this.tenantId}/route-config/${l3OutId}`], { queryParamsHandling: 'merge' });
+  }
 }
