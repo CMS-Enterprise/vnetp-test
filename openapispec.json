@@ -26299,7 +26299,7 @@
           "datacenterId"
         ]
       },
-      "ApplicationProfile": {
+      "ServiceGraphFirewall": {
         "type": "object",
         "properties": {
           "id": {
@@ -26335,17 +26335,18 @@
             "readOnly": true
           },
           "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
+            "type": "string"
           },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
+          "firewallDeviceType": {
+            "type": "string"
           },
-          "description": {
-            "type": "string",
-            "maxLength": 500
+          "serviceGraph": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceGraph"
+              }
+            ]
           },
           "tenant": {
             "readOnly": true,
@@ -26358,16 +26359,12 @@
           "tenantId": {
             "type": "string"
           },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
+          "vsysName": {
+            "type": "string"
           }
         },
         "required": [
-          "tenantId"
+          "vsysName"
         ]
       },
       "AppCentricSubnet": {
@@ -26479,6 +26476,133 @@
           "ipDataPlaneLearning",
           "tenantId",
           "bridgeDomainId"
+        ]
+      },
+      "BridgeDomain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "unicastRouting": {
+            "type": "boolean",
+            "description": "Unicast routing enabled, default: true."
+          },
+          "arpFlooding": {
+            "type": "boolean",
+            "description": "ARP Flooding enabled, default: true."
+          },
+          "hostBasedRouting": {
+            "type": "boolean",
+            "description": "Host Based Routing enabled, default: false."
+          },
+          "bdMacAddress": {
+            "type": "string",
+            "description": "Bridge Domain MAC address, default: null."
+          },
+          "limitLocalIpLearning": {
+            "type": "boolean",
+            "description": "Limit Local IP Learning to BD/EPG Subnets, default: true."
+          },
+          "epMoveDetectionModeGarp": {
+            "type": "boolean",
+            "description": "GARP-based endpoint move detection, default: false."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "vrf": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vrf"
+              }
+            ]
+          },
+          "vrfId": {
+            "type": "string"
+          },
+          "subnets": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppCentricSubnet"
+            }
+          },
+          "endpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "l3outs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
+          }
+        },
+        "required": [
+          "unicastRouting",
+          "arpFlooding",
+          "hostBasedRouting",
+          "bdMacAddress",
+          "limitLocalIpLearning",
+          "epMoveDetectionModeGarp",
+          "tenantId",
+          "vrfId"
         ]
       },
       "InternalRoute": {
@@ -26937,162 +27061,6 @@
           "underlayVlan"
         ]
       },
-      "ServiceGraphFirewall": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "firewallDeviceType": {
-            "type": "string"
-          },
-          "serviceGraph": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceGraph"
-              }
-            ]
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "vsysName": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "vsysName"
-        ]
-      },
-      "ServiceGraph": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "serviceGraphFirewall": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceGraphFirewall"
-              }
-            ]
-          },
-          "serviceGraphFirewallId": {
-            "type": "string"
-          },
-          "underlayIpv4Network": {
-            "type": "string"
-          },
-          "underlayIpv6Network": {
-            "type": "string"
-          },
-          "underlayVlan": {
-            "type": "number"
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "underlayIpv4Network",
-          "underlayIpv6Network",
-          "underlayVlan"
-        ]
-      },
       "Vrf": {
         "type": "object",
         "properties": {
@@ -27218,7 +27186,7 @@
           "tenantId"
         ]
       },
-      "BridgeDomain": {
+      "ServiceGraph": {
         "type": "object",
         "properties": {
           "id": {
@@ -27254,52 +27222,34 @@
             "readOnly": true
           },
           "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
+            "type": "string"
           },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "unicastRouting": {
-            "type": "boolean",
-            "description": "Unicast routing enabled, default: true."
-          },
-          "arpFlooding": {
-            "type": "boolean",
-            "description": "ARP Flooding enabled, default: true."
-          },
-          "hostBasedRouting": {
-            "type": "boolean",
-            "description": "Host Based Routing enabled, default: false."
-          },
-          "bdMacAddress": {
-            "type": "string",
-            "description": "Bridge Domain MAC address, default: null."
-          },
-          "limitLocalIpLearning": {
-            "type": "boolean",
-            "description": "Limit Local IP Learning to BD/EPG Subnets, default: true."
-          },
-          "epMoveDetectionModeGarp": {
-            "type": "boolean",
-            "description": "GARP-based endpoint move detection, default: false."
-          },
-          "tenant": {
+          "serviceGraphFirewall": {
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/Tenant"
+                "$ref": "#/components/schemas/ServiceGraphFirewall"
               }
             ]
           },
-          "tenantId": {
+          "serviceGraphFirewallId": {
             "type": "string"
+          },
+          "underlayIpv4Network": {
+            "type": "string"
+          },
+          "underlayIpv6Network": {
+            "type": "string"
+          },
+          "underlayVlan": {
+            "type": "number"
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
           },
           "vrf": {
             "readOnly": true,
@@ -27312,37 +27262,23 @@
           "vrfId": {
             "type": "string"
           },
-          "subnets": {
+          "tenant": {
             "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AppCentricSubnet"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
           },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "l3outs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
+          "tenantId": {
+            "type": "string"
           }
         },
         "required": [
-          "unicastRouting",
-          "arpFlooding",
-          "hostBasedRouting",
-          "bdMacAddress",
-          "limitLocalIpLearning",
-          "epMoveDetectionModeGarp",
-          "tenantId",
-          "vrfId"
+          "name",
+          "underlayIpv4Network",
+          "underlayIpv6Network",
+          "underlayVlan"
         ]
       },
       "FilterEntry": {
@@ -27618,6 +27554,17 @@
             "type": "string",
             "description": "The scope of a contract between two or more EPGs."
           },
+          "serviceGraph": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceGraph"
+              }
+            ]
+          },
+          "serviceGraphId": {
+            "type": "string"
+          },
           "tenant": {
             "readOnly": true,
             "allOf": [
@@ -27654,6 +27601,133 @@
           "globalAlias",
           "tenantId",
           "contractId"
+        ]
+      },
+      "Contract": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "addDefaultServiceGraphSubject": {
+            "type": "boolean",
+            "default": false
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "applicationProfile",
+              "vrf",
+              "tenant",
+              "global"
+            ],
+            "default": "vrf"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "consumingEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "providingEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "intraEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "consumingEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          },
+          "providingEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          },
+          "intraEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          }
+        },
+        "required": [
+          "tenantId"
         ]
       },
       "Selector": {
@@ -27893,7 +27967,7 @@
           "applicationProfileId"
         ]
       },
-      "Contract": {
+      "ApplicationProfile": {
         "type": "object",
         "properties": {
           "id": {
@@ -27941,10 +28015,6 @@
             "type": "string",
             "maxLength": 500
           },
-          "addDefaultServiceGraphSubject": {
-            "type": "boolean",
-            "default": false
-          },
           "tenant": {
             "readOnly": true,
             "allOf": [
@@ -27953,62 +28023,17 @@
               }
             ]
           },
-          "scope": {
-            "type": "string",
-            "enum": [
-              "applicationProfile",
-              "vrf",
-              "tenant",
-              "global"
-            ],
-            "default": "vrf"
-          },
           "tenantId": {
             "type": "string"
           },
-          "consumingEndpointGroups": {
+          "endpointGroups": {
             "readOnly": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EndpointGroup"
             }
           },
-          "providingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "intraEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          },
-          "consumingEndpointSecurityGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointSecurityGroup"
-            }
-          },
-          "providingEndpointSecurityGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointSecurityGroup"
-            }
-          },
-          "intraEndpointSecurityGroups": {
+          "endpointSecurityGroups": {
             "readOnly": true,
             "type": "array",
             "items": {

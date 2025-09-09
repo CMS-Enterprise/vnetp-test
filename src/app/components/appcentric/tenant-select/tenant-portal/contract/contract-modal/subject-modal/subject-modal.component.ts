@@ -7,6 +7,8 @@ import {
   V2AppCentricFiltersService,
   GetManySubjectResponseDto,
   GetManyFilterResponseDto,
+  V2AppCentricServiceGraphsService,
+  ServiceGraph,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -35,6 +37,7 @@ export class SubjectModalComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
 
+  public serviceGraphs: ServiceGraph[];
   public filters: Filter[];
   public selectedFilter: Filter;
   public subjectId: string;
@@ -59,6 +62,7 @@ export class SubjectModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private subjectsService: V2AppCentricSubjectsService,
     private filterService: V2AppCentricFiltersService,
+    private serviceGraphService: V2AppCentricServiceGraphsService,
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +88,7 @@ export class SubjectModalComponent implements OnInit {
     const subject = dto.subject;
 
     this.modalMode = dto.modalMode;
+    this.getServiceGraphs();
     if (this.modalMode === ModalMode.Edit) {
       this.subjectId = subject.id;
       this.getFiltertableData();
@@ -102,6 +107,7 @@ export class SubjectModalComponent implements OnInit {
       this.form.controls.applyBothDirections.setValue(subject.applyBothDirections);
       this.form.controls.reverseFilterPorts.setValue(subject.reverseFilterPorts);
       this.form.controls.globalAlias.setValue(subject.globalAlias);
+      this.form.controls.serviceGraphId.setValue(subject.serviceGraphId);
     }
     this.ngx.resetModalData('subjectModal');
   }
@@ -120,6 +126,7 @@ export class SubjectModalComponent implements OnInit {
       applyBothDirections: [null],
       reverseFilterPorts: [null],
       globalAlias: ['', Validators.compose([Validators.maxLength(100)])],
+      serviceGraphId: [null],
     });
   }
 
@@ -147,7 +154,7 @@ export class SubjectModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias, applyBothDirections, reverseFilterPorts, globalAlias } = this.form.value;
+    const { name, description, alias, applyBothDirections, reverseFilterPorts, globalAlias, serviceGraphId } = this.form.value;
 
     const tenantId = this.tenantId;
 
@@ -159,6 +166,7 @@ export class SubjectModalComponent implements OnInit {
       applyBothDirections,
       reverseFilterPorts,
       globalAlias,
+      serviceGraphId,
     } as Subject;
 
     subject.contractId = this.contractId;
@@ -192,6 +200,20 @@ export class SubjectModalComponent implements OnInit {
           this.isLoading = false;
         },
       );
+  }
+
+  public getServiceGraphs(): void {
+    this.isLoading = true;
+    this.serviceGraphService
+      .getManyServiceGraph({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(data => {
+        this.serviceGraphs = data.data;
+        this.isLoading = false;
+      });
   }
 
   private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
@@ -300,6 +322,10 @@ export class SubjectModalComponent implements OnInit {
       }
       if (key === 'subjectName') {
         obj.subjectId = this.subjectId;
+        delete obj[key];
+      }
+      if (key === 'serviceGraphName') {
+        obj.serviceGraphId = ObjectUtil.getObjectId(val as string, this.serviceGraphs);
         delete obj[key];
       }
       if (key === 'tenantName') {
