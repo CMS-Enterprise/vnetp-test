@@ -53,6 +53,9 @@ export class ContractModalComponent implements OnInit {
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
       { name: 'Description', property: 'description' },
+      { name: 'Apply Both Directions', property: 'applyBothDirections' },
+      { name: 'Reverse Filter Ports', property: 'reverseFilterPorts' },
+      { name: 'Service Graph', property: 'serviceGraphId' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
