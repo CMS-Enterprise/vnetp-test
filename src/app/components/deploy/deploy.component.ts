@@ -108,14 +108,7 @@ export class DeployComponent implements OnInit {
   ) {}
 
   public deployTiers(): void {
-    console.log('this.tiers', this.tiers);
-    // console.log(this.tiers.filter(t => t.isSelected === true).map(t => t.item))
     const tiersToDeploy = this.tiers.filter(t => t.isSelected === true).map(t => t.item) as any;
-    // console.log('tiersToDeploy', tiersToDeploy);
-    // tiersToDeploy.map(tier => {
-    //   tier.lockTier = true
-    //   this.tierService.updateOneTier(tier)
-    // })
 
     if (!tiersToDeploy.length) {
       return;
@@ -180,8 +173,8 @@ export class DeployComponent implements OnInit {
       tierProvisionJob.definition = {
         tierId: tier.id,
       };
-      tier.lockTier = true;
-      this.tierService.updateOneTier({ id: tier.id, tier }).subscribe(() => {});
+      // tier.lockTier = true;
+      // this.tierService.updateOneTier({ id: tier.id, tier }).subscribe(() => {});
 
       this.jobService.createOneJob({ job: tierProvisionJob }).subscribe(() => {});
 
