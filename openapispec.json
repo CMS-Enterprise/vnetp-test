@@ -15299,8 +15299,8 @@
     "/v2/app-centric/tenants/{id}/generate-full-graph": {
       "get": {
         "operationId": "buildTenantFullGraph",
-        "summary": "Build tenant full graph",
-        "description": "Build tenant full graph",
+        "summary": "Build tenant full connectivity graph",
+        "description": "Build a comprehensive connectivity graph including all tenant entities and their relationships",
         "parameters": [
           {
             "name": "id",
@@ -26923,6 +26923,10 @@
           },
           "bgpAsn": {
             "type": "number"
+          },
+          "routingCost": {
+            "type": "number",
+            "default": 0
           }
         },
         "required": [
@@ -33930,6 +33934,9 @@
               "BRIDGE_DOMAIN",
               "SUBNET",
               "APPLICATION_PROFILE",
+              "SELECTOR",
+              "ENDPOINT",
+              "ENDPOINT_IP_ADDRESS",
               "EXTERNAL_VRF",
               "TENANT"
             ],
@@ -34088,6 +34095,7 @@
               "EXTERNAL_ROUTE_PROPAGATION",
               "CONTRACT_PROVIDES",
               "CONTRACT_CONSUMES",
+              "CONTRACT_CONTAINS",
               "SUBJECT_TO_FILTER",
               "EPG_TO_CONTRACT",
               "EPG_TO_BRIDGE_DOMAIN",
@@ -34233,6 +34241,10 @@
           "bgpAsnAutoGenerate": {
             "type": "boolean",
             "description": "Auto-generate BGP ASN for this firewall. Required if bgpAsn is not provided."
+          },
+          "routingCost": {
+            "type": "number",
+            "default": 0
           },
           "externalVrfConnections": {
             "type": "array",

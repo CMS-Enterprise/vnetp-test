@@ -197,6 +197,23 @@
                     {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.vsysName') }}
                   </div>
                 </div>
+                <div class="form-group col-6">
+                  <label>Routing Cost</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.routingCost')"
+                    [disabled]="mode === 'edit'"
+                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].routingCost"
+                    (ngModelChange)="onConfigMutated()"
+                    min="0"
+                    max="10"
+                    placeholder="e.g. 0"
+                  />
+                  <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.routingCost')" class="invalid-feedback d-block">
+                    {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.routingCost') }}
+                  </div>
+                </div>
                 <div class="form-group" [ngClass]="config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate ? 'col-12' : 'col-8'">
                   <div class="form-check">
                     <input

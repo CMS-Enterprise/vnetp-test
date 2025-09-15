@@ -99,6 +99,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
             vsysName: 'vsys1',
             bgpAsn: null,
             bgpAsnAutoGenerate: true,
+            routingCost: 0,
             externalVrfConnections: [
               {
                 name: 'ext-conn1',
@@ -506,6 +507,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       vsysName: '',
       bgpAsn: null,
       bgpAsnAutoGenerate: true,
+      routingCost: 0,
       externalVrfConnections: [] as any[],
     } as any);
     this.selectedFirewallIdx = this.config.externalFirewalls.length - 1;
