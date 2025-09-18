@@ -91,8 +91,9 @@ export class SubjectModalComponent implements OnInit {
     this.getServiceGraphs();
     if (this.modalMode === ModalMode.Edit) {
       this.subjectId = subject.id;
-      this.getFiltertableData();
-      this.getFilters();
+      this.getFiltertableData(() => {
+        this.getFilters();
+      });
     } else {
       this.form.controls.name.enable();
       this.form.controls.applyBothDirections.setValue(true);
@@ -189,7 +190,7 @@ export class SubjectModalComponent implements OnInit {
       .subscribe(
         data => {
           const allFilters = data.data;
-          const usedFilters = this.filterTableData.data;
+          const usedFilters = this.filterTableData?.data || [];
           const usedFilterIds = usedFilters.map(filter => filter.id);
           this.filters = allFilters.filter(filter => !usedFilterIds.includes(filter.id));
         },
@@ -231,11 +232,12 @@ export class SubjectModalComponent implements OnInit {
   }
 
   private refreshFilters(): void {
-    this.getFiltertableData();
-    this.getFilters();
+    this.getFiltertableData(() => {
+      this.getFilters();
+    });
   }
 
-  public getFiltertableData() {
+  public getFiltertableData(callback?: () => void) {
     this.isLoading = true;
     this.subjectsService
       .getOneSubject({
@@ -257,6 +259,9 @@ export class SubjectModalComponent implements OnInit {
         },
         () => {
           this.isLoading = false;
+          if (callback) {
+            callback();
+          }
         },
       );
   }
