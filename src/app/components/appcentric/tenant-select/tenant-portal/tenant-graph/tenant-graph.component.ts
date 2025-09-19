@@ -99,12 +99,12 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
         graph: this.graph,
         containerSelector: '#tenantGraphContainer',
         svgSelector: '#tenantGraphSvg',
+        hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL', 'INTERVRF_CONNECTION'],
         showLegend: true,
         enableOptimization: true,
         enableContextMenu: true,
         enablePathTrace: true,
         defaultEdgeWidth: 1.2,
-        hideEdgeTypes: [],
         contextMenuConfig: {
           EXTERNAL_FIREWALL: [
             {

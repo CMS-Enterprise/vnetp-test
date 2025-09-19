@@ -265,7 +265,7 @@ export class TenantGraphPathTraceService {
       // Calculate edge cost based on target node (firewall routing cost)
       let edgeCost = 0;
       const targetNode = nodeMap.get(targetNodeId);
-      if (targetNode && (targetNode.type === 'EXTERNAL_FIREWALL' || targetNode.type === 'SERVICE_GRAPH_FIREWALL')) {
+      if (targetNode && targetNode.type === 'EXTERNAL_FIREWALL') {
         edgeCost = targetNode.originalNode?.config?.routingCost ?? 999;
       }
 
