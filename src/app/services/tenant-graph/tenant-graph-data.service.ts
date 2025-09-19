@@ -111,6 +111,12 @@ export interface DataTransformConfig {
   hideEdgeTypes?: string[];
   includeMetadata?: boolean;
   validateConnections?: boolean;
+  filterMode?: {
+    includedNodeTypes?: string[];
+    excludedNodeTypes?: string[];
+    includedEdgeTypes?: string[];
+    excludedEdgeTypes?: string[];
+  };
 }
 
 @Injectable({
@@ -123,26 +129,39 @@ export class TenantGraphDataService {
   public transformGraphData(graph: TenantConnectivityGraph, config: DataTransformConfig = {}): TransformedGraphData {
     const hideEdgeTypes = config.hideEdgeTypes || [];
 
-    // Transform nodes
-    const nodes: D3Node[] = Object.values(graph.nodes).map(graphNode => ({
+    // Transform nodes with filtering
+    let nodes: D3Node[] = Object.values(graph.nodes).map(graphNode => ({
       id: graphNode.id,
       name: graphNode.name,
       type: graphNode.type,
       originalNode: graphNode,
     }));
 
+    // Apply node filtering if specified
+    if (config.filterMode) {
+      nodes = this.applyNodeFiltering(nodes, config.filterMode);
+    }
+
+    // Get valid node IDs for edge filtering
+    const validNodeIds = new Set(nodes.map(n => n.id));
+
     // Transform and filter edges
-    const links: D3Link[] = Object.values(graph.edges)
+    let links: D3Link[] = Object.values(graph.edges)
       .filter(edge => {
         // Filter out specified edge types
         if (hideEdgeTypes.includes(edge.type)) {
           return false;
         }
 
+        // Filter edges based on node filtering (only keep edges between included nodes)
+        const sourceExists = validNodeIds.has(edge.sourceNodeId);
+        const targetExists = validNodeIds.has(edge.targetNodeId);
+        if (!sourceExists || !targetExists) {
+          return false;
+        }
+
         // Optional: Validate connections exist
         if (config.validateConnections) {
-          const sourceExists = nodes.some(n => n.id === edge.sourceNodeId);
-          const targetExists = nodes.some(n => n.id === edge.targetNodeId);
           return sourceExists && targetExists;
         }
 
@@ -156,7 +175,55 @@ export class TenantGraphDataService {
         originalEdge: edge,
       }));
 
+    // Apply edge type filtering if specified
+    if (config.filterMode) {
+      links = this.applyEdgeFiltering(links, config.filterMode);
+    }
+
     return { nodes, links };
+  }
+
+  /**
+   * Apply node filtering based on filter mode configuration
+   */
+  private applyNodeFiltering(nodes: D3Node[], filterConfig: any): D3Node[] {
+    // If includedNodeTypes is empty, include all nodes (full mode)
+    if (!filterConfig.includedNodeTypes || filterConfig.includedNodeTypes.length === 0) {
+      // Apply exclusions if any
+      if (filterConfig.excludedNodeTypes && filterConfig.excludedNodeTypes.length > 0) {
+        return nodes.filter(node => !filterConfig.excludedNodeTypes.includes(node.type));
+      }
+      return nodes;
+    }
+
+    // Include only specified node types
+    let filteredNodes = nodes.filter(node => filterConfig.includedNodeTypes.includes(node.type));
+
+    // Apply exclusions if any
+    if (filterConfig.excludedNodeTypes && filterConfig.excludedNodeTypes.length > 0) {
+      filteredNodes = filteredNodes.filter(node => !filterConfig.excludedNodeTypes.includes(node.type));
+    }
+
+    return filteredNodes;
+  }
+
+  /**
+   * Apply edge filtering based on filter mode configuration
+   */
+  private applyEdgeFiltering(links: D3Link[], filterConfig: any): D3Link[] {
+    let filteredLinks = links;
+
+    // Apply edge type inclusions if specified
+    if (filterConfig.includedEdgeTypes && filterConfig.includedEdgeTypes.length > 0) {
+      filteredLinks = filteredLinks.filter(link => filterConfig.includedEdgeTypes.includes(link.type));
+    }
+
+    // Apply edge type exclusions if specified
+    if (filterConfig.excludedEdgeTypes && filterConfig.excludedEdgeTypes.length > 0) {
+      filteredLinks = filteredLinks.filter(link => !filterConfig.excludedEdgeTypes.includes(link.type));
+    }
+
+    return filteredLinks;
   }
 
   /**

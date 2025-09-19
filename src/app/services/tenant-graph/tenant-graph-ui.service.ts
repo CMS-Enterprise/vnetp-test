@@ -899,4 +899,141 @@ export class TenantGraphUIService {
       .attr('opacity', 0.5)
       .style('pointer-events', 'none'); // Don't interfere with node interactions
   }
+
+  /**
+   * Render filter mode selector dropdown
+   */
+  public renderFilterModeSelector(
+    svg: any,
+    width: number,
+    height: number,
+    availableFilterModes: any[],
+    currentFilterMode: string,
+    onFilterModeChange: (mode: string) => void,
+  ): void {
+    // Remove existing filter selector
+    svg.select('.filter-mode-selector').remove();
+
+    const selectorGroup = svg
+      .append('g')
+      .attr('class', 'filter-mode-selector')
+      .attr('transform', `translate(20, ${height - 50})`);
+
+    // Dropdown dimensions
+    const dropdownWidth = 180;
+    const dropdownHeight = 30;
+
+    // Create dropdown container
+    const dropdown = selectorGroup.append('g').attr('class', 'filter-dropdown').style('cursor', 'pointer');
+
+    // Dropdown background
+    dropdown
+      .append('rect')
+      .attr('width', dropdownWidth)
+      .attr('height', dropdownHeight)
+      .attr('fill', '#f8f9fa')
+      .attr('stroke', '#dee2e6')
+      .attr('stroke-width', 1)
+      .attr('rx', 4);
+
+    // Current mode text
+    const currentMode = availableFilterModes.find(mode => mode.id === currentFilterMode);
+    const displayText = currentMode ? currentMode.name : 'Select Mode';
+
+    dropdown
+      .append('text')
+      .attr('x', 10)
+      .attr('y', dropdownHeight / 2 + 1)
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', 12)
+      .attr('fill', '#495057')
+      .text(displayText)
+      .style('pointer-events', 'none');
+
+    // Dropdown arrow (points up since menu opens upward)
+    dropdown
+      .append('text')
+      .attr('x', dropdownWidth - 15)
+      .attr('y', dropdownHeight / 2 + 1)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', 10)
+      .attr('fill', '#6c757d')
+      .text('▲')
+      .style('pointer-events', 'none');
+
+    // Create dropdown menu (initially hidden) - position upward since we're at bottom
+    const menuHeight = availableFilterModes.length * 25;
+    const menu = selectorGroup
+      .append('g')
+      .attr('class', 'filter-dropdown-menu')
+      .attr('transform', `translate(0, ${-menuHeight - 2})`) // Render upward
+      .style('display', 'none');
+
+    menu
+      .append('rect')
+      .attr('width', dropdownWidth)
+      .attr('height', availableFilterModes.length * 25)
+      .attr('fill', 'white')
+      .attr('stroke', '#dee2e6')
+      .attr('stroke-width', 1)
+      .attr('rx', 4)
+      .style('box-shadow', '0 2px 8px rgba(0,0,0,0.15)');
+
+    // Menu items
+    availableFilterModes.forEach((mode, index) => {
+      const menuItem = menu
+        .append('g')
+        .attr('class', 'filter-menu-item')
+        .attr('transform', `translate(0, ${index * 25})`)
+        .style('cursor', 'pointer');
+
+      menuItem
+        .append('rect')
+        .attr('width', dropdownWidth)
+        .attr('height', 25)
+        .attr('fill', mode.id === currentFilterMode ? '#e3f2fd' : 'transparent')
+        .on('mouseover', function () {
+          if (mode.id !== currentFilterMode) {
+            d3.select(this).attr('fill', '#f5f5f5');
+          }
+        })
+        .on('mouseout', function () {
+          if (mode.id !== currentFilterMode) {
+            d3.select(this).attr('fill', 'transparent');
+          }
+        });
+
+      menuItem
+        .append('text')
+        .attr('x', 10)
+        .attr('y', 16)
+        .attr('font-size', 11)
+        .attr('fill', '#495057')
+        .text(mode.name)
+        .style('pointer-events', 'none');
+
+      menuItem.on('click', (event: any) => {
+        event.stopPropagation(); // Prevent zoom behavior
+        menu.style('display', 'none');
+        onFilterModeChange(mode.id);
+      });
+    });
+
+    // Toggle dropdown on click
+    let isOpen = false;
+    dropdown.on('click', (event: any) => {
+      event.stopPropagation(); // Prevent zoom behavior
+      isOpen = !isOpen;
+      menu.style('display', isOpen ? 'block' : 'none');
+    });
+
+    // Close dropdown when clicking elsewhere
+    svg.on('click.filter-dropdown', () => {
+      if (isOpen) {
+        menu.style('display', 'none');
+        isOpen = false;
+      }
+    });
+  }
 }

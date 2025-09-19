@@ -116,6 +116,16 @@ import { TenantGraphInteractionService, TenantForceConfig, ContextMenuClickEvent
 import { TenantGraphPathTraceService, PathTraceState, PathTraceNode } from './tenant-graph-path-trace.service';
 import { TenantGraphHighlightService, TenantEdgeStyleMap } from './tenant-graph-highlight.service';
 
+export interface GraphFilterMode {
+  id: string;
+  name: string;
+  description: string;
+  includedNodeTypes: string[];
+  includedEdgeTypes?: string[];
+  excludedNodeTypes?: string[];
+  excludedEdgeTypes?: string[];
+}
+
 export interface TenantGraphRenderConfig {
   graph: TenantConnectivityGraph;
   containerSelector: string;
@@ -153,7 +163,11 @@ export interface TenantGraphRenderConfig {
   };
   showLayoutToggle?: boolean;
   enableLayoutTransitions?: boolean;
+  filterMode?: string;
+  availableFilterModes?: GraphFilterMode[];
+  showFilterModeSelector?: boolean;
   onLayoutModeChange?: (mode: 'hierarchical' | 'circular') => void;
+  onFilterModeChange?: (mode: string) => void;
 }
 
 @Injectable({
@@ -237,6 +251,52 @@ export class TenantGraphCoreService {
     enabled: true,
   };
 
+  private readonly DEFAULT_FILTER_MODES: GraphFilterMode[] = [
+    {
+      id: 'full',
+      name: 'Full',
+      description: 'Show all nodes and connections',
+      includedNodeTypes: [], // Empty means include all
+    },
+    {
+      id: 'contracts-policy',
+      name: 'Contracts & Policy',
+      description: 'Show contracts, subjects, service graphs, and policy enforcement',
+      includedNodeTypes: ['CONTRACT', 'SUBJECT', 'SERVICE_GRAPH', 'SERVICE_GRAPH_FIREWALL', 'FILTER', 'FILTER_ENTRY'],
+    },
+    {
+      id: 'contracts-epgs',
+      name: 'Contracts & EPGs',
+      description: 'Show relationships between contracts and endpoint groups',
+      includedNodeTypes: ['CONTRACT', 'ENDPOINT_GROUP'],
+    },
+    {
+      id: 'contracts-esgs',
+      name: 'Contracts & ESGs',
+      description: 'Show relationships between contracts and endpoint security groups',
+      includedNodeTypes: ['CONTRACT', 'ENDPOINT_SECURITY_GROUP'],
+    },
+    {
+      id: 'infrastructure',
+      name: 'Infrastructure',
+      description: 'Show core network infrastructure and connectivity',
+      includedNodeTypes: [
+        'TENANT',
+        'VRF',
+        'BRIDGE_DOMAIN',
+        'SUBNET',
+        'L3OUT',
+        'EXTERNAL_FIREWALL',
+        'EXTERNAL_VRF_CONNECTION',
+        'EXTERNAL_VRF',
+        'ENDPOINT_GROUP',
+        'ENDPOINT_SECURITY_GROUP',
+        'APPLICATION_PROFILE',
+        'SELECTOR',
+      ],
+    },
+  ];
+
   constructor(
     private dataService: TenantGraphDataService,
     private layoutService: TenantGraphLayoutService,
@@ -282,11 +342,20 @@ export class TenantGraphCoreService {
     const height = config.dimensions?.height || container.clientHeight || 500;
     svg.attr('viewBox', [0, 0, width, height]);
 
-    // Step 1: Transform data using DataService
+    // Step 1: Transform data using DataService with filtering
+    const currentFilterMode = this.getCurrentFilterMode(mergedConfig);
     const transformedData = this.dataService.transformGraphData(config.graph, {
       hideEdgeTypes: mergedConfig.hideEdgeTypes,
       validateConnections: true,
       includeMetadata: true,
+      filterMode: currentFilterMode
+        ? {
+            includedNodeTypes: currentFilterMode.includedNodeTypes,
+            excludedNodeTypes: currentFilterMode.excludedNodeTypes,
+            includedEdgeTypes: currentFilterMode.includedEdgeTypes,
+            excludedEdgeTypes: currentFilterMode.excludedEdgeTypes,
+          }
+        : undefined,
     });
 
     // Step 2: Calculate layout using LayoutService
@@ -415,6 +484,18 @@ export class TenantGraphCoreService {
         (newMode: 'hierarchical' | 'circular') => this.switchLayoutMode(newMode, config),
       );
     }
+
+    // Step 15: Render filter mode selector
+    if (mergedConfig.showFilterModeSelector) {
+      this.uiService.renderFilterModeSelector(
+        svg,
+        width,
+        height,
+        mergedConfig.availableFilterModes || this.DEFAULT_FILTER_MODES,
+        mergedConfig.filterMode || 'full',
+        (newMode: string) => this.switchFilterMode(newMode, config),
+      );
+    }
   }
 
   /**
@@ -455,6 +536,30 @@ export class TenantGraphCoreService {
     this.renderGraph(updatedConfig);
   }
 
+  /**
+   * Switch between filter modes
+   */
+  public switchFilterMode(newMode: string, originalConfig: TenantGraphRenderConfig): void {
+    // Update the config with new filter mode
+    const updatedConfig = {
+      ...originalConfig,
+      filterMode: newMode,
+    };
+
+    // Notify external handler if provided
+    if (originalConfig.onFilterModeChange) {
+      originalConfig.onFilterModeChange(newMode);
+    }
+
+    // Re-render the graph with new filter mode
+    this.renderGraph(updatedConfig);
+  }
+
+  private getCurrentFilterMode(config: any): GraphFilterMode | undefined {
+    const availableFilterModes = config.availableFilterModes || this.DEFAULT_FILTER_MODES;
+    return availableFilterModes.find((mode: GraphFilterMode) => mode.id === config.filterMode);
+  }
+
   private mergeConfigDefaults(config: TenantGraphRenderConfig) {
     return {
       margins: { top: 40, bottom: 30, ...config.margins },
@@ -480,6 +585,9 @@ export class TenantGraphCoreService {
       circularConfig: config.circularConfig,
       showLayoutToggle: config.showLayoutToggle !== false,
       enableLayoutTransitions: config.enableLayoutTransitions !== false,
+      filterMode: config.filterMode || 'full',
+      availableFilterModes: config.availableFilterModes || this.DEFAULT_FILTER_MODES,
+      showFilterModeSelector: config.showFilterModeSelector !== false,
       enableOptimization: config.enableOptimization,
     };
   }

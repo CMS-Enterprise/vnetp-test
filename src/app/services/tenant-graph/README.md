@@ -9,7 +9,7 @@ Collection of services to render graphs in the UI.
 ```
 src/app/services/tenant-graph/
 ├── tenant-graph-core.service.ts          (Orchestrator)
-├── tenant-graph-path-trace.service.ts    (PathTrace + Dijkstra)
+├── tenant-graph-path-trace.service.ts    (PathTrace)
 ├── tenant-graph-highlight.service.ts     (Visual highlighting)
 ├── tenant-graph-data.service.ts          (Data transformation)
 ├── tenant-graph-layout.service.ts        (Layout algorithms)
