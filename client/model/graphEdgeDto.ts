@@ -61,14 +61,14 @@ export enum GraphEdgeDtoTypeEnum {
     ExternalRoutePropagation = 'EXTERNAL_ROUTE_PROPAGATION',
     ContractProvides = 'CONTRACT_PROVIDES',
     ContractConsumes = 'CONTRACT_CONSUMES',
-    ContractContains = 'CONTRACT_CONTAINS',
     SubjectToFilter = 'SUBJECT_TO_FILTER',
     EpgToContract = 'EPG_TO_CONTRACT',
     EpgToBridgeDomain = 'EPG_TO_BRIDGE_DOMAIN',
     TenantContainsVrf = 'TENANT_CONTAINS_VRF',
     TenantContainsFirewall = 'TENANT_CONTAINS_FIREWALL',
     VrfContains = 'VRF_CONTAINS',
-    ApplicationProfileContains = 'APPLICATION_PROFILE_CONTAINS'
+    ApplicationProfileContains = 'APPLICATION_PROFILE_CONTAINS',
+    ContractContains = 'CONTRACT_CONTAINS'
 };
 
 

@@ -87,6 +87,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Workflows', title: 'Workflows' },
         loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule),
       },
+      {
+        outlet,
+        path: 'tenant-graph',
+        data: { breadcrumb: 'Graph', title: 'Tenant Portal - Graph' },
+        loadChildren: () => import('./tenant-graph/tenant-graph.module').then(m => m.TenantGraphModule),
+      },
     ],
   },
 ];

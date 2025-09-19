@@ -198,7 +198,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<TenantConnectivityGraph>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/generate-full-graph`,
+        return this.httpClient.get<TenantConnectivityGraph>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/tenant-graph`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

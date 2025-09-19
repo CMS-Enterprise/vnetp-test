@@ -15296,7 +15296,7 @@
         ]
       }
     },
-    "/v2/app-centric/tenants/{id}/generate-full-graph": {
+    "/v2/app-centric/tenants/{id}/tenant-graph": {
       "get": {
         "operationId": "buildTenantFullGraph",
         "summary": "Build tenant full connectivity graph",
@@ -26926,7 +26926,9 @@
           },
           "routingCost": {
             "type": "number",
-            "default": 0
+            "default": 0,
+            "maximum": 10,
+            "minimum": 0
           }
         },
         "required": [
@@ -33931,12 +33933,12 @@
               "FILTER_ENTRY",
               "ENDPOINT_GROUP",
               "ENDPOINT_SECURITY_GROUP",
+              "ENDPOINT",
+              "ENDPOINT_IP_ADDRESS",
               "BRIDGE_DOMAIN",
               "SUBNET",
               "APPLICATION_PROFILE",
               "SELECTOR",
-              "ENDPOINT",
-              "ENDPOINT_IP_ADDRESS",
               "EXTERNAL_VRF",
               "TENANT"
             ],
@@ -34095,14 +34097,14 @@
               "EXTERNAL_ROUTE_PROPAGATION",
               "CONTRACT_PROVIDES",
               "CONTRACT_CONSUMES",
-              "CONTRACT_CONTAINS",
               "SUBJECT_TO_FILTER",
               "EPG_TO_CONTRACT",
               "EPG_TO_BRIDGE_DOMAIN",
               "TENANT_CONTAINS_VRF",
               "TENANT_CONTAINS_FIREWALL",
               "VRF_CONTAINS",
-              "APPLICATION_PROFILE_CONTAINS"
+              "APPLICATION_PROFILE_CONTAINS",
+              "CONTRACT_CONTAINS"
             ],
             "example": "VRF_TO_L3OUT"
           },

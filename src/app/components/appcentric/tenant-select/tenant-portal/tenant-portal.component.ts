@@ -42,6 +42,12 @@ const tabs: Tab[] = [
     route: ['external-firewalls'],
   },
   {
+    name: 'Graph',
+    tooltip: 'View the complete tenant connectivity graph showing all entities and their relationships.',
+    id: 'tv2-tenant-graph',
+    route: ['tenant-graph'],
+  },
+  {
     name: 'Endpoint Connectivity Utility',
     tooltip: 'This utility allows you to test the connectivity between endpoints.',
     id: 'tv2-endpoint-connectivity-utility',

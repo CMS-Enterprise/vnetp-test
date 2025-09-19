@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { TenantConnectivityGraph, TenantConnectivityGraphNodes, TenantConnectivityGraphEdges } from 'client';
 import * as d3 from 'd3';
 
@@ -220,6 +220,21 @@ export interface TenantForceConfig {
   collisionRadius: number;
 }
 
+export interface ContextMenuItem {
+  type: 'item' | 'divider';
+  name?: string;
+  identifier?: string;
+  enabled?: boolean;
+}
+
+export interface ContextMenuClickEvent {
+  nodeType: string;
+  nodeId: string;
+  databaseId: string;
+  menuItemIdentifier: string;
+  node: TenantConnectivityGraphNodes;
+}
+
 export interface TenantGraphRenderConfig {
   graph: TenantConnectivityGraph;
   containerSelector: string;
@@ -240,6 +255,9 @@ export interface TenantGraphRenderConfig {
   zoomExtent?: [number, number];
   enableDrag?: boolean;
   enableOptimization?: boolean; // Simplified: enable/disable all optimizations
+  enableContextMenu?: boolean;
+  contextMenuConfig?: Record<string, ContextMenuItem[]>; // nodeType -> menu items
+  defaultEdgeWidth?: number;
   onNodeClick?: (node: TenantConnectivityGraphNodes) => void;
   onEdgeClick?: (edge: TenantConnectivityGraphEdges) => void;
   forceConfig?: Partial<TenantForceConfig>;
@@ -249,6 +267,7 @@ export interface TenantGraphRenderConfig {
   providedIn: 'root',
 })
 export class TenantGraphRenderingService {
+  public contextMenuClick = new EventEmitter<ContextMenuClickEvent>();
   private readonly DEFAULT_NODE_COLORS: TenantNodeColorMap = {
     TENANT: '#007bff',
     VRF: '#28a745',
@@ -270,12 +289,40 @@ export class TenantGraphRenderingService {
   };
 
   private readonly DEFAULT_EDGE_STYLES: TenantEdgeStyleMap = {
-    TENANT_CONTAINS_VRF: { color: '#adb5bd', width: 1.5, dashArray: '5,5', opacity: 0.8 },
-    TENANT_CONTAINS_FIREWALL: { color: '#adb5bd', width: 1.5, dashArray: '5,5', opacity: 0.8 },
-    VRF_TO_L3OUT: { color: '#adb5bd', width: 1.5, opacity: 0.8 },
-    VRF_TO_SERVICE_GRAPH: { color: '#adb5bd', width: 1.5, opacity: 0.8 },
-    L3OUT_TO_FIREWALL: { color: '#adb5bd', width: 1.5, opacity: 0.8 },
-    INTERVRF_CONNECTION: { color: '#ff6b35', width: 1.5, dashArray: '3,3', opacity: 0.8 },
+    TENANT_CONTAINS_VRF: { color: '#adb5bd', width: 2.5, dashArray: '5,5', opacity: 0.8 },
+    TENANT_CONTAINS_FIREWALL: { color: '#adb5bd', width: 2.5, dashArray: '5,5', opacity: 0.8 },
+    VRF_TO_L3OUT: { color: '#adb5bd', width: 2.5, opacity: 0.8 },
+    VRF_TO_SERVICE_GRAPH: { color: '#adb5bd', width: 2.5, opacity: 0.8 },
+    L3OUT_TO_FIREWALL: { color: '#adb5bd', width: 2.5, opacity: 0.8 },
+    INTERVRF_CONNECTION: { color: '#ff6b35', width: 2.5, dashArray: '3,3', opacity: 0.8 },
+  };
+
+  private readonly DEFAULT_CONTEXT_MENU_CONFIG: Record<string, ContextMenuItem[]> = {
+    TENANT: [
+      { type: 'item', name: 'TODO1', identifier: 'tenant-todo1', enabled: true },
+      { type: 'divider' },
+      { type: 'item', name: 'TODO2', identifier: 'tenant-todo2', enabled: true },
+    ],
+    VRF: [
+      { type: 'item', name: 'TODO1', identifier: 'vrf-todo1', enabled: true },
+      { type: 'divider' },
+      { type: 'item', name: 'TODO2', identifier: 'vrf-todo2', enabled: true },
+    ],
+    L3OUT: [
+      { type: 'item', name: 'TODO1', identifier: 'l3out-todo1', enabled: true },
+      { type: 'divider' },
+      { type: 'item', name: 'TODO2', identifier: 'l3out-todo2', enabled: true },
+    ],
+    EXTERNAL_FIREWALL: [
+      { type: 'item', name: 'TODO1', identifier: 'external-firewall-todo1', enabled: true },
+      { type: 'divider' },
+      { type: 'item', name: 'TODO2', identifier: 'external-firewall-todo2', enabled: true },
+    ],
+    SERVICE_GRAPH_FIREWALL: [
+      { type: 'item', name: 'TODO1', identifier: 'service-graph-firewall-todo1', enabled: true },
+      { type: 'divider' },
+      { type: 'item', name: 'TODO2', identifier: 'service-graph-firewall-todo2', enabled: true },
+    ],
   };
 
   private readonly DEFAULT_FORCE_CONFIG: TenantForceConfig = {
@@ -341,13 +388,16 @@ export class TenantGraphRenderingService {
     const nodeLevels = { ...this.NODE_LEVELS, ...config.customNodeLevels };
     const forceConfig = { ...this.DEFAULT_FORCE_CONFIG, ...config.forceConfig };
     const hideEdgeTypes = config.hideEdgeTypes || ['TENANT_CONTAINS_FIREWALL'];
-    const nodeRadius = config.nodeRadius || 8;
+    const nodeRadius = config.nodeRadius || 10;
     const fontSize = config.fontSize || 11;
     const enableZoom = config.enableZoom !== false;
     const enableDrag = config.enableDrag !== false;
     const zoomExtent = config.zoomExtent || [0.25, 2];
     const showLaneGuides = config.showLaneGuides !== false;
     const showLegend = config.showLegend !== false;
+    const enableContextMenu = config.enableContextMenu !== false;
+    const contextMenuConfig = { ...this.DEFAULT_CONTEXT_MENU_CONFIG, ...config.contextMenuConfig };
+    const defaultEdgeWidth = config.defaultEdgeWidth || 1;
 
     const width = config.dimensions?.width || container.clientWidth || 600;
     const height = config.dimensions?.height || container.clientHeight || 500;
@@ -409,7 +459,7 @@ export class TenantGraphRenderingService {
     }
 
     // Render links
-    const linkSelection = this.renderLinks(zoomGroup, links, edgeStyles);
+    const linkSelection = this.renderLinks(zoomGroup, links, edgeStyles, defaultEdgeWidth);
 
     // Render nodes
     const nodeSelection = this.renderNodes(
@@ -421,6 +471,8 @@ export class TenantGraphRenderingService {
       enableDrag,
       yForType,
       width,
+      enableContextMenu,
+      contextMenuConfig,
       config.onNodeClick,
     );
 
@@ -429,7 +481,7 @@ export class TenantGraphRenderingService {
 
     // Render legend
     if (showLegend) {
-      this.renderLegend(svg, width, nodeColors, edgeStyles);
+      this.renderLegend(svg, width, nodeColors, edgeStyles, nodes, links);
     }
   }
 
@@ -1432,7 +1484,31 @@ export class TenantGraphRenderingService {
     }
   }
 
-  private renderLinks(zoomGroup: any, links: any[], edgeStyles: TenantEdgeStyleMap): any {
+  private renderLinks(zoomGroup: any, links: any[], edgeStyles: TenantEdgeStyleMap, defaultEdgeWidth: number = 1): any {
+    // Get or create tooltip element (reuse the same one from nodes)
+    let tooltip = d3.select('body').select('.graph-tooltip');
+    if (tooltip.empty()) {
+      tooltip = d3
+        .select('body')
+        .append('div')
+        .attr('class', 'graph-tooltip')
+        .style('position', 'absolute')
+        .style('visibility', 'hidden')
+        .style('background', 'rgba(0, 0, 0, 0.9)')
+        .style('color', 'white')
+        .style('padding', '12px')
+        .style('border-radius', '6px')
+        .style('font-size', '12px')
+        .style('font-family', 'Arial, sans-serif')
+        .style('max-width', '300px')
+        .style('box-shadow', '0 4px 8px rgba(0, 0, 0, 0.3)')
+        .style('z-index', '1000')
+        .style('pointer-events', 'none')
+        .style('line-height', '1.4');
+    }
+
+    let edgeHoverTimeout: any = null;
+
     return zoomGroup
       .append('g')
       .attr('fill', 'none')
@@ -1442,7 +1518,7 @@ export class TenantGraphRenderingService {
       .append('path')
       .attr('stroke-width', (d: any) => {
         const style = edgeStyles[d.type] || edgeStyles.VRF_TO_L3OUT;
-        return style.width;
+        return style.width * defaultEdgeWidth;
       })
       .attr('stroke', (d: any) => {
         if (d.type === 'INTERVRF_CONNECTION') {
@@ -1467,6 +1543,56 @@ export class TenantGraphRenderingService {
         }
         const style = edgeStyles[d.type] || edgeStyles.VRF_TO_L3OUT;
         return style.dashArray || 'none';
+      })
+      .style('cursor', 'pointer')
+      .on('mouseover', (event: any, d: any) => {
+        // Clear any existing timeout
+        if (edgeHoverTimeout) {
+          clearTimeout(edgeHoverTimeout);
+        }
+
+        // Highlight edge on hover
+        d3.select(event.target)
+          .attr('stroke-width', (originalD: any) => {
+            const style = edgeStyles[originalD.type] || edgeStyles.VRF_TO_L3OUT;
+            return style.width * defaultEdgeWidth + 1;
+          })
+          .attr('stroke-opacity', 1);
+
+        // Set timeout for 2 seconds
+        edgeHoverTimeout = setTimeout(() => {
+          const tooltipContent = this.formatEdgeTooltip(d);
+          tooltip
+            .html(tooltipContent)
+            .style('visibility', 'visible')
+            .style('left', event.pageX + 10 + 'px')
+            .style('top', event.pageY - 10 + 'px');
+        }, 2000);
+      })
+      .on('mouseout', (event: any) => {
+        // Clear timeout and hide tooltip
+        if (edgeHoverTimeout) {
+          clearTimeout(edgeHoverTimeout);
+          edgeHoverTimeout = null;
+        }
+        tooltip.style('visibility', 'hidden');
+
+        // Reset edge appearance
+        d3.select(event.target)
+          .attr('stroke-width', (originalD: any) => {
+            const style = edgeStyles[originalD.type] || edgeStyles.VRF_TO_L3OUT;
+            return style.width * defaultEdgeWidth;
+          })
+          .attr('stroke-opacity', (originalD: any) => {
+            const style = edgeStyles[originalD.type] || edgeStyles.VRF_TO_L3OUT;
+            return style.opacity;
+          });
+      })
+      .on('mousemove', (event: any) => {
+        // Update tooltip position if visible
+        if (tooltip.style('visibility') === 'visible') {
+          tooltip.style('left', event.pageX + 10 + 'px').style('top', event.pageY - 10 + 'px');
+        }
       });
   }
 
@@ -1479,9 +1605,54 @@ export class TenantGraphRenderingService {
     enableDrag: boolean,
     yForType: (type: string) => number,
     width: number,
+    enableContextMenu: boolean,
+    contextMenuConfig: Record<string, ContextMenuItem[]>,
     onNodeClick?: (node: TenantConnectivityGraphNodes) => void,
   ): any {
     const node = zoomGroup.append('g').selectAll('g').data(nodes).enter().append('g');
+
+    // Create tooltip element
+    let tooltip = d3.select('body').select('.graph-tooltip');
+    if (tooltip.empty()) {
+      tooltip = d3
+        .select('body')
+        .append('div')
+        .attr('class', 'graph-tooltip')
+        .style('position', 'absolute')
+        .style('visibility', 'hidden')
+        .style('background', 'rgba(0, 0, 0, 0.9)')
+        .style('color', 'white')
+        .style('padding', '12px')
+        .style('border-radius', '6px')
+        .style('font-size', '12px')
+        .style('font-family', 'Arial, sans-serif')
+        .style('max-width', '300px')
+        .style('box-shadow', '0 4px 8px rgba(0, 0, 0, 0.3)')
+        .style('z-index', '1000')
+        .style('pointer-events', 'none')
+        .style('line-height', '1.4');
+    }
+
+    let hoverTimeout: any = null;
+
+    // Create context menu element
+    let contextMenu = d3.select('body').select('.graph-context-menu');
+    if (contextMenu.empty()) {
+      contextMenu = d3
+        .select('body')
+        .append('div')
+        .attr('class', 'graph-context-menu')
+        .style('position', 'absolute')
+        .style('visibility', 'hidden')
+        .style('background', 'white')
+        .style('border', '1px solid #ccc')
+        .style('border-radius', '4px')
+        .style('box-shadow', '0 2px 8px rgba(0, 0, 0, 0.15)')
+        .style('z-index', '1001')
+        .style('font-family', 'Arial, sans-serif')
+        .style('font-size', '13px')
+        .style('min-width', '120px');
+    }
 
     if (enableDrag) {
       node.call(
@@ -1514,7 +1685,60 @@ export class TenantGraphRenderingService {
       .attr('r', nodeRadius)
       .attr('fill', (d: any) => nodeColors[d.type as keyof TenantNodeColorMap] || '#6c757d')
       .attr('stroke', '#fff')
-      .attr('stroke-width', 1.5);
+      .attr('stroke-width', 1.5)
+      .on('mouseover', (event: any, d: any) => {
+        // Clear any existing timeout
+        if (hoverTimeout) {
+          clearTimeout(hoverTimeout);
+        }
+
+        // Set timeout for 2 seconds
+        hoverTimeout = setTimeout(() => {
+          const tooltipContent = this.formatNodeTooltip(d);
+          tooltip
+            .html(tooltipContent)
+            .style('visibility', 'visible')
+            .style('left', event.pageX + 10 + 'px')
+            .style('top', event.pageY - 10 + 'px');
+        }, 2000);
+      })
+      .on('mouseout', () => {
+        // Clear timeout and hide tooltip
+        if (hoverTimeout) {
+          clearTimeout(hoverTimeout);
+          hoverTimeout = null;
+        }
+        tooltip.style('visibility', 'hidden');
+      })
+      .on('mousemove', (event: any) => {
+        // Update tooltip position if visible
+        if (tooltip.style('visibility') === 'visible') {
+          tooltip.style('left', event.pageX + 10 + 'px').style('top', event.pageY - 10 + 'px');
+        }
+      })
+      .on('contextmenu', (event: any, d: any) => {
+        if (!enableContextMenu) {
+          return;
+        }
+
+        event.preventDefault();
+
+        // Hide tooltip if visible
+        if (hoverTimeout) {
+          clearTimeout(hoverTimeout);
+          hoverTimeout = null;
+        }
+        tooltip.style('visibility', 'hidden');
+
+        // Check if this node type has context menu configuration
+        const menuItems = contextMenuConfig[d.type];
+        if (!menuItems || menuItems.length === 0) {
+          return;
+        }
+
+        // Show context menu
+        this.showContextMenu(contextMenu, event.pageX, event.pageY, d, menuItems);
+      });
 
     // Click handler
     if (onNodeClick) {
@@ -1545,7 +1769,190 @@ export class TenantGraphRenderingService {
       .attr('font-size', fontSize)
       .attr('fill', '#212529');
 
+    // Add global click handler to hide context menu
+    if (enableContextMenu) {
+      d3.select('body').on('click.context-menu', () => {
+        contextMenu.style('visibility', 'hidden');
+      });
+    }
+
     return node;
+  }
+
+  private showContextMenu(contextMenu: any, x: number, y: number, node: any, menuItems: ContextMenuItem[]): void {
+    // Clear existing menu items
+    contextMenu.selectAll('*').remove();
+
+    menuItems.forEach((item, index) => {
+      if (item.type === 'divider') {
+        contextMenu.append('div').style('height', '1px').style('background', '#e0e0e0').style('margin', '4px 0');
+      } else if (item.type === 'item' && item.name && item.identifier) {
+        const menuItem = contextMenu
+          .append('div')
+          .style('padding', '8px 12px')
+          .style('cursor', item.enabled !== false ? 'pointer' : 'not-allowed')
+          .style('color', item.enabled !== false ? '#333' : '#999')
+          .style('border-bottom', index < menuItems.length - 1 ? '1px solid #f0f0f0' : 'none')
+          .text(item.name)
+          .on('mouseover', function () {
+            if (item.enabled !== false) {
+              d3.select(this).style('background', '#f5f5f5');
+            }
+          })
+          .on('mouseout', function () {
+            d3.select(this).style('background', 'white');
+          });
+
+        if (item.enabled !== false) {
+          menuItem.on('click', (event: any) => {
+            event.stopPropagation();
+            contextMenu.style('visibility', 'hidden');
+
+            // Emit context menu click event
+            this.contextMenuClick.emit({
+              nodeType: node.type,
+              nodeId: node.id,
+              databaseId: node?.originalNode?.databaseId,
+              menuItemIdentifier: item.identifier,
+              node: node.originalNode,
+            });
+          });
+        }
+      }
+    });
+
+    // Position and show menu
+    contextMenu
+      .style('left', x + 'px')
+      .style('top', y + 'px')
+      .style('visibility', 'visible');
+  }
+
+  private formatNodeTooltip(node: any): string {
+    const originalNode = node.originalNode;
+    let html = `<div style="font-weight: bold; margin-bottom: 8px; color: #ffffff;">${node.name}</div>`;
+    html += `<div style="margin-bottom: 6px;"><strong>Type:</strong> ${node.type}</div>`;
+
+    // Add metadata if available
+    if (originalNode?.metadata && Object.keys(originalNode.metadata).length > 0) {
+      html += '<div style="margin-bottom: 6px;"><strong>Metadata:</strong></div>';
+      html += '<div style="margin-left: 8px; font-size: 11px;">';
+
+      Object.entries(originalNode.metadata).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+          if (displayValue.length > 50) {
+            html += `<div style="margin-bottom: 2px;"><strong>${key}:</strong><br/><span style="font-family: monospace;
+             font-size: 10px;">${displayValue.substring(0, 50)}...</span></div>`;
+          } else {
+            html += `<div style="margin-bottom: 2px;"><strong>${key}:</strong> ${displayValue}</div>`;
+          }
+        }
+      });
+      html += '</div>';
+    }
+
+    // Add key config properties if available
+    if (originalNode?.config) {
+      const keyConfigProps = ['id', 'alias', 'description', 'version', 'createdAt', 'updatedAt'];
+      const configInfo = keyConfigProps
+        .filter(prop => originalNode.config[prop] !== null && originalNode.config[prop] !== undefined && originalNode.config[prop] !== '')
+        .map(prop => {
+          let value = originalNode.config[prop];
+          if (prop === 'createdAt' || prop === 'updatedAt') {
+            value = new Date(value).toLocaleString();
+          }
+          return { key: prop, value: String(value) };
+        });
+
+      if (configInfo.length > 0) {
+        html += '<div style="margin-top: 8px; margin-bottom: 6px;"><strong>Configuration:</strong></div>';
+        html += '<div style="margin-left: 8px; font-size: 11px;">';
+        configInfo.forEach(({ key, value }) => {
+          const displayValue = value.length > 40 ? value.substring(0, 40) + '...' : value;
+          html += `<div style="margin-bottom: 2px;"><strong>${key}:</strong> ${displayValue}</div>`;
+        });
+        html += '</div>';
+      }
+    }
+
+    // Add tenant ID if available
+    if (originalNode?.tenantId) {
+      html += `<div style="margin-top: 8px; font-size: 11px; color: #cccccc;"><strong>Tenant ID:</strong>
+       ${originalNode.tenantId.substring(0, 8)}...</div>`;
+    }
+
+    return html;
+  }
+
+  private formatEdgeTooltip(edge: any): string {
+    const originalEdge = edge.originalEdge;
+    const sourceNode = typeof edge.source === 'object' ? edge.source : { id: edge.source };
+    const targetNode = typeof edge.target === 'object' ? edge.target : { id: edge.target };
+
+    let html = '<div style="font-weight: bold; margin-bottom: 8px; color: #ffffff;">Connection</div>';
+    html += `<div style="margin-bottom: 6px;"><strong>Type:</strong> ${edge.type}</div>`;
+
+    // Show source and target
+    html += `<div style="margin-bottom: 6px;"><strong>From:</strong> ${this.getNodeDisplayName(sourceNode)}</div>`;
+    html += `<div style="margin-bottom: 6px;"><strong>To:</strong> ${this.getNodeDisplayName(targetNode)}</div>`;
+
+    // Show if bidirectional
+    if (originalEdge?.bidirectional) {
+      html += '<div style="margin-bottom: 6px;"><strong>Bidirectional:</strong> Yes</div>';
+    }
+
+    // Add properties if available
+    if (originalEdge?.properties && Object.keys(originalEdge.properties).length > 0) {
+      html += '<div style="margin-bottom: 6px;"><strong>Properties:</strong></div>';
+      html += '<div style="margin-left: 8px; font-size: 11px;">';
+
+      Object.entries(originalEdge.properties).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          const displayValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+          html += `<div style="margin-bottom: 2px;"><strong>${key}:</strong> ${displayValue}</div>`;
+        }
+      });
+      html += '</div>';
+    }
+
+    // Add metadata if available
+    if (originalEdge?.metadata && Object.keys(originalEdge.metadata).length > 0) {
+      html += '<div style="margin-bottom: 6px;"><strong>Metadata:</strong></div>';
+      html += '<div style="margin-left: 8px; font-size: 11px;">';
+
+      Object.entries(originalEdge.metadata).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          const displayValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+          if (displayValue.length > 40) {
+            html += `<div style="margin-bottom: 2px;"><strong>${key}:</strong> ${displayValue.substring(0, 40)}...</div>`;
+          } else {
+            html += `<div style="margin-bottom: 2px;"><strong>${key}:</strong> ${displayValue}</div>`;
+          }
+        }
+      });
+      html += '</div>';
+    }
+
+    // Add edge ID if available
+    if (originalEdge?.id) {
+      html += `<div style="margin-top: 8px; font-size: 11px; color: #cccccc;">
+      <strong>Edge ID:</strong> ${originalEdge.id.length > 20 ? originalEdge.id.substring(0, 20) + '...' : originalEdge.id}</div>`;
+    }
+
+    return html;
+  }
+
+  private getNodeDisplayName(node: any): string {
+    if (node.name) {
+      return node.name;
+    }
+    if (node.id) {
+      // Extract name from ID patterns like "vrf:default_vrf" -> "default_vrf"
+      const parts = node.id.split(':');
+      return parts.length > 1 ? parts[parts.length - 1] : node.id;
+    }
+    return 'Unknown';
   }
 
   private setupForceSimulation(
@@ -1608,23 +2015,151 @@ export class TenantGraphRenderingService {
     });
   }
 
-  private renderLegend(svg: any, width: number, nodeColors: TenantNodeColorMap, edgeStyles: TenantEdgeStyleMap): void {
+  private renderLegend(
+    svg: any,
+    width: number,
+    nodeColors: TenantNodeColorMap,
+    edgeStyles: TenantEdgeStyleMap,
+    nodes: any[],
+    links: any[],
+  ): void {
+    // Extract unique node types and edge types from actual data
+    const presentNodeTypes = new Set(nodes.map(node => node.type));
+    const presentEdgeTypes = new Set(links.map(link => link.type));
+
+    // Define all possible node type labels
+    const nodeTypeLabels: Record<string, string> = {
+      TENANT: 'Tenant',
+      VRF: 'VRF',
+      L3OUT: 'L3Out',
+      EXTERNAL_FIREWALL: 'External Firewall',
+      SERVICE_GRAPH: 'Service Graph',
+      SERVICE_GRAPH_FIREWALL: 'Service Graph Firewall',
+      EXTERNAL_VRF_CONNECTION: 'External VRF Connection',
+      EXTERNAL_VRF: 'External VRF',
+      APPLICATION_PROFILE: 'Application Profile',
+      BRIDGE_DOMAIN: 'Bridge Domain',
+      ENDPOINT_GROUP: 'Endpoint Group',
+      ENDPOINT_SECURITY_GROUP: 'Endpoint Security Group',
+      CONTRACT: 'Contract',
+      SUBJECT: 'Subject',
+      FILTER: 'Filter',
+      FILTER_ENTRY: 'Filter Entry',
+      SUBNET: 'Subnet',
+      SELECTOR: 'Selector',
+    };
+
+    // Define edge type labels
+    const edgeTypeLabels: Record<string, string> = {
+      TENANT_CONTAINS_VRF: 'Contains VRF',
+      TENANT_CONTAINS_FIREWALL: 'Contains Firewall',
+      VRF_TO_L3OUT: 'VRF to L3Out',
+      VRF_TO_SERVICE_GRAPH: 'VRF to Service Graph',
+      L3OUT_TO_FIREWALL: 'L3Out to Firewall',
+      INTERVRF_CONNECTION: 'Inter-VRF Connection',
+      SERVICE_GRAPH_TO_FIREWALL: 'Service Graph to Firewall',
+      VRF_CONTAINS: 'VRF Contains',
+      APPLICATION_PROFILE_CONTAINS: 'Application Profile Contains',
+      EPG_TO_BRIDGE_DOMAIN: 'EPG to Bridge Domain',
+      CONTRACT_CONTAINS: 'Contract Contains',
+      CONTRACT_PROVIDES: 'Contract Provides',
+      CONTRACT_CONSUMES: 'Contract Consumes',
+      EPG_TO_CONTRACT: 'EPG to Contract',
+      FIREWALL_TO_EXTERNAL_VRF_CONNECTION: 'Firewall to External VRF Connection',
+      EXTERNAL_VRF_CONNECTION_TO_EXTERNAL_VRF: 'External VRF Connection to External VRF',
+    };
+
+    // Filter to only present node types, maintaining a logical order
+    const nodeTypeOrder = [
+      'TENANT',
+      'VRF',
+      'APPLICATION_PROFILE',
+      'BRIDGE_DOMAIN',
+      'SUBNET',
+      'ENDPOINT_GROUP',
+      'ENDPOINT_SECURITY_GROUP',
+      'SELECTOR',
+      'L3OUT',
+      'SERVICE_GRAPH',
+      'SERVICE_GRAPH_FIREWALL',
+      'EXTERNAL_FIREWALL',
+      'EXTERNAL_VRF_CONNECTION',
+      'EXTERNAL_VRF',
+      'CONTRACT',
+      'SUBJECT',
+      'FILTER',
+      'FILTER_ENTRY',
+    ];
+
+    const presentNodeItems = nodeTypeOrder
+      .filter(type => presentNodeTypes.has(type))
+      .map(type => ({
+        type,
+        color: nodeColors[type as keyof TenantNodeColorMap] || '#6c757d',
+        label: nodeTypeLabels[type] || type,
+      }));
+
+    // Filter to only present edge types with priority ordering
+    const edgeTypePriority = [
+      'TENANT_CONTAINS_VRF',
+      'VRF_TO_L3OUT',
+      'VRF_TO_SERVICE_GRAPH',
+      'L3OUT_TO_FIREWALL',
+      'SERVICE_GRAPH_TO_FIREWALL',
+      'CONTRACT_PROVIDES',
+      'CONTRACT_CONSUMES',
+      'APPLICATION_PROFILE_CONTAINS',
+    ];
+
+    const presentEdgeItems = Array.from(presentEdgeTypes)
+      .sort((a, b) => {
+        const aIndex = edgeTypePriority.indexOf(a);
+        const bIndex = edgeTypePriority.indexOf(b);
+        if (aIndex !== -1 && bIndex !== -1) {
+          return aIndex - bIndex;
+        }
+        if (aIndex !== -1) {
+          return -1;
+        }
+        if (bIndex !== -1) {
+          return 1;
+        }
+        return a.localeCompare(b);
+      })
+      .map(type => ({
+        type,
+        label: edgeTypeLabels[type] || type,
+        style: edgeStyles[type] || edgeStyles.VRF_TO_L3OUT,
+      }))
+      .slice(0, 6); // Reduced to 6 to ensure better fit
+
+    // Calculate legend height dynamically with maximum constraint
+    const headerHeight = 30; // Legend title space
+    const nodeHeaderHeight = presentNodeItems.length > 0 ? 25 : 0; // "Node Types:" header
+    const nodeItemsHeight = presentNodeItems.length * 18;
+    const edgeHeaderHeight = presentEdgeItems.length > 0 ? 25 : 0; // "Edge Types:" header
+    const edgeItemsHeight = presentEdgeItems.length * 15;
+    const bottomPadding = 15; // Bottom margin
+    const calculatedHeight = headerHeight + nodeHeaderHeight + nodeItemsHeight + edgeHeaderHeight + edgeItemsHeight + bottomPadding;
+    const maxLegendHeight = Math.min(600, window.innerHeight * 0.8); // Max 80% of viewport or 600px
+    const legendHeight = Math.min(calculatedHeight, maxLegendHeight);
+
     const legend = svg
       .append('g')
-      .attr('transform', `translate(${width - 160}, 20)`)
+      .attr('transform', `translate(${width - 180}, 20)`)
       .attr('pointer-events', 'none');
 
     legend
       .append('rect')
-      .attr('width', 150)
-      .attr('height', 200)
+      .attr('width', 170)
+      .attr('height', legendHeight)
       .attr('fill', 'rgba(255,255,255,0.95)')
       .attr('stroke', '#dee2e6')
       .attr('rx', 4);
 
     legend
       .append('text')
-      .attr('x', 75)
+      .attr('x', 85)
       .attr('y', 15)
       .attr('text-anchor', 'middle')
       .attr('font-size', 12)
@@ -1632,62 +2167,62 @@ export class TenantGraphRenderingService {
       .attr('fill', '#212529')
       .text('Legend');
 
-    const legendItems = [
-      { type: 'TENANT', color: nodeColors.TENANT, label: 'Tenant' },
-      { type: 'VRF', color: nodeColors.VRF, label: 'VRF' },
-      { type: 'L3OUT', color: nodeColors.L3OUT, label: 'L3Out' },
-      { type: 'EXTERNAL_FIREWALL', color: nodeColors.EXTERNAL_FIREWALL, label: 'External Firewall' },
-      { type: 'SERVICE_GRAPH', color: nodeColors.SERVICE_GRAPH, label: 'Service Graph' },
-      { type: 'SERVICE_GRAPH_FIREWALL', color: nodeColors.SERVICE_GRAPH_FIREWALL, label: 'Service Graph Firewall' },
-    ];
-
-    legendItems.forEach((item, i) => {
-      const y = 30 + i * 18;
-      legend.append('circle').attr('cx', 15).attr('cy', y).attr('r', 6).attr('fill', item.color);
+    // Render node legend items
+    if (presentNodeItems.length > 0) {
       legend
         .append('text')
-        .attr('x', 25)
-        .attr('y', y + 3)
-        .attr('font-size', 10)
+        .attr('x', 10)
+        .attr('y', 35)
+        .attr('font-size', 11)
+        .attr('font-weight', 'bold')
         .attr('fill', '#212529')
-        .text(item.label);
-    });
+        .text('Node Types:');
 
-    // Edge legend
-    legend
-      .append('text')
-      .attr('x', 10)
-      .attr('y', 30 + legendItems.length * 18 + 15)
-      .attr('font-size', 11)
-      .attr('font-weight', 'bold')
-      .attr('fill', '#212529')
-      .text('Edges:');
+      presentNodeItems.forEach((item, i) => {
+        const y = 50 + i * 18;
+        legend.append('circle').attr('cx', 15).attr('cy', y).attr('r', 6).attr('fill', item.color);
+        legend
+          .append('text')
+          .attr('x', 25)
+          .attr('y', y + 3)
+          .attr('font-size', 10)
+          .attr('fill', '#212529')
+          .text(item.label);
+      });
+    }
 
-    const edgeLegendItems = [
-      { label: 'Connection', style: edgeStyles.VRF_TO_L3OUT },
-      { label: 'Contains', style: edgeStyles.TENANT_CONTAINS_VRF },
-      { label: 'Inter-VRF', style: edgeStyles.INTERVRF_CONNECTION },
-    ];
-
-    edgeLegendItems.forEach((item, i) => {
-      const y = 30 + legendItems.length * 18 + 25 + i * 15;
-      legend
-        .append('line')
-        .attr('x1', 15)
-        .attr('x2', 35)
-        .attr('y1', y)
-        .attr('y2', y)
-        .attr('stroke', item.style.color)
-        .attr('stroke-width', item.style.width)
-        .attr('stroke-dasharray', item.style.dashArray || 'none');
-
+    // Render edge legend items
+    if (presentEdgeItems.length > 0) {
+      const edgeStartY = 50 + nodeItemsHeight + (presentNodeItems.length > 0 ? 15 : 0);
       legend
         .append('text')
-        .attr('x', 40)
-        .attr('y', y + 3)
-        .attr('font-size', 10)
+        .attr('x', 10)
+        .attr('y', edgeStartY)
+        .attr('font-size', 11)
+        .attr('font-weight', 'bold')
         .attr('fill', '#212529')
-        .text(item.label);
-    });
+        .text('Edge Types:');
+
+      presentEdgeItems.forEach((item, i) => {
+        const y = edgeStartY + 15 + i * 15;
+        legend
+          .append('line')
+          .attr('x1', 15)
+          .attr('x2', 35)
+          .attr('y1', y)
+          .attr('y2', y)
+          .attr('stroke', item.style.color)
+          .attr('stroke-width', item.style.width)
+          .attr('stroke-dasharray', item.style.dashArray || 'none');
+
+        legend
+          .append('text')
+          .attr('x', 40)
+          .attr('y', y + 3)
+          .attr('font-size', 9)
+          .attr('fill', '#212529')
+          .text(item.label);
+      });
+    }
   }
 }

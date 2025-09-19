@@ -371,6 +371,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         containerSelector: '#graphContainer',
         svgSelector: '#graphSvg',
         hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL', 'INTERVRF_CONNECTION'],
+        enableContextMenu: false,
       });
     }, 100);
   }
