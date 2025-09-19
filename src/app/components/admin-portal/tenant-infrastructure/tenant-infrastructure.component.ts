@@ -14,11 +14,11 @@ import {
 } from 'client';
 import * as yaml from 'js-yaml';
 import { Subject, debounceTime } from 'rxjs';
-import { TenantGraphRenderingService } from 'src/app/services/tenant-graph-rendering.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { trigger, style, transition, animate } from '@angular/animations';
+import { TenantGraphCoreService } from '../../../services/tenant-graph/tenant-graph-core.service';
 
 @Component({
   selector: 'app-tenant-infrastructure',
@@ -66,7 +66,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private orchestrator: V2AdminTenantOrchestratorService,
-    private tenantGraphRenderer: TenantGraphRenderingService,
+    private tenantGraphCore: TenantGraphCoreService,
     private clipboard: Clipboard,
     private globalEnvironmentService: V3GlobalEnvironmentsService,
     private ngx: NgxSmartModalService,
@@ -366,12 +366,15 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
     // Use setTimeout to ensure DOM elements are rendered
     setTimeout(() => {
-      this.tenantGraphRenderer.renderGraph({
+      this.tenantGraphCore.renderGraph({
         graph: this.graph,
         containerSelector: '#graphContainer',
         svgSelector: '#graphSvg',
         hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL', 'INTERVRF_CONNECTION'],
-        enableContextMenu: false,
+        enableContextMenu: true,
+        enablePathTrace: true,
+        contextMenuConfig: {}, // Empty context menu config
+        defaultEdgeWidth: 1.2,
       });
     }, 100);
   }

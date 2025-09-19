@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TenantConnectivityGraph, V2AppCentricTenantsService } from 'client';
-import { TenantGraphRenderingService } from 'src/app/services/tenant-graph-rendering.service';
+import { TenantGraphCoreService, TenantGraphRenderConfig, PathTraceState, ContextMenuClickEvent } from 'src/app/services/tenant-graph';
+import { TenantPortalNavigationService } from '../../../../../services/tenant-portal-navigation.service';
 
 @Component({
   selector: 'app-tenant-graph',
@@ -15,13 +16,21 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
   public isLoading = false;
   public error: string | null = null;
   public tenantId: string | null = null;
+  public pathTraceState: PathTraceState = {
+    selectedNodes: [],
+    pathExists: false,
+    highlightedPath: undefined,
+    pathTraceData: undefined,
+    showPathOnly: false,
+  };
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private tenantService: V2AppCentricTenantsService,
-    private tenantGraphRenderer: TenantGraphRenderingService,
+    private tenantGraphCore: TenantGraphCoreService,
+    private tenantPortalNavigation: TenantPortalNavigationService,
   ) {}
 
   ngOnInit(): void {
@@ -34,8 +43,15 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
     });
 
     // Subscribe to context menu clicks
-    this.tenantGraphRenderer.contextMenuClick.pipe(takeUntil(this.destroy$)).subscribe(event => {
+    this.tenantGraphCore.contextMenuClick.pipe(takeUntil(this.destroy$)).subscribe(event => {
       console.log('Context menu clicked:', event);
+      this.handleContextMenuClick(event);
+    });
+
+    // Subscribe to path trace state changes
+    this.tenantGraphCore.pathTraceStateChange.pipe(takeUntil(this.destroy$)).subscribe(state => {
+      this.pathTraceState = state;
+      console.log('PathTrace state changed:', state);
     });
   }
 
@@ -79,20 +95,46 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
 
     // Use setTimeout to ensure DOM elements are rendered
     setTimeout(() => {
-      this.tenantGraphRenderer.renderGraph({
+      const config: TenantGraphRenderConfig = {
         graph: this.graph,
         containerSelector: '#tenantGraphContainer',
         svgSelector: '#tenantGraphSvg',
         showLegend: true,
         enableOptimization: true,
         enableContextMenu: true,
+        enablePathTrace: true,
         defaultEdgeWidth: 1.2,
         hideEdgeTypes: [],
-      });
+        contextMenuConfig: {
+          EXTERNAL_FIREWALL: [
+            {
+              type: 'item',
+              name: 'Edit Firewall Config',
+              identifier: 'edit-firewall',
+              enabled: true,
+            },
+          ],
+        },
+      };
+      this.tenantGraphCore.renderGraph(config);
     }, 100);
   }
 
   public refreshGraph(): void {
     this.loadTenantGraph();
+  }
+  public handleContextMenuClick(event: ContextMenuClickEvent): void {
+    if (event.nodeType === 'EXTERNAL_FIREWALL' || event.nodeType === 'SERVICE_GRAPH_FIREWALL') {
+      if (event.menuItemIdentifier === 'edit-firewall') {
+        this.tenantPortalNavigation.navigateToFirewallConfig(
+          {
+            type: event.nodeType === 'EXTERNAL_FIREWALL' ? 'external-firewall' : 'service-graph-firewall',
+            firewallId: event.node.id,
+            firewallName: event.node.name,
+          },
+          this.route,
+        );
+      }
+    }
   }
 }
