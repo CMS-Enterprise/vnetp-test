@@ -1,0 +1,26 @@
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table
+    [config]="config"
+    [data]="externalFirewalls"
+    (clearResults)="getExternalFirewalls($event)"
+    (searchParams)="getExternalFirewalls($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+</ng-container>
+
+<ng-template #actionsTemplate let-externalFirewall="datum">
+  <section class="table__actions">
+    <app-icon-button
+      icon="edit"
+      label="Edit Firewall Configuration"
+      type="default"
+      (handleClick)="editFirewallConfig(externalFirewall)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>

@@ -30,25 +30,16 @@ const tabs: Tab[] = [
   { name: 'Contract', route: ['contract'], id: 'contract' },
   { name: 'Filter', route: ['filter'], id: 'filter' },
   {
-    name: 'Internal Firewall',
-    tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
-    id: 'tv2-internal-firewall',
-    subTabs: [
-      { name: 'Firewall Rules', route: ['internal-firewall'], id: 'tv2-internal-firewall-firewall-rules' },
-      { name: 'NAT Rules', route: ['internal-nat'], id: 'tv2-internal-firewall-nat-rules' },
-      { name: 'Service Objects', route: ['internal-service-objects'], id: 'tv2-internal-firewall-service-objects' },
-    ],
+    name: 'Service Graphs',
+    tooltip: 'Manage service graphs and their firewall configurations.',
+    id: 'tv2-service-graphs',
+    route: ['service-graphs'],
   },
   {
-    name: 'External Firewall',
-    tooltip: 'These firewall rules are applied between the ACI environment and external networks.',
-    id: 'tv2-external-firewall',
-    subTabs: [
-      { name: 'Firewall Rules', route: ['external-firewall'], id: 'tv2-external-firewall-firewall-rules' },
-      { name: 'NAT Rules', route: ['external-nat'], id: 'tv2-external-firewall-nat-rules' },
-      { name: 'Network Objects', route: ['external-network-objects'], id: 'tv2-external-firewall-network-objects' },
-      { name: 'Service Objects', route: ['external-service-objects'], id: 'tv2-external-firewall-service-objects' },
-    ],
+    name: 'External Firewalls',
+    tooltip: 'Manage external firewalls and their configurations.',
+    id: 'tv2-external-firewalls',
+    route: ['external-firewalls'],
   },
   {
     name: 'Endpoint Connectivity Utility',
@@ -149,20 +140,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Check if current context is internal firewall
-   */
-  private isInternalFirewallContext(currentTabId: string | null, parentTabId: string | null): boolean {
-    return currentTabId === 'tv2-internal-firewall' || parentTabId === 'tv2-internal-firewall';
-  }
-
-  /**
-   * Check if current context is external firewall
-   */
-  private isExternalFirewallContext(currentTabId: string | null, parentTabId: string | null): boolean {
-    return currentTabId === 'tv2-external-firewall' || parentTabId === 'tv2-external-firewall';
-  }
-
-  /**
    * Select a VRF and load its associated tiers and rule groups
    */
   public selectVrf(vrf: Vrf | null): void {
@@ -239,8 +216,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 this.isLoadingTiers = false;
                 this.isLoadingVrfData = false;
-                // After rule groups are loaded, re-trigger current subtab navigation
-                this.retriggerCurrentSubtab();
               } catch (error) {
                 this.isLoadingTiers = false;
                 this.isLoadingVrfData = false;
@@ -249,15 +224,12 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
             error: () => {
               this.isLoadingTiers = false;
               this.isLoadingVrfData = false;
-              // Still attempt to retrigger with existing data
-              this.retriggerCurrentSubtab();
             },
           });
       }
     } else {
-      // If no additional loading needed, still check for navigation
+      // If no additional loading needed
       this.isLoadingVrfData = false;
-      this.retriggerCurrentSubtab();
     }
   }
 
@@ -270,170 +242,30 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tierContextService.lockTier();
   }
 
-  /**
-   * Navigate to a specific rule group with tier context switching
-   */
-  private navigateToRuleGroup(routePath: string[], ruleGroupId: string | null, tierId: string | null): void {
-    if (ruleGroupId && tierId) {
-      this.switchTierContext(tierId);
-      this.router.navigate([{ outlets: { 'tenant-portal': [...routePath, 'edit', ruleGroupId] } }], {
-        queryParamsHandling: 'merge',
-        relativeTo: this.activatedRoute,
-      });
-    }
-  }
-
-  /**
-   * Re-trigger the current subtab to navigate to the new VRF's rule group
-   */
-  private retriggerCurrentSubtab(): void {
-    const currentUrl = this.router.url;
-
-    // Define route mappings for cleaner logic
-    const routeMappings = [
-      {
-        urlPattern: 'internal-firewall/edit/',
-        routePath: ['internal-firewall'],
-        ruleGroupId: this.selectedVrfInternalFirewallRuleGroup?.id || null,
-        tierId: this.selectedVrfInternalTier?.id || null,
-      },
-      {
-        urlPattern: 'external-firewall/edit/',
-        routePath: ['external-firewall'],
-        ruleGroupId: this.selectedVrfExternalFirewallRuleGroup?.id || null,
-        tierId: this.selectedVrfExternalTier?.id || null,
-      },
-      {
-        urlPattern: 'internal-nat/edit/',
-        routePath: ['internal-nat'],
-        ruleGroupId: this.selectedVrfInternalNatRuleGroup?.id || null,
-        tierId: this.selectedVrfInternalTier?.id || null,
-      },
-      {
-        urlPattern: 'external-nat/edit/',
-        routePath: ['external-nat'],
-        ruleGroupId: this.selectedVrfExternalNatRuleGroup?.id || null,
-        tierId: this.selectedVrfExternalTier?.id || null,
-      },
-    ];
-
-    // Find matching route and navigate
-    const matchingRoute = routeMappings.find(route => currentUrl.includes(route.urlPattern));
-    if (matchingRoute) {
-      this.navigateToRuleGroup(matchingRoute.routePath, matchingRoute.ruleGroupId, matchingRoute.tierId);
-    }
-  }
-
   public async handleTabChange(tab: Tab): Promise<any> {
     if (!tab) {
       return;
     }
-
-    // Get current tab ID and parent tab ID safely
-    const currentTabId = this.getCurrentTabId();
-    const parentTabId = currentTabId; // Store the parent context before potential change
 
     // Update current tab unless this is a sub-tab
     if (!tab.isSubTab) {
       this.currentTab = tab.name;
     }
 
-    // Use the name of the tab to determine the action to take
-    switch (tab.name) {
-      case 'Internal Firewall':
-        // Preset the Tier to the Internal Tier of selected VRF
-        if (this.selectedVrfInternalTier?.id) {
-          this.switchTierContext(this.selectedVrfInternalTier.id);
-        }
-        break;
-      case 'External Firewall':
-        // Preset the Tier to the External Tier of selected VRF
-        if (this.selectedVrfExternalTier?.id) {
-          this.switchTierContext(this.selectedVrfExternalTier.id);
-        }
-        break;
-      case 'Network Objects':
-        if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          if (this.selectedVrfExternalTier?.id) {
-            this.switchTierContext(this.selectedVrfExternalTier.id);
-            this.router.navigate([{ outlets: { 'tenant-portal': ['external-network-objects'] } }], {
-              queryParamsHandling: 'merge',
-              relativeTo: this.activatedRoute,
-            });
-          }
-        }
-        return;
+    // For any tab, look up its route and navigate using type-safe lookup
+    const routeTab = this.hasValidTabId(tab) ? this.tabs.find(t => t.id === tab.id) : this.tabs.find(t => t.name === tab.name);
 
-      case 'Service Objects':
-        // Check if we're under Internal or External based on parent tab context
-        if (this.isInternalFirewallContext(currentTabId, parentTabId)) {
-          if (this.selectedVrfInternalTier?.id) {
-            this.switchTierContext(this.selectedVrfInternalTier.id);
-            this.router.navigate([{ outlets: { 'tenant-portal': ['internal-service-objects'] } }], {
-              queryParamsHandling: 'merge',
-              relativeTo: this.activatedRoute,
-            });
-          }
-        } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          if (this.selectedVrfExternalTier?.id) {
-            this.switchTierContext(this.selectedVrfExternalTier.id);
-            this.router.navigate([{ outlets: { 'tenant-portal': ['external-service-objects'] } }], {
-              queryParamsHandling: 'merge',
-              relativeTo: this.activatedRoute,
-            });
-          }
-        }
-        return;
-
-      case 'Firewall Rules':
-        // Check if we're under Internal or External based on parent tab context
-        if (this.isInternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['internal-firewall'],
-            this.selectedVrfInternalFirewallRuleGroup?.id || null,
-            this.selectedVrfInternalTier?.id || null,
-          );
-        } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['external-firewall'],
-            this.selectedVrfExternalFirewallRuleGroup?.id || null,
-            this.selectedVrfExternalTier?.id || null,
-          );
-        }
-        break;
-      case 'NAT Rules':
-        if (this.isInternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['internal-nat'],
-            this.selectedVrfInternalNatRuleGroup?.id || null,
-            this.selectedVrfInternalTier?.id || null,
-          );
-        } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['external-nat'],
-            this.selectedVrfExternalNatRuleGroup?.id || null,
-            this.selectedVrfExternalTier?.id || null,
-          );
-        }
-        break;
-
-      default:
-        // For any other tab, look up its route and navigate using type-safe lookup
-        const routeTab = this.hasValidTabId(tab) ? this.tabs.find(t => t.id === tab.id) : this.tabs.find(t => t.name === tab.name);
-
-        if (routeTab && this.hasValidRoute(routeTab)) {
-          this.router.navigate([{ outlets: { 'tenant-portal': routeTab.route } }], {
-            queryParamsHandling: 'merge',
-            relativeTo: this.activatedRoute,
-          });
-        } else if (this.hasValidRoute(tab)) {
-          // If we couldn't find it in the lookup but it has a route, use that
-          this.router.navigate([{ outlets: { 'tenant-portal': tab.route } }], {
-            queryParamsHandling: 'merge',
-            relativeTo: this.activatedRoute,
-          });
-        }
-        break;
+    if (routeTab && this.hasValidRoute(routeTab)) {
+      this.router.navigate([{ outlets: { 'tenant-portal': routeTab.route } }], {
+        queryParamsHandling: 'merge',
+        relativeTo: this.activatedRoute,
+      });
+    } else if (this.hasValidRoute(tab)) {
+      // If we couldn't find it in the lookup but it has a route, use that
+      this.router.navigate([{ outlets: { 'tenant-portal': tab.route } }], {
+        queryParamsHandling: 'merge',
+        relativeTo: this.activatedRoute,
+      });
     }
   }
 
