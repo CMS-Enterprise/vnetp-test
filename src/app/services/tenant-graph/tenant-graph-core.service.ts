@@ -153,7 +153,7 @@ export interface TenantGraphRenderConfig {
   onNodeClick?: (node: TenantConnectivityGraphNodes) => void;
   onEdgeClick?: (edge: TenantConnectivityGraphEdges) => void;
   forceConfig?: Partial<TenantForceConfig>;
-  layoutMode?: 'hierarchical' | 'circular';
+  layoutMode?: 'hierarchical' | 'circular' | 'force-directed';
   circularConfig?: {
     centerLevel?: number;
     radiusMultiplier?: number;
@@ -166,7 +166,7 @@ export interface TenantGraphRenderConfig {
   filterMode?: string;
   availableFilterModes?: GraphFilterMode[];
   showFilterModeSelector?: boolean;
-  onLayoutModeChange?: (mode: 'hierarchical' | 'circular') => void;
+  onLayoutModeChange?: (mode: 'hierarchical' | 'circular' | 'force-directed') => void;
   onFilterModeChange?: (mode: string) => void;
 }
 
@@ -206,6 +206,9 @@ export class TenantGraphCoreService {
     VRF_TO_SERVICE_GRAPH: { color: '#adb5bd', width: 2.5, opacity: 0.8 },
     L3OUT_TO_FIREWALL: { color: '#adb5bd', width: 2.5, opacity: 0.8 },
     INTERVRF_CONNECTION: { color: '#ff6b35', width: 2.5, dashArray: '3,3', opacity: 0.8 },
+    CONTRACT_CONSUMER: { color: '#00ff00', width: 2.5, dashArray: '2,2', opacity: 0.8 },
+    CONTRACT_PROVIDER: { color: '#ff0000', width: 2.5, dashArray: '2,2', opacity: 0.8 },
+    CONTRACT_INTRA: { color: '#0000ff', width: 2.5, dashArray: '2,2', opacity: 0.8 },
   };
 
   private readonly DEFAULT_CONTEXT_MENU_CONFIG: Record<string, ContextMenuItem[]> = {
@@ -376,8 +379,8 @@ export class TenantGraphCoreService {
     transformedData.nodes.forEach(node => {
       (node as any).clusterX = layoutResult.clusterCenters.get(node.id) || width / 2;
 
-      // For circular layout, also apply Y coordinate and set initial positions
-      if (mergedConfig.layoutMode === 'circular') {
+      // For circular and force-directed layouts, also apply Y coordinate and set initial positions
+      if (mergedConfig.layoutMode === 'circular' || mergedConfig.layoutMode === 'force-directed') {
         (node as any).clusterY = layoutResult.clusterCenters.get(`${node.id}_y`) || height / 2;
 
         // Set initial x,y positions for D3 force simulation
@@ -400,6 +403,8 @@ export class TenantGraphCoreService {
       if (layoutResult.ringRadii && layoutResult.ringRadii.length > 0) {
         this.uiService.renderGuideCircles(zoomGroup, width, height, layoutResult.ringRadii);
       }
+    } else if (mergedConfig.layoutMode === 'force-directed') {
+      // For force-directed layout, no guides needed - nodes position themselves naturally
     } else {
       // Only show lane guides for hierarchical layout
       if (mergedConfig.showLaneGuides) {
@@ -481,7 +486,7 @@ export class TenantGraphCoreService {
         width,
         height,
         mergedConfig.layoutMode || 'hierarchical',
-        (newMode: 'hierarchical' | 'circular') => this.switchLayoutMode(newMode, config),
+        (newMode: 'hierarchical' | 'circular' | 'force-directed') => this.switchLayoutMode(newMode, config),
       );
     }
 
@@ -520,7 +525,7 @@ export class TenantGraphCoreService {
   /**
    * Switch between layout modes with smooth transitions
    */
-  public switchLayoutMode(newMode: 'hierarchical' | 'circular', originalConfig: TenantGraphRenderConfig): void {
+  public switchLayoutMode(newMode: 'hierarchical' | 'circular' | 'force-directed', originalConfig: TenantGraphRenderConfig): void {
     // Update the config with new layout mode
     const updatedConfig = {
       ...originalConfig,

@@ -18,20 +18,32 @@ import { D3Node, D3Link } from './tenant-graph-data.service';
  * - Maintains consistent layer spacing and alignment
  * - Supports custom node level overrides
  *
- * ### 2. **Smart Horizontal Clustering**
+ * ### 2. **Force-Directed Layout**
+ * - Physics-based simulation that positions nodes naturally based on connections
+ * - No rigid levels - nodes find optimal positions through attraction/repulsion forces
+ * - TENANT nodes are gently anchored toward center for stability
+ * - Highly connected nodes naturally cluster together
+ * - Reduces edge crossings and creates organic, readable layouts
+ *
+ * ### 3. **Circular Layout**
+ * - Arranges nodes in concentric rings based on their hierarchy levels
+ * - Center level determined by node type (TENANT nodes typically centered)
+ * - Rings assigned by distance from center level
+ *
+ * ### 4. **Smart Horizontal Clustering** (Hierarchical)
  * - **Display order support**: If nodes have `displayOrder` metadata, uses that for positioning
  * - **Relationship-based clustering**: Groups nodes based on their connections
  * - **Shared connection optimization**: Nodes that connect to the same targets are positioned closer together
  * - **Parent-child alignment**: Child nodes positioned relative to their parents
  *
- * ### 3. **Multi-pass Optimization**
+ * ### 5. **Multi-pass Optimization** (Hierarchical)
  * The service runs multiple optimization passes to improve the layout:
  * - **Forward pass**: Optimizes based on parent-child relationships
  * - **Backward pass**: Parents adjust to their children's positions (back-propagation)
  * - **Cross-layer optimization**: Reduces edge crossings between adjacent layers
  * - **Shared target optimization**: Groups nodes with common downstream connections
  *
- * ### 4. **Connection Analysis**
+ * ### 6. **Connection Analysis** (All Layouts)
  * - Analyzes shared connections for better positioning
  * - Calculates connection similarity using Jaccard similarity
  * - Identifies orphaned nodes and handles them appropriately
@@ -75,7 +87,8 @@ import { D3Node, D3Link } from './tenant-graph-data.service';
  *     clusterConfig: { widthPercent: 0.7, startPercent: 0.15 },
  *     levelLabels: { 1: 'Tenant', 2: 'VRF', 3: 'Service Graph' },
  *     nodeLevels: { TENANT: 1, VRF: 2, L3OUT: 3 },
- *     enableOptimization: true
+ *     layoutMode: 'force-directed', // 'hierarchical', 'circular', or 'force-directed'
+ *     forceConfig: { linkStrength: 0.7, chargeStrength: -300, tenantAnchorStrength: 0.3 }
  *   };
  *
  *   const result = this.layoutService.calculateLayout(nodes, links, config);
@@ -109,13 +122,22 @@ export interface LayoutConfig {
   clusterConfig: { widthPercent: number; startPercent: number };
   levelLabels: Record<number, string>;
   nodeLevels: Record<string, number>;
-  layoutMode?: 'hierarchical' | 'circular';
+  layoutMode?: 'hierarchical' | 'circular' | 'force-directed';
   circularConfig?: {
     centerLevel?: number; // Which level to center (default: level with most nodes)
     radiusMultiplier?: number; // Controls spacing between rings (default: 1.2)
     startAngle?: number; // Starting angle for first node (default: -Math.PI/2, top)
     ringSpacing?: number; // Base spacing between rings (default: 80)
     minRadius?: number; // Minimum radius for center ring (default: 60)
+  };
+  forceConfig?: {
+    linkStrength?: number; // Strength of connections between linked nodes (default: 0.7)
+    chargeStrength?: number; // Repulsion strength between nodes (default: -300)
+    centerStrength?: number; // Pull toward center (default: 0.1)
+    collisionRadius?: number; // Collision detection radius (default: 25)
+    tenantAnchorStrength?: number; // How strongly TENANT nodes are anchored toward center (default: 0.3)
+    iterations?: number; // Number of simulation iterations (default: 300)
+    alphaDecay?: number; // How quickly simulation cools down (default: 0.02)
   };
 }
 
@@ -128,6 +150,8 @@ export class TenantGraphLayoutService {
   public calculateLayout(nodes: D3Node[], links: D3Link[], config: LayoutConfig): LayoutResult {
     if (config.layoutMode === 'circular') {
       return this.calculateCircularLayout(nodes, links, config);
+    } else if (config.layoutMode === 'force-directed') {
+      return this.calculateForceDirectedLayout(nodes, links, config);
     } else {
       return this.calculateHierarchicalLayout(nodes, links, config);
     }
@@ -625,6 +649,55 @@ export class TenantGraphLayoutService {
     return { clusterCenters, yForType, ringRadii };
   }
 
+  /**
+   * Calculate force-directed layout using physics simulation
+   * Nodes position themselves naturally based on connections without rigid levels
+   */
+  private calculateForceDirectedLayout(nodes: D3Node[], links: D3Link[], config: LayoutConfig): LayoutResult {
+    const { width, height, forceConfig } = config;
+
+    // Apply default force configuration
+    const forceDefaults = {
+      linkStrength: 0.7,
+      chargeStrength: -300,
+      centerStrength: 0.1,
+      collisionRadius: 25,
+      tenantAnchorStrength: 0.3,
+      iterations: 300,
+      alphaDecay: 0.02,
+      ...forceConfig,
+    };
+
+    // Build relationship maps for connection analysis
+    const relationshipData = this.buildRelationshipMaps(nodes, links);
+
+    // Initialize node positions randomly within bounds
+    const initializedNodes = this.initializeForceNodes(nodes, width, height);
+
+    // Run force simulation
+    const simulationResult = this.runForceSimulation(
+      initializedNodes,
+      links,
+      relationshipData.connectionsMap,
+      width,
+      height,
+      forceDefaults,
+    );
+
+    // Extract final positions
+    const clusterCenters = new Map<string, number>();
+    simulationResult.nodes.forEach(node => {
+      clusterCenters.set(node.id, node.x || width / 2);
+      // Store y position with special key for force-directed layout
+      clusterCenters.set(`${node.id}_y`, node.y || height / 2);
+    });
+
+    // Create a yForType function that works with force-directed layout
+    const yForType = this.createForceDirectedYFunction(simulationResult.nodes, height);
+
+    return { clusterCenters, yForType };
+  }
+
   private findOptimalCenterLevel(nodes: D3Node[], nodeLevels: Record<string, number>): number {
     // Always use TENANT as center level for circular layout - it should be at the center
     const tenantLevel = nodeLevels.TENANT;
@@ -775,5 +848,128 @@ export class TenantGraphLayoutService {
     });
 
     return radii;
+  }
+
+  /**
+   * Initialize nodes with random positions for force simulation
+   */
+  private initializeForceNodes(nodes: D3Node[], width: number, height: number): any[] {
+    return nodes.map(node => ({
+      ...node,
+      x: Math.random() * width * 0.8 + width * 0.1, // Random position within 80% of width
+      y: Math.random() * height * 0.8 + height * 0.1, // Random position within 80% of height
+    }));
+  }
+
+  /**
+   * Run D3 force simulation to position nodes naturally
+   */
+  private runForceSimulation(
+    nodes: any[],
+    links: D3Link[],
+    connectionsMap: Map<string, string[]>,
+    width: number,
+    height: number,
+    forceConfig: any,
+  ): { nodes: any[]; links: any[] } {
+    // Convert links to simulation format
+    const simulationLinks = links.map(link => ({
+      source: typeof link.source === 'object' ? (link.source as any)?.id || '' : link.source,
+      target: typeof link.target === 'object' ? (link.target as any)?.id || '' : link.target,
+      type: link.type,
+    }));
+
+    // Create a simple force simulation without D3 dependency
+    // This is a basic implementation - in a real app you'd use d3-force
+    const simulation = this.createSimpleForceSimulation(nodes, simulationLinks, connectionsMap, width, height, forceConfig);
+
+    return { nodes: simulation.nodes, links: simulationLinks };
+  }
+
+  /**
+   * Simple force simulation implementation (replaces D3 force simulation)
+   */
+  private createSimpleForceSimulation(
+    nodes: any[],
+    links: any[],
+    connectionsMap: Map<string, string[]>,
+    width: number,
+    height: number,
+    config: any,
+  ): { nodes: any[] } {
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    // Run simulation iterations
+    for (let i = 0; i < config.iterations; i++) {
+      const alpha = 1 - i / config.iterations; // Cooling factor
+
+      nodes.forEach(node => {
+        let fx = 0;
+        let fy = 0;
+
+        // Center force - gentle pull toward center
+        const centerForce = config.centerStrength * alpha;
+        fx += (centerX - node.x) * centerForce;
+        fy += (centerY - node.y) * centerForce;
+
+        // TENANT anchor force - stronger pull toward center for TENANT nodes
+        if (node.type === 'TENANT') {
+          const tenantForce = config.tenantAnchorStrength * alpha;
+          fx += (centerX - node.x) * tenantForce;
+          fy += (centerY - node.y) * tenantForce;
+        }
+
+        // Link forces - attract connected nodes
+        const connections = connectionsMap.get(node.id) || [];
+        connections.forEach(connectedId => {
+          const connectedNode = nodes.find(n => n.id === connectedId);
+          if (connectedNode) {
+            const dx = connectedNode.x - node.x;
+            const dy = connectedNode.y - node.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const linkForce = config.linkStrength * alpha;
+
+            fx += (dx / distance) * linkForce;
+            fy += (dy / distance) * linkForce;
+          }
+        });
+
+        // Charge force - repel all other nodes
+        nodes.forEach(otherNode => {
+          if (otherNode !== node) {
+            const dx = node.x - otherNode.x;
+            const dy = node.y - otherNode.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const chargeForce = (config.chargeStrength * alpha) / (distance * distance);
+
+            fx += (dx / distance) * chargeForce;
+            fy += (dy / distance) * chargeForce;
+          }
+        });
+
+        // Apply forces with damping
+        const damping = 0.9;
+        node.x += fx * damping;
+        node.y += fy * damping;
+
+        // Keep nodes within bounds with padding
+        const padding = config.collisionRadius;
+        node.x = Math.max(padding, Math.min(width - padding, node.x));
+        node.y = Math.max(padding, Math.min(height - padding, node.y));
+      });
+    }
+
+    return { nodes };
+  }
+
+  /**
+   * Create yForType function for force-directed layout
+   */
+  private createForceDirectedYFunction(nodes: any[], height: number): (type: string) => number {
+    const centerY = height / 2;
+
+    // For force-directed layout, return center as fallback (actual Y positions are stored per-node)
+    return () => centerY;
   }
 }

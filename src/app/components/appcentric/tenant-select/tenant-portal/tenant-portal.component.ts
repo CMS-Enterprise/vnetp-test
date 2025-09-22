@@ -280,15 +280,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tenantService
       .getOneTenant({
         id: this.tenantId,
-        join: [
-          'vrfs',
-          'vrfs.serviceGraphs',
-          'vrfs.serviceGraphs.serviceGraphFirewall',
-          'vrfs.l3outs',
-          'vrfs.l3outs.externalFirewall',
-          'externalFirewalls',
-          'externalFirewalls.externalVrfConnections',
-        ],
+        join: ['vrfs'],
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(

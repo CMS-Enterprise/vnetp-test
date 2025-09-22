@@ -311,6 +311,8 @@ export class TenantGraphUIService {
     const originalNode = node.originalNode;
     let html = `<div style="font-weight: bold; margin-bottom: 8px; color: #ffffff;">${node.name}</div>`;
     html += `<div style="margin-bottom: 6px;"><strong>Type:</strong> ${node.type}</div>`;
+    html += `<div style="margin-bottom: 6px;"><strong>Graph ID:</strong> ${node.id}</div>`;
+    html += `<div style="margin-bottom: 6px;"><strong>Database ID:</strong> ${originalNode?.databaseId}</div>`;
 
     // Add metadata if available
     if (originalNode?.metadata && Object.keys(originalNode.metadata).length > 0) {
@@ -485,11 +487,6 @@ export class TenantGraphUIService {
 
       // Status
       let statusText = pathTraceState.pathExists ? `Path found (${pathTraceState.pathLength} hops)` : 'No path available';
-
-      // Add routing cost if available
-      if (pathTraceState.pathTraceData?.totalCost !== undefined) {
-        statusText += ` - Cost: ${pathTraceState.pathTraceData.totalCost}`;
-      }
 
       // Add incomplete indicator
       if (pathTraceState.pathTraceData && !pathTraceState.pathTraceData.isComplete) {
@@ -754,14 +751,14 @@ export class TenantGraphUIService {
   }
 
   /**
-   * Render layout toggle buttons for switching between hierarchical and circular layouts
+   * Render layout toggle buttons for switching between hierarchical, circular, and force-directed layouts
    */
   public renderLayoutToggle(
     svg: any,
     width: number,
     height: number,
-    currentLayoutMode: 'hierarchical' | 'circular',
-    onLayoutModeChange: (mode: 'hierarchical' | 'circular') => void,
+    currentLayoutMode: 'hierarchical' | 'circular' | 'force-directed',
+    onLayoutModeChange: (mode: 'hierarchical' | 'circular' | 'force-directed') => void,
   ): void {
     // Remove existing layout toggle
     svg.select('.layout-toggle').remove();
@@ -772,8 +769,8 @@ export class TenantGraphUIService {
       .attr('transform', `translate(${width - 120}, ${height - 50})`);
 
     // Button dimensions
-    const buttonWidth = 50;
-    const buttonHeight = 30;
+    const buttonWidth = 30;
+    const buttonHeight = 20;
     const buttonSpacing = 5;
 
     // Create hierarchical layout button
@@ -789,10 +786,23 @@ export class TenantGraphUIService {
       () => onLayoutModeChange('hierarchical'),
     );
 
+    // Create force-directed layout button
+    this.createLayoutButton(
+      toggleGroup,
+      (buttonWidth + buttonSpacing) * 1,
+      0,
+      buttonWidth,
+      buttonHeight,
+      'force-directed',
+      currentLayoutMode === 'force-directed',
+      'FD', // Lightning/force icon
+      () => onLayoutModeChange('force-directed'),
+    );
+
     // Create circular layout button
     this.createLayoutButton(
       toggleGroup,
-      buttonWidth + buttonSpacing,
+      (buttonWidth + buttonSpacing) * 2,
       0,
       buttonWidth,
       buttonHeight,
@@ -809,7 +819,7 @@ export class TenantGraphUIService {
     y: number,
     width: number,
     height: number,
-    mode: 'hierarchical' | 'circular',
+    mode: 'hierarchical' | 'circular' | 'force-directed',
     isActive: boolean,
     icon: string,
     onClick: () => void,
@@ -851,7 +861,7 @@ export class TenantGraphUIService {
       .attr('y', height / 2 + 1)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .attr('font-size', mode === 'hierarchical' ? 16 : 14)
+      .attr('font-size', mode === 'hierarchical' ? 16 : mode === 'force-directed' ? 12 : 14)
       .attr('font-weight', 'bold')
       .attr('fill', textColor)
       .text(icon)

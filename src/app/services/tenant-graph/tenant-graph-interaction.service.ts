@@ -192,7 +192,7 @@ export class TenantGraphInteractionService {
     height: number,
     clusterCenters: Map<string, number>,
     forceConfig: Partial<TenantForceConfig> = {},
-    layoutMode: 'hierarchical' | 'circular' = 'hierarchical',
+    layoutMode: 'hierarchical' | 'circular' | 'force-directed' = 'hierarchical',
   ): void {
     // Adjust force config for circular layout
     let config = { ...this.DEFAULT_FORCE_CONFIG, ...forceConfig };
@@ -206,6 +206,17 @@ export class TenantGraphInteractionService {
         chargeStrength: -150, // Moderate repulsion
         linkDistance: 80, // Normal link distance
         linkStrength: 0.4, // Moderate link forces
+      };
+    } else if (layoutMode === 'force-directed') {
+      // Use very weak positioning forces to allow natural movement
+      config = {
+        ...config,
+        layerStrength: 0.05, // Very weak Y positioning - let physics decide
+        clusterStrength: 0.05, // Very weak X positioning - let physics decide
+        centerStrength: 0.02, // Minimal center pull
+        chargeStrength: -100, // Moderate repulsion for spacing
+        linkDistance: 60, // Shorter links for tighter clusters
+        linkStrength: 0.6, // Stronger link forces for natural clustering
       };
     }
 
@@ -241,15 +252,15 @@ export class TenantGraphInteractionService {
     nodes.forEach((n: any) => (n.simulation = simulation));
 
     simulation.on('tick', () => {
-      // For circular layout, don't clamp to lanes - let nodes use their circular positions
-      if (layoutMode !== 'circular') {
+      // For circular and force-directed layouts, don't clamp to lanes - let nodes use their natural positions
+      if (layoutMode === 'hierarchical') {
         // Clamp to lanes only for hierarchical layout
         nodes.forEach((n: any) => {
           n.y = yForType(n.type);
           n.x = Math.max(20, Math.min(width - 20, n.x));
         });
       } else {
-        // For circular layout, just clamp to canvas bounds
+        // For circular and force-directed layouts, just ensure nodes stay within bounds
         nodes.forEach((n: any) => {
           n.x = Math.max(20, Math.min(width - 20, n.x));
           n.y = Math.max(20, Math.min(height - 20, n.y));
