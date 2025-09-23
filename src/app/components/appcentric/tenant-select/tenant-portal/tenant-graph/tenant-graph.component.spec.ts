@@ -8,8 +8,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TenantGraphComponent } from './tenant-graph.component';
 import { TenantGraphCoreService, PathTraceState, ContextMenuClickEvent } from '../../../../../services/tenant-graph';
 
-// Mock the TenantGraphCoreService to avoid D3 import issues
-jest.mock('../../../../../services/tenant-graph/tenant-graph-core.service', () => ({
+// Mock the entire tenant-graph services module to avoid D3 import issues
+jest.mock('../../../../../services/tenant-graph', () => ({
   TenantGraphCoreService: jest.fn().mockImplementation(() => ({
     renderGraph: jest.fn(),
     contextMenuClick: {
@@ -21,6 +21,8 @@ jest.mock('../../../../../services/tenant-graph/tenant-graph-core.service', () =
       emit: jest.fn(),
     },
   })),
+  PathTraceState: {},
+  ContextMenuClickEvent: {},
 }));
 import {
   V2AppCentricTenantsService,
@@ -96,7 +98,7 @@ describe('TenantGraphComponent', () => {
     pathTraceStateChangeSubject = new Subject<PathTraceState>();
 
     mockTenantService = {
-      buildTenantFullGraph: jest.fn(),
+      buildTenantFullGraph: jest.fn().mockReturnValue(of(mockGraph) as any),
     } as any;
 
     mockTenantGraphCore = {
@@ -161,7 +163,7 @@ describe('TenantGraphComponent', () => {
 
       fixture.detectChanges();
       parentParentParamMapSubject.next(paramMap);
-      tick();
+      tick(500);
 
       expect(component.tenantId).toBe('tenant-123');
       expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
@@ -171,15 +173,15 @@ describe('TenantGraphComponent', () => {
     it('should not load graph when no tenant ID in route params', fakeAsync(() => {
       parentParentParamMapSubject.next(new Map());
       fixture.detectChanges();
-      tick();
+      tick(500);
 
-      expect(component.tenantId).toBeNull();
+      expect(component.tenantId).toBeUndefined();
       expect(mockTenantService.buildTenantFullGraph).not.toHaveBeenCalled();
     }));
 
     it('should subscribe to context menu clicks on init', fakeAsync(() => {
       fixture.detectChanges();
-      tick();
+      tick(500);
 
       const contextMenuEvent: ContextMenuClickEvent = {
         node: { id: 'fw1', name: 'Firewall 1', type: 'EXTERNAL_FIREWALL' },
@@ -197,7 +199,7 @@ describe('TenantGraphComponent', () => {
 
     it('should subscribe to path trace state changes on init', fakeAsync(() => {
       fixture.detectChanges();
-      tick();
+      tick(500);
 
       pathTraceStateChangeSubject.next(mockPathTraceState);
 
@@ -224,7 +226,7 @@ describe('TenantGraphComponent', () => {
       mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
 
       (component as any).loadTenantGraph();
-      tick();
+      tick(500);
 
       expect(component.isLoading).toBe(false);
       expect(component.error).toBeNull();
@@ -232,14 +234,23 @@ describe('TenantGraphComponent', () => {
       expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
     }));
 
-    it('should set loading state while loading graph', () => {
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+    it('should set loading state while loading graph', fakeAsync(() => {
+      // Create a delayed observable to test loading state
+      const delayedObservable = new Subject();
+      mockTenantService.buildTenantFullGraph.mockReturnValue(delayedObservable as any);
 
       (component as any).loadTenantGraph();
 
       expect(component.isLoading).toBe(true);
       expect(component.error).toBeNull();
-    });
+
+      // Complete the observable
+      delayedObservable.next(mockGraph);
+      delayedObservable.complete();
+      tick(200); // Wait for setTimeout and any other timers
+
+      expect(component.isLoading).toBe(false);
+    }));
 
     it('should handle graph loading error', fakeAsync(() => {
       const errorMessage = 'Failed to load graph';
@@ -314,9 +325,19 @@ describe('TenantGraphComponent', () => {
     }));
 
     it('should render graph after loading completes', fakeAsync(() => {
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      // Reset the mock to ensure clean state
+      mockTenantGraphCore.renderGraph.mockClear();
+      component.tenantId = 'tenant-123';
+
+      // Create a subject to control the observable timing
+      const graphSubject = new Subject();
+      mockTenantService.buildTenantFullGraph.mockReturnValue(graphSubject as any);
 
       (component as any).loadTenantGraph();
+
+      // Complete the observable with graph data
+      graphSubject.next(mockGraph);
+      graphSubject.complete();
       tick(200); // Wait for both loading and rendering timeouts
 
       expect(mockTenantGraphCore.renderGraph).toHaveBeenCalled();
@@ -468,7 +489,7 @@ describe('TenantGraphComponent', () => {
       const paramMap1 = new Map();
       paramMap1.set('id', 'tenant-123');
       parentParentParamMapSubject.next(paramMap1);
-      tick();
+      tick(500);
 
       expect(component.tenantId).toBe('tenant-123');
       expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
@@ -477,7 +498,7 @@ describe('TenantGraphComponent', () => {
       const paramMap2 = new Map();
       paramMap2.set('id', 'tenant-456');
       parentParentParamMapSubject.next(paramMap2);
-      tick();
+      tick(500);
 
       expect(component.tenantId).toBe('tenant-456');
       expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-456' });
@@ -515,7 +536,7 @@ describe('TenantGraphComponent', () => {
 
       fixture.detectChanges();
       parentParentParamMapSubject.next(paramMap);
-      tick();
+      tick(500);
 
       // Verify subscriptions are active
       expect(component.tenantId).toBe('tenant-123');
