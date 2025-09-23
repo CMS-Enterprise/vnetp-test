@@ -150,6 +150,7 @@ export interface TenantGraphRenderConfig {
   contextMenuConfig?: Record<string, ContextMenuItem[]>;
   defaultEdgeWidth?: number;
   enablePathTrace?: boolean;
+  noPathTraceNodeTypes?: string[];
   onNodeClick?: (node: TenantConnectivityGraphNodes) => void;
   onEdgeClick?: (edge: TenantConnectivityGraphEdges) => void;
   forceConfig?: Partial<TenantForceConfig>;
@@ -212,8 +213,6 @@ export class TenantGraphCoreService {
   };
 
   private readonly DEFAULT_CONTEXT_MENU_CONFIG: Record<string, ContextMenuItem[]> = {
-    TENANT: [{ type: 'item', name: 'View Details', identifier: 'tenant-details', enabled: true }],
-    VRF: [{ type: 'item', name: 'View VRF Details', identifier: 'vrf-details', enabled: true }],
     EXTERNAL_FIREWALL: [{ type: 'item', name: 'Edit Firewall Config', identifier: 'edit-firewall', enabled: true }],
     SERVICE_GRAPH_FIREWALL: [{ type: 'item', name: 'Edit Firewall Config', identifier: 'edit-firewall', enabled: true }],
   };
@@ -226,6 +225,8 @@ export class TenantGraphCoreService {
     5: 'External VRF Connection',
     6: 'External VRF',
   };
+
+  private readonly NO_PATHTRACE_NODE_TYPES = ['TENANT'];
 
   private readonly NODE_LEVELS = {
     TENANT: 1,
@@ -594,6 +595,7 @@ export class TenantGraphCoreService {
       availableFilterModes: config.availableFilterModes || this.DEFAULT_FILTER_MODES,
       showFilterModeSelector: config.showFilterModeSelector !== false,
       enableOptimization: config.enableOptimization,
+      noPathTraceNodeTypes: config.noPathTraceNodeTypes || this.NO_PATHTRACE_NODE_TYPES,
     };
   }
 
@@ -710,7 +712,7 @@ export class TenantGraphCoreService {
     const menuItems: ContextMenuItem[] = [];
 
     // Add PathTrace option if enabled
-    if (config.enablePathTrace) {
+    if (config.enablePathTrace && !config.noPathTraceNodeTypes.includes(nodeType)) {
       menuItems.push(this.PATHTRACE_MENU_ITEM);
       if (userMenuItems.length > 0) {
         menuItems.push({ type: 'divider' });
