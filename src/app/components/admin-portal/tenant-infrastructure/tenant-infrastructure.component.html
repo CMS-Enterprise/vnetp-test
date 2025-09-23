@@ -21,12 +21,12 @@
         <fa-icon [icon]="leftPanelCollapsed ? ['fas', 'chevron-right'] : ['fas', 'chevron-left']"></fa-icon>
       </button>
       <div class="btn-group mr-2">
-        <button class="btn btn-primary" *ngIf="mode === 'create'" (click)="validate()">
+        <button class="btn btn-primary" *ngIf="mode === 'create'" [disabled]="isSubmitting" (click)="validate()">
           <fa-icon [icon]="['fas', 'check']" class="mr-1"></fa-icon>
           Validate
         </button>
         <button class="btn btn-info" (click)="getGraph()">Graph</button>
-        <button class="btn btn-success" *ngIf="mode === 'create'" (click)="saveConfig()">
+        <button class="btn btn-success" *ngIf="mode === 'create'" [disabled]="isSubmitting" (click)="saveConfig()">
           <fa-icon [icon]="['fas', 'save']" class="mr-1"></fa-icon>
           Save
         </button>
@@ -34,7 +34,6 @@
     </div>
   </div>
 
-  <!-- Loading indicator for edit mode -->
   <div *ngIf="isLoadingConfig" class="text-center py-4">
     <fa-icon class="icon text-primary" [icon]="['fas', 'spinner']" [spin]="true" style="font-size: 2rem"></fa-icon>
     <div class="mt-2 text-muted">Loading tenant configuration...</div>

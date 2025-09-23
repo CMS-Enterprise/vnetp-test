@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   V2AdminTenantOrchestratorService,
@@ -205,34 +205,39 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.validation = null;
     this.validationErrors.clear();
 
-    this.orchestrator.validateTenantInfrastructure({ tenantInfrastructureConfigDto: this.config }).subscribe({
-      next: res => {
-        this.validation = res as TenantInfrastructureValidationResponse;
-        this.hasValidated = true;
-        this.showConfig();
-      },
-      error: err => {
-        console.log('Validation error response:', err);
-        this.hasValidated = false;
+    this.orchestrator
+      .validateTenantInfrastructure({ tenantInfrastructureConfigDto: this.config })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        }),
+      )
+      .subscribe({
+        next: res => {
+          this.validation = res as TenantInfrastructureValidationResponse;
+          this.hasValidated = true;
+          this.showConfig();
+        },
+        error: err => {
+          this.hasValidated = false;
 
-        // Parse class-validator errors from API response
-        if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
-          err.error.detail.message.forEach((msg: string) => {
-            this.parseValidationError(msg);
-          });
-        }
+          // Parse class-validator errors from API response
+          if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
+            err.error.detail.message.forEach((msg: string) => {
+              this.parseValidationError(msg);
+            });
+          }
 
-        // Also create a general validation response for the UI
-        this.validation = {
-          success: false,
-          errors: err?.error?.detail?.message?.map((msg: string) => ({
-            path: '$',
-            message: msg,
-          })) || [{ path: '$', message: err?.message || 'Request failed' }],
-        } as TenantInfrastructureValidationResponse;
-      },
-      complete: () => (this.isSubmitting = false),
-    });
+          // Also create a general validation response for the UI
+          this.validation = {
+            success: false,
+            errors: err?.error?.detail?.message?.map((msg: string) => ({
+              path: '$',
+              message: msg,
+            })) || [{ path: '$', message: err?.message || 'Request failed' }],
+          } as TenantInfrastructureValidationResponse;
+        },
+      });
   }
 
   private parseValidationError(message: string): void {
@@ -242,7 +247,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     if (pathMatch) {
       const path = pathMatch[1];
       this.validationErrors.set(path, message);
-      console.log('Parsed validation error:', { path, message }); // Debug
     }
   }
 
@@ -252,9 +256,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
   hasFieldError(path: string): boolean {
     const hasError = this.validationErrors.has(path);
-    if (hasError) {
-      console.log('Field has error:', { path, message: this.validationErrors.get(path) }); // Debug
-    }
     return hasError;
   }
 
@@ -287,7 +288,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       this.orchestrator.getTenantInfrastructureGraph({ id: this.tenantId }).subscribe({
         next: res => {
           this.graph = res as TenantConnectivityGraph;
-          console.log('Graph data:', this.graph);
           setTimeout(() => this.renderGraph(), 100);
         },
       });
@@ -299,27 +299,32 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       return;
     }
     this.isSubmitting = true;
-    this.orchestrator.configureTenantInfrastructure({ tenantInfrastructureConfigDto: this.config }).subscribe({
-      next: res => {
-        console.log('Config saved:', res);
-        this.saveResponse = res as TenantInfrastructureResponse;
-        this.hasUnsavedChanges = false; // Clear unsaved changes flag
-        this.rightPanelView = 'response';
-      },
-      error: err => {
-        this.validation = {
-          success: false,
-          errors: [
-            {
-              path: '$',
-              message: err?.message || 'Request failed',
-            } as any,
-          ],
-        } as TenantInfrastructureValidationResponse;
-        this.showConfig();
-      },
-      complete: () => (this.isSubmitting = false),
-    });
+    this.orchestrator
+      .configureTenantInfrastructure({ tenantInfrastructureConfigDto: this.config })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        }),
+      )
+      .subscribe({
+        next: res => {
+          this.saveResponse = res as TenantInfrastructureResponse;
+          this.hasUnsavedChanges = false; // Clear unsaved changes flag
+          this.rightPanelView = 'response';
+        },
+        error: err => {
+          this.validation = {
+            success: false,
+            errors: [
+              {
+                path: '$',
+                message: err?.message || 'Request failed',
+              } as any,
+            ],
+          } as TenantInfrastructureValidationResponse;
+          this.showConfig();
+        },
+      });
   }
 
   showConfig(): void {
@@ -336,27 +341,29 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     }
 
     this.isLoadingConfig = true;
-    this.orchestrator.getTenantInfrastructureConfig({ id: this.tenantId }).subscribe({
-      next: config => {
-        this.config = config as TenantInfrastructureConfigDto;
-        this.updateRawFromConfig();
-        this.rightPanelView = 'graph';
-        this.generateGraphInternal();
-      },
-      error: err => {
-        console.error('Failed to load tenant config:', err);
-        // Fallback to empty config
-        this.config = {
-          tenant: { name: '', environmentId: '', alias: '', description: '' },
-          externalFirewalls: [],
-          vrfs: [],
-        } as TenantInfrastructureConfigDto;
-        this.updateRawFromConfig();
-      },
-      complete: () => {
-        this.isLoadingConfig = false;
-      },
-    });
+    this.orchestrator
+      .getTenantInfrastructureConfig({ id: this.tenantId })
+      .pipe(
+        finalize(() => {
+          this.isLoadingConfig = false;
+        }),
+      )
+      .subscribe({
+        next: config => {
+          this.config = config as TenantInfrastructureConfigDto;
+          this.updateRawFromConfig();
+          this.rightPanelView = 'graph';
+          this.generateGraphInternal();
+        },
+        error: () => {
+          this.config = {
+            tenant: { name: '', environmentId: '', alias: '', description: '' },
+            externalFirewalls: [],
+            vrfs: [],
+          } as TenantInfrastructureConfigDto;
+          this.updateRawFromConfig();
+        },
+      });
   }
 
   private renderGraph(): void {
@@ -457,7 +464,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   copyToClipboard(): void {
     // Validate that there's content to copy
     if (!this.displayConfig || this.displayConfig.trim() === '') {
-      console.error('No configuration content to copy');
       this.showCopyFeedback('No configuration content to copy', 'error');
       return;
     }
@@ -466,10 +472,8 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     const successful = this.clipboard.copy(this.displayConfig);
 
     if (successful) {
-      console.log('Configuration copied to clipboard');
       this.showCopyFeedback('Configuration copied to clipboard!', 'success');
     } else {
-      console.error('Failed to copy to clipboard');
       this.showCopyFeedback('Failed to copy to clipboard. Please copy manually.', 'error');
     }
   }
@@ -494,9 +498,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         button.className = originalClass;
       }, 2000);
     }
-
-    // Also log for debugging
-    console.log(`Copy feedback: ${message}`);
   }
 
   setActiveTab(tab: 'tenant' | 'firewalls' | 'vrfs'): void {
