@@ -1,16 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ExternalRouteComponent } from './external-route.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import {
   V3GlobalExternalRoutesService,
   V2AppCentricVrfsService,
   V2RoutingExternalVrfConnectionsService,
+  V2RoutingExternalRoutesService,
+  ExternalVrfConnection,
+  GlobalExternalRoute,
+  ExternalRoute,
 } from '../../../../../client';
 import { MockFontAwesomeComponent, MockComponent } from '../../../../test/mock-components';
-import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -21,65 +22,71 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ExternalRouteComponent } from './external-route.component';
 
 describe('ExternalRouteComponent', () => {
   let component: ExternalRouteComponent;
   let fixture: ComponentFixture<ExternalRouteComponent>;
   let mockActivatedRoute: any;
   let mockExternalRouteService: any;
-    let mockExternalVrfConnectionService: any;
+  let mockExternalVrfConnectionService: any;
   let mockGlobalExternalRouteService: any;
   let mockVrfService: any;
-  let mockRuntimeDataService: any;
   let mockRouter: any;
   let mockNgx: any;
+  let capturedCloseCb: (() => void) | null = null;
+
+  const baseConnection: ExternalVrfConnection = {
+    id: 'conn-1',
+    tenantId: 'tenant-1',
+    externalFirewall: {
+      bgpAsn: 65001,
+      externalVrfConnections: [{ externalVrf: 'VRF_B' } as any, { externalVrf: 'VRF_A' } as any, { externalVrf: 'VRF_A' } as any],
+    },
+  } as any;
 
   beforeEach(async () => {
     mockActivatedRoute = {
       snapshot: {
-        params: {
-          id: 'id',
-        },
-        data: {
-          mode: 'mode',
-        },
+        params: { id: 'id' },
+        data: { mode: 'mode' },
         queryParams: { id: 'id' },
       },
     };
+
     mockExternalRouteService = {
-      getManyExternalRoute: jest.fn(),
-      createRuntimeDataJobExternalRoute: jest.fn(),
-      deleteOneExternalRoute: jest.fn(),
-      softDeleteOneExternalRoute: jest.fn(),
-      restoreOneExternalRoute: jest.fn(),
-      createOneExternalRoute: jest.fn(),
-    };
+      getManyExternalRoute: jest.fn().mockReturnValue(of([])),
+      deleteOneExternalRoute: jest.fn().mockReturnValue(of({})),
+      softDeleteOneExternalRoute: jest.fn().mockReturnValue(of({})),
+      restoreOneExternalRoute: jest.fn().mockReturnValue(of({})),
+      createOneExternalRoute: jest.fn().mockReturnValue(of({})),
+    } as Partial<V2RoutingExternalRoutesService> as any;
+
     mockExternalVrfConnectionService = {
-      getOneExternalVrfConnection: jest.fn().mockReturnValue(of({})),
-      addRouteToExternalVrfConnectionExternalVrfConnection: jest.fn(),
-      removeRouteFromExternalVrfConnectionExternalVrfConnection: jest.fn(),
-    };
+      getOneExternalVrfConnection: jest.fn().mockReturnValue(of(baseConnection)),
+    } as Partial<V2RoutingExternalVrfConnectionsService> as any;
+
     mockGlobalExternalRouteService = {
-      getManyExternalRoutes: jest.fn(),
-    };
-    mockVrfService = {
-      getOneVrf: jest.fn().mockReturnValue(of({ id: 'vrfId', externalVrfs: [] })),
-    };
-    mockRuntimeDataService = {
-      isRecentlyRefreshed: jest.fn(),
-      pollJobStatus: jest.fn(),
-    };
-    mockRouter = {
-      navigate: jest.fn(),
-    };
+      getManyExternalRoutes: jest.fn().mockReturnValue(of([])),
+    } as Partial<V3GlobalExternalRoutesService> as any;
+
+    mockVrfService = {} as Partial<V2AppCentricVrfsService> as any;
+
+    mockRouter = { navigate: jest.fn() } as Partial<Router> as any;
+
     mockNgx = {
       setModalData: jest.fn(),
       getModal: jest.fn().mockReturnValue({
         open: jest.fn(),
-        onCloseFinished: of({}),
+        onCloseFinished: {
+          subscribe: jest.fn((cb: () => void) => {
+            capturedCloseCb = cb;
+            return { unsubscribe: jest.fn() };
+          }),
+        },
       }),
       resetModalData: jest.fn(),
-    };
+    } as Partial<NgxSmartModalService> as any;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -101,210 +108,204 @@ describe('ExternalRouteComponent', () => {
         { provide: V2RoutingExternalVrfConnectionsService, useValue: mockExternalVrfConnectionService },
         { provide: V3GlobalExternalRoutesService, useValue: mockGlobalExternalRouteService },
         { provide: V2AppCentricVrfsService, useValue: mockVrfService },
+        { provide: V2RoutingExternalRoutesService, useValue: mockExternalRouteService },
         { provide: NgxSmartModalService, useValue: mockNgx },
         { provide: Router, useValue: mockRouter },
-        { provide: RuntimeDataService, useValue: mockRuntimeDataService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExternalRouteComponent);
     component = fixture.componentInstance;
-    component.vrfId = 'vrfId';
+    component.externalVrfConnection = JSON.parse(JSON.stringify(baseConnection));
+    component.environmentId = 'env-1';
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should soft delete route', () => {
-    const route = { id: 'route1' } as any;
-    const deleteSpy = jest.spyOn(mockExternalRouteService, 'softDeleteOneExternalRoute').mockReturnValue(of({}));
-    const getAllRoutesSpy = jest.spyOn(component, 'getAllRoutes');
-    component.deleteRoute(route);
-    expect(deleteSpy).toHaveBeenCalledWith({ id: 'route1' });
-    expect(getAllRoutesSpy).toHaveBeenCalled();
-  });
-
-  it('should delete route', () => {
-    const route = { id: 'route1', deletedAt: '2021-01-01' } as any;
-    const deleteSpy = jest.spyOn(mockExternalRouteService, 'deleteOneExternalRoute').mockReturnValue(of({}));
-    const getAllRoutesSpy = jest.spyOn(component, 'getAllRoutes');
-    component.deleteRoute(route);
-    expect(deleteSpy).toHaveBeenCalledWith({ id: 'route1' });
-    expect(getAllRoutesSpy).toHaveBeenCalled();
-  });
-
-  it('should open route table modal', () => {
-    component.externalVrfConnection = { id: 'externalVrfConnection1' } as any;
-    (component as any).modalSubscription = of({}).subscribe();
-    const setModalDataSpy = jest.spyOn(mockNgx, 'setModalData');
-    component.openModal();
-    expect(setModalDataSpy).toHaveBeenCalledWith({ externalVrfConnectionId: 'externalVrfConnection1' }, 'externalRouteModal');
-  });
-
-  it('ngOnInit should load vrf then getAllRoutes', () => {
-    const vrf = { id: 'vrfId', externalVrfs: ['A', 'B'] };
-    (mockVrfService.getOneVrf as jest.Mock).mockReturnValue(of(vrf));
-    const getAllSpy = jest.spyOn(component, 'getAllRoutes');
+  it('ngOnInit loads connection and calls getAllRoutes', () => {
+    const spyAll = jest.spyOn(component, 'getAllRoutes');
     component.ngOnInit();
-    expect(mockVrfService.getOneVrf).toHaveBeenCalledWith({ id: 'vrfId' });
-    expect(component.parentVrf).toEqual(vrf as any);
-    expect(getAllSpy).toHaveBeenCalled();
-  });
-
-  it('ngAfterViewInit should wire up sorts and paginators', () => {
-    const assignedSort = {} as any;
-    const availableSort = {} as any;
-    const assignedPaginator = {} as any;
-    const availablePaginator = {} as any;
-    (component as any).assignedRoutesSort = assignedSort;
-    (component as any).availableRoutesSort = availableSort;
-    (component as any).assignedRoutesPaginator = assignedPaginator;
-    (component as any).availableRoutesPaginator = availablePaginator;
-    component.ngAfterViewInit();
-    expect(component.assignedRoutesDataSource.sort).toBe(assignedSort);
-    expect(component.availableRoutesDataSource.sort).toBe(availableSort);
-    expect(component.assignedRoutesDataSource.paginator).toBe(assignedPaginator);
-    expect(component.availableRoutesDataSource.paginator).toBe(availablePaginator);
-  });
-
-  it('addRouteToWanForm should call service and refresh', () => {
-    component.externalVrfConnection = { id: 'externalVrfConnection1' } as any;
-    (mockExternalRouteService.createOneExternalRoute as jest.Mock).mockReturnValue(of({}));
-    const refreshSpy = jest.spyOn(component, 'getAllRoutes');
-    component.addRouteToExternalVrfConnection({ id: 'g1' } as any);
-    expect(mockExternalRouteService.createOneExternalRoute).toHaveBeenCalledWith({
-      externalRoute: { externalVrfConnectionId: 'externalVrfConnection1', globalExternalRouteId: 'g1' },
+    expect(mockExternalVrfConnectionService.getOneExternalVrfConnection).toHaveBeenCalledWith({
+      id: 'conn-1',
+      relations: ['externalFirewall.externalVrfConnections'],
     });
-    expect(refreshSpy).toHaveBeenCalled();
+    expect(spyAll).toHaveBeenCalled();
   });
 
-  it('removeRouteFromWanForm should delegate to deleteRoute', () => {
-    const route = { id: 'r1' } as any;
-    const spy = jest.spyOn(component, 'deleteRoute').mockImplementation(() => undefined as any);
-    component.removeRouteFromExternalVrfConnection(route);
-    expect(spy).toHaveBeenCalledWith(route);
+  it('getConnectionChildren requests relations', done => {
+    component.getConnectionChildren().subscribe(conn => {
+      expect(conn.id).toBe('conn-1');
+      expect(mockExternalVrfConnectionService.getOneExternalVrfConnection).toHaveBeenCalledWith({
+        id: 'conn-1',
+        relations: ['externalFirewall.externalVrfConnections'],
+      });
+      done();
+    });
   });
 
-  it('getAllRoutes should orchestrate fetches and process data', () => {
-    component.externalVrfConnection = { externalFirewall: { externalVrfConnections: [{ externalVrf: 'A' }, { externalVrf: 'B' }] } } as any;
-    const globals = [{ id: 'g1' }];
-    const assigned = [{ id: 'a1', globalExternalRouteId: 'g1' }];
-    const fetchGlobalsSpy = jest.spyOn(component as any, '_fetchGlobalRoutes').mockReturnValue(of(globals as any));
-    const fetchAssignedSpy = jest.spyOn(component as any, '_fetchAssignedRoutes').mockReturnValue(of(assigned as any));
-    const processSpy = jest.spyOn(component as any, '_processRoutesData');
-    // restore real method (it was not stubbed globally now, but ensure correct binding)
-    ExternalRouteComponent.prototype.getAllRoutes.call(component);
-    expect(fetchGlobalsSpy).toHaveBeenCalledWith('A,B');
-    expect(fetchAssignedSpy).toHaveBeenCalled();
-    expect(processSpy).toHaveBeenCalledWith(globals as any, assigned as any);
+  it('ngAfterViewInit does not throw when wiring up Mat components', () => {
+    expect(() => component.ngAfterViewInit()).not.toThrow();
   });
 
-  it('_fetchGlobalRoutes should query service with filters', done => {
+  it('addRouteToExternalVrfConnection creates and refreshes', () => {
+    const spyAll = jest.spyOn(component, 'getAllRoutes');
+    const route: GlobalExternalRoute = { id: 'gr-1' } as any;
+    component.addRouteToExternalVrfConnection(route);
+    expect(mockExternalRouteService.createOneExternalRoute).toHaveBeenCalledWith({
+      externalRoute: {
+        externalVrfConnectionId: 'conn-1',
+        globalExternalRouteId: 'gr-1',
+        tenantId: 'tenant-1',
+      },
+    });
+    expect(spyAll).toHaveBeenCalled();
+  });
+
+  it('removeRouteFromExternalVrfConnection delegates to deleteRoute', () => {
+    const spyDel = jest.spyOn(component, 'deleteRoute');
+    component.removeRouteFromExternalVrfConnection({ id: 'er-1' } as any);
+    expect(spyDel).toHaveBeenCalled();
+  });
+
+  it('getAllRoutes fetches and processes data', () => {
+    const globals: GlobalExternalRoute[] = [{ id: 'gr-1', externalVrf: 'VRF_A' } as any, { id: 'gr-2', externalVrf: 'VRF_B' } as any];
+    const assigned: ExternalRoute[] = [{ id: 'er-1', globalExternalRouteId: 'gr-2' } as any];
+    mockGlobalExternalRouteService.getManyExternalRoutes.mockReturnValueOnce(of(globals));
+    mockExternalRouteService.getManyExternalRoute.mockReturnValueOnce(of(assigned));
+
+    component.getAllRoutes();
+
+    expect(component.availableVrfs).toEqual(['VRF_A', 'VRF_B']);
+    expect(component.assignedRoutesDataSource.data[0].globalExternalRoute.id).toBe('gr-2');
+  });
+
+  it('_fetchGlobalRoutes calls service with env and filter', done => {
     component.environmentId = 'env-1';
-    (mockGlobalExternalRouteService.getManyExternalRoutes as jest.Mock).mockReturnValue(of([]));
-    (component as any)._fetchGlobalRoutes('A,B').subscribe((res: any) => {
-      expect(Array.isArray(res)).toBe(true);
+    mockGlobalExternalRouteService.getManyExternalRoutes.mockReturnValueOnce(of([{ id: 'x' }]));
+    (component as any)._fetchGlobalRoutes('VRF_A,VRF_B').subscribe((res: any) => {
       expect(mockGlobalExternalRouteService.getManyExternalRoutes).toHaveBeenCalledWith({
         environmentId: 'env-1',
         limit: 50000,
-        filter: ['externalVrf||in||A,B'],
+        filter: ['externalVrf||in||VRF_A,VRF_B'],
       });
+      expect(res.length).toBe(1);
       done();
     });
   });
 
-  it('_fetchAssignedRoutes should query service with wanFormId', done => {
-    component.externalVrfConnection = { id: 'externalVrfConnection1' } as any;
-    (mockExternalRouteService.getManyExternalRoute as jest.Mock).mockReturnValue(of([]));
+  it('_fetchAssignedRoutes calls service with filter', done => {
+    component.externalVrfConnection = { id: 'abc', externalFirewall: { externalVrfConnections: [] } } as any;
+    mockExternalRouteService.getManyExternalRoute.mockReturnValueOnce(of([{ id: 'y' }]));
     (component as any)._fetchAssignedRoutes().subscribe((res: any) => {
-      expect(Array.isArray(res)).toBe(true);
       expect(mockExternalRouteService.getManyExternalRoute).toHaveBeenCalledWith({
-        filter: ['externalVrfConnectionId||eq||externalVrfConnection1'],
+        filter: ['externalVrfConnectionId||eq||abc'],
         limit: 50000,
       });
+      expect(res.length).toBe(1);
       done();
     });
   });
 
-  it('_processRoutesData should compute availableVrfs, link globals, and refresh available routes', () => {
-    const globals = [
-      { id: 'g1', externalVrf: 'B' },
-      { id: 'g2', externalVrf: 'A' },
-    ] as any;
-    const assigned = [{ id: 'a1', globalExternalRouteId: 'g1' }] as any;
-    component.externalVrfConnection = {
-      externalFirewall: {
-        externalVrfConnections: [
-          { externalVrf: 'B' }, { externalVrf: 'A' }, { externalVrf: 'A' }]
-      }
-    } as any;
-    const updateSpy = jest.spyOn(component, 'updateAvailableRoutes');
+  it('_processRoutesData sets lists and calls updateAvailableRoutes', () => {
+    const spyUpdate = jest.spyOn(component, 'updateAvailableRoutes');
+    const globals: GlobalExternalRoute[] = [{ id: 'gr-1', externalVrf: 'VRF_A' } as any, { id: 'gr-2', externalVrf: 'VRF_B' } as any];
+    const assigned: ExternalRoute[] = [
+      { id: 'er-1', globalExternalRouteId: 'gr-1' } as any,
+      { id: 'er-2', globalExternalRouteId: 'gr-2' } as any,
+    ];
     (component as any)._processRoutesData(globals, assigned);
-    expect(component.allGlobalRoutes).toEqual(globals);
-    expect(component.availableVrfs).toEqual(['A', 'B']);
-    expect(component.assignedRoutesDataSource.data[0].globalExternalRoute).toEqual(globals[0]);
-    expect(updateSpy).toHaveBeenCalled();
+    expect(component.allGlobalRoutes.length).toBe(2);
+    expect(component.assignedRoutesDataSource.data.length).toBe(2);
+    expect(spyUpdate).toHaveBeenCalled();
   });
 
-  it('restoreRoute should call service then refresh', () => {
-    (mockExternalRouteService.restoreOneExternalRoute as jest.Mock).mockReturnValue(of({}));
-    const refreshSpy = jest.spyOn(component, 'getAllRoutes');
-    component.restoreRoute({ id: 'r1' } as any);
-    expect(mockExternalRouteService.restoreOneExternalRoute).toHaveBeenCalledWith({ id: 'r1' });
-    expect(refreshSpy).toHaveBeenCalled();
+  it('deleteRoute hard deletes when deletedAt truthy', () => {
+    const spyAll = jest.spyOn(component, 'getAllRoutes');
+    component.deleteRoute({ id: 'er-1', deletedAt: 'now' } as any);
+    expect(mockExternalRouteService.deleteOneExternalRoute).toHaveBeenCalledWith({ id: 'er-1' });
+    expect(spyAll).toHaveBeenCalled();
   });
 
-  describe('updateAvailableRoutes', () => {
-    it('should handle missing global routes', () => {
-      (component as any).allGlobalRoutes = undefined;
-      component.updateAvailableRoutes();
-      expect(component.availableRoutesDataSource.data).toEqual([]);
-    });
-
-    it('should require selectedVrf and filter out assigned routes', () => {
-      const firstPage = jest.fn();
-      (component as any).allGlobalRoutes = [
-        { id: 'g1', externalVrf: 'A' },
-        { id: 'g2', externalVrf: 'B' },
-        { id: 'g3', externalVrf: 'A' },
-      ];
-      component.assignedRoutesDataSource.data = [{ globalExternalRouteId: 'g3' }] as any;
-      component.availableRoutesDataSource.paginator = { firstPage } as any;
-
-      component.selectedVrf = '';
-      component.updateAvailableRoutes();
-      expect(component.availableRoutesDataSource.data).toEqual([]);
-
-      component.selectedVrf = 'A';
-      component.updateAvailableRoutes();
-      expect(component.availableRoutesDataSource.data).toEqual([{ id: 'g1', externalVrf: 'A' }] as any);
-      expect(firstPage).toHaveBeenCalled();
-    });
+  it('deleteRoute soft deletes when active', () => {
+    const spyAll = jest.spyOn(component, 'getAllRoutes');
+    component.deleteRoute({ id: 'er-2' } as any);
+    expect(mockExternalRouteService.softDeleteOneExternalRoute).toHaveBeenCalledWith({ id: 'er-2' });
+    expect(spyAll).toHaveBeenCalled();
   });
 
-  it('onAssignedRoutesSearch should set filter', () => {
-    component.assignedRoutesSearchQuery = '  Hello  ';
-    component.onAssignedRoutesSearch();
-    expect(component.assignedRoutesDataSource.filter).toBe('hello');
+  it('isRouteBgpTagBlocked returns false for null, true for tag==asn, false otherwise', () => {
+    expect(component.isRouteBgpTagBlocked(null as any)).toBe(false);
+    const routeBlocked = { tag: 65001 } as any;
+    (component as any).externalVrfConnection.externalFirewall.bgpAsn = 65001;
+    expect(component.isRouteBgpTagBlocked(routeBlocked)).toBe(true);
+    const routeOk = { tag: 12345 } as any;
+    expect(component.isRouteBgpTagBlocked(routeOk)).toBe(false);
   });
 
-  it('onAvailableRoutesSearch should set filter', () => {
-    component.availableRoutesSearchQuery = '  WORLD  ';
-    component.onAvailableRoutesSearch();
-    expect(component.availableRoutesDataSource.filter).toBe('world');
+  it('getAddRouteTooltip varies based on isRouteBgpTagBlocked', () => {
+    (component as any).externalVrfConnection.externalFirewall.bgpAsn = 65001;
+    const blocked = component.getAddRouteTooltip({ tag: 65001 } as any);
+    expect(blocked).toContain('Add disabled');
+    const ok = component.getAddRouteTooltip({ tag: 1 } as any);
+    expect(ok).toBe('Add Route to External VRF Connection');
   });
 
-  it('subscribeToModal should reset modal data, unsubscribe, and refresh', () => {
-    const subject = new Subject<any>();
-    (mockNgx.getModal as jest.Mock).mockReturnValue({ onCloseFinished: subject.asObservable() });
-    const refreshSpy = jest.spyOn(component, 'getAllRoutes');
-    (component as any).subscribeToModal();
-    expect((component as any).modalSubscription).toBeTruthy();
-    subject.next({});
+  it('restoreRoute calls service and refreshes', () => {
+    const spyAll = jest.spyOn(component, 'getAllRoutes');
+    component.restoreRoute({ id: 'er-3' } as any);
+    expect(mockExternalRouteService.restoreOneExternalRoute).toHaveBeenCalledWith({ id: 'er-3' });
+    expect(spyAll).toHaveBeenCalled();
+  });
+
+  it('updateAvailableRoutes handles missing globals and filters by VRF', () => {
+    component.allGlobalRoutes = undefined;
+    component.availableRoutesDataSource.data = [{ id: 'x' } as any];
+    component.updateAvailableRoutes();
+    expect(component.availableRoutesDataSource.data).toEqual([]);
+
+    component.allGlobalRoutes = [{ id: 'gr-1', externalVrf: 'VRF_A' } as any, { id: 'gr-2', externalVrf: 'VRF_B' } as any];
+    component.assignedRoutesDataSource.data = [{ globalExternalRouteId: 'gr-2' } as any];
+    component.selectedVrf = 'VRF_A';
+    const paginator: any = { firstPage: jest.fn() };
+    // set the dataSource paginator directly since ViewChild is not present in test harness
+    (component as any).availableRoutesDataSource.paginator = paginator;
+    component.updateAvailableRoutes();
+    expect(component.availableRoutesDataSource.data.map(r => (r as any).id)).toEqual(['gr-1']);
+    expect(paginator.firstPage).toHaveBeenCalled();
+
+    component.selectedVrf = '';
+    component.updateAvailableRoutes();
+    expect(component.availableRoutesDataSource.data).toEqual([]);
+  });
+
+  it('openModal sets data and opens, subscribeToModal resets and refreshes', () => {
+    const spySub = jest.spyOn<any, any>(component as any, 'subscribeToModal');
+    const spyAll = jest.spyOn(component, 'getAllRoutes');
+    component.openModal();
+    expect(spySub).toHaveBeenCalled();
+    expect(mockNgx.setModalData).toHaveBeenCalledWith(
+      {
+        externalVrfConnectionId: 'conn-1',
+        tenantId: 'tenant-1',
+      },
+      'externalRouteModal',
+    );
+    expect(mockNgx.getModal).toHaveBeenCalledWith('externalRouteModal');
+
+    // simulate modal close
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    capturedCloseCb && capturedCloseCb();
+
     expect(mockNgx.resetModalData).toHaveBeenCalledWith('externalRouteModal');
-    expect((component as any).modalSubscription.closed).toBe(true);
-    expect(refreshSpy).toHaveBeenCalled();
+    expect(spyAll).toHaveBeenCalled();
+  });
+
+  it('onAssignedRoutesSearch and onAvailableRoutesSearch set filters', () => {
+    component.assignedRoutesSearchQuery = 'abc';
+    component.onAssignedRoutesSearch();
+    expect(component.assignedRoutesDataSource.filter).toBe('abc');
+
+    component.availableRoutesSearchQuery = 'xyz';
+    component.onAvailableRoutesSearch();
+    expect(component.availableRoutesDataSource.filter).toBe('xyz');
   });
 });

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,8 +28,9 @@ interface ExternalRouteWithGlobalRoute extends ExternalRoute {
 })
 export class ExternalRouteComponent implements OnInit, AfterViewInit {
   @Input() externalVrfConnection: ExternalVrfConnection;
-  @Input() vrfId: string;
+  @Input() vrf: Vrf;
   @Input() environmentId: string;
+  @Output() routeChanges = new EventEmitter<void>();
   dcsMode: string;
   assignedRoutesDataSource = new MatTableDataSource<ExternalRouteWithGlobalRoute>();
   availableRoutesDataSource = new MatTableDataSource<GlobalExternalRoute>();
@@ -60,9 +61,17 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.vrfService.getOneVrf({ id: this.vrfId }).subscribe(vrf => {
-      this.parentVrf = vrf;
+    this.getConnectionChildren().subscribe(connection => {
+      this.externalVrfConnection = connection;
       this.getAllRoutes();
+    });
+  }
+
+  getConnectionChildren(): Observable<ExternalVrfConnection> {
+    return this.externalVrfConnectionService.getOneExternalVrfConnection({
+      id: this.externalVrfConnection.id, relations: [
+        'externalFirewall.externalVrfConnections',
+      ]
     });
   }
 
@@ -79,6 +88,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
         externalRoute: {
           externalVrfConnectionId: this.externalVrfConnection.id,
           globalExternalRouteId: route.id,
+          tenantId: this.externalVrfConnection.tenantId,
         } as any,
       })
       .subscribe(() => {
@@ -197,7 +207,9 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   public openModal(): void {
     this.subscribeToModal();
-    this.ngx.setModalData({ externalVrfConnectionId: this.externalVrfConnection.id }, 'externalRouteModal');
+    this.ngx.setModalData({
+      externalVrfConnectionId: this.externalVrfConnection.id, tenantId: this.externalVrfConnection.tenantId
+    }, 'externalRouteModal');
     this.ngx.getModal('externalRouteModal').open();
   }
 

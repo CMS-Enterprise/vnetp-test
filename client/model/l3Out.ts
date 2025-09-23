@@ -34,7 +34,7 @@ export interface L3Out {
     readonly tenantVersion?: number;
     readonly endpointGroups?: Array<L3Out>;
     readonly endpointSecurityGroups?: Array<L3Out>;
-    l3outType: string;
+    l3outType: L3OutL3outTypeEnum;
     propagateExternalRoutes?: boolean;
     readonly externalFirewall?: ExternalFirewall;
     externalFirewallId?: string;
@@ -42,4 +42,10 @@ export interface L3Out {
     underlayIpv6Network: string;
     underlayVlan: number;
 }
+export enum L3OutL3outTypeEnum {
+    External = 'external',
+    Intervrf = 'intervrf'
+};
+
+
 

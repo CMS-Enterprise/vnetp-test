@@ -20,6 +20,7 @@ import { Observable }                                        from 'rxjs';
 import { ExternalRouteSyncDto } from '../model/models';
 import { GetManyGlobalExternalRouteResponseDto } from '../model/models';
 import { InlineResponse200 } from '../model/models';
+import { InlineResponse2001 } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -364,6 +365,48 @@ export class V3GlobalExternalRoutesService {
         return this.httpClient.get<GetManyGlobalExternalRouteResponseDto>(`${this.configuration.basePath}/v3/global/external-routes/environment/${encodeURIComponent(String(environmentId))}/vrf/${encodeURIComponent(String(vrf))}/external-routes`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * DEV ONLY: Seed 20,000 external routes
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public seedDevExternalRoutes(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2001>;
+    public seedDevExternalRoutes(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2001>>;
+    public seedDevExternalRoutes(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2001>>;
+    public seedDevExternalRoutes(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<InlineResponse2001>(`${this.configuration.basePath}/v3/global/external-routes/dev/seed-20k`,
+            null,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

@@ -11,7 +11,7 @@
  */
 
 
-export interface WanFormRequest { 
+export interface RouteControlRequest { 
     readonly id?: string;
     readonly tenantId?: string;
     readonly datacenterId?: string;
@@ -19,5 +19,6 @@ export interface WanFormRequest {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     status?: string;
+    tenantAccountName: string;
 }
 

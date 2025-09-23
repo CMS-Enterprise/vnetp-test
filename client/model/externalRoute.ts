@@ -23,7 +23,9 @@ export interface ExternalRoute {
     network: string;
     globalExternalRouteId?: string;
     manual?: boolean;
+    routeControlVersion?: number;
     readonly externalVrfConnection?: ExternalVrfConnection;
     externalVrfConnectionId?: string;
+    tenantId?: string;
 }
 

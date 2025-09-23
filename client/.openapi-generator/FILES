@@ -64,7 +64,7 @@ api/v3GlobalBgpRanges.service.ts
 api/v3GlobalEnvironment.service.ts
 api/v3GlobalExternalRoutes.service.ts
 api/v3GlobalMessages.service.ts
-api/v3GlobalWanFormRequest.service.ts
+api/v3GlobalRouteControlRequest.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -204,6 +204,7 @@ model/getManyNatRuleGroupResponseDto.ts
 model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
 model/getManyNetworkObjectResponseDto.ts
+model/getManyRouteControlRequestResponseDto.ts
 model/getManySelectorResponseDto.ts
 model/getManyServiceGraphFirewallResponseDto.ts
 model/getManyServiceGraphResponseDto.ts
@@ -217,7 +218,6 @@ model/getManyTierGroupResponseDto.ts
 model/getManyTierResponseDto.ts
 model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
-model/getManyWanFormRequestResponseDto.ts
 model/getManyWorkflowResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/globalBgpAsnAllocation.ts
@@ -234,6 +234,7 @@ model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
 model/inlineResponse200.ts
+model/inlineResponse2001.ts
 model/internalRoute.ts
 model/ipAddress.ts
 model/job.ts
@@ -271,6 +272,8 @@ model/paginationDTO.ts
 model/panosApplication.ts
 model/panosApplicationReferences.ts
 model/poolImportCollectionDto.ts
+model/routeControlRequest.ts
+model/routeControlRequestDto.ts
 model/routingLoop.ts
 model/routingPaths.ts
 model/ruleOperationDto.ts
@@ -321,8 +324,6 @@ model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
 model/vrfConfigDto.ts
-model/wanFormRequest.ts
-model/wanFormRequestDto.ts
 model/workflow.ts
 model/workflowEvent.ts
 model/workflowValidationError.ts

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { of, Subject, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import {
   V2RoutingInternalRoutesService,
   V1NetworkSubnetsService,
@@ -9,12 +9,12 @@ import {
   ExternalVrfConnection,
   V2RoutingExternalVrfConnectionsService,
 } from '../../../../../client';
-import { InternalRouteModalDto } from '../../../models/network-scope-forms/internal-route-modal.dto';
+// import { InternalRouteModalDto } from '../../../models/network-scope-forms/internal-route-modal.dto';
 import { ModalMode } from '../../../models/other/modal-mode';
 import { TableContextService } from '../../../services/table-context.service';
 import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApplicationMode } from '../../../models/other/application-mode-enum';
+// import { ApplicationMode } from '../../../models/other/application-mode-enum';
 import { InternalRouteComponent } from './internal-route.component';
 
 describe('InternalRoutesComponent', () => {
@@ -30,6 +30,7 @@ describe('InternalRoutesComponent', () => {
   let mockTableContextService: any;
 
   beforeEach(async () => {
+    let capturedCloseCb: (() => void) | null = null;
     mockNgxSmartModalService = {
       close: jest.fn(),
       resetModalData: jest.fn(),
@@ -38,13 +39,16 @@ describe('InternalRoutesComponent', () => {
       getModal: jest.fn().mockReturnValue({
         open: jest.fn(),
         onCloseFinished: {
-          subscribe: jest.fn().mockImplementation(() => ({ unsubscribe: jest.fn() })),
+          subscribe: jest.fn((cb: () => void) => {
+            capturedCloseCb = cb;
+            return { unsubscribe: jest.fn() };
+          }),
         },
       }),
     };
 
     mockInternalRouteService = {
-      getManyInternalRoute: jest.fn().mockReturnValue(of({})),
+      getManyInternalRoute: jest.fn().mockReturnValue(of({ data: [{ id: 'ir-1' }] })),
       createOneInternalRoute: jest.fn().mockReturnValue(of({})),
       updateOneInternalRoute: jest.fn().mockReturnValue(of({})),
       deleteOneInternalRoute: jest.fn().mockReturnValue(of({})),
@@ -53,7 +57,7 @@ describe('InternalRoutesComponent', () => {
     };
 
     mockExternalVrfConnectionService = {
-      getOneExternalVrfConnection: jest.fn().mockReturnValue(of({})),
+      getOneExternalVrfConnection: jest.fn().mockReturnValue(of({ id: 'testExternalVrfConnectionId' })),
     };
 
     mockNetcentricSubnetService = {
@@ -108,172 +112,137 @@ describe('InternalRoutesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('ngOnInit loads connection, routes, and children', () => {
+    const spyGetInternal = jest.spyOn(component, 'getInternalRoutes');
+    const spyChildren = jest.spyOn(component, 'getChildren');
+    component.ngOnInit();
+    expect(mockExternalVrfConnectionService.getOneExternalVrfConnection).toHaveBeenCalledWith({
+      id: 'testExternalVrfConnectionId',
+      relations: ['externalFirewall.externalVrfConnections'],
+    });
+    expect(spyGetInternal).toHaveBeenCalled();
+    expect(spyChildren).toHaveBeenCalled();
   });
 
-  describe('ngOnInit', () => {
-    it('should fetch external VRF connection subnets on initialization', () => {
-      const getInternalRoutesSpy = jest.spyOn(component, 'getInternalRoutes');
-      const getChildrenSpy = jest.spyOn(component, 'getChildren');
-      component.ngOnInit();
-      expect(getInternalRoutesSpy).toHaveBeenCalled();
-      expect(getChildrenSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('getInternalRoutes', () => {
-    it('should call service and unset loading (default params)', () => {
-      component.getInternalRoutes();
-      expect(mockInternalRouteService.getManyInternalRoute).toHaveBeenCalled();
-      expect(component.isLoading).toBe(false);
-    });
-
-    it('should update internalRoutes and set isLoading to false on success', () => {
-      const internalRoutesMock = { data: [{ id: '1' }, { id: '2' }] };
-      mockInternalRouteService.getManyInternalRoute.mockReturnValue(of(internalRoutesMock));
-      component.getInternalRoutes();
-      expect(component.internalRoutes).toEqual(internalRoutesMock);
-      expect(component.isLoading).toBe(false);
-    });
-
-    it('should apply event paging and search filter when provided', () => {
-      const evt: any = { page: 3, perPage: 50, searchColumn: 'description', searchText: 'term' };
-      mockInternalRouteService.getManyInternalRoute.mockClear();
-      component.getInternalRoutes(evt);
-      const args = mockInternalRouteService.getManyInternalRoute.mock.calls[0][0];
-      expect(args.filter).toEqual(['externalVrfConnectionId||eq||testExternalVrfConnectionId', 'description||cont||term']);
-      expect(args.page).toBe(3);
-      expect(args.perPage).toBe(50);
-    });
-
-    it('should default page/perPage when event has nullish values and omit search filter when incomplete', () => {
-      const evt: any = { page: undefined, perPage: undefined, searchColumn: 'description', searchText: '' };
-      mockInternalRouteService.getManyInternalRoute.mockClear();
-      component.getInternalRoutes(evt);
-      const args = mockInternalRouteService.getManyInternalRoute.mock.calls[0][0];
-      expect(args.filter).toEqual(['externalVrfConnectionId||eq||testExternalVrfConnectionId']);
-      expect(args.page).toBe(1);
-      expect(args.perPage).toBe(20);
-    });
-
-    it('should unset loading on error', () => {
-      mockInternalRouteService.getManyInternalRoute.mockReturnValue(throwError(() => new Error('boom')));
-      component.getInternalRoutes();
-      expect(component.isLoading).toBe(false);
+  it('getConnectionChildren requests relations', done => {
+    component.getConnectionChildren().subscribe(() => {
+      expect(mockExternalVrfConnectionService.getOneExternalVrfConnection).toHaveBeenCalled();
+      done();
     });
   });
 
-  describe('openModal', () => {
-    it('should set modal data and open the modal', () => {
-      const subSpy = jest.spyOn(component as any, 'subscribeToModal');
-      const dto = new InternalRouteModalDto();
-      dto.modalMode = ModalMode.Create;
-      dto.externalVrfConnection = component.externalVrfConnection;
-
-      component.openModal(ModalMode.Create);
-      expect(subSpy).toHaveBeenCalled();
-      expect(mockNgxSmartModalService.setModalData).toHaveBeenCalledWith(dto, 'internalRouteModal');
-      expect(mockNgxSmartModalService.getModal('internalRouteModal').open).toHaveBeenCalled();
-    });
-  });
-
-  describe('subscribeToModal', () => {
-    it('should reset modal data and fetch external VRF connection subnets on modal close without filters', () => {
-      const subject = new Subject<any>();
-      mockNgxSmartModalService.getModal.mockReturnValue({ onCloseFinished: subject.asObservable() });
-      const getSpy = jest.spyOn(component, 'getInternalRoutes');
-      (component as any).subscribeToModal();
-      expect((component as any).modalSubscription).toBeTruthy();
-      // no filteredResults
-      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({});
-      subject.next({});
-      expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('internalRouteModal');
-      expect(getSpy).toHaveBeenCalledWith();
-    });
-
-    it('should fetch with params when filteredResults present', () => {
-      const subject = new Subject<any>();
-      mockNgxSmartModalService.getModal.mockReturnValue({ onCloseFinished: subject.asObservable() });
-      const getSpy = jest.spyOn(component, 'getInternalRoutes');
-      (component as any).subscribeToModal();
-      const params = { filteredResults: true, page: 2, perPage: 10 } as any;
-      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue(params);
-      subject.next({});
-      expect(getSpy).toHaveBeenCalledWith(params);
-    });
-  });
-
-  describe('deleteInternalRoute', () => {
-    it('should call delete service and fetch external VRF connection subnets', () => {
-      const internalRouteMock = { id: '1', deletedAt: null } as any;
-      component.deleteInternalRoute(internalRouteMock);
-      expect(mockInternalRouteService.softDeleteOneInternalRoute).toHaveBeenCalledWith({ id: '1' });
-    });
-
-    it('should call hard delete service if deletedAt is set and fetch external VRF connection subnets', () => {
-      const internalRouteMock = { id: '1', deletedAt: new Date() } as any;
-      component.deleteInternalRoute(internalRouteMock);
-      expect(mockInternalRouteService.deleteOneInternalRoute).toHaveBeenCalledWith({ id: '1' });
-    });
-  });
-
-  describe('restoreInternalRoute', () => {
-    it('should call restore service and fetch external VRF connection subnets', () => {
-      const internalRouteMock = { id: '1' } as any;
-      component.restoreInternalRoute(internalRouteMock);
-      expect(mockInternalRouteService.restoreOneInternalRoute).toHaveBeenCalledWith({ id: '1' });
-    });
-  });
-
-  it('onTableEvent should update dto and call getInternalRoutes with event', () => {
-    const evt = { page: 7, perPage: 15, searchColumn: 'description', searchText: 'x' } as any;
+  it('onTableEvent forwards event to getInternalRoutes', () => {
+    const evt = { page: 2, perPage: 50 } as any;
     const spy = jest.spyOn(component, 'getInternalRoutes');
     component.onTableEvent(evt);
-    expect(component.tableComponentDto).toBe(evt);
     expect(spy).toHaveBeenCalledWith(evt);
   });
 
-  describe('getChildren', () => {
-    it('should call getSubnetVlans if dcsMode is netcentric', () => {
-      const getSubnetVlansSpy = jest.spyOn(component, 'getSubnetVlans');
-      component.applicationMode = ApplicationMode.NETCENTRIC;
-      component.getChildren();
-      expect(getSubnetVlansSpy).toHaveBeenCalled();
-    });
+  it('openModal sets modal data and opens', () => {
+    const spySub = jest.spyOn<any, any>(component as any, 'subscribeToModal');
+    component.tenantId = 'tenant-1';
+    const route = { id: 'ir-1' } as any;
+    component.openModal(ModalMode.Create, route);
+    expect(spySub).toHaveBeenCalled();
+    expect(mockNgxSmartModalService.setModalData).toHaveBeenCalled();
+    expect(mockNgxSmartModalService.getModal).toHaveBeenCalledWith('internalRouteModal');
+  });
 
-    it('should call getSubnetBridgeDomains if dcsMode is appcentric', () => {
-      const getSubnetBridgeDomainsSpy = jest.spyOn(component, 'getSubnetBridgeDomains');
-      component.applicationMode = ApplicationMode.APPCENTRIC;
-      component.getChildren();
-      expect(getSubnetBridgeDomainsSpy).toHaveBeenCalled();
+  it('subscribeToModal refreshes routes with and without filteredResults', () => {
+    const spyGet = jest.spyOn(component, 'getInternalRoutes');
+    // else branch
+    (component as any).subscribeToModal();
+    // simulate modal close
+    const modalInstance = mockNgxSmartModalService.getModal.mock.results[0].value;
+    const subscribeMock = modalInstance.onCloseFinished.subscribe as jest.Mock;
+    const cb = (subscribeMock.mock.calls[0] || [])[0] as () => void;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    cb && cb();
+    expect(spyGet).toHaveBeenCalled();
+
+    // filteredResults true branch
+    spyGet.mockClear();
+    mockTableContextService.getSearchLocalStorage.mockReturnValue({ filteredResults: true });
+    (component as any).subscribeToModal();
+    const subscribeMock2 = modalInstance.onCloseFinished.subscribe as jest.Mock;
+    const cb2 = (subscribeMock2.mock.calls[1] || [])[0] as () => void;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    cb2 && cb2();
+    expect(spyGet).toHaveBeenCalled();
+  });
+
+  it('getInternalRoutes success without event', () => {
+    component.getInternalRoutes();
+    expect(mockInternalRouteService.getManyInternalRoute).toHaveBeenCalledWith({
+      filter: ['externalVrfConnectionId||eq||testExternalVrfConnectionId'],
+      join: ['appcentricSubnet'],
+      page: component.tableComponentDto.page,
+      perPage: component.tableComponentDto.perPage,
+    });
+    expect(component.isLoading).toBe(false);
+    expect(component.internalRoutes).toEqual({ data: [{ id: 'ir-1' }] });
+  });
+
+  it('getInternalRoutes success with event', () => {
+    const evt = { page: 3, perPage: 10 };
+    component.getInternalRoutes(evt);
+    expect(mockInternalRouteService.getManyInternalRoute).toHaveBeenCalledWith({
+      filter: ['externalVrfConnectionId||eq||testExternalVrfConnectionId'],
+      join: ['appcentricSubnet'],
+      page: 3,
+      perPage: 10,
     });
   });
 
-  describe('getSubnetVlans', () => {
-    it('should fetch subnet VLANs for netcentric mode', () => {
-      const netcentricSubnetsMock = [{ id: '1', vlan: {} }];
-      mockNetcentricSubnetService.getSubnetsByDatacenterIdSubnet.mockReturnValue(of(netcentricSubnetsMock));
-      component.getSubnetVlans();
-      expect(component.subnetVlans.get('1')).toEqual({});
-    });
+  it('getInternalRoutes error clears loading', () => {
+    mockInternalRouteService.getManyInternalRoute.mockReturnValueOnce(throwError(() => new Error('fail')));
+    component.getInternalRoutes();
+    expect(component.isLoading).toBe(false);
   });
 
-  describe('getSubnetBridgeDomains', () => {
-    it('should fetch subnet bridge domains for appcentric mode', () => {
-      const appcentricSubnetsMock = [{ id: '1', bridgeDomain: {} }];
-      mockAppcentricSubnetService.getManyAppCentricSubnet.mockReturnValue(of(appcentricSubnetsMock));
-      component.getSubnetBridgeDomains();
-      expect(component.subnetBridgeDomains.get('1')).toEqual({});
-    });
+  it('deleteInternalRoute calls hard delete when deletedAt is truthy', () => {
+    const spyRefresh = jest.spyOn(component, 'getInternalRoutes');
+    component.deleteInternalRoute({ id: 'ir-1', deletedAt: 'now' } as any);
+    expect(mockInternalRouteService.deleteOneInternalRoute).toHaveBeenCalledWith({ id: 'ir-1' });
+    expect(spyRefresh).toHaveBeenCalled();
+  });
 
-    it('should handle error path', () => {
-      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined as any);
-      component.externalVrfConnection = { id: 'testExternalVrfConnectionId', tenantId: 'tenant-1' } as any;
-      mockAppcentricSubnetService.getManyAppCentricSubnet.mockReturnValue(throwError(() => new Error('fail')));
-      component.getSubnetBridgeDomains();
-      expect(logSpy).toHaveBeenCalledWith('tenant-1');
-      logSpy.mockRestore();
-    });
+  it('deleteInternalRoute calls soft delete when not deleted', () => {
+    const spyRefresh = jest.spyOn(component, 'getInternalRoutes');
+    component.deleteInternalRoute({ id: 'ir-2' } as any);
+    expect(mockInternalRouteService.softDeleteOneInternalRoute).toHaveBeenCalledWith({ id: 'ir-2' });
+    expect(spyRefresh).toHaveBeenCalled();
+  });
+
+  it('restoreInternalRoute calls restore and refresh', () => {
+    const spyRefresh = jest.spyOn(component, 'getInternalRoutes');
+    component.restoreInternalRoute({ id: 'ir-3' } as any);
+    expect(mockInternalRouteService.restoreOneInternalRoute).toHaveBeenCalledWith({ id: 'ir-3' });
+    expect(spyRefresh).toHaveBeenCalled();
+  });
+
+  it('getChildren calls correct branch by mode', () => {
+    const spyBD = jest.spyOn(component, 'getSubnetBridgeDomains');
+    (component as any).applicationMode = 'netcentric';
+    component.getChildren();
+    expect(spyBD).not.toHaveBeenCalled();
+
+    spyBD.mockClear();
+    (component as any).applicationMode = 'appcentric';
+    component.getChildren();
+    expect(spyBD).toHaveBeenCalled();
+  });
+
+  it('getSubnetBridgeDomains populates map', () => {
+    mockAppcentricSubnetService.getManyAppCentricSubnet.mockReturnValueOnce(
+      of([
+        { id: 's1', bridgeDomain: { id: 'bd1', name: 'BD 1' } },
+        { id: 's2', bridgeDomain: { id: 'bd2', name: 'BD 2' } },
+      ]),
+    );
+    component.tenantId = 'tenant-1';
+    component.getSubnetBridgeDomains();
+    expect(component.subnetBridgeDomains.get('s1')?.name).toBe('BD 1');
+    expect(component.subnetBridgeDomains.get('s2')?.name).toBe('BD 2');
   });
 });

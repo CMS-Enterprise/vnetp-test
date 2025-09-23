@@ -64,7 +64,7 @@ import { V3GlobalBgpRangesService } from './api/v3GlobalBgpRanges.service';
 import { V3GlobalEnvironmentService } from './api/v3GlobalEnvironment.service';
 import { V3GlobalExternalRoutesService } from './api/v3GlobalExternalRoutes.service';
 import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
-import { V3GlobalWanFormRequestService } from './api/v3GlobalWanFormRequest.service';
+import { V3GlobalRouteControlRequestService } from './api/v3GlobalRouteControlRequest.service';
 
 @NgModule({
   imports:      [],

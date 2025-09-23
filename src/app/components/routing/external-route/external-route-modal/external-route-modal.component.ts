@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ExternalRoute, V2RoutingExternalRoutesService } from '../../../../../../client';
@@ -13,6 +13,8 @@ export class ExternalRouteModalComponent {
   public form: FormGroup;
   public submitted: boolean;
   public externalVrfConnectionId: string;
+  public tenantId: string;
+  @Output() routeChanges = new EventEmitter<void>();
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -34,8 +36,9 @@ export class ExternalRouteModalComponent {
   }
 
   public getData(): void {
-    const dto = Object.assign({}, this.ngx.getModalData('externalRouteModal')) as { externalVrfConnectionId: string };
+    const dto = Object.assign({}, this.ngx.getModalData('externalRouteModal')) as { externalVrfConnectionId: string; tenantId: string };
     this.externalVrfConnectionId = dto.externalVrfConnectionId;
+    this.tenantId = dto.tenantId;
     this.ngx.resetModalData('externalRouteModal');
   }
 
@@ -63,6 +66,7 @@ export class ExternalRouteModalComponent {
       network,
       externalVrf,
       externalVrfConnectionId: this.externalVrfConnectionId,
+      tenantId: this.tenantId,
     } as ExternalRoute;
 
     this.externalRouteService.createOneExternalRoute({ externalRoute }).subscribe(() => {

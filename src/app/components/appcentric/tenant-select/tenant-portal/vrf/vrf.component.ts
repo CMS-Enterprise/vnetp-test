@@ -2,14 +2,17 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   GetManyVrfResponseDto,
+  RouteControlRequest,
   Tenant,
+  TenantRouteControlStatusEnum,
   V2AppCentricTenantsService,
   V2AppCentricVrfsService,
-  V3GlobalWanFormRequestService,
+  V3GlobalRouteControlRequestService,
   Vrf,
-  WanFormRequest,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { MatDialog } from '@angular/material/dialog';
+import { VrfRejectionReasonDialogComponent } from './rejection-reason-dialog.component';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -37,12 +40,12 @@ export class VrfComponent implements OnInit {
   public vrfModalSubscription: Subscription;
   public tenantId: string;
   public applicationMode: ApplicationMode;
+  public ApplicationMode = ApplicationMode;
   public isLoading = false;
-  public currentView: 'vrf' | 'subnets' | 'routes' = 'vrf';
-  public selectedVrf: Vrf | null = null;
   public expandedRow: Vrf | null = null;
   public tenant: Tenant;
-  public wanFormRequest: WanFormRequest;
+  public routeControlRequest: RouteControlRequest;
+  public showRejectionReason = false;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -71,11 +74,12 @@ export class VrfComponent implements OnInit {
   constructor(
     private vrfService: V2AppCentricVrfsService,
     private tableContextService: TableContextService,
-    private ngx: NgxSmartModalService,
+    public ngx: NgxSmartModalService,
+    private dialog: MatDialog,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tenantService: V2AppCentricTenantsService,
-    private wanFormRequestService: V3GlobalWanFormRequestService,
+    private routeControlRequestService: V3GlobalRouteControlRequestService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
@@ -97,28 +101,24 @@ export class VrfComponent implements OnInit {
     this.getTenant();
   }
 
-  public getTenant(): void {
-    this.tenantService.getOneTenant({ id: this.tenantId }).subscribe(tenant => {
-      this.tenant = tenant;
-      if (this.tenant.wanFormStatus === 'PENDING') {
-        this.getWanFormRequest();
-      }
+  public toggleRejectionReason(): void {
+    this.showRejectionReason = !this.showRejectionReason;
+  }
+
+  public openRejectionModal(): void {
+    this.dialog.open(VrfRejectionReasonDialogComponent, {
+      width: '720px',
+      data: { reason: this.tenant?.routeControlRejectionReason },
     });
   }
 
-  public showVrfList(): void {
-    this.selectedVrf = null;
-    this.currentView = 'vrf';
-  }
-
-  public showSubnets(vrf: Vrf): void {
-    this.selectedVrf = vrf;
-    this.currentView = 'subnets';
-  }
-
-  public showRoutes(vrf: Vrf): void {
-    this.selectedVrf = vrf;
-    this.currentView = 'routes';
+  public getTenant(): void {
+    this.tenantService.getOneTenant({ id: this.tenantId }).subscribe(tenant => {
+      this.tenant = tenant;
+      if (this.tenant.routeControlStatus === TenantRouteControlStatusEnum.Pending) {
+        this.getRouteControlRequest();
+      }
+    });
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -306,16 +306,16 @@ export class VrfComponent implements OnInit {
     );
   }
 
-  public createWanFormRequest(): void {
+  public createRouteControlRequest(): void {
     const message =
       'This action will submit your route changes for approval. ' +
       'Once submitted, you will not be able to make further changes until the request is approved, rejected, or cancelled. ' +
       'Are you sure you want to proceed?';
     const title = 'Request Deployment of Route Changes';
     const onConfirm = () => {
-      this.wanFormRequestService
-        .createOneWanFormRequest({
-          wanFormRequestDto: {
+      this.routeControlRequestService
+        .createOneRouteControlRequest({
+          routeControlRequestDto: {
             tenantId: this.tenantId,
             organization: 'test',
           },
@@ -331,21 +331,21 @@ export class VrfComponent implements OnInit {
     this.showConfirmationModal(title, message, onConfirm);
   }
 
-  public getWanFormRequest(): void {
-    this.wanFormRequestService
-      .getManyWanFormRequests({ filter: [`tenantId||eq||${this.tenantId}`, 'status||eq||PENDING'] })
-      .subscribe(wanFormRequests => {
-        this.wanFormRequest = wanFormRequests[0];
+  public getRouteControlRequest(): void {
+    this.routeControlRequestService
+      .getManyRouteControlRequests({ filter: [`tenantId||eq||${this.tenantId}`, 'status||eq||PENDING'] })
+      .subscribe(routeControlRequests => {
+        this.routeControlRequest = routeControlRequests[0];
       });
   }
 
-  public cancelWanFormRequest(): void {
+  public cancelRouteControlRequest(): void {
     const title = 'Cancel Route Change Request';
     const message =
       'This action will cancel your pending route change request and restart the approval process. ' +
       'This cannot be undone. Are you sure you want to proceed?';
     const onConfirm = () => {
-      this.wanFormRequestService.deleteOneWanFormRequest({ wanFormRequestId: this.wanFormRequest.id }).subscribe({
+      this.routeControlRequestService.deleteOneRouteControlRequest({ routeControlRequestId: this.routeControlRequest.id }).subscribe({
         next: () => {
           this.getTenant();
           this.refreshVrfs();

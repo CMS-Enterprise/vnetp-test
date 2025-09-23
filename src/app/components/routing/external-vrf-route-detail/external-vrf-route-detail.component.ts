@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { ExternalRoute, ExternalVrfConnection, InternalRoute } from 'client';
+import { ExternalVrfConnection, TenantRouteControlStatusEnum } from 'client';
 
 @Component({
   selector: 'app-external-vrf-route-detail',
@@ -8,6 +8,9 @@ import { ExternalRoute, ExternalVrfConnection, InternalRoute } from 'client';
 })
 export class ExternalVrfRouteDetailComponent {
   @Input() externalVrfConnection: ExternalVrfConnection;
+  @Input() blockChanges = false;
+  @Input() tenantRouteControlStatus?: TenantRouteControlStatusEnum;
+  TenantRouteControlStatusEnum = TenantRouteControlStatusEnum;
 
   private _global = false;
 
@@ -23,5 +26,3 @@ export class ExternalVrfRouteDetailComponent {
   @Output() manageSubnets = new EventEmitter<void>();
   @Output() manageRoutes = new EventEmitter<void>();
 }
-
-

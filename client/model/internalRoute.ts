@@ -25,5 +25,7 @@ export interface InternalRoute {
     appcentricSubnetId?: string;
     readonly externalVrfConnection?: ExternalVrfConnection;
     externalVrfConnectionId?: string;
+    routeControlVersion?: number;
+    tenantId?: string;
 }
 

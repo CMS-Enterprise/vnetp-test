@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -32,6 +33,8 @@ import { InternalRouteComponent } from './internal-route/internal-route.componen
 import { ExternalVrfRouteDetailComponent } from './external-vrf-route-detail/external-vrf-route-detail.component';
 import { RouteConfigComponent } from './route-config/route-config.component';
 import { RouterModule, Routes } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RoutingRejectionReasonDialogComponent } from './rejection-reason-dialog.component';
 
 const routes: Routes = [
   {
@@ -48,6 +51,7 @@ const routes: Routes = [
     ExternalRouteModalComponent,
     ExternalVrfRouteDetailComponent,
     RouteConfigComponent,
+    RoutingRejectionReasonDialogComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -78,6 +82,8 @@ const routes: Routes = [
     MatSelectModule,
     MatPaginatorModule,
     MatExpansionModule,
+    MatChipsModule,
+    MatDialogModule,
   ],
   exports: [
     InternalRouteComponent,
@@ -88,4 +94,4 @@ const routes: Routes = [
     RouteConfigComponent,
   ],
 })
-export class RoutingModule { }
+export class RoutingModule {}

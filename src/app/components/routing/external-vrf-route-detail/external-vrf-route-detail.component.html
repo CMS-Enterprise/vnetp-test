@@ -1,82 +1,117 @@
-<div *ngIf="externalVrfConnection?.allowAllRoutesFromExternalVrf || externalVrfConnection?.injectDefaultRouteFromExternalVrf" class="mat-elevation-z2" style="padding: 12px; margin-bottom: 16px; display: flex; align-items: center;">
-  <mat-icon color="warn" style="margin-right: 8px;">warning_amber</mat-icon>
+<div *ngIf="blockChanges" class="mat-elevation-z2" style="padding: 12px; margin-bottom: 16px; display: flex; align-items: center">
+  <mat-icon color="warn" style="margin-right: 8px">block</mat-icon>
   <div>
-    External route management is disabled for this VRF due to connection default route settings or allow all routes from external VRF settings.
-  </div>
-  <span class="spacer"></span>
-</div>
-<div *ngIf="externalVrfConnection?.advertiseAllRoutesToExternalVrf" class="mat-elevation-z2" style="padding: 12px; margin-bottom: 16px; display: flex; align-items: center;">
-  <mat-icon color="warn" style="margin-right: 8px;">warning_amber</mat-icon>
-  <div>
-    Internal route management is disabled for this VRF due to connection advertise all routes to external VRF settings.
+    <ng-container *ngIf="tenantRouteControlStatus === TenantRouteControlStatusEnum.Pending; else approvedMsg">
+      Changes are currently blocked due to an active route control request. Cancel the request to make additional changes.
+    </ng-container>
+    <ng-template #approvedMsg>
+      Your route control change request has been approved and must be deployed during a change window. You cannot make new changes until the
+      approved changes are deployed.
+    </ng-template>
   </div>
   <span class="spacer"></span>
 </div>
 
-<section style="margin-bottom: 24px;">
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-    <h3 style="margin: 0;">Advertised Internal Routes</h3>
-    <button *ngIf="!global" mat-stroked-button color="primary" (click)="manageSubnets.emit()" [disabled]="externalVrfConnection?.advertiseAllRoutesToExternalVrf" [matTooltip]="externalVrfConnection?.advertiseAllRoutesToExternalVrf ? 'Internal routes disabled by connection settings' : ''" data-testid="manage-subnets-button">
-      <mat-icon style="margin-right: 4px;">tune</mat-icon>
+<div
+  *ngIf="externalVrfConnection?.allowAllRoutesFromExternalVrf || externalVrfConnection?.injectDefaultRouteFromExternalVrf"
+  class="mat-elevation-z2"
+  style="padding: 12px; margin-bottom: 16px; display: flex; align-items: center"
+>
+  <mat-icon color="warn" style="margin-right: 8px">warning_amber</mat-icon>
+  <div>
+    External route management is disabled for this VRF due to connection default route settings or allow all routes from external VRF
+    settings.
+  </div>
+  <span class="spacer"></span>
+</div>
+<div
+  *ngIf="externalVrfConnection?.advertiseAllRoutesToExternalVrf"
+  class="mat-elevation-z2"
+  style="padding: 12px; margin-bottom: 16px; display: flex; align-items: center"
+>
+  <mat-icon color="warn" style="margin-right: 8px">warning_amber</mat-icon>
+  <div>Internal route management is disabled for this VRF due to connection advertise all routes to external VRF settings.</div>
+  <span class="spacer"></span>
+</div>
+
+<section style="margin-bottom: 24px">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+    <h3 style="margin: 0">Advertised Internal Routes</h3>
+    <button
+      *ngIf="!global"
+      mat-stroked-button
+      color="primary"
+      (click)="manageSubnets.emit()"
+      [disabled]="externalVrfConnection?.advertiseAllRoutesToExternalVrf || blockChanges"
+      [matTooltip]="externalVrfConnection?.advertiseAllRoutesToExternalVrf ? 'Internal routes disabled by connection settings' : ''"
+      data-testid="manage-subnets-button"
+    >
+      <mat-icon style="margin-right: 4px">tune</mat-icon>
       Manage Internal Routes
     </button>
   </div>
 
   <div *ngIf="externalVrfConnection?.internalRoutes?.length; else noInternalRoutes">
-    <table mat-table [dataSource]="externalVrfConnection?.internalRoutes || []" class="mat-elevation-z1" style="width: 100%;">
+    <table mat-table [dataSource]="externalVrfConnection?.internalRoutes || []" class="mat-elevation-z1" style="width: 100%">
       <ng-container matColumnDef="network">
-        <th mat-header-cell *matHeaderCellDef> Network </th>
-        <td mat-cell *matCellDef="let element"> {{ element?.appcentricSubnet?.gatewayIp }} </td>
+        <th mat-header-cell *matHeaderCellDef>Network</th>
+        <td mat-cell *matCellDef="let element">{{ element?.appcentricSubnet?.gatewayIp }}</td>
       </ng-container>
 
       <ng-container matColumnDef="vrfs">
-        <th mat-header-cell *matHeaderCellDef> Advertised to External VRF </th>
-        <td mat-cell *matCellDef="let element"> {{ element?.externalVrf }} </td>
+        <th mat-header-cell *matHeaderCellDef>Advertised to External VRF</th>
+        <td mat-cell *matCellDef="let element">{{ element?.externalVrf }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="['network', 'vrfs']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['network', 'vrfs'];"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['network', 'vrfs']"></tr>
     </table>
   </div>
   <ng-template #noInternalRoutes>
-    <div class="mat-elevation-z1" style="padding: 12px; color: rgba(0,0,0,0.6);">No advertised internal routes.</div>
+    <div class="mat-elevation-z1" style="padding: 12px; color: rgba(0, 0, 0, 0.6)">No advertised internal routes.</div>
   </ng-template>
 </section>
 
 <section>
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-    <h3 style="margin: 0;">Learned External Routes</h3>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+    <h3 style="margin: 0">Learned External Routes</h3>
     <button
       *ngIf="!global"
       mat-stroked-button
       color="primary"
       (click)="manageRoutes.emit()"
-      [disabled]="externalVrfConnection?.allowAllRoutesFromExternalVrf || externalVrfConnection?.injectDefaultRouteFromExternalVrf"
-      [matTooltip]="(externalVrfConnection?.allowAllRoutesFromExternalVrf || externalVrfConnection?.injectDefaultRouteFromExternalVrf) ? 'External routes disabled by connection settings' : ''"
+      [disabled]="
+        externalVrfConnection?.allowAllRoutesFromExternalVrf || externalVrfConnection?.injectDefaultRouteFromExternalVrf || blockChanges
+      "
+      [matTooltip]="
+        externalVrfConnection?.allowAllRoutesFromExternalVrf || externalVrfConnection?.injectDefaultRouteFromExternalVrf
+          ? 'External routes disabled by connection settings'
+          : ''
+      "
       data-testid="manage-routes-button"
     >
-      <mat-icon style="margin-right: 4px;">route</mat-icon>
+      <mat-icon style="margin-right: 4px">route</mat-icon>
       Manage External Routes
     </button>
   </div>
 
   <div *ngIf="externalVrfConnection?.externalRoutes?.length; else noExternalRoutes">
-    <table mat-table [dataSource]="externalVrfConnection?.externalRoutes || []" class="mat-elevation-z1" style="width: 100%;">
+    <table mat-table [dataSource]="externalVrfConnection?.externalRoutes || []" class="mat-elevation-z1" style="width: 100%">
       <ng-container matColumnDef="network">
-        <th mat-header-cell *matHeaderCellDef> Network </th>
-        <td mat-cell *matCellDef="let route"> {{ route?.network }} </td>
+        <th mat-header-cell *matHeaderCellDef>Network</th>
+        <td mat-cell *matCellDef="let route">{{ route?.network }}</td>
       </ng-container>
 
       <ng-container matColumnDef="vrf">
-        <th mat-header-cell *matHeaderCellDef> Learned from External VRF </th>
-        <td mat-cell *matCellDef="let route"> {{ route?.externalVrf }} </td>
+        <th mat-header-cell *matHeaderCellDef>Learned from External VRF</th>
+        <td mat-cell *matCellDef="let route">{{ route?.externalVrf }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="['network', 'vrf']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['network', 'vrf'];"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['network', 'vrf']"></tr>
     </table>
   </div>
   <ng-template #noExternalRoutes>
-    <div class="mat-elevation-z1" style="padding: 12px; color: rgba(0,0,0,0.6);">No learned external routes.</div>
+    <div class="mat-elevation-z1" style="padding: 12px; color: rgba(0, 0, 0, 0.6)">No learned external routes.</div>
   </ng-template>
 </section>

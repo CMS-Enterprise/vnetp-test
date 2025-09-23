@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { VrfComponent } from './vrf.component';
 import { RouterModule, Routes } from '@angular/router';
 import { VrfModalComponent } from './vrf-modal/vrf-modal.component';
+import { VrfRejectionReasonDialogComponent } from './rejection-reason-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TableModule } from 'src/app/common/table/table.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
@@ -21,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [VrfComponent, VrfModalComponent],
+  declarations: [VrfComponent, VrfModalComponent, VrfRejectionReasonDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -30,6 +32,7 @@ const routes: Routes = [
     IconButtonModule,
     ImportExportModule,
     NgxSmartModalModule,
+    MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
     TooltipModule,

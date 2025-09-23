@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   Vlan,
   BridgeDomain,
@@ -10,6 +10,7 @@ import {
   GetManyInternalRouteResponseDto,
   ExternalVrfConnection,
   V2RoutingInternalRoutesService,
+  V2RoutingExternalVrfConnectionsService,
 } from 'client';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -42,28 +43,24 @@ export class InternalRouteComponent implements OnInit {
   public applicationMode: ApplicationMode;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
-  @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
   @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
   @ViewChild('subnetTemplate') subnetTemplate: TemplateRef<any>;
+  @ViewChild('gatewayTemplate') gatewayTemplate: TemplateRef<any>;
+  @ViewChild('bridgeDomainTemplate') bridgeDomainTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Internal Routes',
     columns: [
-      { name: 'Name', property: 'name' },
-      { name: 'Description', property: 'description' },
       { name: 'Subnet', template: () => this.subnetTemplate },
-      { name: 'Exported To Vrfs', property: 'exportedToVrfs' },
+      { name: 'Gateway IP', template: () => this.gatewayTemplate },
+      { name: 'Bridge Domain', template: () => this.bridgeDomainTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRows,
     hideAdvancedSearch: true,
   };
 
-  public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Description', propertyName: 'description' },
-    { displayName: 'VRF/Zone', propertyName: 'vrfName' },
-    { displayName: 'Environment', propertyName: 'environment' },
-  ];
+  public searchColumns: SearchColumnConfig[] = [];
 
   constructor(
     private internalRouteService: V2RoutingInternalRoutesService,
@@ -71,11 +68,23 @@ export class InternalRouteComponent implements OnInit {
     private tableContextService: TableContextService,
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
+    private externalVrfConnectionService: V2RoutingExternalVrfConnectionsService,
   ) {}
 
   ngOnInit(): void {
-    this.getInternalRoutes();
-    this.getChildren();
+    this.getConnectionChildren().subscribe(connection => {
+      this.externalVrfConnection = connection;
+      this.getInternalRoutes();
+      this.getChildren();
+    });
+  }
+
+  getConnectionChildren(): Observable<ExternalVrfConnection> {
+    return this.externalVrfConnectionService.getOneExternalVrfConnection({
+      id: this.externalVrfConnection.id, relations: [
+        'externalFirewall.externalVrfConnections',
+      ]
+    });
   }
 
   public onTableEvent(event): void {
@@ -119,28 +128,23 @@ export class InternalRouteComponent implements OnInit {
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName && searchText) {
-        filter.push(`${propertyName}||cont||${searchText}`);
-      }
     }
     this.internalRouteService
       .getManyInternalRoute({
         filter,
-        join: ['netcentricSubnet', 'appcentricSubnet'],
+        join: ['appcentricSubnet'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: (data) => {
           this.internalRoutes = data;
           this.isLoading = false;
         },
-        () => {
+        error: () => {
           this.isLoading = false;
         },
-      );
+    });
   }
 
   public deleteInternalRoute(internalRoute: InternalRoute): void {
@@ -150,29 +154,29 @@ export class InternalRouteComponent implements OnInit {
         .deleteOneInternalRoute({
           id: internalRoute.id,
         })
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.getInternalRoutes();
           },
-          () => {
+          error: () => {
             this.isLoading = false;
           },
-          () => {
+          complete: () => {
             this.isLoading = false;
           },
-        );
+        });
     } else {
-      this.internalRouteService.softDeleteOneInternalRoute({ id: internalRoute.id }).subscribe(
-        () => {
+      this.internalRouteService.softDeleteOneInternalRoute({ id: internalRoute.id }).subscribe({
+        next: () => {
           this.getInternalRoutes();
         },
-        () => {
+        error: () => {
           this.isLoading = false;
         },
-        () => {
+        complete: () => {
           this.isLoading = false;
         },
-      );
+      });
     }
   }
 

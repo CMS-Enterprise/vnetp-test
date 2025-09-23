@@ -11,8 +11,7 @@
  */
 
 
-export interface WanFormRequestDto { 
-    tenantId: string;
-    organization: string;
+export interface InlineResponse2001 { 
+    count?: number;
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -45,6 +45,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
   public vrfOptions: VrfOption[] = [];
   public ApplicationMode = ApplicationMode;
   public tenantId: string;
+  @Output() routeChanges = new EventEmitter<void>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -90,15 +91,19 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
    * Build VRF options from the VrfExternalVrfsEnum
    */
   private buildVrfOptions(): void {
+    if (!this.externalVrfConnection) {
+      return;
+    }
 
-      const firewallExternalVrfs = this.externalVrfConnection
-        .externalFirewall.externalVrfConnections.map(connection => connection.externalVrf);
-      this.vrfOptions = Object.values(ExternalVrfConnectionExternalVrfEnum)
-        .filter(enumValue => firewallExternalVrfs.includes(enumValue))
-        .map(enumValue => ({
-          value: enumValue,
-          label: this.getVrfDisplayLabel(enumValue),
-        }));
+    const firewallExternalVrfs = this.externalVrfConnection
+      .externalFirewall.externalVrfConnections.map(connection => connection.externalVrf);
+
+    this.vrfOptions = Object.values(ExternalVrfConnectionExternalVrfEnum)
+      .filter(enumValue => firewallExternalVrfs.includes(enumValue))
+      .map(enumValue => ({
+        value: enumValue,
+        label: this.getVrfDisplayLabel(enumValue),
+      }));
   }
 
   /**
@@ -141,15 +146,14 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
     const dto = Object.assign({}, this.ngx.getModalData('internalRouteModal') as InternalRouteModalDto);
     this.externalVrfConnection = dto.externalVrfConnection;
     this.modalMode = dto.modalMode;
-    this.getSubnetsByApplicationMode();
     this.tenantId = dto.tenantId;
+    this.getSubnetsByApplicationMode();
 
     if (this.modalMode === ModalMode.Edit) {
       this.internalRouteId = dto.internalRoute.id;
     } else {
       this.form.controls.netcentricSubnetId.enable();
       this.form.controls.appcentricSubnetId.enable();
-      this.form.controls.exportedToVrfs.enable();
     }
 
     const internalRoute = dto.internalRoute;
@@ -188,6 +192,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       datacenterId: this.datacenterId,
       netcentricSubnetId: netcentricSubnetId || null,
       appcentricSubnetId: appcentricSubnetId || null,
+      tenantId: this.tenantId,
     } as InternalRoute;
 
     if (this.modalMode === ModalMode.Create) {
@@ -196,8 +201,8 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       });
     } else {
       delete internalRoute.externalVrfConnectionId;
-      // delete internalRoute.netcentricSubnetId;
       delete internalRoute.appcentricSubnetId;
+      delete internalRoute.tenantId;
 
       this.internalRouteService
         .updateOneInternalRoute({

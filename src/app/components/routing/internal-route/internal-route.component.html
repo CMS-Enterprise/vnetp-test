@@ -20,23 +20,23 @@
 
 <ng-template #actionsTemplate let-internalRoute="datum">
   <section>
-    <app-icon-button icon="edit" label="Edit Internal Route" (handleClick)="openModal(ModalMode.Edit, internalRoute)"></app-icon-button>
+    <app-icon-button icon="edit" label="Edit" (handleClick)="openModal(ModalMode.Edit, internalRoute)"></app-icon-button>
     <app-icon-button
       *ngIf="internalRoute?.deletedAt"
       icon="undo"
-      label="Restore Internal Route"
+      label="Restore"
       type="success"
       (handleClick)="restoreInternalRoute(internalRoute)"
     ></app-icon-button>
-
     <app-icon-button
       icon="delete"
-      label="Soft-Delete/Delete Internal Route"
+      label="Delete"
       [type]="internalRoute.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteInternalRoute(internalRoute)"
     >
     </app-icon-button>
   </section>
+  
 </ng-template>
 
 <ng-template #loading>
@@ -46,124 +46,58 @@
 <app-internal-route-modal></app-internal-route-modal>
 
 <ng-template #expandableRows let-subnet="datum">
-  <ng-container *ngIf="subnet.netcentricSubnetId">
-    <tr>
-      <td colspan="5">
-        <div *ngIf="subnet.netcentricSubnet" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
-          <h5 class="mb-3">Subnet Details</h5>
-          <div class="row">
-            <div class="col-sm-6">
-              <p><strong>Name:</strong> {{ subnet.netcentricSubnet.name }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Description:</strong> {{ subnet.netcentricSubnet.description || '-' }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Network:</strong> {{ subnet.netcentricSubnet.network }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Gateway:</strong> {{ subnet.netcentricSubnet.gateway }}</p>
-            </div>
+  <tr>
+    <td colspan="4">
+      <div *ngIf="subnet.appcentricSubnet" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
+        <h5 class="mb-3">Subnet Details</h5>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Name:</strong> {{ subnet.appcentricSubnet.name }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Description:</strong> {{ subnet.appcentricSubnet.description || '-' }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Gateway IP:</strong> {{ subnet.appcentricSubnet.gatewayIp }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Advertised Externally:</strong> {{ subnet.appcentricSubnet.advertisedExternally }}</p>
           </div>
         </div>
-      </td>
-      <td colspan="5">
-        <div *ngIf="subnet.netcentricSubnet" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
-          <h5 class="mb-3">VLAN Details</h5>
-          <div class="row">
-            <div class="col-sm-6">
-              <p><strong>Name:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).name }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Description:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).description || '-' }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>VLAN Number:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).vlanNumber }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>VCD VLAN Type:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).vcdVlanType }}</p>
-            </div>
+      </div>
+    </td>
+    <td colspan="4">
+      <div *ngIf="subnet.appcentricSubnetId" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
+        <h5 class="mb-3">Bridge Domain Details</h5>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Name:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).name }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Description:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).description || '-' }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Mac Address:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).bdMacAddress }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Unicast Routing:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).unicastRouting }}</p>
           </div>
         </div>
-      </td>
-    </tr>
-  </ng-container>
-  <ng-container *ngIf="subnet.appcentricSubnetId">
-    <tr>
-      <td colspan="5">
-        <div *ngIf="subnet.appcentricSubnet" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
-          <h5 class="mb-3">Subnet Details</h5>
-          <div class="row">
-            <div class="col-sm-6">
-              <p><strong>Name:</strong> {{ subnet.appcentricSubnet.name }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Description:</strong> {{ subnet.appcentricSubnet.description || '-' }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Gateway IP:</strong> {{ subnet.appcentricSubnet.gatewayIp }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Treat As Virtual IP Address:</strong> {{ subnet.appcentricSubnet.treatAsVirtualIpAddress }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Primary IP Address:</strong> {{ subnet.appcentricSubnet.primaryIpAddress }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Advertised Externally:</strong> {{ subnet.appcentricSubnet.advertisedExternally }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Preferred:</strong> {{ subnet.appcentricSubnet.preferred }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Shared:</strong> {{ subnet.appcentricSubnet.sharedBetweenVrfs }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>IP Data Plane Learning:</strong> {{ subnet.appcentricSubnet.ipDataPlaneLearning }}</p>
-            </div>
-          </div>
-        </div>
-      </td>
-      <td colspan="5">
-        <div *ngIf="subnet.appcentricSubnetId" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
-          <h5 class="mb-3">Bridge Domain Details</h5>
-          <div class="row">
-            <div class="col-sm-6">
-              <p><strong>Name:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).name }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Description:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).description || '-' }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Mac Address:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).bdMacAddress }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Unicast Routing:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).unicastRouting }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>ARP Flooding:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).arpFlooding }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p><strong>Limit Local IP Learning:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).limitLocalIpLearning }}</p>
-            </div>
-            <div class="col-sm-6">
-              <p>
-                <strong>EP Move Detection Mode GARP:</strong>
-                {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).epMoveDetectionModeGarp }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </td>
-    </tr>
-  </ng-container>
+      </div>
+    </td>
+  </tr>
 </ng-template>
 
 <ng-template #subnetTemplate let-internalRoute="datum">
-  <span class="link-like" *ngIf="internalRoute.netcentricSubnetId">
-    {{ internalRoute.netcentricSubnet.name }}
+  <span class="link-like">
+    {{ internalRoute.appcentricSubnet?.name || '-' }}
   </span>
-  <span class="link-like" *ngIf="internalRoute.appcentricSubnetId">
-    {{ internalRoute.appcentricSubnet.name }}
-  </span>
+</ng-template>
+
+<ng-template #gatewayTemplate let-internalRoute="datum">
+  {{ internalRoute.appcentricSubnet?.gatewayIp || '-' }}
+</ng-template>
+
+<ng-template #bridgeDomainTemplate let-internalRoute="datum">
+  {{ subnetBridgeDomains.get(internalRoute.appcentricSubnetId)?.name || '-' }}
 </ng-template>

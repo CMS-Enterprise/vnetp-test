@@ -43,48 +43,89 @@ describe('ExternalRouteModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get the form', () => {
+  it('ngOnInit builds the form', () => {
+    const spy = jest.spyOn(component as any, 'buildForm');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should get the form controls via getter', () => {
     const form = component.f;
     expect(form).toBeTruthy();
+    expect('network' in form).toBe(true);
+    expect('externalVrf' in form).toBe(true);
+  });
+
+  it('buildForm creates controls with validators', () => {
+    (component as any).buildForm();
+    const networkCtrl = component.form.get('network');
+    const externalVrfCtrl = component.form.get('externalVrf');
+    expect(networkCtrl).toBeTruthy();
+    expect(externalVrfCtrl).toBeTruthy();
+
+    // required validation
+    networkCtrl?.setValue('');
+    externalVrfCtrl?.setValue('');
+    expect(networkCtrl?.valid).toBe(false);
+    expect(externalVrfCtrl?.valid).toBe(false);
+
+    networkCtrl?.setValue('10.0.0.1');
+    externalVrfCtrl?.setValue('VRF_A');
+    expect(networkCtrl?.valid).toBe(true);
+    expect(externalVrfCtrl?.valid).toBe(true);
   });
 
   it('should close the modal and reset', () => {
     const resetSpy = jest.spyOn(component, 'reset').mockImplementation(() => {});
     component.closeModal();
-    expect(mockNgx.close).toHaveBeenCalled();
+    expect(mockNgx.close).toHaveBeenCalledWith('externalRouteModal');
     expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should get modal data', () => {
-    jest.spyOn(mockNgx, 'getModalData').mockReturnValue({ externalVrfConnectionId: 'id' });
+  it('getData sets connection and tenant IDs and resets modal data', () => {
+    jest.spyOn(mockNgx, 'getModalData').mockReturnValue({ externalVrfConnectionId: 'id', tenantId: 'tenant-1' });
     component.getData();
     expect(component.externalVrfConnectionId).toBe('id');
-    expect(mockNgx.resetModalData).toHaveBeenCalled();
+    expect(component.tenantId).toBe('tenant-1');
+    expect(mockNgx.resetModalData).toHaveBeenCalledWith('externalRouteModal');
   });
 
-  it('should reset the form', () => {
+  it('reset clears submitted, resets data and rebuilds form', () => {
     component.submitted = true;
+    const spyBuild = jest.spyOn(component as any, 'buildForm');
     component.reset();
-    expect(component.submitted).toBeFalsy();
-    expect(mockNgx.resetModalData).toHaveBeenCalled();
+    expect(component.submitted).toBe(false);
+    expect(mockNgx.resetModalData).toHaveBeenCalledWith('externalRouteModal');
+    expect(spyBuild).toHaveBeenCalled();
   });
 
   describe('save', () => {
-    it('should not save if form is invalid', () => {
+    it('does not save if form is invalid', () => {
       const createOneSpy = jest.spyOn(mockExternalRouteService, 'createOneExternalRoute');
-      component.form.controls.network.setErrors({ incorrect: true });
+      component.form.controls.network.setValue('');
+      component.form.controls.externalVrf.setValue('');
       component.save();
       expect(createOneSpy).not.toHaveBeenCalled();
     });
 
-    it('should save', () => {
-      component.form.setValue({
-        network: '192.168.0.1',
-        externalVrf: 'vrf',
-      });
-      const createOneSpy = jest.spyOn(mockExternalRouteService, 'createOneExternalRoute');
+    it('saves with correct payload and closes modal', () => {
+      // set IDs as they are sourced from modal data normally
+      component.externalVrfConnectionId = 'conn-1';
+      component.tenantId = 'tenant-1';
+      const spyClose = jest.spyOn(component, 'closeModal');
+
+      component.form.setValue({ network: '10.0.0.1', externalVrf: 'VRF_A' });
       component.save();
-      expect(createOneSpy).toHaveBeenCalled();
+
+      expect(mockExternalRouteService.createOneExternalRoute).toHaveBeenCalledWith({
+        externalRoute: {
+          network: '10.0.0.1',
+          externalVrf: 'VRF_A',
+          externalVrfConnectionId: 'conn-1',
+          tenantId: 'tenant-1',
+        },
+      });
+      expect(spyClose).toHaveBeenCalled();
     });
   });
 });

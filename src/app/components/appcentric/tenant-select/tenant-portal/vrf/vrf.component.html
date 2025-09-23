@@ -1,60 +1,45 @@
-<ng-container [ngSwitch]="currentView">
-  <ng-container *ngSwitchCase="'vrf'">
-    <ng-container *ngIf="!isLoading; else loading">
-      <section class="btn-toolbar" role="toolbar">
-        <button *ngIf="tenant.wanFormStatus !== 'PENDING'" type="button" class="btn btn-primary" (click)="createWanFormRequest()">
-          <fa-icon class="icon" [icon]="['fas', 'paper-plane']"></fa-icon>
-          <span>Deploy Route Changes</span>
-        </button>
-        <button *ngIf="tenant.wanFormStatus === 'PENDING'" type="button" class="btn btn-danger" (click)="cancelWanFormRequest()">
-          <fa-icon class="icon" [icon]="['fas', 'times']"></fa-icon>
-          <span>Cancel Request</span>
-        </button>
-      </section>
-      <app-table
-        [config]="config"
-        [data]="vrfs"
-        (clearResults)="getVrfs($event)"
-        (searchParams)="getVrfs($event)"
-        [searchColumns]="searchColumns"
-        [(itemsPerPage)]="perPage"
-        (tableEvent)="onTableEvent($event)"
-      ></app-table>
-      <section class="btn-toolbar" role="toolbar">
-        <app-import-export
-          [exportObject]="vrfs"
-          exportFileName="vrfs"
-          [disableJson]="false"
-          (import)="importVrfs($event)"
-        ></app-import-export>
-      </section>
-    </ng-container>
-  </ng-container>
-
-  <!-- <ng-container *ngSwitchCase="'subnets'">
-    <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
-      <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-      <span>Back to VRF List</span>
+<ng-container *ngIf="!isLoading; else loading">
+  <div *ngIf="tenant?.routeControlStatus === 'ACTIVE' && tenant?.routeControlRejectionReason" class="alert alert-warning mb-3" role="alert">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <div>Your last Route Control request was rejected.</div>
+      <div>
+        <a href="javascript:void(0)" (click)="openRejectionModal()" style="text-decoration: underline">View Rejection Reason</a>
+      </div>
+    </div>
+    <div class="mt-2 text-muted" style="font-size: 0.85rem">Please review and resubmit a new request.</div>
+  </div>
+  <section class="btn-toolbar" role="toolbar">
+    <button *ngIf="tenant.routeControlStatus !== 'PENDING'" type="button" class="btn btn-primary" (click)="createRouteControlRequest()">
+      <fa-icon class="icon" [icon]="['fas', 'paper-plane']"></fa-icon>
+      <span>Deploy Route Changes</span>
     </button>
-    <app-internal-route [wanForm]="selectedVrf.wanForm" [vrfId]="selectedVrf.id" (back)="showVrfList()"></app-internal-route>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'routes'">
-    <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
-      <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-      <span>Back to VRF List</span>
+    <button *ngIf="tenant.routeControlStatus === 'PENDING'" type="button" class="btn btn-danger" (click)="cancelRouteControlRequest()">
+      <fa-icon class="icon" [icon]="['fas', 'times']"></fa-icon>
+      <span>Cancel Route Control Request</span>
     </button>
-    <app-external-route
-      [wanForm]="selectedVrf.wanForm"
-      [vrfId]="selectedVrf.id"
-      [environmentId]="tenant?.environmentId"
-    ></app-external-route>
-  </ng-container> -->
+  </section>
+  <app-table
+    [config]="config"
+    [data]="vrfs"
+    (clearResults)="getVrfs($event)"
+    (searchParams)="getVrfs($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export [exportObject]="vrfs" exportFileName="vrfs" [disableJson]="false" (import)="importVrfs($event)"></app-import-export>
+  </section>
 </ng-container>
 
 <ng-template #actionsTemplate let-vrf="datum">
   <section class="table__actions">
-    <button type="button" class="btn btn-success" (click)="navigateToRouteConfig(vrf.id)">Test</button>
+    <app-icon-button
+      *ngIf="applicationMode === ApplicationMode.TENANTV2"
+      icon="cog"
+      label="Route Control"
+      (handleClick)="navigateToRouteConfig(vrf.id)"
+    ></app-icon-button>
     <app-icon-button
       *ngIf="!vrf?.deletedAt"
       icon="edit"
