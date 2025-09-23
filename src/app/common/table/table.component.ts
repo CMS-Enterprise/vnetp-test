@@ -236,10 +236,10 @@ export class TableComponent<T> implements AfterViewInit {
 
   private getDefaultRowStyle(datum: any): Partial<CSSStyleDeclaration> {
     if (datum.deletedAt) {
-      return { background: '#ffebee', color: '#aaaaaa', textDecoration: 'line-through' };
+      return { background: '#ffebee', color: '#696969', textDecoration: 'line-through' };
     }
     if (datum.enabled === false) {
-      return { background: '#e0e0e0', color: '#aaaaaa', textDecoration: 'line-through' };
+      return { background: '#ebebeb', color: '#696969', textDecoration: 'line-through' };
     }
     return {};
   }
