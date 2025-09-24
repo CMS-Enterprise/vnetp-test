@@ -32,6 +32,9 @@ export class IconButtonComponent {
     cog: ['fas', 'cog'],
     arrowRight: ['fas', 'arrow-right'],
     arrowLeft: ['fas', 'arrow-left'],
+    eye: ['fas', 'eye'],
+    stop: ['fas', 'stop'],
+    paperPlane: ['fas', 'paper-plane'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -39,6 +42,7 @@ export class IconButtonComponent {
     danger: 'icon icon--danger',
     success: 'icon icon--success',
     info: 'icon icon--info',
+    primary: 'icon icon--primary',
   };
 }
 
@@ -61,5 +65,7 @@ export type Icon =
   | 'cog'
   | 'arrowRight'
   | 'arrowLeft'
-  | 'cog';
-export type IconType = 'default' | 'danger' | 'success' | 'info';
+  | 'eye'
+  | 'stop'
+  | 'paperPlane';
+export type IconType = 'default' | 'danger' | 'success' | 'info' | 'primary';

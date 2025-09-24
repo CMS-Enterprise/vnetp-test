@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { V3GlobalEnvironmentService } from 'client';
+import { V3GlobalEnvironmentsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -13,7 +13,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 describe('EnvironmentModalComponent', () => {
   let component: EnvironmentModalComponent;
   let fixture: ComponentFixture<EnvironmentModalComponent>;
-  let mockEnvironmentService: Partial<V3GlobalEnvironmentService>;
+  let mockEnvironmentService: Partial<V3GlobalEnvironmentsService>;
   let mockNgxSmartModalService: Partial<NgxSmartModalService>;
 
   beforeEach(async () => {
@@ -40,7 +40,7 @@ describe('EnvironmentModalComponent', () => {
       imports: [ReactiveFormsModule, NgxSmartModalModule],
       providers: [
         UntypedFormBuilder,
-        { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },
+        { provide: V3GlobalEnvironmentsService, useValue: mockEnvironmentService },
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
       ],
       schemas: [NO_ERRORS_SCHEMA],

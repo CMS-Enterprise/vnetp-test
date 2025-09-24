@@ -67,7 +67,8 @@ export enum GraphEdgeDtoTypeEnum {
     TenantContainsVrf = 'TENANT_CONTAINS_VRF',
     TenantContainsFirewall = 'TENANT_CONTAINS_FIREWALL',
     VrfContains = 'VRF_CONTAINS',
-    ApplicationProfileContains = 'APPLICATION_PROFILE_CONTAINS'
+    ApplicationProfileContains = 'APPLICATION_PROFILE_CONTAINS',
+    ContractContains = 'CONTRACT_CONTAINS'
 };
 
 

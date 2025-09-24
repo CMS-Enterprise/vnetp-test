@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { Clipboard } from '@angular/cdk/clipboard';
 import {
   V2AdminTenantOrchestratorService,
   TenantInfrastructureConfigDto,
@@ -8,15 +9,30 @@ import {
   ExternalVrfConnectionExternalVrfEnum,
   TenantConnectivityGraph,
   TenantInfrastructureResponse,
+  V3GlobalEnvironmentsService,
+  Environment,
 } from 'client';
 import * as yaml from 'js-yaml';
 import { Subject, debounceTime } from 'rxjs';
-import { TenantGraphRenderingService } from '../../../services/tenant-graph-rendering.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { trigger, style, transition, animate } from '@angular/animations';
+import { TenantGraphCoreService } from '../../../services/tenant-graph/tenant-graph-core.service';
 
 @Component({
   selector: 'app-tenant-infrastructure',
   templateUrl: './tenant-infrastructure.component.html',
   styleUrls: ['./tenant-infrastructure.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(-100%)', opacity: 0 }),
+        animate('300ms ease-in', style({ transform: 'translateX(0%)', opacity: 1 })),
+      ]),
+      transition(':leave', [animate('300ms ease-out', style({ transform: 'translateX(-100%)', opacity: 0 }))]),
+    ]),
+  ],
 })
 export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   graph: TenantConnectivityGraph | null = null;
@@ -24,7 +40,8 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   tenantId?: string;
   private sub?: Subscription;
 
-  rawJson = '';
+  environments: Environment[] = [];
+  displayConfig = '';
   parseError: string | null = null;
   parsedConfig: TenantInfrastructureConfigDto | null = null;
   config: TenantInfrastructureConfigDto;
@@ -42,12 +59,17 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   rightPanelView: 'config' | 'graph' | 'response' = 'config';
   private graphUpdateSubject = new Subject<void>();
   private graphUpdateSubscription?: Subscription;
+  leftPanelCollapsed = false;
+  hasUnsavedChanges = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private orchestrator: V2AdminTenantOrchestratorService,
-    private tenantGraphRenderer: TenantGraphRenderingService,
+    private tenantGraphCore: TenantGraphCoreService,
+    private clipboard: Clipboard,
+    private globalEnvironmentService: V3GlobalEnvironmentsService,
+    private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit(): void {
@@ -59,29 +81,42 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         this.mode = id ? 'edit' : 'create';
       }) || undefined;
 
+    this.getEnvironments();
+
     // Seed example JSON/config
     if (this.mode === 'create') {
       this.config = {
         tenant: {
           name: 'tenant1',
-          environmentId: '789725fa-eb42-45fa-a81b-25eed5102a3e', // TODO: Placeholder, need to lookup from API.
+          environmentId: '', // TODO: Placeholder, need to lookup from API.
           alias: 'Tenant 1',
           description: '',
         },
         externalFirewalls: [
           {
-            name: 'fw1',
+            name: 'ext-fw',
             firewallDeviceType: 'PaloAlto',
             vsysName: 'vsys1',
             bgpAsn: null,
             bgpAsnAutoGenerate: true,
-            externalVrfConnections: [] as any[],
+            routingCost: 0,
+            externalVrfConnections: [
+              {
+                name: 'ext-conn1',
+                externalVrf: 'cmsnet_transport',
+                injectDefaultRouteFromExternalVrf: false,
+                allowAllRoutesFromExternalVrf: false,
+                advertiseHostBasedRoutesToExternalVrf: false,
+                advertiseAllRoutesToExternalVrf: false,
+              },
+            ] as any[],
           },
         ],
         vrfs: [
           {
             name: 'default_vrf',
             alias: 'Default VRF',
+            displayOrder: null,
             maxExternalRoutes: 150,
             bgpAsn: null,
             bgpAsnAutoGenerate: true,
@@ -89,13 +124,13 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
               {
                 name: 'sg1',
                 serviceGraphFirewall: {
-                  name: 'sg1-fw',
+                  name: 'sg-fw',
                   firewallDeviceType: 'PaloAlto',
-                  vsysName: 'vsys1',
+                  vsysName: 'vsys2',
                 },
               },
             ] as any[],
-            l3outs: [{ name: 'l3out1', l3outType: 'external', externalFirewall: 'fw1' }] as any[],
+            l3outs: [{ name: 'l3out1', l3outType: 'external', externalFirewall: 'ext-fw' }] as any[],
           },
         ],
       } as TenantInfrastructureConfigDto;
@@ -107,12 +142,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       this.updateRawFromConfig();
     }
 
-    let debounceTimeMs = 1000;
-
-    if (this.mode === 'edit') {
-      debounceTimeMs = 0;
-      this.generateGraphInternal();
-    }
+    const debounceTimeMs = 2000;
 
     // Setup debounced graph updates
     this.graphUpdateSubscription = this.graphUpdateSubject.pipe(debounceTime(debounceTimeMs)).subscribe(() => {
@@ -120,11 +150,22 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         this.generateGraphInternal();
       }
     });
+
+    if (this.mode === 'edit') {
+      this.generateGraphInternal();
+    }
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.graphUpdateSubscription?.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    if (this.hasUnsavedChanges && this.mode === 'create') {
+      $event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+    }
   }
 
   goBack(): void {
@@ -136,9 +177,9 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     try {
       let obj: any;
       if (this.previewFormat === 'json') {
-        obj = JSON.parse(this.rawJson);
+        obj = JSON.parse(this.displayConfig);
       } else {
-        obj = yaml.load(this.rawJson);
+        obj = yaml.load(this.displayConfig);
       }
       this.parsedConfig = obj as TenantInfrastructureConfigDto;
       this.config = this.parsedConfig;
@@ -164,34 +205,39 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.validation = null;
     this.validationErrors.clear();
 
-    this.orchestrator.validateTenantInfrastructure({ tenantInfrastructureConfigDto: this.config }).subscribe({
-      next: res => {
-        this.validation = res as TenantInfrastructureValidationResponse;
-        this.hasValidated = true;
-        this.showConfig();
-      },
-      error: err => {
-        console.log('Validation error response:', err);
-        this.hasValidated = false;
+    this.orchestrator
+      .validateTenantInfrastructure({ tenantInfrastructureConfigDto: this.config })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        }),
+      )
+      .subscribe({
+        next: res => {
+          this.validation = res as TenantInfrastructureValidationResponse;
+          this.hasValidated = true;
+          this.showConfig();
+        },
+        error: err => {
+          this.hasValidated = false;
 
-        // Parse class-validator errors from API response
-        if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
-          err.error.detail.message.forEach((msg: string) => {
-            this.parseValidationError(msg);
-          });
-        }
+          // Parse class-validator errors from API response
+          if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
+            err.error.detail.message.forEach((msg: string) => {
+              this.parseValidationError(msg);
+            });
+          }
 
-        // Also create a general validation response for the UI
-        this.validation = {
-          success: false,
-          errors: err?.error?.detail?.message?.map((msg: string) => ({
-            path: '$',
-            message: msg,
-          })) || [{ path: '$', message: err?.message || 'Request failed' }],
-        } as TenantInfrastructureValidationResponse;
-      },
-      complete: () => (this.isSubmitting = false),
-    });
+          // Also create a general validation response for the UI
+          this.validation = {
+            success: false,
+            errors: err?.error?.detail?.message?.map((msg: string) => ({
+              path: '$',
+              message: msg,
+            })) || [{ path: '$', message: err?.message || 'Request failed' }],
+          } as TenantInfrastructureValidationResponse;
+        },
+      });
   }
 
   private parseValidationError(message: string): void {
@@ -201,7 +247,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     if (pathMatch) {
       const path = pathMatch[1];
       this.validationErrors.set(path, message);
-      console.log('Parsed validation error:', { path, message }); // Debug
     }
   }
 
@@ -211,10 +256,13 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
   hasFieldError(path: string): boolean {
     const hasError = this.validationErrors.has(path);
-    if (hasError) {
-      console.log('Field has error:', { path, message: this.validationErrors.get(path) }); // Debug
-    }
     return hasError;
+  }
+
+  getEnvironments(): void {
+    this.globalEnvironmentService.getManyEnvironments().subscribe(envs => {
+      this.environments = envs || [];
+    });
   }
 
   getGraph(): void {
@@ -240,7 +288,6 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       this.orchestrator.getTenantInfrastructureGraph({ id: this.tenantId }).subscribe({
         next: res => {
           this.graph = res as TenantConnectivityGraph;
-          console.log('Graph data:', this.graph);
           setTimeout(() => this.renderGraph(), 100);
         },
       });
@@ -252,26 +299,32 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       return;
     }
     this.isSubmitting = true;
-    this.orchestrator.configureTenantInfrastructure({ tenantInfrastructureConfigDto: this.config }).subscribe({
-      next: res => {
-        console.log('Config saved:', res);
-        this.saveResponse = res as TenantInfrastructureResponse;
-        this.rightPanelView = 'response';
-      },
-      error: err => {
-        this.validation = {
-          success: false,
-          errors: [
-            {
-              path: '$',
-              message: err?.message || 'Request failed',
-            } as any,
-          ],
-        } as TenantInfrastructureValidationResponse;
-        this.showConfig();
-      },
-      complete: () => (this.isSubmitting = false),
-    });
+    this.orchestrator
+      .configureTenantInfrastructure({ tenantInfrastructureConfigDto: this.config })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        }),
+      )
+      .subscribe({
+        next: res => {
+          this.saveResponse = res as TenantInfrastructureResponse;
+          this.hasUnsavedChanges = false; // Clear unsaved changes flag
+          this.rightPanelView = 'response';
+        },
+        error: err => {
+          this.validation = {
+            success: false,
+            errors: [
+              {
+                path: '$',
+                message: err?.message || 'Request failed',
+              } as any,
+            ],
+          } as TenantInfrastructureValidationResponse;
+          this.showConfig();
+        },
+      });
   }
 
   showConfig(): void {
@@ -288,27 +341,29 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     }
 
     this.isLoadingConfig = true;
-    this.orchestrator.getTenantInfrastructureConfig({ id: this.tenantId }).subscribe({
-      next: config => {
-        this.config = config as TenantInfrastructureConfigDto;
-        this.updateRawFromConfig();
-        this.rightPanelView = 'graph';
-        this.generateGraphInternal();
-      },
-      error: err => {
-        console.error('Failed to load tenant config:', err);
-        // Fallback to empty config
-        this.config = {
-          tenant: { name: '', environmentId: '', alias: '', description: '' },
-          externalFirewalls: [],
-          vrfs: [],
-        } as TenantInfrastructureConfigDto;
-        this.updateRawFromConfig();
-      },
-      complete: () => {
-        this.isLoadingConfig = false;
-      },
-    });
+    this.orchestrator
+      .getTenantInfrastructureConfig({ id: this.tenantId })
+      .pipe(
+        finalize(() => {
+          this.isLoadingConfig = false;
+        }),
+      )
+      .subscribe({
+        next: config => {
+          this.config = config as TenantInfrastructureConfigDto;
+          this.updateRawFromConfig();
+          this.rightPanelView = 'graph';
+          this.generateGraphInternal();
+        },
+        error: () => {
+          this.config = {
+            tenant: { name: '', environmentId: '', alias: '', description: '' },
+            externalFirewalls: [],
+            vrfs: [],
+          } as TenantInfrastructureConfigDto;
+          this.updateRawFromConfig();
+        },
+      });
   }
 
   private renderGraph(): void {
@@ -318,11 +373,15 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
     // Use setTimeout to ensure DOM elements are rendered
     setTimeout(() => {
-      this.tenantGraphRenderer.renderGraph({
+      this.tenantGraphCore.renderGraph({
         graph: this.graph,
         containerSelector: '#graphContainer',
         svgSelector: '#graphSvg',
-        hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL'],
+        hideEdgeTypes: ['TENANT_CONTAINS_FIREWALL', 'INTERVRF_CONNECTION'],
+        enableContextMenu: true,
+        enablePathTrace: true,
+        contextMenuConfig: {}, // Empty context menu config
+        defaultEdgeWidth: 1.2,
       });
     }, 100);
   }
@@ -338,11 +397,16 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   onConfigMutated(): void {
     this.validation = null;
     this.hasValidated = false;
+    this.hasUnsavedChanges = true;
     this.validationErrors.clear(); // Clear field-level errors on changes
     this.updateRawFromConfig();
     if (this.rightPanelView === 'graph') {
       this.graphUpdateSubject.next();
     }
+  }
+
+  toggleLeftPanel(): void {
+    this.leftPanelCollapsed = !this.leftPanelCollapsed;
   }
 
   // Error indicator helpers
@@ -383,9 +447,9 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   private updateRawFromConfig(): void {
     try {
       if (this.previewFormat === 'json') {
-        this.rawJson = JSON.stringify(this.config, null, 2);
+        this.displayConfig = JSON.stringify(this.config, null, 2);
       } else {
-        this.rawJson = yaml.dump(this.config, { noRefs: true, indent: 2 });
+        this.displayConfig = yaml.dump(this.config, { noRefs: true, indent: 2 });
       }
       this.parseError = null;
     } catch (e: any) {
@@ -398,22 +462,42 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   }
 
   copyToClipboard(): void {
-    navigator.clipboard
-      ?.writeText(this.rawJson)
-      .then(() => {
-        // Could add a toast notification here
-        console.log('Configuration copied to clipboard');
-      })
-      .catch(() => {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = this.rawJson;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        console.log('Configuration copied to clipboard (fallback)');
-      });
+    // Validate that there's content to copy
+    if (!this.displayConfig || this.displayConfig.trim() === '') {
+      this.showCopyFeedback('No configuration content to copy', 'error');
+      return;
+    }
+
+    // Use Angular CDK Clipboard service
+    const successful = this.clipboard.copy(this.displayConfig);
+
+    if (successful) {
+      this.showCopyFeedback('Configuration copied to clipboard!', 'success');
+    } else {
+      this.showCopyFeedback('Failed to copy to clipboard. Please copy manually.', 'error');
+    }
+  }
+
+  private showCopyFeedback(message: string, type: 'success' | 'error'): void {
+    // Simple feedback mechanism - you can enhance this with toast notifications
+    const button = document.querySelector('button[title="Copy to clipboard"]') as HTMLElement;
+    if (button) {
+      const originalText = button.textContent;
+      const originalClass = button.className;
+
+      // Update button appearance temporarily
+      button.textContent = type === 'success' ? '✓ Copied!' : '✗ Failed';
+      button.className =
+        type === 'success'
+          ? button.className.replace('btn-outline-secondary', 'btn-success')
+          : button.className.replace('btn-outline-secondary', 'btn-danger');
+
+      // Reset after 2 seconds
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.className = originalClass;
+      }, 2000);
+    }
   }
 
   setActiveTab(tab: 'tenant' | 'firewalls' | 'vrfs'): void {
@@ -428,17 +512,31 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       vsysName: '',
       bgpAsn: null,
       bgpAsnAutoGenerate: true,
+      routingCost: 0,
       externalVrfConnections: [] as any[],
     } as any);
     this.selectedFirewallIdx = this.config.externalFirewalls.length - 1;
     this.onConfigMutated();
   }
   removeFirewall(i: number): void {
-    this.config.externalFirewalls.splice(i, 1);
-    if (this.selectedFirewallIdx >= this.config.externalFirewalls.length) {
-      this.selectedFirewallIdx = 0;
-    }
-    this.onConfigMutated();
+    const firewall = this.config.externalFirewalls[i];
+    const modalDto = new YesNoModalDto(
+      'Confirm Removal',
+      `Are you sure you want to remove firewall "${firewall.name || 'unnamed'}"?`,
+      'Remove',
+      'Cancel',
+      'danger',
+    );
+
+    const onConfirm = () => {
+      this.config.externalFirewalls.splice(i, 1);
+      if (this.selectedFirewallIdx >= this.config.externalFirewalls.length) {
+        this.selectedFirewallIdx = 0;
+      }
+      this.onConfigMutated();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
   addExternalVrfConnection(fwIdx: number): void {
     const fw = this.config.externalFirewalls[fwIdx] as any;
@@ -454,8 +552,21 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   }
   removeExternalVrfConnection(fwIdx: number, i: number): void {
     const fw = this.config.externalFirewalls[fwIdx] as any;
-    fw.externalVrfConnections.splice(i, 1);
-    this.onConfigMutated();
+    const connection = fw.externalVrfConnections[i];
+    const modalDto = new YesNoModalDto(
+      'Confirm Removal',
+      `Are you sure you want to remove VRF connection "${connection.name || 'unnamed'}"?`,
+      'Remove',
+      'Cancel',
+      'danger',
+    );
+
+    const onConfirm = () => {
+      fw.externalVrfConnections.splice(i, 1);
+      this.onConfigMutated();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   // VRFs
@@ -463,6 +574,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.config.vrfs.push({
       name: 'new-vrf',
       alias: '',
+      displayOrder: null,
       maxExternalRoutes: 0,
       bgpAsn: null,
       bgpAsnAutoGenerate: true,
@@ -470,14 +582,75 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       l3outs: [] as any[],
     } as any);
     this.selectedVrfIdx = this.config.vrfs.length - 1;
+    this.updateVrfDisplayOrders();
     this.onConfigMutated();
   }
+
   removeVrf(i: number): void {
-    this.config.vrfs.splice(i, 1);
-    if (this.selectedVrfIdx >= this.config.vrfs.length) {
-      this.selectedVrfIdx = 0;
+    const vrf = this.config.vrfs[i];
+    const modalDto = new YesNoModalDto(
+      'Confirm Removal',
+      `Are you sure you want to remove VRF "${vrf.name || 'unnamed'}"?`,
+      'Remove',
+      'Cancel',
+      'danger',
+    );
+
+    const onConfirm = () => {
+      this.config.vrfs.splice(i, 1);
+      if (this.selectedVrfIdx >= this.config.vrfs.length) {
+        this.selectedVrfIdx = 0;
+      }
+      this.updateVrfDisplayOrders();
+      this.onConfigMutated();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  moveVrfUp(i: number): void {
+    if (i > 0) {
+      // Swap with previous VRF
+      const temp = this.config.vrfs[i];
+      this.config.vrfs[i] = this.config.vrfs[i - 1];
+      this.config.vrfs[i - 1] = temp;
+
+      // Update selected index if needed
+      if (this.selectedVrfIdx === i) {
+        this.selectedVrfIdx = i - 1;
+      } else if (this.selectedVrfIdx === i - 1) {
+        this.selectedVrfIdx = i;
+      }
+
+      this.updateVrfDisplayOrders();
+      this.onConfigMutated();
     }
-    this.onConfigMutated();
+  }
+
+  moveVrfDown(i: number): void {
+    if (i < this.config.vrfs.length - 1) {
+      // Swap with next VRF
+      const temp = this.config.vrfs[i];
+      this.config.vrfs[i] = this.config.vrfs[i + 1];
+      this.config.vrfs[i + 1] = temp;
+
+      // Update selected index if needed
+      if (this.selectedVrfIdx === i) {
+        this.selectedVrfIdx = i + 1;
+      } else if (this.selectedVrfIdx === i + 1) {
+        this.selectedVrfIdx = i;
+      }
+
+      this.updateVrfDisplayOrders();
+      this.onConfigMutated();
+    }
+  }
+
+  private updateVrfDisplayOrders(): void {
+    // Update displayOrder based on array position (1-based indexing)
+    this.config.vrfs.forEach((vrf: any, index: number) => {
+      vrf.displayOrder = index + 1;
+    });
   }
   addServiceGraph(vrfIdx: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
@@ -489,8 +662,21 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   }
   removeServiceGraph(vrfIdx: number, i: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
-    vrf.serviceGraphs.splice(i, 1);
-    this.onConfigMutated();
+    const sg = vrf.serviceGraphs[i];
+    const modalDto = new YesNoModalDto(
+      'Confirm Removal',
+      `Are you sure you want to remove service graph "${sg.name || 'unnamed'}"?`,
+      'Remove',
+      'Cancel',
+      'danger',
+    );
+
+    const onConfirm = () => {
+      vrf.serviceGraphs.splice(i, 1);
+      this.onConfigMutated();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
   addL3Out(vrfIdx: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
@@ -499,8 +685,21 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   }
   removeL3Out(vrfIdx: number, i: number): void {
     const vrf = this.config.vrfs[vrfIdx] as any;
-    vrf.l3outs.splice(i, 1);
-    this.onConfigMutated();
+    const l3out = vrf.l3outs[i];
+    const modalDto = new YesNoModalDto(
+      'Confirm Removal',
+      `Are you sure you want to remove L3Out "${l3out.name || 'unnamed'}"?`,
+      'Remove',
+      'Cancel',
+      'danger',
+    );
+
+    const onConfirm = () => {
+      vrf.l3outs.splice(i, 1);
+      this.onConfigMutated();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   trackByIdx(_i: number): any {

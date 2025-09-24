@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Tenant } from './tenant';
 import { Endpoint } from './endpoint';
 
 
-export interface IpAddress { 
+export interface EndpointIpAddress { 
     /**
      * IP Address ID
      */
@@ -25,10 +26,15 @@ export interface IpAddress {
     /**
      * Endpoint last seen
      */
-    readonly orphanedAt?: string;
+    readonly lastSeen?: string;
     /**
      * Endpoint ID
      */
     readonly endpointId?: string;
+    readonly tenant?: Tenant;
+    /**
+     * Tenant ID
+     */
+    readonly tenantId?: string;
 }
 

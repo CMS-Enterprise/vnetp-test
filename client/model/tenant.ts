@@ -19,12 +19,15 @@ import { Vrf } from './vrf';
 import { AuditLog } from './auditLog';
 import { Subject } from './subject';
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
+import { Endpoint } from './endpoint';
 import { ExternalFirewall } from './externalFirewall';
 import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
+import { ServiceGraph } from './serviceGraph';
 import { Datacenter } from './datacenter';
 import { AppCentricSubnet } from './appCentricSubnet';
 import { ApplicationProfile } from './applicationProfile';
+import { EndpointIpAddress } from './endpointIpAddress';
 import { Contract } from './contract';
 import { Selector } from './selector';
 
@@ -56,8 +59,6 @@ export interface Tenant {
     readonly workflows?: Array<Workflow>;
     readonly datacenterId?: string;
     readonly datacenter: Datacenter;
-    readonly multiVrf: boolean;
-    readonly multiL3out: boolean;
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
     readonly environmentId: string;
@@ -66,7 +67,9 @@ export interface Tenant {
     readonly externalFirewalls?: Array<ExternalFirewall>;
     readonly externalVrfConnections?: Array<ExternalVrfConnection>;
     readonly serviceGraphFirewalls?: Array<ServiceGraphFirewall>;
-    routeControlRejectionReason?: string;
+    readonly serviceGraphs?: Array<ServiceGraph>;
+    readonly endpoints?: Array<Endpoint>;
+    readonly endpointIpAddresses?: Array<EndpointIpAddress>;
 }
 export enum TenantRouteControlStatusEnum {
     Pending = 'PENDING',

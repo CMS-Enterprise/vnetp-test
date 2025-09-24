@@ -34,8 +34,7 @@ describe('VrfModalComponent', () => {
     policyControlEnforced: true,
     policyControlEnforcementIngress: false,
     maxExternalRoutes: 100,
-    internalBgpAsn: 65000,
-    externalBgpAsn: 65001,
+    bgpAsn: 65000,
     tenantId: 'test-tenant-id',
   });
 

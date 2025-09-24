@@ -63,14 +63,6 @@
       (handleClick)="deleteVrf(vrf)"
     ></app-icon-button>
 
-    <!-- <app-icon-button
-      *ngIf="vrf?.provisionedAt"
-      icon="download"
-      label="Deprovision VRF"
-      type="danger"
-      (handleClick)="deprovisionVrf(vrf)"
-    ></app-icon-button> -->
-
     <app-icon-button icon="expand" label="Expand Row" (click)="expandedRow = expandedRow === vrf ? null : vrf"></app-icon-button>
   </section>
 </ng-template>

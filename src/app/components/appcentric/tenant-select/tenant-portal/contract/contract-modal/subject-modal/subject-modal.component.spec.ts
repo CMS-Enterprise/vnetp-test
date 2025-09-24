@@ -89,6 +89,7 @@ describe('SubjectModalComponent', () => {
       name: 'subject1',
       alias: '',
       description: 'description!',
+      serviceGraphId: null,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -110,6 +111,7 @@ describe('SubjectModalComponent', () => {
       name: 'subject',
       alias: '',
       description: 'updated description!',
+      serviceGraphId: null,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
