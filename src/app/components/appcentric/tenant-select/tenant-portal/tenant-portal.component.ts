@@ -76,27 +76,27 @@ const sidenavGroups: SidenavGroup[] = [
       { name: 'Endpoint Security Group', route: ['endpoint-security-group'], id: 'endpoint-security-group' },
       { name: 'Contract', route: ['contract'], id: 'contract' },
       { name: 'Filter', route: ['filter'], id: 'filter' },
-      {
-        name: 'Internal Firewall',
-        tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
-        id: 'tv2-internal-firewall',
-        subItems: [
-          { name: 'Firewall Rules', route: ['internal-firewall'], id: 'tv2-internal-firewall-firewall-rules', isSubItem: true },
-          { name: 'NAT Rules', route: ['internal-nat'], id: 'tv2-internal-firewall-nat-rules', isSubItem: true },
-          { name: 'Service Objects', route: ['internal-service-objects'], id: 'tv2-internal-firewall-service-objects', isSubItem: true },
-        ],
-      },
-      {
-        name: 'External Firewall',
-        tooltip: 'These firewall rules are applied between the ACI environment and external networks.',
-        id: 'tv2-external-firewall',
-        subItems: [
-          { name: 'Firewall Rules', route: ['external-firewall'], id: 'tv2-external-firewall-firewall-rules', isSubItem: true },
-          { name: 'NAT Rules', route: ['external-nat'], id: 'tv2-external-firewall-nat-rules', isSubItem: true },
-          { name: 'Network Objects', route: ['external-network-objects'], id: 'tv2-external-firewall-network-objects', isSubItem: true },
-          { name: 'Service Objects', route: ['external-service-objects'], id: 'tv2-external-firewall-service-objects', isSubItem: true },
-        ],
-      },
+      // {
+      //   name: 'Service Graph Firewalls',
+      //   tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
+      //   id: 'tv2-internal-firewall',
+      //   subItems: [
+      //     { name: 'Firewall Rules', route: ['internal-firewall'], id: 'tv2-internal-firewall-firewall-rules', isSubItem: true },
+      //     { name: 'NAT Rules', route: ['internal-nat'], id: 'tv2-internal-firewall-nat-rules', isSubItem: true },
+      //     { name: 'Service Objects', route: ['internal-service-objects'], id: 'tv2-internal-firewall-service-objects', isSubItem: true },
+      //   ],
+      // },
+      // {
+      //   name: 'External Firewall',
+      //   tooltip: 'These firewall rules are applied between the ACI environment and external networks.',
+      //   id: 'tv2-external-firewall',
+      //   subItems: [
+      //     { name: 'Firewall Rules', route: ['external-firewall'], id: 'tv2-external-firewall-firewall-rules', isSubItem: true },
+      //     { name: 'NAT Rules', route: ['external-nat'], id: 'tv2-external-firewall-nat-rules', isSubItem: true },
+      //     { name: 'Network Objects', route: ['external-network-objects'], id: 'tv2-external-firewall-network-objects', isSubItem: true },
+      //     { name: 'Service Objects', route: ['external-service-objects'], id: 'tv2-external-firewall-service-objects', isSubItem: true },
+      //   ],
+      // },
     ],
   },
   {
@@ -105,10 +105,10 @@ const sidenavGroups: SidenavGroup[] = [
     icon: 'project-diagram',
     items: [
       {
-        name: 'Diagram',
+        name: 'Graph',
         tooltip: 'Network topology and relationship diagrams.',
         id: 'tv2-diagram',
-        route: ['diagram'],
+        route: ['tenant-graph'],
       },
     ],
   },
