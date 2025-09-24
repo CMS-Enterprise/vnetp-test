@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
 import { EndpointGroup } from './endpointGroup';
 
@@ -27,5 +28,6 @@ export interface ApplicationProfile {
     readonly tenant?: Tenant;
     tenantId: string;
     readonly endpointGroups?: Array<EndpointGroup>;
+    readonly endpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
 

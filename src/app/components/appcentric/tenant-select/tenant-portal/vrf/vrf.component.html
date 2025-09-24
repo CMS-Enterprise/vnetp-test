@@ -30,26 +30,6 @@
       </section>
     </ng-container>
   </ng-container>
-
-  <!-- <ng-container *ngSwitchCase="'subnets'">
-    <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
-      <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-      <span>Back to VRF List</span>
-    </button>
-    <app-internal-route [wanForm]="selectedVrf.wanForm" [vrfId]="selectedVrf.id" (back)="showVrfList()"></app-internal-route>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'routes'">
-    <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
-      <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
-      <span>Back to VRF List</span>
-    </button>
-    <app-external-route
-      [wanForm]="selectedVrf.wanForm"
-      [vrfId]="selectedVrf.id"
-      [environmentId]="tenant?.environmentId"
-    ></app-external-route>
-  </ng-container> -->
 </ng-container>
 
 <ng-template #actionsTemplate let-vrf="datum">
@@ -76,14 +56,6 @@
       [type]="vrf?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteVrf(vrf)"
     ></app-icon-button>
-
-    <!-- <app-icon-button
-      *ngIf="vrf?.provisionedAt"
-      icon="download"
-      label="Deprovision VRF"
-      type="danger"
-      (handleClick)="deprovisionVrf(vrf)"
-    ></app-icon-button> -->
 
     <app-icon-button icon="expand" label="Expand Row" (click)="expandedRow = expandedRow === vrf ? null : vrf"></app-icon-button>
   </section>

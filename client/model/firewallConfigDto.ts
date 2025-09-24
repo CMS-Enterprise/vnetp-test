@@ -24,6 +24,7 @@ export interface FirewallConfigDto {
      * Auto-generate BGP ASN for this firewall. Required if bgpAsn is not provided.
      */
     bgpAsnAutoGenerate?: boolean;
+    routingCost?: number;
     externalVrfConnections: Array<ExternalVrfConnectionConfigDto>;
 }
 export enum FirewallConfigDtoFirewallDeviceTypeEnum {

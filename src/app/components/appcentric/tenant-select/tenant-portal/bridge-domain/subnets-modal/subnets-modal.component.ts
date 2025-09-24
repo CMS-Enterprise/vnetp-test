@@ -44,6 +44,8 @@ export class SubnetsModalComponent implements OnInit {
       { name: 'Alias', property: 'alias' },
       { name: 'Description', property: 'description' },
       { name: 'Gateway IP', property: 'gatewayIp' },
+      { name: 'Advertised Externally', property: 'advertisedExternally' },
+      { name: 'Shared Between VRFs', property: 'sharedBetweenVrfs' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

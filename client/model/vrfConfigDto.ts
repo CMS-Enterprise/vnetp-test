@@ -26,6 +26,7 @@ export interface VrfConfigDto {
     bgpAsnAutoGenerate?: boolean;
     alias?: string;
     description?: string;
+    displayOrder?: number;
     policyControlEnforced?: boolean;
     policyControlEnforcementIngress?: boolean;
     l3outs?: Array<L3OutConfigDto>;

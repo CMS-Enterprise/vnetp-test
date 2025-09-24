@@ -12,6 +12,7 @@
 import { ServiceGraphFirewall } from './serviceGraphFirewall';
 import { Tenant } from './tenant';
 import { Vrf } from './vrf';
+import { Subject } from './subject';
 
 
 export interface ServiceGraph { 
@@ -28,6 +29,7 @@ export interface ServiceGraph {
     underlayIpv4Network: string;
     underlayIpv6Network: string;
     underlayVlan: number;
+    readonly subjects?: Array<Subject>;
     readonly vrf?: Vrf;
     vrfId?: string;
     readonly tenant?: Tenant;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Environment, EnvironmentExternalVrfsEnum, V3GlobalEnvironmentService } from 'client';
+import { Environment, EnvironmentExternalVrfsEnum, V3GlobalEnvironmentsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -38,7 +38,7 @@ export class EnvironmentModalComponent implements OnInit {
   ];
 
   constructor(
-    private environmentService: V3GlobalEnvironmentService,
+    private environmentService: V3GlobalEnvironmentsService,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
   ) {}

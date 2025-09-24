@@ -31,14 +31,21 @@
 
 <ng-template #tenantSelectNameTemplate let-tenant="datum">
   <section>
+    <!-- when in Admin Portal mode, click navigates to tenant infrastructure -->
+    <a
+      href="javascript:void(0)"
+      (click)="navigateToTenantInfrastructure('edit', tenant)"
+      *ngIf="applicationMode === ApplicationMode.ADMINPORTAL"
+      >{{ tenant.name }}</a
+    >
     <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
     <a
       routerLink="/tenantv2/tenant-select/edit/{{ tenant.id }}/home"
       queryParamsHandling="merge"
-      *ngIf="applicationMode === ApplicationMode.ADMINPORTAL || applicationMode === ApplicationMode.TENANTV2"
+      *ngIf="applicationMode === ApplicationMode.TENANTV2"
       >{{ tenant.name }}</a
     >
-    <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
+    <!-- when in AppCentric mode navigate to appcentric/tenant-select/edit -->
     <a
       routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home"
       queryParamsHandling="merge"
@@ -55,6 +62,14 @@
       icon="edit"
       label="Edit Tenant"
       (handleClick)="navigateToTenantInfrastructure('edit', tenant)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="!tenant?.deletedAt && applicationMode === ApplicationMode.ADMINPORTAL"
+      icon="paperPlane"
+      label="View in Tenant Portal"
+      type="default"
+      (handleClick)="navigateToTenantPortal(tenant)"
     ></app-icon-button>
 
     <app-icon-button

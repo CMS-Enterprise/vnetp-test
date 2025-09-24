@@ -20,10 +20,15 @@ import { Observable }                                        from 'rxjs';
 import { CreateManyTenantDto } from '../model/models';
 import { GetManyTenantResponseDto } from '../model/models';
 import { Tenant } from '../model/models';
+import { TenantConnectivityGraph } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
+
+export interface BuildTenantFullGraphRequestParams {
+    id: string;
+}
 
 export interface CreateManyTenantRequestParams {
     createManyTenantDto: CreateManyTenantDto;
@@ -155,6 +160,53 @@ export class V2AppCentricTenantsService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * Build tenant full connectivity graph
+     * Build a comprehensive connectivity graph including all tenant entities and their relationships
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public buildTenantFullGraph(requestParameters: BuildTenantFullGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
+    public buildTenantFullGraph(requestParameters: BuildTenantFullGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
+    public buildTenantFullGraph(requestParameters: BuildTenantFullGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
+    public buildTenantFullGraph(requestParameters: BuildTenantFullGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling buildTenantFullGraph.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<TenantConnectivityGraph>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/tenant-graph`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**

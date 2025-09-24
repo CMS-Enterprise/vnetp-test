@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { V3GlobalEnvironmentService } from 'client';
+import { V3GlobalEnvironmentsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subject, throwError } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { MockComponent, MockFontAwesomeComponent } from '../../../../test/mock-c
 describe('EnvironmentManagementComponent', () => {
   let component: EnvironmentManagementComponent;
   let fixture: ComponentFixture<EnvironmentManagementComponent>;
-  let mockEnvironmentService: Partial<V3GlobalEnvironmentService>;
+  let mockEnvironmentService: Partial<V3GlobalEnvironmentsService>;
   let mockNgxSmartModalService: Partial<NgxSmartModalService>;
 
   beforeEach(async () => {
@@ -37,7 +37,7 @@ describe('EnvironmentManagementComponent', () => {
         MockComponent({ selector: 'app-environment-modal' }),
       ],
       providers: [
-        { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },
+        { provide: V3GlobalEnvironmentsService, useValue: mockEnvironmentService },
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: ActivatedRoute, useValue: jest.fn() },
       ],

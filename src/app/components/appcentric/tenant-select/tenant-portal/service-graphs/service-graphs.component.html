@@ -1,0 +1,21 @@
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table
+    [config]="config"
+    [data]="serviceGraphs"
+    (clearResults)="getServiceGraphs($event)"
+    (searchParams)="getServiceGraphs($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+</ng-container>
+
+<ng-template #actionsTemplate let-serviceGraph="datum">
+  <section class="table__actions">
+    <app-icon-button icon="edit" label="Edit Firewall Configuration" (handleClick)="editFirewallConfig(serviceGraph)"></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
