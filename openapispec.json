@@ -14365,28 +14365,6 @@
         "tags": ["v1/audit-log"]
       }
     },
-    "/v2/app-centric/tenants/{tenantId}/route-control/changes": {
-      "get": {
-        "operationId": "getRouteControlChangesTenant",
-        "summary": "Get route control changes for a tenant",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Grouped audit log changes"
-          }
-        },
-        "tags": ["v2/app-centric/tenants"]
-      }
-    },
     "/v2/app-centric/tenants/{id}/tenant-graph": {
       "get": {
         "operationId": "buildTenantFullGraph",
@@ -14414,9 +14392,29 @@
             }
           }
         },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
+        "tags": ["v2/app-centric/tenants"]
+      }
+    },
+    "/v2/app-centric/tenants/{tenantId}/route-control/changes": {
+      "get": {
+        "operationId": "getRouteControlChangesTenant",
+        "summary": "Get route control changes for a tenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grouped audit log changes"
+          }
+        },
+        "tags": ["v2/app-centric/tenants"]
       }
     },
     "/v2/app-centric/tenants": {
@@ -23680,9 +23678,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/environments"
-        ]
+        "tags": ["v3/global/environments"]
       },
       "get": {
         "operationId": "getManyEnvironments",
@@ -23703,9 +23699,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/environments"
-        ]
+        "tags": ["v3/global/environments"]
       }
     },
     "/v3/global/environments/{id}": {
@@ -23744,9 +23738,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/environments"
-        ]
+        "tags": ["v3/global/environments"]
       },
       "get": {
         "operationId": "getOneEnvironment",
@@ -23773,9 +23765,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/environments"
-        ]
+        "tags": ["v3/global/environments"]
       }
     },
     "/v3/global/environments/summary": {
@@ -23798,9 +23788,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/environments"
-        ]
+        "tags": ["v3/global/environments"]
       }
     },
     "/v3/global/environments/{id}/summary": {
@@ -23829,9 +23817,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/environments"
-        ]
+        "tags": ["v3/global/environments"]
       }
     },
     "/v2/routing/internal-routes": {
@@ -24816,9 +24802,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "vsysName"
-        ]
+        "required": ["vsysName"]
       },
       "AppCentricSubnet": {
         "type": "object",
@@ -25731,12 +25715,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name",
-          "underlayIpv4Network",
-          "underlayIpv6Network",
-          "underlayVlan"
-        ]
+        "required": ["name", "underlayIpv4Network", "underlayIpv6Network", "underlayVlan"]
       },
       "FilterEntry": {
         "type": "object",
@@ -26086,12 +26065,7 @@
           },
           "scope": {
             "type": "string",
-            "enum": [
-              "applicationProfile",
-              "vrf",
-              "tenant",
-              "global"
-            ],
+            "enum": ["applicationProfile", "vrf", "tenant", "global"],
             "default": "vrf"
           },
           "tenantId": {
@@ -26147,9 +26121,7 @@
             }
           }
         },
-        "required": [
-          "tenantId"
-        ]
+        "required": ["tenantId"]
       },
       "Selector": {
         "type": "object",
@@ -27626,13 +27598,13 @@
             "items": {
               "$ref": "#/components/schemas/EndpointIpAddress"
             }
+          },
+          "routeControlRejectionReason": {
+            "type": "string",
+            "maxLength": 500
           }
         },
-        "required": [
-          "datacenter",
-          "allowServiceGraphBypass",
-          "environmentId"
-        ]
+        "required": ["datacenter", "allowServiceGraphBypass", "environmentId"]
       },
       "EndpointGroup": {
         "type": "object",
@@ -31706,12 +31678,7 @@
             }
           }
         },
-        "required": [
-          "isValid",
-          "errors",
-          "warnings",
-          "dependencies"
-        ]
+        "required": ["isValid", "errors", "warnings", "dependencies"]
       },
       "GraphNodeDto": {
         "type": "object",
@@ -31799,12 +31766,7 @@
             ]
           }
         },
-        "required": [
-          "id",
-          "name",
-          "type",
-          "metadata"
-        ]
+        "required": ["id", "name", "type", "metadata"]
       },
       "EdgeProperties": {
         "type": "object",
@@ -31855,10 +31817,7 @@
           },
           "routeFilters": {
             "description": "Route filtering information",
-            "example": [
-              "permit 10.0.0.0/8",
-              "deny 0.0.0.0/0"
-            ],
+            "example": ["permit 10.0.0.0/8", "deny 0.0.0.0/0"],
             "type": "array",
             "items": {
               "type": "string"
@@ -31904,16 +31863,20 @@
               "DEFAULT_ROUTE",
               "INTERVRF_CONNECTION",
               "EXTERNAL_ROUTE_PROPAGATION",
-              "CONTRACT_PROVIDES",
-              "CONTRACT_CONSUMES",
+              "CONTRACT_PROVIDER",
+              "CONTRACT_CONSUMER",
+              "CONTRACT_INTRA",
               "SUBJECT_TO_FILTER",
-              "EPG_TO_CONTRACT",
+              "SUBJECT_TO_SERVICE_GRAPH",
               "EPG_TO_BRIDGE_DOMAIN",
               "TENANT_CONTAINS_VRF",
               "TENANT_CONTAINS_FIREWALL",
               "VRF_CONTAINS",
               "APPLICATION_PROFILE_CONTAINS",
-              "CONTRACT_CONTAINS"
+              "CONTRACT_TO_SUBJECT",
+              "FILTER_TO_FILTER_ENTRY",
+              "BRIDGE_DOMAIN_TO_SUBNET",
+              "ENDPOINT_TO_ENDPOINT_GROUP"
             ],
             "example": "VRF_TO_L3OUT"
           },
@@ -31944,12 +31907,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "sourceNodeId",
-          "targetNodeId",
-          "type"
-        ]
+        "required": ["id", "sourceNodeId", "targetNodeId", "type"]
       },
       "TenantConfigDto": {
         "type": "object",
@@ -31973,10 +31931,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "name",
-          "environmentId"
-        ]
+        "required": ["name", "environmentId"]
       },
       "ExternalVrfConnectionConfigDto": {
         "type": "object",
@@ -32036,10 +31991,7 @@
           },
           "firewallDeviceType": {
             "type": "string",
-            "enum": [
-              "PaloAlto",
-              "CiscoAsa"
-            ]
+            "enum": ["PaloAlto", "CiscoAsa"]
           },
           "vsysName": {
             "type": "string",
@@ -32064,12 +32016,7 @@
             }
           }
         },
-        "required": [
-          "name",
-          "firewallDeviceType",
-          "vsysName",
-          "externalVrfConnections"
-        ]
+        "required": ["name", "firewallDeviceType", "vsysName", "externalVrfConnections"]
       },
       "L3OutConfigDto": {
         "type": "object",
@@ -32079,10 +32026,7 @@
           },
           "l3outType": {
             "type": "string",
-            "enum": [
-              "external",
-              "intervrf"
-            ]
+            "enum": ["external", "intervrf"]
           },
           "propagateExternalRoutes": {
             "type": "boolean"
@@ -32094,11 +32038,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name",
-          "l3outType",
-          "externalFirewall"
-        ]
+        "required": ["name", "l3outType", "externalFirewall"]
       },
       "ServiceGraphFirewallConfigDto": {
         "type": "object",
@@ -32108,20 +32048,13 @@
           },
           "firewallDeviceType": {
             "type": "string",
-            "enum": [
-              "PaloAlto",
-              "CiscoAsa"
-            ]
+            "enum": ["PaloAlto", "CiscoAsa"]
           },
           "vsysName": {
             "type": "string"
           }
         },
-        "required": [
-          "name",
-          "firewallDeviceType",
-          "vsysName"
-        ]
+        "required": ["name", "firewallDeviceType", "vsysName"]
       },
       "ServiceGraphConfigDto": {
         "type": "object",
@@ -32133,10 +32066,7 @@
             "$ref": "#/components/schemas/ServiceGraphFirewallConfigDto"
           }
         },
-        "required": [
-          "name",
-          "serviceGraphFirewall"
-        ]
+        "required": ["name", "serviceGraphFirewall"]
       },
       "VrfConfigDto": {
         "type": "object",
@@ -32188,9 +32118,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "name"
-        ]
+        "required": ["name"]
       },
       "TenantInfrastructureConfigDto": {
         "type": "object",
@@ -32211,11 +32139,7 @@
             }
           }
         },
-        "required": [
-          "tenant",
-          "externalFirewalls",
-          "vrfs"
-        ]
+        "required": ["tenant", "externalFirewalls", "vrfs"]
       },
       "TenantInfrastructureResponse": {
         "type": "object",
@@ -32260,15 +32184,7 @@
             }
           }
         },
-        "required": [
-          "tenant",
-          "vrfs",
-          "l3outs",
-          "externalFirewalls",
-          "externalVrfConnections",
-          "serviceGraphs",
-          "serviceGraphFirewalls"
-        ]
+        "required": ["tenant", "vrfs", "l3outs", "externalFirewalls", "externalVrfConnections", "serviceGraphs", "serviceGraphFirewalls"]
       },
       "TenantInfrastructureValidationError": {
         "type": "object",
@@ -32292,13 +32208,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "entityType",
-          "entityName",
-          "field",
-          "message",
-          "code"
-        ]
+        "required": ["entityType", "entityName", "field", "message", "code"]
       },
       "TenantInfrastructureValidationResponse": {
         "type": "object",
@@ -32319,10 +32229,7 @@
             }
           }
         },
-        "required": [
-          "success",
-          "errors"
-        ]
+        "required": ["success", "errors"]
       },
       "GlobalBgpAsnAllocation": {
         "type": "object",

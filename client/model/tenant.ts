@@ -70,6 +70,7 @@ export interface Tenant {
     readonly serviceGraphs?: Array<ServiceGraph>;
     readonly endpoints?: Array<Endpoint>;
     readonly endpointIpAddresses?: Array<EndpointIpAddress>;
+    routeControlRejectionReason?: string;
 }
 export enum TenantRouteControlStatusEnum {
     Pending = 'PENDING',
