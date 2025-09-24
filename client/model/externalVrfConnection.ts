@@ -23,7 +23,6 @@ export interface ExternalVrfConnection {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     name: string;
-    readonly firewall?: ExternalFirewall;
     externalVrf: ExternalVrfConnectionExternalVrfEnum;
     injectDefaultRouteFromExternalVrf: boolean;
     allowAllRoutesFromExternalVrf: boolean;
@@ -35,8 +34,8 @@ export interface ExternalVrfConnection {
     readonly internalRoutes?: Array<InternalRoute>;
     readonly externalRoutes?: Array<ExternalRoute>;
     readonly externalFirewall?: ExternalFirewall;
-    externalFirewallId?: string;
-    tenantId?: string;
+    externalFirewallId: string;
+    tenantId: string;
 }
 export enum ExternalVrfConnectionExternalVrfEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

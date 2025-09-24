@@ -18,9 +18,6 @@ export interface GlobalBgpAsnAllocation {
     role: GlobalBgpAsnAllocationRoleEnum;
     organizationId: string;
     tenantId?: string;
-    vrfId?: string;
-    datacenterId?: string;
-    tierId?: string;
     globalBgpRangeId: string;
 }
 export enum GlobalBgpAsnAllocationRoleEnum {

@@ -11,6 +11,7 @@
  */
 import { Tenant } from './tenant';
 import { Filter } from './filter';
+import { ServiceGraph } from './serviceGraph';
 import { Contract } from './contract';
 
 
@@ -37,6 +38,8 @@ export interface Subject {
      * The scope of a contract between two or more EPGs.
      */
     globalAlias: string;
+    readonly serviceGraph?: ServiceGraph;
+    serviceGraphId?: string;
     readonly tenant?: Tenant;
     tenantId: string;
     readonly contract?: Contract;

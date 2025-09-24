@@ -31,5 +31,6 @@ export interface ExternalFirewall {
     readonly tenant?: Tenant;
     tenantId?: string;
     bgpAsn?: number;
+    routingCost?: number;
 }
 

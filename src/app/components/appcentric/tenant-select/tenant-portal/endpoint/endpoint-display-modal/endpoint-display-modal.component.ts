@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { Endpoint } from '../../../../../../../../client/model/endpoint';
-import { IpAddress } from '../../../../../../../../client/model/ipAddress';
+import { EndpointIpAddress } from '../../../../../../../../client/model/endpointIpAddress';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 // Removed ExtendedEndpoint interface
@@ -8,7 +8,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 // Define a type for the data that will be displayed in the template for a single endpoint's details
 export interface ModalDisplayEndpoint {
   macAddress?: string;
-  ipAddresses?: IpAddress[]; // Assuming IpAddress has 'address' field
+  ipAddresses?: EndpointIpAddress[]; // Assuming IpAddress has 'address' field
   isIpListExpanded: boolean;
 }
 

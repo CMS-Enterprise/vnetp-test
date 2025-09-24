@@ -22,6 +22,8 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { By } from '@angular/platform-browser';
+import { L3Out } from 'client';
+
 describe('BridgeDomainModalComponent', () => {
   let component: BridgeDomainModalComponent;
   let fixture: ComponentFixture<BridgeDomainModalComponent>;
@@ -206,7 +208,7 @@ describe('BridgeDomainModalComponent', () => {
   });
 
   it('should add associated l3out', () => {
-    component.selectedL3Out = { id: '123', tenantId: 'tenantId-123', vrfId: 'vrfId-123' };
+    component.selectedL3Out = { id: '123', tenantId: 'tenantId-123', vrfId: 'vrfId-123' } as L3Out;
     component.addL3Out();
     const getL3OutTableDataMock = jest.spyOn(component['bridgeDomainService'], 'getOneBridgeDomain');
     expect(getL3OutTableDataMock).toHaveBeenCalled();
@@ -222,7 +224,7 @@ describe('BridgeDomainModalComponent', () => {
       return new Subscription();
     });
 
-    const l3OutToDelete = { id: '123', description: 'Bye!', tenantId: 'tenantId-123', vrfId: 'vrfId-123' };
+    const l3OutToDelete = { id: '123', description: 'Bye!', tenantId: 'tenantId-123', vrfId: 'vrfId-123' } as L3Out;
     component.bridgeDomainId = 'bridgeDomainId-123';
     component.removeL3Out(l3OutToDelete);
     expect(component.getL3OutsTableData).toHaveBeenCalled();

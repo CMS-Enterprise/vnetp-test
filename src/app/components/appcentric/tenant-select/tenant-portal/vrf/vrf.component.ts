@@ -60,12 +60,10 @@ export class VrfComponent implements OnInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
-      { name: 'Description', property: 'description' },
       { name: 'Policy Control Enforced', property: 'policyControlEnforced' },
       { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
       { name: 'Max External Routes', property: 'maxExternalRoutes' },
-      { name: 'Internal BGP ASN', property: 'internalBgpAsn' },
-      { name: 'External BGP ASN', property: 'externalBgpAsn' },
+      { name: 'BGP ASN', property: 'bgpAsn' },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRows,

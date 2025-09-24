@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { AdminV2AppCentricTenantsService } from './api/adminV2AppCentricTenants.service';
 import { UtilitiesService } from './api/utilities.service';
 import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';
@@ -61,7 +60,7 @@ import { V2RoutingExternalVrfConnectionsService } from './api/v2RoutingExternalV
 import { V2RoutingInternalRoutesService } from './api/v2RoutingInternalRoutes.service';
 import { V2WorkflowsService } from './api/v2Workflows.service';
 import { V3GlobalBgpRangesService } from './api/v3GlobalBgpRanges.service';
-import { V3GlobalEnvironmentService } from './api/v3GlobalEnvironment.service';
+import { V3GlobalEnvironmentsService } from './api/v3GlobalEnvironments.service';
 import { V3GlobalExternalRoutesService } from './api/v3GlobalExternalRoutes.service';
 import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
 import { V3GlobalWanFormRequestService } from './api/v3GlobalWanFormRequest.service';

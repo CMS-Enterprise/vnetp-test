@@ -1,7 +1,6 @@
 .gitignore
 README.md
 api.module.ts
-api/adminV2AppCentricTenants.service.ts
 api/api.ts
 api/utilities.service.ts
 api/v1AuditLog.service.ts
@@ -61,7 +60,7 @@ api/v2RoutingExternalVrfConnections.service.ts
 api/v2RoutingInternalRoutes.service.ts
 api/v2Workflows.service.ts
 api/v3GlobalBgpRanges.service.ts
-api/v3GlobalEnvironment.service.ts
+api/v3GlobalEnvironments.service.ts
 api/v3GlobalExternalRoutes.service.ts
 api/v3GlobalMessages.service.ts
 api/v3GlobalWanFormRequest.service.ts
@@ -138,6 +137,7 @@ model/endpointConnectionUtilityResponse.ts
 model/endpointConnectivityGeneratedConfig.ts
 model/endpointConnectivityQuery.ts
 model/endpointGroup.ts
+model/endpointIpAddress.ts
 model/endpointSecurityGroup.ts
 model/endpointSyncDto.ts
 model/environment.ts
@@ -235,7 +235,6 @@ model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
 model/inlineResponse200.ts
 model/internalRoute.ts
-model/ipAddress.ts
 model/job.ts
 model/justDiffOutput.ts
 model/l3Out.ts
@@ -298,8 +297,6 @@ model/syncEndpointGroup.ts
 model/syncEndpointSecurityGroup.ts
 model/syncTenant.ts
 model/tenant.ts
-model/tenantAdminDto.ts
-model/tenantBasicUpdateDto.ts
 model/tenantConfigDto.ts
 model/tenantConnectivityGraph.ts
 model/tenantConnectivityGraphEdges.ts

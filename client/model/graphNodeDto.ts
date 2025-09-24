@@ -64,9 +64,12 @@ export enum GraphNodeDtoTypeEnum {
     FilterEntry = 'FILTER_ENTRY',
     EndpointGroup = 'ENDPOINT_GROUP',
     EndpointSecurityGroup = 'ENDPOINT_SECURITY_GROUP',
+    Endpoint = 'ENDPOINT',
+    EndpointIpAddress = 'ENDPOINT_IP_ADDRESS',
     BridgeDomain = 'BRIDGE_DOMAIN',
     Subnet = 'SUBNET',
     ApplicationProfile = 'APPLICATION_PROFILE',
+    Selector = 'SELECTOR',
     ExternalVrf = 'EXTERNAL_VRF',
     Tenant = 'TENANT'
 };

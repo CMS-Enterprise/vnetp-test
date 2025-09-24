@@ -45,7 +45,7 @@ export interface UpdateOneEnvironmentRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V3GlobalEnvironmentService {
+export class V3GlobalEnvironmentsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -146,7 +146,7 @@ export class V3GlobalEnvironmentService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Environment>(`${this.configuration.basePath}/v3/global/environment`,
+        return this.httpClient.post<Environment>(`${this.configuration.basePath}/v3/global/environments`,
             environment,
             {
                 responseType: <any>responseType,
@@ -188,7 +188,7 @@ export class V3GlobalEnvironmentService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<EnvironmentSummary>>(`${this.configuration.basePath}/v3/global/environment/summary`,
+        return this.httpClient.get<Array<EnvironmentSummary>>(`${this.configuration.basePath}/v3/global/environments/summary`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -229,7 +229,7 @@ export class V3GlobalEnvironmentService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<Environment>>(`${this.configuration.basePath}/v3/global/environment`,
+        return this.httpClient.get<Array<Environment>>(`${this.configuration.basePath}/v3/global/environments`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -275,7 +275,7 @@ export class V3GlobalEnvironmentService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Environment>(`${this.configuration.basePath}/v3/global/environment/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<Environment>(`${this.configuration.basePath}/v3/global/environments/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -321,7 +321,7 @@ export class V3GlobalEnvironmentService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EnvironmentSummary>(`${this.configuration.basePath}/v3/global/environment/${encodeURIComponent(String(id))}/summary`,
+        return this.httpClient.get<EnvironmentSummary>(`${this.configuration.basePath}/v3/global/environments/${encodeURIComponent(String(id))}/summary`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -380,7 +380,7 @@ export class V3GlobalEnvironmentService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Environment>(`${this.configuration.basePath}/v3/global/environment/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<Environment>(`${this.configuration.basePath}/v3/global/environments/${encodeURIComponent(String(id))}`,
             environment,
             {
                 responseType: <any>responseType,

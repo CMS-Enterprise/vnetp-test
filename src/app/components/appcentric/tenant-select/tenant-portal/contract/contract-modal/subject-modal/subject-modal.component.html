@@ -105,6 +105,10 @@
           </select>
         </div>
       </div>
+      <div class="form-group">
+        <label for="serviceGraphId">Service Graph</label>
+        <ng-select formControlName="serviceGraphId" [items]="serviceGraphs" id="serviceGraphId" bindLabel="name" bindValue="id"></ng-select>
+      </div>
 
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
       <button class="btn btn-success" data-dismiss="modal">
