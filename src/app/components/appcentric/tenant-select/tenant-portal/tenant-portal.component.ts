@@ -20,6 +20,8 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { RouteDataUtil } from '../../../../utils/route-data.util';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
+import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 const tabs: Tab[] = [
   { name: 'VRF', route: ['vrf'], id: 'vrf' },
@@ -147,6 +149,7 @@ const sidenavGroups: SidenavGroup[] = [
 })
 export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tabsRef') tabsComponent: TabsComponent;
+  @ViewChild('drawer') drawer: MatDrawer;
 
   public initialTabIndex = 0;
   public currentTab: string;
@@ -178,10 +181,12 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   public sidenavGroups: SidenavGroup[] = [];
   public isSidenavCollapsed = false;
   public currentRoute = '';
+  public drawerMode: MatDrawerMode = 'side';
 
   // Subscription management
   private destroy$ = new Subject<void>();
   private subscriptions: Subscription[] = [];
+  private readonly mobileBreakpoint = '(max-width: 1199px)';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -191,6 +196,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     private tierService: V1TiersService,
     private tierContextService: TierContextService,
     private datacenterContextService: DatacenterContextService,
+    private breakpointObserver: BreakpointObserver,
   ) {}
 
   private initializeTabs(): void {
@@ -416,13 +422,38 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.updateCurrentRoute();
     }, 100);
+
+    if (this.drawerMode === 'over') {
+      this.setSidenavCollapsed(true);
+    }
   }
 
   /**
    * Toggle sidenav collapsed state
    */
   public toggleSidenav(): void {
-    this.isSidenavCollapsed = !this.isSidenavCollapsed;
+    this.setSidenavCollapsed(!this.isSidenavCollapsed);
+  }
+
+  public setSidenavCollapsed(collapsed: boolean): void {
+    if (this.isSidenavCollapsed === collapsed) {
+      return;
+    }
+
+    this.isSidenavCollapsed = collapsed;
+    this.updateDrawerState();
+  }
+
+  private updateDrawerState(): void {
+    if (!this.drawer) {
+      return;
+    }
+
+    if (this.isSidenavCollapsed) {
+      this.drawer.close();
+    } else {
+      this.drawer.open();
+    }
   }
 
   /**
@@ -574,9 +605,18 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
    * Initialize responsive behavior - sidenav starts collapsed on mobile/tablet
    */
   private initializeResponsiveBehavior(): void {
-    if (typeof window !== 'undefined') {
-      this.isSidenavCollapsed = window.innerWidth < 1200;
-    }
+    this.breakpointObserver
+      .observe(this.mobileBreakpoint)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        if (state.matches) {
+          this.drawerMode = 'over';
+          this.setSidenavCollapsed(true);
+        } else {
+          this.drawerMode = 'side';
+          this.setSidenavCollapsed(false);
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -584,6 +624,8 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.initialSubTab && this.tabsComponent) {
       this.tabsComponent.setActiveSubTab(this.initialSubTab);
     }
+
+    this.updateDrawerState();
   }
 
   public getInitialTabIndex(): number {

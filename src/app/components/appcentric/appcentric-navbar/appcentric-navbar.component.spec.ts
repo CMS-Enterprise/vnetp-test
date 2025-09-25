@@ -3,26 +3,42 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { AuthService } from 'src/app/services/auth.service';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-
 import { AppcentricNavbarComponent } from './appcentric-navbar.component';
 import { of } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 describe('AppcentricNavbarComponent', () => {
   let component: AppcentricNavbarComponent;
   let fixture: ComponentFixture<AppcentricNavbarComponent>;
   let mockAuthService: Partial<AuthService>;
-  let mockNgxSmartModalService: Partial<NgxSmartModalService>;
+  let mockDialog: Partial<MatDialog>;
 
   beforeEach(() => {
+    mockDialog = {
+      open: jest.fn().mockReturnValue({ afterClosed: () => of('cancel') } as any),
+    };
+
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, FormsModule, HttpClientModule],
-      declarations: [AppcentricNavbarComponent, FilterPipe, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), AuthService],
+      imports: [
+        RouterTestingModule,
+        FormsModule,
+        HttpClientModule,
+        MatMenuModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+      ],
+      declarations: [AppcentricNavbarComponent, FilterPipe, MockFontAwesomeComponent],
+      providers: [MockProvider(MatDialog, mockDialog), AuthService],
     })
       .compileComponents()
       .then(() => {
@@ -41,36 +57,16 @@ describe('AppcentricNavbarComponent', () => {
   });
 
   describe('openLogoutModal', () => {
-    beforeEach(() => {
-      mockNgxSmartModalService = {
-        getModal: jest.fn().mockReturnValue({ open: jest.fn(), close: jest.fn() }),
-      };
-      component['ngx'] = mockNgxSmartModalService as any;
-    });
-
-    it('should open the logoutModal', () => {
+    it('should open the logout dialog', () => {
       component.openLogoutModal();
-      expect(mockNgxSmartModalService.getModal('logoutModal').open).toHaveBeenCalled();
+      expect(mockDialog.open).toHaveBeenCalled();
     });
   });
 
   describe('logout', () => {
-    const mockResponse = jest.fn();
-    Object.defineProperty(window, 'location', {
-      value: {
-        hash: {
-          endsWith: mockResponse,
-          includes: mockResponse,
-        },
-        assign: mockResponse,
-      },
-      writable: true,
-    });
-    it('should close the logoutModal and call auth.logout', () => {
-      jest.spyOn(component['ngx'], 'close');
+    it('should call auth.logout', () => {
       jest.spyOn(component['auth'], 'logout');
       component.logout();
-      expect(component['ngx'].close).toHaveBeenCalledWith('logoutModal');
       expect(component['auth'].logout).toHaveBeenCalled();
     });
   });

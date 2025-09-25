@@ -6,12 +6,17 @@ import { AuthGuard } from 'src/app/guards/auth.guard';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
 import { AppcentricNavbarComponent } from './appcentric-navbar/appcentric-navbar.component';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AppcentricDashboardComponent } from './appcentric-dashboard/appcentric-dashboard.component';
 import { TenantSelectModule } from './tenant-select/tenant-select.module';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
 import { AuditLogModule } from '../../common/audit-log/audit-log.module';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { LogoutConfirmationDialogComponent } from './appcentric-navbar/logout-confirmation-dialog/logout-confirmation-dialog.component';
 
 const routes: Routes = [
   {
@@ -70,13 +75,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppcentricComponent, AppcentricNavbarComponent, AppcentricDashboardComponent],
+  declarations: [AppcentricComponent, AppcentricNavbarComponent, AppcentricDashboardComponent, LogoutConfirmationDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     FontAwesomeModule,
     TooltipModule,
-    NgxSmartModalModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatDialogModule,
     TenantSelectModule,
     BreadcrumbsModule,
     TypeDeleteModalModule,

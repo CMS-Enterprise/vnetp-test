@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserDto } from 'client/model/userDto';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from 'src/app/services/auth.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { MatDialog } from '@angular/material/dialog';
+import { LogoutConfirmationDialogComponent } from './logout-confirmation-dialog/logout-confirmation-dialog.component';
 
 @Component({
   selector: 'app-appcentric-navbar',
@@ -18,7 +19,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
+  constructor(private dialog: MatDialog, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
@@ -47,11 +48,18 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   }
 
   public openLogoutModal(): void {
-    this.ngx.getModal('logoutModal').open();
+    const dialogRef = this.dialog.open(LogoutConfirmationDialogComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.logout();
+      }
+    });
   }
 
   public logout(): void {
-    this.ngx.close('logoutModal');
     this.auth.logout();
   }
 

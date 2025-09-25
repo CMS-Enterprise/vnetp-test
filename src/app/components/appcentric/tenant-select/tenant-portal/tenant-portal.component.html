@@ -1,40 +1,44 @@
-<div class="tenant-portal-layout">
-  <div class="tenant-portal-header">
-    <div class="header-content">
-      <button
-        class="sidenav-toggle d-lg-none"
-        (click)="toggleSidenav()"
-        [attr.aria-label]="isSidenavCollapsed ? 'Open navigation menu' : 'Close navigation menu'"
-      >
-        <fa-icon [icon]="['fas', 'bars']"></fa-icon>
-      </button>
-      <h1 class="portal-title">
-        <span *ngIf="applicationMode === ApplicationMode.APPCENTRIC">AppCentric ({{ currentTenantName }})</span>
-        <span *ngIf="applicationMode === ApplicationMode.TENANTV2">Tenant ({{ currentTenantName }})</span>
-        <span class="current-section" *ngIf="currentTab"> - {{ currentTab }}</span>
-      </h1>
-    </div>
-  </div>
-
-  <div class="tenant-portal-content">
+<mat-drawer-container class="tenant-portal-layout" [hasBackdrop]="drawerMode === 'over'">
+  <mat-drawer
+    #drawer
+    class="tenant-portal-sidenav"
+    [mode]="drawerMode"
+    [opened]="!isSidenavCollapsed"
+    (closedStart)="setSidenavCollapsed(true)"
+  >
     <app-tenant-sidenav
       [groups]="sidenavGroups"
       [isCollapsed]="isSidenavCollapsed"
       [currentRoute]="currentRoute"
       (navigationChange)="handleNavigationChange($event)"
       (toggleCollapse)="toggleSidenav()"
-      [class.show]="!isSidenavCollapsed"
     ></app-tenant-sidenav>
+  </mat-drawer>
+
+  <mat-drawer-content class="tenant-portal-content">
+    <mat-toolbar class="tenant-portal-header" [class.drawer-open]="drawerMode === 'side' && !isSidenavCollapsed" color="primary">
+      <button
+        mat-icon-button
+        class="sidenav-toggle"
+        (click)="toggleSidenav()"
+        [attr.aria-label]="isSidenavCollapsed ? 'Open navigation menu' : 'Close navigation menu'"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="portal-title">
+        <span *ngIf="applicationMode === ApplicationMode.APPCENTRIC">AppCentric ({{ currentTenantName }})</span>
+        <span *ngIf="applicationMode === ApplicationMode.TENANTV2">Tenant ({{ currentTenantName }})</span>
+        <span class="current-section" *ngIf="currentTab"> - {{ currentTab }}</span>
+      </span>
+    </mat-toolbar>
 
     <main class="tenant-portal-main">
       <router-outlet name="tenant-portal"></router-outlet>
     </main>
-  </div>
 
-  <div class="sidenav-overlay d-lg-none" [class.show]="!isSidenavCollapsed" (click)="toggleSidenav()"></div>
-
-  <!-- Legacy tabs component - hidden by default, can be shown via feature flag -->
-  <ng-container *ngIf="false">
-    <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
-  </ng-container>
-</div>
+    <!-- Legacy tabs component - hidden by default, can be shown via feature flag -->
+    <ng-container *ngIf="false">
+      <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+    </ng-container>
+  </mat-drawer-content>
+</mat-drawer-container>

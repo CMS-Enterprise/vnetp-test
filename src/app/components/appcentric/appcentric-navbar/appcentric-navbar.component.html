@@ -1,108 +1,46 @@
-<nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
-  <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
-    <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
-  </a>
-
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <fa-icon class="icon" [icon]="['fas', 'bars']"></fa-icon>
+<mat-toolbar color="primary" class="appcentric-navbar" *ngIf="user && tenant">
+  <button mat-icon-button routerLink="/appcentric/dashboard" queryParamsHandling="merge" title="DRaaS">
+    <mat-icon>bolt</mat-icon>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item dropdown">
-        <a
-          tabindex="0"
-          class="nav-link dropdown-toggle"
-          id="networkingNavbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          >Networking
-        </a>
-        <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
-          <a
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="/appcentric/tenant-select"
-            queryParamsHandling="merge"
-            >Tenant Select</a
-          >
-          <!-- <a
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="wan-form"
-            queryParamsHandling="merge"
-            >Wan Form</a
-          > -->
-        </div>
-      </li>
-    </ul>
+  <span class="toolbar-spacer"></span>
 
-    <ul class="navbar-nav m-auto">
-      <li id="accountNumber" class="nav-item">
-        <a>
-          <span *ngIf="tenant">Appcentric - {{ tenant }}</span>
-        </a>
-      </li>
-    </ul>
-
-    <ul class="navbar-nav ml-auto align-items-lg-center">
-      <li class="nav-item dropdown">
-        <a
-          tabindex="0"
-          class="nav-link dropdown-toggle"
-          id="userNavbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
-          <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
-            >Environment Summary</a
-          >
-          <a
-            id="audit-log-link"
-            *ngIf="userRoles?.includes('admin')"
-            class="dropdown-item"
-            routerLink="audit-log"
-            queryParamsHandling="preserve"
-            >Audit Log</a
-          >
-          <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-<!-- Logout -->
-<ngx-smart-modal #logoutModal identifier="logoutModal">
-  <header class="modal-header">
-    <h4 class="modal-title">Logout</h4>
-  </header>
-
-  <div class="modal-body">
-    <p class="mb-3">Are you sure you want to log out?</p>
-  </div>
-
-  <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">Cancel</button>
-
-    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
-      <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>
-      <span>Logout</span>
+  <button mat-button [matMenuTriggerFor]="networkingMenu">
+    Networking
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu #networkingMenu="matMenu">
+    <button
+      mat-menu-item
+      *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+      routerLink="/appcentric/tenant-select"
+      queryParamsHandling="merge"
+    >
+      Tenant Select
     </button>
-  </footer>
-</ngx-smart-modal>
+  </mat-menu>
+
+  <span class="toolbar-title" *ngIf="tenant">Appcentric - {{ tenant }}</span>
+
+  <span class="toolbar-spacer"></span>
+
+  <button mat-button [matMenuTriggerFor]="userMenu">
+    <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu #userMenu="matMenu" class="user-menu">
+    <button id="environment-summary-link" mat-menu-item routerLink="/appcentric/environment-summary" queryParamsHandling="merge">
+      Environment Summary
+    </button>
+    <button
+      id="audit-log-link"
+      mat-menu-item
+      *ngIf="userRoles?.includes('admin')"
+      routerLink="/appcentric/audit-log"
+      queryParamsHandling="preserve"
+    >
+      Audit Log
+    </button>
+    <button mat-menu-item (click)="openLogoutModal()">Logout</button>
+  </mat-menu>
+</mat-toolbar>
