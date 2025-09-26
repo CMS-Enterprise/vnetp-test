@@ -599,7 +599,7 @@ export class TenantGraphCoreService {
     };
   }
 
-  private renderLinks(zoomGroup: any, links: any[], edgeStyles: TenantEdgeStyleMap, defaultEdgeWidth: number): any {
+  public renderLinks(zoomGroup: any, links: any[], edgeStyles: TenantEdgeStyleMap, defaultEdgeWidth: number): any {
     const tooltip = this.uiService.createTooltip();
 
     const linkSelection = zoomGroup

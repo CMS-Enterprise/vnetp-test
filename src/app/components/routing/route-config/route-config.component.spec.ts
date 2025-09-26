@@ -130,8 +130,14 @@ describe('RouteConfigComponent', () => {
     expect(mockRouter.navigateByUrl).toHaveBeenCalledWith({ tree: true });
   });
 
-  it('getVrf sets blockChanges false when status not Pending', () => {
+  it('getVrf sets blockChanges true when status Approved', () => {
     mockVrfService.getOneVrf.mockReturnValueOnce(of(makeVrf('APPROVED' as any)));
+    component.getVrf();
+    expect(component.blockChanges).toBe(true);
+  });
+
+  it('getVrf sets blockChanges false when status Active', () => {
+    mockVrfService.getOneVrf.mockReturnValueOnce(of(makeVrf('ACTIVE' as any)));
     component.getVrf();
     expect(component.blockChanges).toBe(false);
   });

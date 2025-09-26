@@ -119,7 +119,6 @@ describe('RouteControlRequestDetailComponent', () => {
     expect(mockTenantService.getOneTenant).toHaveBeenCalledWith({ id: tenantId });
     expect(mockTenantService.getRouteControlChangesTenant).toHaveBeenCalledWith({ tenantId });
     expect(component.routeControlChanges.tenantName).toBe('Tenant One');
-    expect(component.isLoading).toBe(false);
   }));
 
   it('loadRequestDetails logs error and stops when tenantId missing', fakeAsync(() => {

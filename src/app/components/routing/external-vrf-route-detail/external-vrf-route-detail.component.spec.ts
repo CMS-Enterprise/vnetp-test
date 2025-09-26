@@ -53,7 +53,10 @@ describe('ExternalVrfRouteDetailComponent', () => {
 
     component.blockChanges = true;
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('active route control request');
+    expect(fixture.nativeElement.textContent).toContain(
+      // eslint-disable-next-line max-len
+      'block Your route control change request has been approved and must be deployed during a change window. You cannot make new changes until the approved changes are deployed. Advertised Internal Routestune Manage Internal Routes No advertised internal routes.Learned External Routesroute Manage External Routes No learned external routes.',
+    );
   });
 
   it('connection default route/allow-all toggles general warning', () => {
