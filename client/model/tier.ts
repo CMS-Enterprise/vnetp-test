@@ -43,7 +43,8 @@ export interface Tier {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    datacenterId: string;
+    datacenterId?: string;
+    tenantId?: string;
     tierGroupId?: string;
     readonly tierGroup?: TierGroup;
     tierType?: TierTierTypeEnum;
@@ -93,7 +94,8 @@ export enum TierTierClassEnum {
     Tst = 'TST',
     Bck = 'BCK',
     Mgt = 'MGT',
-    Sec = 'SEC'
+    Sec = 'SEC',
+    Fw = 'FW'
 };
 export enum TierTransitTenantVrfsEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

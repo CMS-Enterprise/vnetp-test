@@ -8,7 +8,6 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { RouteDataUtil } from '../../../../../utils/route-data.util';
 import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
-import { TenantPortalNavigationService } from 'src/app/services/tenant-portal-navigation.service';
 
 @Component({
   selector: 'app-external-firewalls',
@@ -52,7 +51,6 @@ export class ExternalFirewallsComponent implements OnInit {
     private tableContextService: TableContextService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private tenantPortalNavigation: TenantPortalNavigationService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<ExternalFirewall>();
     advancedSearchAdapter.setService(this.externalFirewallService);
@@ -125,14 +123,18 @@ export class ExternalFirewallsComponent implements OnInit {
   }
 
   public editFirewallConfig(externalFirewall: ExternalFirewall): void {
-    // Use navigation service to handle firewall config navigation
-    this.tenantPortalNavigation.navigateToFirewallConfig(
+    this.router.navigate(
+      [
+        {
+          outlets: {
+            'tenant-portal': ['firewall-config', 'external-firewall', externalFirewall.id],
+          },
+        },
+      ],
       {
-        type: 'external-firewall',
-        firewallId: externalFirewall.id,
-        firewallName: externalFirewall.name,
+        queryParamsHandling: 'merge',
+        relativeTo: this.activatedRoute.parent?.parent || this.activatedRoute,
       },
-      this.activatedRoute,
     );
   }
 }

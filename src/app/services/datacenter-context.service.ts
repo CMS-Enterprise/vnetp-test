@@ -62,7 +62,7 @@ export class DatacenterContextService implements OnInit {
         return;
       }
       const fetch = !this.routesNotToRender.some(route => route === this.router.url);
-      if (fetch && this.applicationMode !== ApplicationMode.APPCENTRIC) {
+      if (fetch && this.applicationMode === ApplicationMode.NETCENTRIC) {
         this.getDatacenters(queryParams.get('datacenter'));
       }
     });
@@ -111,7 +111,8 @@ export class DatacenterContextService implements OnInit {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.datacenterService.getManyDatacenter({ join: ['tiers', 'appCentricTenant'], page: 1, perPage: 1000 }).subscribe(response => {
+    console.log('getDatacenters', datacenterParam);
+    this.datacenterService.getManyDatacenter({ join: ['tiers'], page: 1, perPage: 1000 }).subscribe(response => {
       // Update internal datacenters array and external subject.
       this._datacenters = response.data;
       this.datacentersSubject.next(response.data);

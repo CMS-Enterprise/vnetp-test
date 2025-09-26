@@ -11,6 +11,7 @@
  */
 import { L3Out } from './l3Out';
 import { ServiceGraphFirewall } from './serviceGraphFirewall';
+import { Tier } from './tier';
 import { EndpointGroup } from './endpointGroup';
 import { ExternalVrfConnection } from './externalVrfConnection';
 import { Workflow } from './workflow';
@@ -69,6 +70,7 @@ export interface Tenant {
     readonly serviceGraphs?: Array<ServiceGraph>;
     readonly endpoints?: Array<Endpoint>;
     readonly endpointIpAddresses?: Array<EndpointIpAddress>;
+    readonly tiers?: Array<Tier>;
 }
 export enum TenantWanFormStatusEnum {
     Pending = 'PENDING',

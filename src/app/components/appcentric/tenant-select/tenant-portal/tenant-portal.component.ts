@@ -249,6 +249,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public async handleTabChange(tab: Tab): Promise<any> {
+    console.log('handleTabChange', tab);
     if (!tab) {
       return;
     }
@@ -258,20 +259,12 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentTab = tab.name;
     }
 
-    // For any tab, look up its route and navigate using type-safe lookup
-    const routeTab = this.hasValidTabId(tab) ? this.tabs.find(t => t.id === tab.id) : this.tabs.find(t => t.name === tab.name);
-
-    if (routeTab && this.hasValidRoute(routeTab)) {
-      this.router.navigate([{ outlets: { 'tenant-portal': routeTab.route } }], {
+    if (tab.route) {
+      await this.router.navigate([{ outlets: { 'tenant-portal': tab.route } }], {
         queryParamsHandling: 'merge',
         relativeTo: this.activatedRoute,
       });
-    } else if (this.hasValidRoute(tab)) {
-      // If we couldn't find it in the lookup but it has a route, use that
-      this.router.navigate([{ outlets: { 'tenant-portal': tab.route } }], {
-        queryParamsHandling: 'merge',
-        relativeTo: this.activatedRoute,
-      });
+      return;
     }
   }
 
@@ -318,38 +311,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectVrf(firstVrf);
       }
     }
-  }
-
-  public getNetworkServicesContainerDatacenter(datacenterId: string): void {
-    this.datacenterService
-      .getOneDatacenter({
-        id: datacenterId,
-        join: ['tiers', 'tiers.firewallRuleGroups', 'tiers.natRuleGroups'],
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: response => {
-          this.networkServicesContainerDatacenter = response;
-          this.datacenterContextService.unlockDatacenter();
-          this.datacenterContextService.switchDatacenter(response.id);
-          this.datacenterContextService.lockDatacenter();
-
-          // Load tiers and rule groups for the selected VRF
-          if (this.selectedVrf) {
-            this.loadVrfTiersAndRuleGroups(this.selectedVrf);
-          }
-
-          // Call getInitialTabIndex after we have all the necessary data
-          this.getInitialTabIndex();
-        },
-        error: () => {
-          // Still attempt to proceed with available data
-          if (this.selectedVrf) {
-            this.loadVrfTiersAndRuleGroups(this.selectedVrf);
-          }
-          this.getInitialTabIndex();
-        },
-      });
   }
 
   ngOnInit(): void {

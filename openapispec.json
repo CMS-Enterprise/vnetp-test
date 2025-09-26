@@ -26361,6 +26361,17 @@
           },
           "vsysName": {
             "type": "string"
+          },
+          "tier": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier"
+              }
+            ]
+          },
+          "tierId": {
+            "type": "string"
           }
         },
         "required": [
@@ -26929,6 +26940,17 @@
             "default": 0,
             "maximum": 10,
             "minimum": 0
+          },
+          "tier": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier"
+              }
+            ]
+          },
+          "tierId": {
+            "type": "string"
           }
         },
         "required": [
@@ -29336,6 +29358,13 @@
             "items": {
               "$ref": "#/components/schemas/EndpointIpAddress"
             }
+          },
+          "tiers": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tier"
+            }
           }
         },
         "required": [
@@ -30849,7 +30878,8 @@
               "Intervrf",
               "External",
               "ZoneBased",
-              "OneArmServiceGraph"
+              "OneArmServiceGraph",
+              "V2ZoneBased"
             ]
           },
           "tierId": {
@@ -30925,6 +30955,7 @@
               "Intervrf",
               "External",
               "ZoneBased",
+              "OneArmServiceGraph",
               "V2ZoneBased"
             ]
           },
@@ -31755,6 +31786,9 @@
           "datacenterId": {
             "type": "string"
           },
+          "tenantId": {
+            "type": "string"
+          },
           "tierGroupId": {
             "type": "string"
           },
@@ -31788,7 +31822,8 @@
               "TST",
               "BCK",
               "MGT",
-              "SEC"
+              "SEC",
+              "FW"
             ]
           },
           "vlans": {
@@ -31991,8 +32026,7 @@
           }
         },
         "required": [
-          "name",
-          "datacenterId"
+          "name"
         ]
       },
       "FirewallRuleImport": {
@@ -34095,16 +34129,20 @@
               "DEFAULT_ROUTE",
               "INTERVRF_CONNECTION",
               "EXTERNAL_ROUTE_PROPAGATION",
-              "CONTRACT_PROVIDES",
-              "CONTRACT_CONSUMES",
+              "CONTRACT_PROVIDER",
+              "CONTRACT_CONSUMER",
+              "CONTRACT_INTRA",
               "SUBJECT_TO_FILTER",
-              "EPG_TO_CONTRACT",
+              "SUBJECT_TO_SERVICE_GRAPH",
               "EPG_TO_BRIDGE_DOMAIN",
               "TENANT_CONTAINS_VRF",
               "TENANT_CONTAINS_FIREWALL",
               "VRF_CONTAINS",
               "APPLICATION_PROFILE_CONTAINS",
-              "CONTRACT_CONTAINS"
+              "CONTRACT_TO_SUBJECT",
+              "FILTER_TO_FILTER_ENTRY",
+              "BRIDGE_DOMAIN_TO_SUBNET",
+              "ENDPOINT_TO_ENDPOINT_GROUP"
             ],
             "example": "VRF_TO_L3OUT"
           },
