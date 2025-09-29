@@ -97,4 +97,46 @@ describe('TierContextService', () => {
     expect(datacenterServiceSpy.getOneDatacenter).toHaveBeenCalledWith({ id: datacenterId, join: ['tiers'] });
     expect(service.tiersValue).toEqual(tiers);
   });
+
+  it('should switch tier without calling router.navigate when setQueryParam is false', () => {
+    const tier1 = { id: 'tier-1', name: 'Tier 1' } as any;
+    const tier2 = { id: 'tier-2', name: 'Tier 2' } as any;
+    service['_tiers'] = [tier1, tier2];
+    service['currentTierSubject'].next(tier1);
+
+    routerSpy.navigate.mockClear();
+
+    const result = service.switchTier(tier2.id, false);
+    expect(result).toBe(true);
+    expect(service.currentTierValue).toEqual(tier2);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should set tenant tiers and switch to specified tier without setting query param', () => {
+    const tier1 = { id: 'tier-1', name: 'Tier 1' } as any;
+    const tier2 = { id: 'tier-2', name: 'Tier 2' } as any;
+    const tiers = [tier1, tier2];
+
+    routerSpy.navigate.mockClear();
+
+    service.setTenantTiers(tiers, tier2.id);
+
+    expect(service.tiersValue).toEqual(tiers);
+    expect(service.currentTierValue).toEqual(tier2);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should set tenant tiers and switch to first tier when no currentTierId is provided', () => {
+    const tier1 = { id: 'tier-1', name: 'Tier 1' } as any;
+    const tier2 = { id: 'tier-2', name: 'Tier 2' } as any;
+    const tiers = [tier1, tier2];
+
+    routerSpy.navigate.mockClear();
+
+    service.setTenantTiers(tiers);
+
+    expect(service.tiersValue).toEqual(tiers);
+    expect(service.currentTierValue).toEqual(tier1);
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
 });

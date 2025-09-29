@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UndeployedChangesService } from '../services/undeployed-changes.service';
+import { TenantStateService } from '../services/tenant-state.service';
 import { Injector } from '@angular/core';
 
 describe('HttpConfigInterceptor', () => {
@@ -28,8 +29,15 @@ describe('HttpConfigInterceptor', () => {
 
   const mockAuthService = {
     currentUserValue: { token: 'mockToken' },
+    currentTenantValue: '',
     logout: jest.fn(),
+    isGlobalAdmin: jest.fn(() => false),
   } as any;
+
+  const mockTenantStateService = {
+    isTenantSet: jest.fn(() => false),
+    getTenant: jest.fn(),
+  };
 
   const mockUndeployedChangesService = {
     getUndeployedChanges: jest.fn(),
@@ -53,11 +61,17 @@ describe('HttpConfigInterceptor', () => {
         { provide: AuthService, useValue: mockAuthService },
         { provide: ToastrService, useValue: mockToastrService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: TenantStateService, useValue: mockTenantStateService },
         { provide: Injector, useValue: mockInjector },
       ],
     });
 
     interceptor = TestBed.inject(HttpConfigInterceptor);
+
+    // Reset mocks
+    mockAuthService.currentTenantValue = '';
+    mockAuthService.isGlobalAdmin.mockReturnValue(false);
+    mockTenantStateService.isTenantSet.mockReturnValue(false);
   });
 
   describe('processSuccessRequest ', () => {
@@ -108,6 +122,44 @@ describe('HttpConfigInterceptor', () => {
       expect(modifiedRequest.params.get('tenant')).toBe('mockTenant');
     });
 
+    it('should fallback to window.location.search when tenant is not in queryParams', () => {
+      mockActivatedRoute.queryParams = of({} as any);
+      delete global.window.location;
+      global.window.location = { search: '?tenant=urlTenant' } as any;
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data');
+      interceptor.intercept(request, mockHttpHandler);
+
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+      expect(modifiedRequest.params.get('tenant')).toBe('urlTenant');
+    });
+
+    it('should fallback to auth.currentTenantValue when tenant is not in queryParams or URL', () => {
+      mockActivatedRoute.queryParams = of({} as any);
+      delete global.window.location;
+      global.window.location = { search: '' } as any;
+      mockAuthService.currentTenantValue = 'localStorageTenant';
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data');
+      interceptor.intercept(request, mockHttpHandler);
+
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+      expect(modifiedRequest.params.get('tenant')).toBe('localStorageTenant');
+    });
+
+    it('should use tenantStateService when it is set and user is global admin', () => {
+      mockActivatedRoute.queryParams = of({ tenant: 'queryParamTenant' });
+      mockAuthService.isGlobalAdmin.mockReturnValue(true);
+      mockTenantStateService.isTenantSet.mockReturnValue(true);
+      mockTenantStateService.getTenant.mockReturnValue('stateTenant');
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data');
+      interceptor.intercept(request, mockHttpHandler);
+
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+      expect(modifiedRequest.params.get('tenant')).toBe('stateTenant');
+    });
+
     // it('should log out if there is no tenant', () => {
     //   mockActivatedRoute.snapshot.queryParams.tenant = '';
     //   const spy = jest.spyOn(mockActivatedRoute.queryParams, 'subscribe') as any;
@@ -149,7 +201,7 @@ describe('HttpConfigInterceptor', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
       const request = new HttpRequest('GET', 'http://test-api.com/data', {
-        params: new HttpParams().set('filter', 'name||eq||test,status||eq||active')
+        params: new HttpParams().set('filter', 'name||eq||test,status||eq||active'),
       });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
@@ -162,22 +214,23 @@ describe('HttpConfigInterceptor', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
       const request = new HttpRequest('GET', 'http://test-api.com/data', {
-        params: new HttpParams().set('filter', 'id||in||31db4114-57cc-4df4-83e4-8f266e777100,5c5a3d7b-f12b-4622-afcf-eb562a2cae7a')
+        params: new HttpParams().set('filter', 'id||in||31db4114-57cc-4df4-83e4-8f266e777100,5c5a3d7b-f12b-4622-afcf-eb562a2cae7a'),
       });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
 
       // Should not be modified since it's a single filter with comma-separated values
       expect(modifiedRequest.url).toBe('http://test-api.com/data');
-      expect(modifiedRequest.params.get('filter'))
-        .toBe('id||in||31db4114-57cc-4df4-83e4-8f266e777100,5c5a3d7b-f12b-4622-afcf-eb562a2cae7a');
+      expect(modifiedRequest.params.get('filter')).toBe(
+        'id||in||31db4114-57cc-4df4-83e4-8f266e777100,5c5a3d7b-f12b-4622-afcf-eb562a2cae7a',
+      );
     });
 
     it('should not modify filter parameter when it contains no commas', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
       const request = new HttpRequest('GET', 'http://test-api.com/data', {
-        params: new HttpParams().set('filter', 'name||eq||test')
+        params: new HttpParams().set('filter', 'name||eq||test'),
       });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
@@ -191,13 +244,14 @@ describe('HttpConfigInterceptor', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
       const request = new HttpRequest('GET', 'http://test-api.com/data', {
-        params: new HttpParams().set('filter', 'id||in||uuid1,uuid2,uuid3,name||eq||test,status||in||active,inactive')
+        params: new HttpParams().set('filter', 'id||in||uuid1,uuid2,uuid3,name||eq||test,status||in||active,inactive'),
       });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
 
-      expect(modifiedRequest.url)
-        .toBe('http://test-api.com/data?filter=id||in||uuid1,uuid2,uuid3&filter=name||eq||test&filter=status||in||active,inactive');
+      expect(modifiedRequest.url).toBe(
+        'http://test-api.com/data?filter=id||in||uuid1,uuid2,uuid3&filter=name||eq||test&filter=status||in||active,inactive',
+      );
       expect(modifiedRequest.params.has('filter')).toBeFalsy();
     });
 
@@ -205,7 +259,7 @@ describe('HttpConfigInterceptor', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
       const request = new HttpRequest('GET', 'http://test-api.com/data', {
-        params: new HttpParams().set('filter', 'name||eq||test, ,status||eq||active')
+        params: new HttpParams().set('filter', 'name||eq||test, ,status||eq||active'),
       });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
@@ -218,7 +272,7 @@ describe('HttpConfigInterceptor', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
       const request = new HttpRequest('GET', 'http://test-api.com/data', {
-        params: new HttpParams().set('filter', 'simple,comma,separated,values')
+        params: new HttpParams().set('filter', 'simple,comma,separated,values'),
       });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];

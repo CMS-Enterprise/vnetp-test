@@ -4,8 +4,6 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Tier, V1DatacentersService } from 'client';
 import { DatacenterContextService } from './datacenter-context.service';
 import * as _ from 'lodash';
-import { ApplicationMode } from '../models/other/application-mode-enum';
-import { RouteDataUtil } from '../utils/route-data.util';
 
 /** Service to store and expose the Current Tier Context. */
 @Injectable({
@@ -33,41 +31,36 @@ export class TierContextService {
   ignoreNextQueryParamEvent: boolean;
   currentDatacenterId: string;
 
-  private applicationMode: ApplicationMode;
-
   constructor(
     private DatacenterService: V1DatacentersService,
     private datacenterContextService: DatacenterContextService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     // This subscription ensures that we release
     // the tier change lock when a navigation
     // event occurs. This is useful in the event
     // that the component doesn't release the lock
     // before being destroyed.
-    if (this.applicationMode !== ApplicationMode.TENANTV2) {
-      this.router.events.subscribe(e => {
-        if (e instanceof NavigationEnd) {
-          this.getTiers();
-          if (this.lockCurrentTierSubject.value) {
-            this.lockCurrentTierSubject.next(false);
-          }
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.getTiers();
+        if (this.lockCurrentTierSubject.value) {
+          this.lockCurrentTierSubject.next(false);
         }
-      });
+      }
+    });
 
-      // Subscribe to the activatedRoute, validate that the
-      // tier param has a valid id present.
-      this.activatedRoute.queryParamMap.subscribe(queryParams => {
-        if (this.ignoreNextQueryParamEvent) {
-          this.ignoreNextQueryParamEvent = false;
-          return;
-        }
+    // Subscribe to the activatedRoute, validate that the
+    // tier param has a valid id present.
+    this.activatedRoute.queryParamMap.subscribe(queryParams => {
+      if (this.ignoreNextQueryParamEvent) {
+        this.ignoreNextQueryParamEvent = false;
+        return;
+      }
 
-        this.getTiers(queryParams.get('tier'));
-      });
-    }
+      this.getTiers(queryParams.get('tier'));
+    });
   }
 
   public get currentTierValue(): Tier {
@@ -123,7 +116,7 @@ export class TierContextService {
     });
   }
 
-  public switchTier(tierId: string): boolean {
+  public switchTier(tierId: string, setQueryParam: boolean = true): boolean {
     if (this.lockCurrentTierSubject.value) {
       return false;
     }
@@ -142,10 +135,12 @@ export class TierContextService {
     }
     this.currentTierSubject.next(tier);
     this.ignoreNextQueryParamEvent = true;
-    this.router.navigate([], {
-      queryParams: { tier: tier.id },
-      queryParamsHandling: 'merge',
-    });
+    if (setQueryParam) {
+      this.router.navigate([], {
+        queryParams: { tier: tier.id },
+        queryParamsHandling: 'merge',
+      });
+    }
     return true;
   }
 
@@ -165,7 +160,8 @@ export class TierContextService {
     const targetTierId = currentTierId && this._tiers.some(t => t.id === currentTierId) ? currentTierId : this._tiers[0]?.id;
 
     if (targetTierId) {
-      this.switchTier(targetTierId);
+      // Pass false, otherwise the router.navigate([]) will be called and will stop navigation.
+      this.switchTier(targetTierId, false);
     }
   }
 

@@ -123,7 +123,6 @@ export class ExternalFirewallsComponent implements OnInit {
   }
 
   public editFirewallConfig(externalFirewall: ExternalFirewall): void {
-    console.log('Editing firewall config', externalFirewall);
     this.router.navigate(
       [
         '/tenantv2/tenant-select/edit',
@@ -136,8 +135,7 @@ export class ExternalFirewallsComponent implements OnInit {
         },
       ],
       {
-        queryParamsHandling: 'merge',
-        state: { refreshKey: Date.now() },
+        queryParamsHandling: 'preserve',
       },
     );
   }

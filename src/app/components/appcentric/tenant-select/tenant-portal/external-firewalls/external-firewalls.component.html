@@ -16,12 +16,7 @@
       class="btn btn-icon"
       title="Edit Firewall Configuration"
       aria-label="Edit Firewall Configuration"
-      [routerLink]="[
-        '/tenantv2/tenant-select/edit',
-        tenantId,
-        'home',
-        { outlets: { 'tenant-portal': 'firewall-config/external-firewall/' + externalFirewall.id } }
-      ]"
+      (click)="editFirewallConfig(externalFirewall)"
       queryParamsHandling="merge"
     >
       <fa-icon class="icon" [icon]="['fas', 'pencil-alt']"></fa-icon>

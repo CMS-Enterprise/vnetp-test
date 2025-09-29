@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FirewallConfigResolvedData } from './firewall-config.resolver';
 
 @Component({
   selector: 'app-firewall-config-container',
@@ -8,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FirewallConfigComponent {
   tabs = [
-    { name: 'Summary', route: [], requiresSelection: false },
     { name: 'Firewall Rules', route: ['rules'], requiresSelection: true },
     { name: 'NAT Rules', route: ['nat'], requiresSelection: true },
     { name: 'Network Objects', route: ['network-objects'], requiresSelection: true },
@@ -16,10 +16,13 @@ export class FirewallConfigComponent {
   ];
 
   hasSelection = false;
+  public resolvedData: FirewallConfigResolvedData | null = null;
+  public firewallName: string;
 
   constructor(private route: ActivatedRoute) {
-    this.route.paramMap.subscribe(params => {
-      this.hasSelection = !!params.get('firewallId');
+    this.route.data.subscribe(data => {
+      this.resolvedData = data?.firewall as FirewallConfigResolvedData;
+      this.firewallName = this.resolvedData?.firewall?.name;
     });
   }
 }
