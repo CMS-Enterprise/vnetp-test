@@ -33,12 +33,14 @@ export class HttpConfigInterceptor {
       });
 
       if (this.tenantStateService.isTenantSet() && this.auth.isGlobalAdmin(currentUser)) {
+        // Tenant State should only be set when doing multi-tenant actions.
         tenant = this.tenantStateService.getTenant();
       }
 
       // If no tenant is selected, log the user out and allow them to reselect a tenant.
       if (!tenant) {
-        this.auth.logout();
+        console.log('No tenant selected, logging out');
+        // this.auth.logout();
       }
 
       const headers = new HttpHeaders({

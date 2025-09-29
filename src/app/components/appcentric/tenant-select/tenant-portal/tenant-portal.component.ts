@@ -1,21 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Datacenter,
-  FirewallRuleGroup,
-  GetManyTenantResponseDto,
-  NatRuleGroup,
-  Tier,
-  V2AppCentricTenantsService,
-  Vrf,
-  Tenant,
-} from 'client';
+import { GetManyTenantResponseDto, V2AppCentricTenantsService, Tenant } from 'client';
 import { Tab, TabsComponent } from 'src/app/common/tabs/tabs.component';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
-import { V1DatacentersService } from 'client';
-import { V1TiersService } from 'client';
-import { TierContextService } from 'src/app/services/tier-context.service';
-import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { RouteDataUtil } from '../../../../utils/route-data.util';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -77,22 +64,11 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   public tenantId: string;
   public applicationMode: ApplicationMode;
   public ApplicationMode = ApplicationMode;
-  public networkServicesContainerDatacenter: Datacenter;
 
   // Loading states
   public isLoadingTenant = false;
   public isLoadingVrfData = false;
   public isLoadingTiers = false;
-
-  // VRF-based properties with improved type safety
-  public tenantVrfs: Vrf[] = [];
-  public selectedVrf: Vrf | null = null;
-  public selectedVrfInternalTier: Tier | null = null;
-  public selectedVrfExternalTier: Tier | null = null;
-  public selectedVrfInternalFirewallRuleGroup: FirewallRuleGroup | null = null;
-  public selectedVrfExternalFirewallRuleGroup: FirewallRuleGroup | null = null;
-  public selectedVrfInternalNatRuleGroup: NatRuleGroup | null = null;
-  public selectedVrfExternalNatRuleGroup: NatRuleGroup | null = null;
 
   public tabs: Tab[] = [];
 
@@ -100,20 +76,11 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private subscriptions: Subscription[] = [];
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private tenantService: V2AppCentricTenantsService,
-    private datacenterService: V1DatacentersService,
-    private tierService: V1TiersService,
-    private tierContextService: TierContextService,
-    private datacenterContextService: DatacenterContextService,
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private tenantService: V2AppCentricTenantsService) {}
 
   private initializeTabs(): void {
     if (this.applicationMode === ApplicationMode.TENANTV2) {
       // Show all tabs including firewalls for V2, preserving subTabs
-      this.datacenterContextService.refreshDatacenters();
       this.tabs = [...tabs];
     } else {
       // Filter out tenant v2 tabs
@@ -143,109 +110,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   private getCurrentTabId(): string | null {
     const currentTab = this.tabs.find(tab => tab.name === this.currentTab);
     return currentTab?.id || null;
-  }
-
-  /**
-   * Select a VRF and load its associated tiers and rule groups
-   */
-  public selectVrf(vrf: Vrf | null): void {
-    if (!vrf) {
-      console.warn('Cannot select null VRF');
-      return;
-    }
-
-    this.selectedVrf = vrf;
-    this.isLoadingVrfData = true;
-    this.loadVrfTiersAndRuleGroups(vrf);
-  }
-
-  /**
-   * Load tiers and rule groups for the selected VRF
-   */
-  private loadVrfTiersAndRuleGroups(vrf: Vrf): void {
-    if (!vrf) {
-      console.warn('Cannot load tiers for null VRF');
-      this.isLoadingVrfData = false;
-      return;
-    }
-
-    this.selectedVrfInternalTier = vrf.internalNetworkServicesTier || null;
-    this.selectedVrfExternalTier = vrf.externalNetworkServicesTier || null;
-
-    // If we have tier IDs but not the full tier objects with rule groups, fetch them
-    const internalTierId = this.selectedVrfInternalTier?.id;
-    const externalTierId = this.selectedVrfExternalTier?.id;
-
-    if (internalTierId || externalTierId) {
-      const tierIds = [internalTierId, externalTierId].filter(Boolean) as string[];
-
-      if (tierIds.length > 0) {
-        this.isLoadingTiers = true;
-
-        // Get the full tier objects with rule groups
-        this.tierService
-          .getManyTier({
-            filter: [`id||in||${tierIds.join(',')}`],
-            join: ['firewallRuleGroups', 'natRuleGroups'],
-            page: 1,
-            perPage: 10,
-          })
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: tierResponse => {
-              try {
-                if (!tierResponse?.data) {
-                  throw new Error('Invalid tier response data');
-                }
-
-                const tiersById = new Map(tierResponse.data.map(t => [t.id, t]));
-
-                // Update internal tier and rule groups with type safety
-                if (internalTierId) {
-                  const fullInternalTier = tiersById.get(internalTierId);
-                  if (fullInternalTier) {
-                    this.selectedVrfInternalTier = fullInternalTier;
-                    this.selectedVrfInternalFirewallRuleGroup = fullInternalTier.firewallRuleGroups?.[0] || null;
-                    this.selectedVrfInternalNatRuleGroup = fullInternalTier.natRuleGroups?.[0] || null;
-                  }
-                }
-
-                // Update external tier and rule groups with type safety
-                if (externalTierId) {
-                  const fullExternalTier = tiersById.get(externalTierId);
-                  if (fullExternalTier) {
-                    this.selectedVrfExternalTier = fullExternalTier;
-                    this.selectedVrfExternalFirewallRuleGroup = fullExternalTier.firewallRuleGroups?.[0] || null;
-                    this.selectedVrfExternalNatRuleGroup = fullExternalTier.natRuleGroups?.[0] || null;
-                  }
-                }
-
-                this.isLoadingTiers = false;
-                this.isLoadingVrfData = false;
-              } catch (error) {
-                this.isLoadingTiers = false;
-                this.isLoadingVrfData = false;
-              }
-            },
-            error: () => {
-              this.isLoadingTiers = false;
-              this.isLoadingVrfData = false;
-            },
-          });
-      }
-    } else {
-      // If no additional loading needed
-      this.isLoadingVrfData = false;
-    }
-  }
-
-  /**
-   * Helper method to switch tier context safely
-   */
-  private switchTierContext(tierId: string): void {
-    this.tierContextService.unlockTier();
-    this.tierContextService.switchTier(tierId);
-    this.tierContextService.lockTier();
   }
 
   public async handleTabChange(tab: Tab): Promise<any> {
@@ -281,36 +145,12 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
           this.currentTenant = response;
           this.currentTenantName = response.name;
           this.isLoadingTenant = false;
-
-          if (this.applicationMode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
-            this.tenantVrfs = response.vrfs || [];
-            this.initializeVrfSelection();
-            // this.getNetworkServicesContainerDatacenter(response.datacenterId);
-          }
         },
         () => {
           this.tenants = null;
           this.isLoadingTenant = false;
         },
       );
-  }
-
-  /**
-   * Initialize VRF selection - select first VRF or only VRF if there's only one
-   */
-  private initializeVrfSelection(): void {
-    if (!this.tenantVrfs || this.tenantVrfs.length === 0) {
-      console.warn('No VRFs available for selection');
-      return;
-    }
-
-    // If there's only one VRF or if no VRF is selected yet, select the first one
-    if (this.tenantVrfs.length === 1 || !this.selectedVrf) {
-      const firstVrf = this.tenantVrfs[0];
-      if (firstVrf) {
-        this.selectVrf(firstVrf);
-      }
-    }
   }
 
   ngOnInit(): void {

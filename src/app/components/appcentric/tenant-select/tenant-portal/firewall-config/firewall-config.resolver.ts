@@ -61,6 +61,8 @@ export class FirewallConfigResolver implements Resolve<FirewallConfigResolvedDat
           return this.handleError('Firewall is not associated with a tier.');
         }
 
+        console.log('Tenant ID', tenantId);
+
         if (!tenantId) {
           return of(this.buildResolvedData(typeParam, firewall));
         }

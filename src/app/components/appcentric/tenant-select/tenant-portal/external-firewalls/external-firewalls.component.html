@@ -12,12 +12,20 @@
 
 <ng-template #actionsTemplate let-externalFirewall="datum">
   <section class="table__actions">
-    <app-icon-button
-      icon="edit"
-      label="Edit Firewall Configuration"
-      type="default"
-      (handleClick)="editFirewallConfig(externalFirewall)"
-    ></app-icon-button>
+    <a
+      class="btn btn-icon"
+      title="Edit Firewall Configuration"
+      aria-label="Edit Firewall Configuration"
+      [routerLink]="[
+        '/tenantv2/tenant-select/edit',
+        tenantId,
+        'home',
+        { outlets: { 'tenant-portal': 'firewall-config/external-firewall/' + externalFirewall.id } }
+      ]"
+      queryParamsHandling="merge"
+    >
+      <fa-icon class="icon" [icon]="['fas', 'pencil-alt']"></fa-icon>
+    </a>
   </section>
 </ng-template>
 

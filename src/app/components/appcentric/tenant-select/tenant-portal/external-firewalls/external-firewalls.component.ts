@@ -123,8 +123,12 @@ export class ExternalFirewallsComponent implements OnInit {
   }
 
   public editFirewallConfig(externalFirewall: ExternalFirewall): void {
+    console.log('Editing firewall config', externalFirewall);
     this.router.navigate(
       [
+        '/tenantv2/tenant-select/edit',
+        this.tenantId,
+        'home',
         {
           outlets: {
             'tenant-portal': ['firewall-config', 'external-firewall', externalFirewall.id],
@@ -133,7 +137,7 @@ export class ExternalFirewallsComponent implements OnInit {
       ],
       {
         queryParamsHandling: 'merge',
-        relativeTo: this.activatedRoute.parent?.parent || this.activatedRoute,
+        state: { refreshKey: Date.now() },
       },
     );
   }

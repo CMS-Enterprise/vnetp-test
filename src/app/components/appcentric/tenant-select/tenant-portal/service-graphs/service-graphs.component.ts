@@ -122,22 +122,33 @@ export class ServiceGraphsComponent implements OnInit {
   public editFirewallConfig(serviceGraph: ServiceGraph): void {
     // Use navigation service to handle firewall config navigation
     if (serviceGraph.serviceGraphFirewall) {
-      this.router.navigate(
-        [
+      this.router.navigate(['/tenantv2/tenant-select/edit', this.tenantId, 'home'], {
+        queryParamsHandling: 'merge',
+        queryParams: {
+          serviceGraphId: serviceGraph.id,
+        },
+      });
+
+      setTimeout(() => {
+        this.router.navigate(
+          [
+            '/tenantv2/tenant-select/edit',
+            this.tenantId,
+            'home',
+            {
+              outlets: {
+                'tenant-portal': ['firewall-config', 'service-graph-firewall', serviceGraph.serviceGraphFirewall.id],
+              },
+            },
+          ],
           {
-            outlets: {
-              'tenant-portal': ['firewall-config', 'service-graph-firewall', serviceGraph.serviceGraphFirewall.id],
+            queryParamsHandling: 'merge',
+            queryParams: {
+              serviceGraphId: serviceGraph.id,
             },
           },
-        ],
-        {
-          queryParamsHandling: 'merge',
-          queryParams: {
-            serviceGraphId: serviceGraph.id,
-          },
-          relativeTo: this.activatedRoute.parent?.parent || this.activatedRoute,
-        },
-      );
+        );
+      });
     }
   }
 }
