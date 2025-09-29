@@ -20,6 +20,8 @@ import { ResourceDetailsDialogComponent } from './dialogs/resource-details-dialo
 import { YesNoModalDto } from '../../../../models/other/yes-no-modal-dto';
 import SubscriptionUtil from '../../../../utils/SubscriptionUtil';
 import { forkJoin } from 'rxjs';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { TenantStateService } from 'src/app/services/tenant-state.service';
 
 interface GroupedChange {
   externalVrfConnectionName: string;
@@ -56,6 +58,8 @@ export class RouteControlRequestDetailComponent implements OnInit {
     private externalVrfConnectionsService: V2RoutingExternalVrfConnectionsService,
     private globalExternalRoutesService: V3GlobalExternalRoutesService,
     private dialog: MatDialog,
+    private ngx: NgxSmartModalService,
+    private tenantStateService: TenantStateService,
   ) {}
 
   ngOnInit(): void {
@@ -303,11 +307,13 @@ export class RouteControlRequestDetailComponent implements OnInit {
       'Are you sure you want to approve this request? It will be applied immediately.',
     );
     const onConfirm = () => {
-      // this.routeControlRequestService.approveOneRouteControlRequest({ id: this.requestId }).subscribe(() => {
-      //   this.router.navigate(['/admin/route-control-requests']);
-      // });
+      this.tenantStateService.setTenant(this.routeControlRequest.tenantAccountName);
+      this.routeControlRequestService.approveOneRouteControlRequest({ id: this.requestId }).subscribe(() => {
+        this.tenantStateService.clearTenant();
+        this.router.navigate(['/adminportal/route-control-request'], { queryParamsHandling: 'merge' });
+      });
     };
-    SubscriptionUtil.subscribeToYesNoModal(dto, null as any, onConfirm);
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
   }
 
   public rejectRequest(): void {

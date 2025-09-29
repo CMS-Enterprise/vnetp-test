@@ -23626,31 +23626,6 @@
         "tags": ["v3/global/external-routes"]
       }
     },
-    "/v3/global/external-routes/dev/seed-20k": {
-      "post": {
-        "operationId": "seedDevExternalRoutes",
-        "summary": "DEV ONLY: Seed 20,000 external routes",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "count": {
-                      "type": "number"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["v3/global/external-routes"]
-      }
-    },
     "/v3/global/environments": {
       "post": {
         "operationId": "createOneEnvironment",
@@ -24578,6 +24553,35 @@
             "required": false,
             "in": "query",
             "description": "ID of the Route Control Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteControlRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v3/global/route-control-request"]
+      }
+    },
+    "/v3/global/route-control-request/approve/{id}": {
+      "post": {
+        "operationId": "approveOneRouteControlRequest",
+        "summary": "Approve one Route Control Request",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
             "schema": {
               "type": "string"
             }

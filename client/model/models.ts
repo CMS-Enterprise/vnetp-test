@@ -164,7 +164,6 @@ export * from './hitcountData';
 export * from './hitcountJobCreateDto';
 export * from './hitcountJobResultDto';
 export * from './inlineResponse200';
-export * from './inlineResponse2001';
 export * from './internalRoute';
 export * from './job';
 export * from './justDiffOutput';
