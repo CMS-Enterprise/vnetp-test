@@ -83,6 +83,7 @@ model/createManyLoadBalancerRouteDto.ts
 model/createManyLoadBalancerSelfIpDto.ts
 model/createManyLoadBalancerVirtualServerDto.ts
 model/createManyLoadBalancerVlanDto.ts
+model/createManyMessageDto.ts
 model/createManyNatRuleDto.ts
 model/createManyNatRuleGroupDto.ts
 model/createManyNetworkObjectDto.ts
@@ -152,6 +153,7 @@ model/getManyLoadBalancerRouteResponseDto.ts
 model/getManyLoadBalancerSelfIpResponseDto.ts
 model/getManyLoadBalancerVirtualServerResponseDto.ts
 model/getManyLoadBalancerVlanResponseDto.ts
+model/getManyMessageResponseDto.ts
 model/getManyNatRuleGroupResponseDto.ts
 model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
@@ -199,7 +201,6 @@ model/networkObjectGroup.ts
 model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
-model/paginationDTO.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts
