@@ -10,7 +10,7 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Message, PaginationDTO, V3GlobalMessagesService } from 'client';
+import { Message, GetManyMessageResponseDto, V3GlobalMessagesService } from 'client';
 import { GlobalMessagesComponent } from './global-messages.component';
 import { Subject, Subscription, of } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -46,18 +46,22 @@ describe('GlobalMessagesComponent', () => {
   describe('Get Messages', () => {
     it('should fetch messages', () => {
       const messageService = TestBed.inject(V3GlobalMessagesService);
-      const messagesMock: PaginationDTO = {
+      const messagesMock: GetManyMessageResponseDto = {
+        totalPages: 1,
         total: 2,
         count: 2,
         page: 1,
         pageCount: 1,
-        data: ['message1', 'message2'],
+        data: [
+          { id: '1', description: 'message1', timestamp: '2021-01-01' },
+          { id: '2', description: 'message2', timestamp: '2021-01-02' },
+        ],
       };
       component.messages = messagesMock;
 
-      const getManyMessagesSpy = jest.spyOn(messageService, 'getMessagesMessage').mockReturnValue(of({ data: messagesMock } as any));
+      const getManyMessagesSpy = jest.spyOn(messageService, 'getManyMessage').mockReturnValue(of({ data: messagesMock } as any));
 
-      messageService.getMessagesMessage({ page: 1, perPage: 50 });
+      messageService.getManyMessage({ page: 1, perPage: 50 });
       expect(getManyMessagesSpy).toHaveBeenCalled();
       expect(component['messages']).toEqual(messagesMock);
     });
@@ -111,7 +115,7 @@ describe('GlobalMessagesComponent', () => {
       const messageToDelete = { id: '123', description: 'Bye!' } as Message;
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
       component.deleteEntry(messageToDelete);
-      const getMessagesMock = jest.spyOn(component['globalMessagesService'], 'getMessagesMessage');
+      const getMessagesMock = jest.spyOn(component['globalMessagesService'], 'getManyMessage');
       expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
       expect(getMessagesMock).toHaveBeenCalled();
     });
