@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Message, PaginationDTO, V3GlobalMessagesService } from 'client';
+import { Message, GetManyMessageResponseDto, V3GlobalMessagesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -29,7 +29,7 @@ export class GlobalMessagesComponent implements OnInit {
     hideSearchBar: true,
   };
   perPage = 20;
-  messages: PaginationDTO;
+  messages: GetManyMessageResponseDto;
 
   public tableComponentDto = new TableComponentDto();
 
@@ -64,7 +64,7 @@ export class GlobalMessagesComponent implements OnInit {
     }
 
     this.globalMessagesService
-      .getMessagesMessage({ page: this.tableComponentDto.page, perPage: this.tableComponentDto.perPage })
+      .getManyMessage({ page: this.tableComponentDto.page, perPage: this.tableComponentDto.perPage })
       .subscribe(data => {
         this.messages = data;
       });
@@ -84,7 +84,7 @@ export class GlobalMessagesComponent implements OnInit {
 
     const dto = new YesNoModalDto('Delete Message?', `"${newDescription}"`);
     const onConfirm = () => {
-      this.globalMessagesService.deleteMessageMessage({ messageId: message.id }).subscribe(() => {
+      this.globalMessagesService.deleteOneMessage({ id: message.id }).subscribe(() => {
         this.getGlobalMessages();
       });
     };

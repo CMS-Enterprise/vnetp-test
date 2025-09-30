@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Message } from './message';
 
 
-export interface Message { 
-    readonly id?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly version?: number;
-    description: string;
-    readonly timestamp: string;
+export interface CreateManyMessageDto { 
+    bulk: Array<Message>;
 }
 
