@@ -14,6 +14,8 @@ import {
 } from 'client';
 import { of } from 'rxjs';
 import { RouteControlRequestDetailComponent } from './route-control-request-detail.component';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { TenantStateService } from 'src/app/services/tenant-state.service';
 
 describe('RouteControlRequestDetailComponent', () => {
   let component: RouteControlRequestDetailComponent;
@@ -27,6 +29,8 @@ describe('RouteControlRequestDetailComponent', () => {
   let mockExtVrfConnService: any;
   let mockGlobalRoutesService: any;
   let mockDialog: any;
+  let mockNgxSmartModalService: any;
+  let mockTenantStateService: any;
 
   const requestId = 'req-1';
   const tenantId = 't-1';
@@ -81,6 +85,17 @@ describe('RouteControlRequestDetailComponent', () => {
 
     mockDialog = { open: jest.fn() } as Partial<MatDialog> as any;
 
+    mockNgxSmartModalService = {
+      close: jest.fn(),
+      resetModalData: jest.fn(),
+      getModalData: jest.fn().mockReturnValue({}),
+    } as Partial<NgxSmartModalService> as any;
+
+    mockTenantStateService = {
+      setTenant: jest.fn(),
+      clearTenant: jest.fn(),
+    } as Partial<TenantStateService> as any;
+
     await TestBed.configureTestingModule({
       declarations: [RouteControlRequestDetailComponent],
       providers: [
@@ -92,6 +107,8 @@ describe('RouteControlRequestDetailComponent', () => {
         { provide: V2RoutingExternalVrfConnectionsService, useValue: mockExtVrfConnService },
         { provide: V3GlobalExternalRoutesService, useValue: mockGlobalRoutesService },
         { provide: MatDialog, useValue: mockDialog },
+        { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
+        { provide: TenantStateService, useValue: mockTenantStateService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
