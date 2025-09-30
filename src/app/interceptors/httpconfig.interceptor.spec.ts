@@ -160,18 +160,21 @@ describe('HttpConfigInterceptor', () => {
       expect(modifiedRequest.params.get('tenant')).toBe('stateTenant');
     });
 
-    // it('should log out if there is no tenant', () => {
-    //   mockActivatedRoute.snapshot.queryParams.tenant = '';
-    //   const spy = jest.spyOn(mockActivatedRoute.queryParams, 'subscribe') as any;
-    //   spy.and.callFake(callback => {
-    //     callback({ tenant: '' });
-    //   });
+    it('should call auth.logout when all tenant fallbacks fail', () => {
+      // Setup: All tenant sources return empty
+      mockActivatedRoute.queryParams = of({} as any);
+      delete global.window.location;
+      global.window.location = { search: '' } as any;
+      mockAuthService.currentTenantValue = '';
+      mockTenantStateService.isTenantSet.mockReturnValue(false);
 
-    //   const request = new HttpRequest('GET', 'http://test-api.com/data');
-    //   interceptor.intercept(request, mockHttpHandler);
+      const authLogoutSpy = jest.spyOn(mockAuthService, 'logout');
 
-    //   expect(mockAuthService.logout).toHaveBeenCalled();
-    // });
+      const request = new HttpRequest('GET', 'http://test-api.com/data');
+      interceptor.intercept(request, mockHttpHandler);
+
+      expect(authLogoutSpy).toHaveBeenCalled();
+    });
 
     it('should set Content-Type header when missing and method is not GET', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';

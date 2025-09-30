@@ -50,8 +50,7 @@ export class HttpConfigInterceptor {
 
       // If no tenant is selected, log the user out and allow them to reselect a tenant.
       if (!tenant) {
-        console.log('No tenant selected, logging out');
-        // this.auth.logout();
+        this.auth.logout();
       }
 
       const headers = new HttpHeaders({
