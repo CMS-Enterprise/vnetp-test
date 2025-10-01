@@ -27177,22 +27177,6 @@
               "$ref": "#/components/schemas/BridgeDomain"
             }
           },
-          "internalNetworkServicesTier": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tier"
-              }
-            ]
-          },
-          "externalNetworkServicesTier": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tier"
-              }
-            ]
-          },
           "tenantVersion": {
             "type": "number",
             "readOnly": true,
@@ -30878,8 +30862,7 @@
               "Intervrf",
               "External",
               "ZoneBased",
-              "OneArmServiceGraph",
-              "V2ZoneBased"
+              "OneArmServiceGraph"
             ]
           },
           "tierId": {
@@ -31966,22 +31949,6 @@
               "$ref": "#/components/schemas/LoadBalancerRoute"
             }
           },
-          "internalForAppCentricVrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "externalForAppCentricVrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
           "tenantVersion": {
             "type": "number",
             "readOnly": true,
@@ -31998,31 +31965,6 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
-          },
-          "transitTenantVrfs": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ]
-            }
           }
         },
         "required": [

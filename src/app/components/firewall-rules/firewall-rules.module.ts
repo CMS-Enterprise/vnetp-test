@@ -75,5 +75,6 @@ const routes: Routes = [
     FirewallRuleObjectInfoModalComponent,
     FirewallRulesOperationModalComponent,
   ],
+  exports: [FirewallRulesDetailComponent],
 })
 export class FirewallRulesModule {}

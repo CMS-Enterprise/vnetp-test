@@ -242,23 +242,34 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.expandableRows = () => [this.hitcountTemplate];
     }
 
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.datacenterId = cd.id;
-        this.tiers = cd.tiers;
-        this.datacenterService.lockDatacenter();
+    if (this.applicationMode !== ApplicationMode.TENANTV2) {
+      this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+        if (cd) {
+          this.datacenterId = cd.id;
+          this.tiers = cd.tiers;
+          this.datacenterService.lockDatacenter();
 
-        // Subscribe to route parameter changes instead of using snapshot
-        this.routeParamSubscription = this.route.paramMap.subscribe(params => {
-          const newId = params.get('id') || '';
-          if (newId !== this.Id) {
-            this.Id = newId;
-            this.currentTierIds = this.datacenterService.currentTiersValue;
-            this.getFirewallRuleGroup();
-          }
-        });
-      }
-    });
+          // Subscribe to route parameter changes instead of using snapshot
+          this.routeParamSubscription = this.route.paramMap.subscribe(params => {
+            const newId = params.get('id') || '';
+            if (newId !== this.Id) {
+              this.Id = newId;
+              this.currentTierIds = this.datacenterService.currentTiersValue;
+              this.getFirewallRuleGroup();
+            }
+          });
+        }
+      });
+    } else {
+      this.routeParamSubscription = this.route.paramMap.subscribe(params => {
+        const newId = params.get('firewallRuleGroupId') || '';
+        if (newId !== this.Id) {
+          this.Id = newId;
+          this.currentTierIds = [this.tierContextService.currentTierValue.id];
+          this.getFirewallRuleGroup();
+        }
+      });
+    }
   }
 
   toggleDrawer(panosApp: PanosApplication, firewallRule: FirewallRule): void {
@@ -460,14 +471,14 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
     if (this.applicationMode === ApplicationMode.TENANTV2) {
       endpointGroupRequest = this.endpointGroupService.getManyEndpointGroup({
-        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenant.id}`, 'deletedAt||isnull'],
+        filter: [`tenantId||eq||${this.tierContextService.currentTierValue.tenantId}`, 'deletedAt||isnull'],
         fields: ['id,name'],
         sort: ['updatedAt,ASC'],
         page: 1,
         perPage: 50000,
       });
       endpointSecurityGroupRequest = this.endpointSecurityGroupService.getManyEndpointSecurityGroup({
-        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenant.id}`, 'deletedAt||isnull'],
+        filter: [`tenantId||eq||${this.tierContextService.currentTierValue.tenantId}`, 'deletedAt||isnull'],
         fields: ['id,name'],
         sort: ['updatedAt,ASC'],
         page: 1,

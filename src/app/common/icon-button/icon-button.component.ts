@@ -35,6 +35,7 @@ export class IconButtonComponent {
     eye: ['fas', 'eye'],
     stop: ['fas', 'stop'],
     paperPlane: ['fas', 'paper-plane'],
+    expand: ['fas', 'expand'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -67,5 +68,6 @@ export type Icon =
   | 'arrowLeft'
   | 'eye'
   | 'stop'
-  | 'paperPlane';
+  | 'paperPlane'
+  | 'expand';
 export type IconType = 'default' | 'danger' | 'success' | 'info' | 'primary';

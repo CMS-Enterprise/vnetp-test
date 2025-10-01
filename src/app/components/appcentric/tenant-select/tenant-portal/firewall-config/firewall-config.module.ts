@@ -6,7 +6,10 @@ import { FirewallConfigComponent } from './firewall-config.component';
 import { FirewallConfigRuleGroupsComponent } from './firewall-config-rule-groups.component';
 import { TableModule } from 'src/app/common/table/table.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
-
+import { FirewallRulesModule } from 'src/app/components/firewall-rules/firewall-rules.module';
+import { FirewallRulesDetailComponent } from '../../../../firewall-rules/firewall-rules-detail/firewall-rules-detail.component';
+import { NatRulesModule } from 'src/app/components/nat-rules/nat-rules.module';
+import { NatRulesDetailComponent } from '../../../../nat-rules/nat-rules-detail/nat-rules-detail.component';
 const routes: Routes = [
   {
     path: ':firewallType/:firewallId',
@@ -24,8 +27,8 @@ const routes: Routes = [
         component: FirewallConfigRuleGroupsComponent,
       },
       {
-        path: 'rules/edit/:id',
-        loadChildren: () => import('src/app/components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
+        path: 'rules/edit/:firewallRuleGroupId',
+        component: FirewallRulesDetailComponent,
       },
       {
         path: 'nat',
@@ -35,7 +38,7 @@ const routes: Routes = [
       },
       {
         path: 'nat/edit/:id',
-        loadChildren: () => import('src/app/components/nat-rules/nat-rules.module').then(m => m.NatRulesModule),
+        component: NatRulesDetailComponent,
       },
       {
         path: 'network-objects',
@@ -55,7 +58,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [FirewallConfigComponent, FirewallConfigRuleGroupsComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), TableModule, IconButtonModule],
-  exports: [RouterModule],
+  imports: [CommonModule, RouterModule.forChild(routes), TableModule, IconButtonModule, FirewallRulesModule, NatRulesModule],
+  exports: [RouterModule, FirewallConfigComponent],
 })
 export class FirewallConfigModule {}
