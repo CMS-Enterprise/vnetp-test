@@ -82,10 +82,10 @@ const routes: Routes = [
         loadChildren: () => import('./tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
       },
       {
-        path: 'wan-form-request',
+        path: 'route-control-request',
         canActivate: [AdminAuthGuard],
-        data: { breadcrumb: 'WAN Form Requests', title: 'WAN Form Requests' },
-        loadChildren: () => import('./wan-form-request/wan-form-request.module').then(m => m.WanFormRequestModule),
+        data: { breadcrumb: 'Route Control Requests', title: 'Route Control Requests' },
+        loadChildren: () => import('./route-control-request/route-control-request.module').then(m => m.RouteControlRequestModule),
       },
       {
         path: 'app-id-maintenance',

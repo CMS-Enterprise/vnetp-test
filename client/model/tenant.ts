@@ -62,15 +62,17 @@ export interface Tenant {
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
     readonly environmentId: string;
-    readonly wanFormStatus?: TenantWanFormStatusEnum;
+    readonly routeControlVersion?: number;
+    readonly routeControlStatus?: TenantRouteControlStatusEnum;
     readonly externalFirewalls?: Array<ExternalFirewall>;
     readonly externalVrfConnections?: Array<ExternalVrfConnection>;
     readonly serviceGraphFirewalls?: Array<ServiceGraphFirewall>;
     readonly serviceGraphs?: Array<ServiceGraph>;
     readonly endpoints?: Array<Endpoint>;
     readonly endpointIpAddresses?: Array<EndpointIpAddress>;
+    routeControlRejectionReason?: string;
 }
-export enum TenantWanFormStatusEnum {
+export enum TenantRouteControlStatusEnum {
     Pending = 'PENDING',
     Approved = 'APPROVED',
     Active = 'ACTIVE'

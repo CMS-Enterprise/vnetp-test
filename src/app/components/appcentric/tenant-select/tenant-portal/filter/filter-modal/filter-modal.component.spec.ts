@@ -16,7 +16,6 @@ import { of, Subject, Subscription } from 'rxjs';
 import { FilterEntry, V2AppCentricFilterEntriesService, V2AppCentricFiltersService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { By } from '@angular/platform-browser';
-import { RouteProfileModalDto } from 'src/app/models/appcentric/route-profile-modal-dto';
 import { FilterEntryModalDto } from 'src/app/models/appcentric/filter-entry-modal.dto';
 
 describe('FilterEntryModalComponent', () => {

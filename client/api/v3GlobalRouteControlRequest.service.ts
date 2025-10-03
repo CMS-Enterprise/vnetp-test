@@ -17,26 +17,28 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GetManyWanFormRequestResponseDto } from '../model/models';
-import { WanFormRequest } from '../model/models';
-import { WanFormRequestDto } from '../model/models';
+import { GetManyRouteControlRequestResponseDto } from '../model/models';
+import { RouteControlRequest } from '../model/models';
+import { RouteControlRequestDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateOneWanFormRequestRequestParams {
-    wanFormRequestDto: WanFormRequestDto;
+export interface ApproveOneRouteControlRequestRequestParams {
+    id: string;
 }
 
-export interface DeleteOneWanFormRequestRequestParams {
-    /** ID of the WAN form */
-    wanFormId?: string;
-    /** ID of the WAN form request */
-    wanFormRequestId?: string;
+export interface CreateOneRouteControlRequestRequestParams {
+    routeControlRequestDto: RouteControlRequestDto;
 }
 
-export interface GetManyWanFormRequestsRequestParams {
+export interface DeleteOneRouteControlRequestRequestParams {
+    /** ID of the Route Control Request */
+    routeControlRequestId?: string;
+}
+
+export interface GetManyRouteControlRequestsRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -63,7 +65,7 @@ export interface GetManyWanFormRequestsRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V3GlobalWanFormRequestService {
+export class V3GlobalRouteControlRequestService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -121,18 +123,65 @@ export class V3GlobalWanFormRequestService {
     }
 
     /**
-     * Create one WAN form request
+     * Approve one Route Control Request
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneWanFormRequest(requestParameters: CreateOneWanFormRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanFormRequest>;
-    public createOneWanFormRequest(requestParameters: CreateOneWanFormRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanFormRequest>>;
-    public createOneWanFormRequest(requestParameters: CreateOneWanFormRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanFormRequest>>;
-    public createOneWanFormRequest(requestParameters: CreateOneWanFormRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanFormRequestDto = requestParameters.wanFormRequestDto;
-        if (wanFormRequestDto === null || wanFormRequestDto === undefined) {
-            throw new Error('Required parameter wanFormRequestDto was null or undefined when calling createOneWanFormRequest.');
+    public approveOneRouteControlRequest(requestParameters: ApproveOneRouteControlRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteControlRequest>;
+    public approveOneRouteControlRequest(requestParameters: ApproveOneRouteControlRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteControlRequest>>;
+    public approveOneRouteControlRequest(requestParameters: ApproveOneRouteControlRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteControlRequest>>;
+    public approveOneRouteControlRequest(requestParameters: ApproveOneRouteControlRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling approveOneRouteControlRequest.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<RouteControlRequest>(`${this.configuration.basePath}/v3/global/route-control-request/approve/${encodeURIComponent(String(id))}`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one Route Control Request
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneRouteControlRequest(requestParameters: CreateOneRouteControlRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteControlRequest>;
+    public createOneRouteControlRequest(requestParameters: CreateOneRouteControlRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteControlRequest>>;
+    public createOneRouteControlRequest(requestParameters: CreateOneRouteControlRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteControlRequest>>;
+    public createOneRouteControlRequest(requestParameters: CreateOneRouteControlRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const routeControlRequestDto = requestParameters.routeControlRequestDto;
+        if (routeControlRequestDto === null || routeControlRequestDto === undefined) {
+            throw new Error('Required parameter routeControlRequestDto was null or undefined when calling createOneRouteControlRequest.');
         }
 
         let headers = this.defaultHeaders;
@@ -164,8 +213,8 @@ export class V3GlobalWanFormRequestService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<WanFormRequest>(`${this.configuration.basePath}/v3/global/wan-form-request`,
-            wanFormRequestDto,
+        return this.httpClient.post<RouteControlRequest>(`${this.configuration.basePath}/v3/global/route-control-request`,
+            routeControlRequestDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -177,26 +226,21 @@ export class V3GlobalWanFormRequestService {
     }
 
     /**
-     * Delete one WAN form request
+     * Delete one Route Control Request
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneWanFormRequest(requestParameters: DeleteOneWanFormRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanFormRequest>;
-    public deleteOneWanFormRequest(requestParameters: DeleteOneWanFormRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanFormRequest>>;
-    public deleteOneWanFormRequest(requestParameters: DeleteOneWanFormRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanFormRequest>>;
-    public deleteOneWanFormRequest(requestParameters: DeleteOneWanFormRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanFormId = requestParameters.wanFormId;
-        const wanFormRequestId = requestParameters.wanFormRequestId;
+    public deleteOneRouteControlRequest(requestParameters: DeleteOneRouteControlRequestRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteControlRequest>;
+    public deleteOneRouteControlRequest(requestParameters: DeleteOneRouteControlRequestRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteControlRequest>>;
+    public deleteOneRouteControlRequest(requestParameters: DeleteOneRouteControlRequestRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteControlRequest>>;
+    public deleteOneRouteControlRequest(requestParameters: DeleteOneRouteControlRequestRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const routeControlRequestId = requestParameters.routeControlRequestId;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (wanFormId !== undefined && wanFormId !== null) {
+        if (routeControlRequestId !== undefined && routeControlRequestId !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>wanFormId, 'wanFormId');
-        }
-        if (wanFormRequestId !== undefined && wanFormRequestId !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>wanFormRequestId, 'wanFormRequestId');
+            <any>routeControlRequestId, 'routeControlRequestId');
         }
 
         let headers = this.defaultHeaders;
@@ -219,7 +263,7 @@ export class V3GlobalWanFormRequestService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<WanFormRequest>(`${this.configuration.basePath}/v3/global/wan-form-request`,
+        return this.httpClient.delete<RouteControlRequest>(`${this.configuration.basePath}/v3/global/route-control-request`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -232,15 +276,15 @@ export class V3GlobalWanFormRequestService {
     }
 
     /**
-     * Get many WAN form requests
+     * Get many Route Control Requests
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyWanFormRequests(requestParameters: GetManyWanFormRequestsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyWanFormRequestResponseDto>;
-    public getManyWanFormRequests(requestParameters: GetManyWanFormRequestsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyWanFormRequestResponseDto>>;
-    public getManyWanFormRequests(requestParameters: GetManyWanFormRequestsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyWanFormRequestResponseDto>>;
-    public getManyWanFormRequests(requestParameters: GetManyWanFormRequestsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyRouteControlRequests(requestParameters: GetManyRouteControlRequestsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyRouteControlRequestResponseDto>;
+    public getManyRouteControlRequests(requestParameters: GetManyRouteControlRequestsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyRouteControlRequestResponseDto>>;
+    public getManyRouteControlRequests(requestParameters: GetManyRouteControlRequestsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyRouteControlRequestResponseDto>>;
+    public getManyRouteControlRequests(requestParameters: GetManyRouteControlRequestsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -326,7 +370,7 @@ export class V3GlobalWanFormRequestService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyWanFormRequestResponseDto>(`${this.configuration.basePath}/v3/global/wan-form-request`,
+        return this.httpClient.get<GetManyRouteControlRequestResponseDto>(`${this.configuration.basePath}/v3/global/route-control-request`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

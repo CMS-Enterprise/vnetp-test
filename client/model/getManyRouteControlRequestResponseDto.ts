@@ -9,10 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { RouteControlRequest } from './routeControlRequest';
 
 
-export interface WanFormRequestDto { 
-    tenantId: string;
-    organization: string;
+export interface GetManyRouteControlRequestResponseDto { 
+    totalPages: number;
+    count: number;
+    total: number;
+    page: number;
+    pageCount: number;
+    data: Array<RouteControlRequest>;
 }
 

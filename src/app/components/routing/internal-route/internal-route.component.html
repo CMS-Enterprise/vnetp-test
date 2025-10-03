@@ -1,0 +1,103 @@
+<h1>Internal Routes for: {{ externalVrfConnection?.name }}</h1>
+
+<section class="btn-toolbar" role="toolbar" aria-label="create-internal-route">
+  <button type="button" class="btn btn-success" (click)="openModal(ModalMode.Create)">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create Internal Route</span>
+  </button>
+</section>
+
+<app-table
+  *ngIf="!isLoading; else loading"
+  [config]="config"
+  [data]="internalRoutes"
+  (clearResults)="getInternalRoutes($event)"
+  (searchParams)="getInternalRoutes($event)"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+
+<ng-template #actionsTemplate let-internalRoute="datum">
+  <section>
+    <app-icon-button icon="edit" label="Edit" (handleClick)="openModal(ModalMode.Edit, internalRoute)"></app-icon-button>
+    <app-icon-button
+      *ngIf="internalRoute?.deletedAt"
+      icon="undo"
+      label="Restore"
+      type="success"
+      (handleClick)="restoreInternalRoute(internalRoute)"
+    ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Delete"
+      [type]="internalRoute.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteInternalRoute(internalRoute)"
+    >
+    </app-icon-button>
+  </section>
+  
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<app-internal-route-modal></app-internal-route-modal>
+
+<ng-template #expandableRows let-subnet="datum">
+  <tr>
+    <td colspan="4">
+      <div *ngIf="subnet.appcentricSubnet" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
+        <h5 class="mb-3">Subnet Details</h5>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Name:</strong> {{ subnet.appcentricSubnet.name }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Description:</strong> {{ subnet.appcentricSubnet.description || '-' }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Gateway IP:</strong> {{ subnet.appcentricSubnet.gatewayIp }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Advertised Externally:</strong> {{ subnet.appcentricSubnet.advertisedExternally }}</p>
+          </div>
+        </div>
+      </div>
+    </td>
+    <td colspan="4">
+      <div *ngIf="subnet.appcentricSubnetId" class="expandable-row bg-light border rounded m-3 p-3 shadow-sm">
+        <h5 class="mb-3">Bridge Domain Details</h5>
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Name:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).name }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Description:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).description || '-' }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Mac Address:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).bdMacAddress }}</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Unicast Routing:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).unicastRouting }}</p>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #subnetTemplate let-internalRoute="datum">
+  <span class="link-like">
+    {{ internalRoute.appcentricSubnet?.name || '-' }}
+  </span>
+</ng-template>
+
+<ng-template #gatewayTemplate let-internalRoute="datum">
+  {{ internalRoute.appcentricSubnet?.gatewayIp || '-' }}
+</ng-template>
+
+<ng-template #bridgeDomainTemplate let-internalRoute="datum">
+  {{ subnetBridgeDomains.get(internalRoute.appcentricSubnetId)?.name || '-' }}
+</ng-template>

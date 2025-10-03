@@ -59,16 +59,20 @@ export enum GraphEdgeDtoTypeEnum {
     DefaultRoute = 'DEFAULT_ROUTE',
     IntervrfConnection = 'INTERVRF_CONNECTION',
     ExternalRoutePropagation = 'EXTERNAL_ROUTE_PROPAGATION',
-    ContractProvides = 'CONTRACT_PROVIDES',
-    ContractConsumes = 'CONTRACT_CONSUMES',
+    ContractProvider = 'CONTRACT_PROVIDER',
+    ContractConsumer = 'CONTRACT_CONSUMER',
+    ContractIntra = 'CONTRACT_INTRA',
     SubjectToFilter = 'SUBJECT_TO_FILTER',
-    EpgToContract = 'EPG_TO_CONTRACT',
+    SubjectToServiceGraph = 'SUBJECT_TO_SERVICE_GRAPH',
     EpgToBridgeDomain = 'EPG_TO_BRIDGE_DOMAIN',
     TenantContainsVrf = 'TENANT_CONTAINS_VRF',
     TenantContainsFirewall = 'TENANT_CONTAINS_FIREWALL',
     VrfContains = 'VRF_CONTAINS',
     ApplicationProfileContains = 'APPLICATION_PROFILE_CONTAINS',
-    ContractContains = 'CONTRACT_CONTAINS'
+    ContractToSubject = 'CONTRACT_TO_SUBJECT',
+    FilterToFilterEntry = 'FILTER_TO_FILTER_ENTRY',
+    BridgeDomainToSubnet = 'BRIDGE_DOMAIN_TO_SUBNET',
+    EndpointToEndpointGroup = 'ENDPOINT_TO_ENDPOINT_GROUP'
 };
 
 
