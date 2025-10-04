@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import {
   ExternalFirewall,
   ServiceGraphFirewall,
@@ -31,9 +31,7 @@ export class FirewallConfigResolver implements Resolve<FirewallConfigResolvedDat
     private router: Router,
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<FirewallConfigResolvedData> {
-    console.log('resolve', route);
-    console.log('resolve', state);
+  resolve(route: ActivatedRouteSnapshot): Observable<FirewallConfigResolvedData> {
     const paramSource = route.paramMap.has('firewallId') ? route : route.parent;
     const typeParam = (paramSource?.paramMap.get('firewallType') as FirewallConfigType) || 'external-firewall';
     const rawFirewallId = paramSource?.paramMap.get('firewallId');
@@ -61,8 +59,6 @@ export class FirewallConfigResolver implements Resolve<FirewallConfigResolvedDat
           return this.handleError('Firewall is not associated with a tier.');
         }
 
-        console.log('Tenant ID', tenantId);
-
         if (!tenantId) {
           return of(this.buildResolvedData(typeParam, firewall));
         }
@@ -72,7 +68,7 @@ export class FirewallConfigResolver implements Resolve<FirewallConfigResolvedDat
           map(tenant => this.buildResolvedData(typeParam, firewall, tenant)),
           catchError(() => {
             // Even if we fail to load tenant tiers, continue with firewall data.
-            console.log('Failed to load tenant tiers, continuing with firewall data.');
+            console.error('Failed to load tenant tiers, continuing with firewall data.');
             this.tierContextService.clearTier();
             return of(this.buildResolvedData(typeParam, firewall));
           }),
@@ -83,9 +79,7 @@ export class FirewallConfigResolver implements Resolve<FirewallConfigResolvedDat
   }
 
   private applyTierContext(tiers: Tier[] = [], tierId: string | null): void {
-    console.log('applyTierContext', tiers, tierId);
     if (!tiers?.length || !tierId) {
-      console.log('no tiers or tierId', tiers, tierId);
       this.tierContextService.clearTier();
       return;
     }
@@ -100,7 +94,6 @@ export class FirewallConfigResolver implements Resolve<FirewallConfigResolvedDat
     firewall: ExternalFirewall | ServiceGraphFirewall | null,
     tenant?: Tenant,
   ): FirewallConfigResolvedData {
-    console.log('buildResolvedData', firewall, firewallType, tenant);
     return {
       firewall,
       firewallType,

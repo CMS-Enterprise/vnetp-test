@@ -113,7 +113,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public async handleTabChange(tab: Tab): Promise<any> {
-    console.log('handleTabChange', tab);
     if (!tab) {
       return;
     }

@@ -1,21 +1,13 @@
-import { Injectable, NgZone, OnInit } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Datacenter, V1DatacentersService } from 'client';
-import { RouteDataUtil } from '../utils/route-data.util';
-import { ApplicationMode } from '../models/other/application-mode-enum';
 
 /** Service to store and expose the Current Datacenter Context. */
 @Injectable({
   providedIn: 'root',
 })
-export class DatacenterContextService implements OnInit {
-  ngOnInit(): void {
-    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
-  }
-
-  private applicationMode: ApplicationMode;
-
+export class DatacenterContextService {
   private currentDatacenterSubject: BehaviorSubject<Datacenter> = new BehaviorSubject<Datacenter>(null);
 
   private datacentersSubject: BehaviorSubject<Datacenter[]> = new BehaviorSubject<Datacenter[]>(null);
@@ -62,7 +54,7 @@ export class DatacenterContextService implements OnInit {
         return;
       }
       const fetch = !this.routesNotToRender.some(route => route === this.router.url);
-      if (fetch && this.applicationMode === ApplicationMode.NETCENTRIC) {
+      if (fetch) {
         this.getDatacenters(queryParams.get('datacenter'));
       }
     });
@@ -111,7 +103,6 @@ export class DatacenterContextService implements OnInit {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    console.log('getDatacenters', datacenterParam);
     this.datacenterService.getManyDatacenter({ join: ['tiers'], page: 1, perPage: 1000 }).subscribe(response => {
       // Update internal datacenters array and external subject.
       this._datacenters = response.data;

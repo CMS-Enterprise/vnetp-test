@@ -121,6 +121,10 @@ export class ServiceGraphsComponent implements OnInit {
   }
 
   public editFirewallConfig(serviceGraph: ServiceGraph): void {
+    if (!serviceGraph.serviceGraphFirewall) {
+      return;
+    }
+
     this.router.navigate(
       [
         '/tenantv2/tenant-select/edit',

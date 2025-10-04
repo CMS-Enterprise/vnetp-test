@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FirewallConfigResolvedData } from './firewall-config.resolver';
+import { FirewallConfigResolvedData, FirewallConfigType } from './firewall-config.resolver';
 
 @Component({
   selector: 'app-firewall-config-container',
@@ -18,11 +18,13 @@ export class FirewallConfigComponent {
   hasSelection = false;
   public resolvedData: FirewallConfigResolvedData | null = null;
   public firewallName: string;
+  public firewallType: FirewallConfigType;
 
   constructor(private route: ActivatedRoute) {
     this.route.data.subscribe(data => {
       this.resolvedData = data?.firewall as FirewallConfigResolvedData;
       this.firewallName = this.resolvedData?.firewall?.name;
+      this.firewallType = this.resolvedData?.firewallType;
     });
   }
 }

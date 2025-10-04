@@ -245,6 +245,9 @@ describe('FirewallRulesDetailComponent', () => {
     component.applicationMode = ApplicationMode.TENANTV2;
     component.TierId = 'testTierId';
     component.Id = 'testId';
+    component['tierContextService'] = {
+      currentTierValue: { id: 'tier-id', tenantId: 'testTenantId', name: 'Test Tier' },
+    } as TierContextService;
     mockDatacenterService.currentDatacenterValue = { appCentricTenant: { id: 'testTenantId' } } as any;
     jest.spyOn(component, 'getFirewallRules').mockImplementation();
     component.getObjects();
@@ -644,5 +647,150 @@ describe('FirewallRulesDetailComponent', () => {
     const unsubscribeSpy = jest.spyOn(component.currentDatacenterSubscription, 'unsubscribe');
     component.ngOnDestroy();
     expect(unsubscribeSpy).toHaveBeenCalled();
+  });
+
+  describe('Application Mode Handling', () => {
+    let mockTierContextService: any;
+
+    beforeEach(() => {
+      mockTierContextService = {
+        currentTierValue: { id: 'tier-id', tenantId: 'tenant-id' },
+      };
+
+      jest.spyOn(component['firewallRuleGroupService'], 'getOneFirewallRuleGroup').mockReturnValue(
+        of({
+          id: 'test-group-id',
+          name: 'Test Group',
+          tierId: 'test-tier-id',
+        }) as any,
+      );
+
+      component['tierContextService'] = mockTierContextService;
+    });
+
+    describe('ngOnInit with NETCENTRIC mode', () => {
+      it('should use DatacenterContextService and route param "id"', () => {
+        component.applicationMode = ApplicationMode.NETCENTRIC;
+        const lockSpy = jest.spyOn(mockDatacenterService, 'lockDatacenter');
+
+        expect(component.applicationMode).toBe(ApplicationMode.NETCENTRIC);
+        expect(lockSpy).toBeDefined();
+      });
+
+      it('should unlock datacenter on destroy in NETCENTRIC mode', () => {
+        component.applicationMode = ApplicationMode.NETCENTRIC;
+        const unlockSpy = jest.spyOn(mockDatacenterService, 'unlockDatacenter');
+
+        component.ngOnDestroy();
+
+        expect(unlockSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('ngOnInit with TENANTV2 mode', () => {
+      it('should use TierContextService in TENANTV2 mode', () => {
+        component.applicationMode = ApplicationMode.TENANTV2;
+        component['tierContextService'] = mockTierContextService;
+
+        expect(component.applicationMode).toBe(ApplicationMode.TENANTV2);
+        expect(mockTierContextService.currentTierValue.id).toBe('tier-id');
+      });
+
+      it('should NOT lock/unlock datacenter in TENANTV2 mode', () => {
+        component.applicationMode = ApplicationMode.TENANTV2;
+        const lockSpy = jest.spyOn(mockDatacenterService, 'lockDatacenter');
+        const unlockSpy = jest.spyOn(mockDatacenterService, 'unlockDatacenter');
+
+        component.ngOnDestroy();
+
+        expect(unlockSpy).not.toHaveBeenCalled();
+      });
+
+      it('should have tierContextService available', () => {
+        component.applicationMode = ApplicationMode.TENANTV2;
+        component['tierContextService'] = mockTierContextService;
+
+        expect(component['tierContextService'].currentTierValue).toEqual({ id: 'tier-id', tenantId: 'tenant-id' });
+      });
+    });
+
+    describe('getObjects with TENANTV2 mode', () => {
+      it('should fetch endpoint groups and security groups in TENANTV2 mode', () => {
+        component.applicationMode = ApplicationMode.TENANTV2;
+        component.TierId = 'test-tier-id';
+        mockTierContextService.currentTierValue = { id: 'tier-id', tenantId: 'tenant-123' };
+
+        jest.spyOn(component['tierService'], 'getOneTier').mockReturnValue(of({ name: 'Test Tier' }) as any);
+        jest.spyOn(component['networkObjectService'], 'getManyNetworkObject').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['serviceObjectService'], 'getManyServiceObject').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['serviceObjectGroupService'], 'getManyServiceObjectGroup').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['zoneService'], 'getManyZone').mockReturnValue(of({ data: [] }) as any);
+        const endpointGroupSpy = jest
+          .spyOn(component['endpointGroupService'], 'getManyEndpointGroup')
+          .mockReturnValue(of({ data: [] }) as any);
+        const endpointSecurityGroupSpy = jest
+          .spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup')
+          .mockReturnValue(of({ data: [] }) as any);
+
+        component.getObjects();
+
+        expect(endpointGroupSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            filter: expect.arrayContaining([expect.stringContaining('tenant-123')]),
+          }),
+        );
+        expect(endpointSecurityGroupSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            filter: expect.arrayContaining([expect.stringContaining('tenant-123')]),
+          }),
+        );
+      });
+
+      it('should NOT fetch endpoint groups in NETCENTRIC mode', () => {
+        component.applicationMode = ApplicationMode.NETCENTRIC;
+        component.TierId = 'test-tier-id';
+
+        jest.spyOn(component['tierService'], 'getOneTier').mockReturnValue(of({ name: 'Test Tier' }) as any);
+        jest.spyOn(component['networkObjectService'], 'getManyNetworkObject').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['serviceObjectService'], 'getManyServiceObject').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['serviceObjectGroupService'], 'getManyServiceObjectGroup').mockReturnValue(of({ data: [] }) as any);
+        jest.spyOn(component['zoneService'], 'getManyZone').mockReturnValue(of({ data: [] }) as any);
+        const endpointGroupSpy = jest.spyOn(component['endpointGroupService'], 'getManyEndpointGroup');
+        const endpointSecurityGroupSpy = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
+
+        component.getObjects();
+
+        expect(endpointGroupSpy).not.toHaveBeenCalled();
+        expect(endpointSecurityGroupSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Disabled features in TENANTV2 mode', () => {
+      beforeEach(() => {
+        component.applicationMode = ApplicationMode.TENANTV2;
+      });
+
+      it('should have ApplicationMode.TENANTV2 property available for template', () => {
+        expect(component.ApplicationMode.TENANTV2).toBe(ApplicationMode.TENANTV2);
+        expect(component.applicationMode).toBe(ApplicationMode.TENANTV2);
+      });
+
+      it('refreshHitcount should have TODO comment indicating TENANTV2 limitation', () => {
+        const methodString = component.refreshHitcount.toString();
+        expect(methodString).toContain('TODO');
+      });
+
+      it('importFirewallRulesConfig should have TODO comment indicating TENANTV2 limitation', () => {
+        const methodString = component.importFirewallRulesConfig.toString();
+        expect(methodString).toContain('TODO');
+      });
+
+      it('openFirewallRuleOperationModal should have TODO comment indicating TENANTV2 limitation', () => {
+        const methodString = component.openFirewallRuleOperationModal.toString();
+        expect(methodString).toContain('TODO');
+      });
+    });
   });
 });

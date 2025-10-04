@@ -25,6 +25,7 @@ export class RouteDataUtil {
       currentRoute = currentRoute.parent;
       iterations++;
     }
+    console.error('Application mode not found via RouteDataUtil', route);
     return undefined;
   }
 }

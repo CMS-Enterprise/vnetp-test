@@ -312,7 +312,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     if (this.routeParamSubscription) {
       this.routeParamSubscription.unsubscribe();
     }
-    this.datacenterService.unlockDatacenter();
+    if (this.applicationMode !== ApplicationMode.TENANTV2) {
+      this.datacenterService.unlockDatacenter();
+    }
   }
 
   refresh(): void {
@@ -325,6 +327,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   public openFirewallRuleOperationModal(firewallRule: FirewallRule): void {
+    // TODO: Re-enable for TENANTV2 mode - update routing logic to support named outlets and tenant context
+    // Currently disabled in template for TENANTV2 mode (see template line ~56)
     const dto: RuleOperationModalDto = {
       tierId: this.TierId,
       ruleId: firewallRule.id,
@@ -640,6 +644,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   importFirewallRulesConfig(event: FirewallRuleImport[]): void {
+    // TODO: Re-enable for TENANTV2 mode - implement tenant-based import instead of datacenter-based
+    // Currently disabled in template for TENANTV2 mode (see template line ~94)
+    // Issue: depends on datacenterService.currentDatacenterValue.id which is not available in TENANTV2 mode
     const fwDto: FirewallRuleImportCollectionDto = {
       datacenterId: this.datacenterService.currentDatacenterValue.id,
       firewallRules: this.sanitizeData(event),
@@ -978,6 +985,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   refreshHitcount(): void {
+    // TODO: Re-enable for TENANTV2 mode - implement datacenter-independent hitcount refresh
+    // Currently disabled in template for TENANTV2 mode (see template line ~266)
+    // Issue: depends on datacenterService.currentDatacenterValue.id which is not available in TENANTV2 mode
     this.isRefreshingRuntimeData = true;
     this.hitcountService
       .createRuntimeDataJobHitcount({
