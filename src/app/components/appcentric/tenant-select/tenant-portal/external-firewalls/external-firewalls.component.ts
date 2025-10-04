@@ -104,6 +104,7 @@ export class ExternalFirewallsComponent implements OnInit {
         },
         error: () => {
           this.externalFirewalls = null;
+          this.isLoading = false;
         },
         complete: () => {
           this.isLoading = false;

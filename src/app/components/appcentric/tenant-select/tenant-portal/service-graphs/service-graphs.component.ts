@@ -101,6 +101,7 @@ export class ServiceGraphsComponent implements OnInit {
         },
         error: () => {
           this.serviceGraphs = null;
+          this.isLoading = false;
         },
         complete: () => {
           this.isLoading = false;

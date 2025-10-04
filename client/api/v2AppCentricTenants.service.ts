@@ -80,6 +80,10 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
+export interface GetRouteControlChangesTenantRequestParams {
+    tenantId: string;
+}
+
 export interface ProvisionOneTenantRequestParams {
     /** UUID. */
     id: string;
@@ -574,6 +578,51 @@ export class V2AppCentricTenantsService {
         return this.httpClient.get<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get route control changes for a tenant
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const tenantId = requestParameters.tenantId;
+        if (tenantId === null || tenantId === undefined) {
+            throw new Error('Required parameter tenantId was null or undefined when calling getRouteControlChangesTenant.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(tenantId))}/route-control/changes`,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

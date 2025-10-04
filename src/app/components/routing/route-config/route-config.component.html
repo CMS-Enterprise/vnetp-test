@@ -1,0 +1,135 @@
+<mat-toolbar color="primary" style="margin-bottom: 12px; display: flex; align-items: center">
+  <button mat-icon-button aria-label="Back" (click)="goBackToVrf()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <mat-icon aria-hidden="true">hub</mat-icon>
+  <span style="font-weight: 600; margin-left: 8px">External VRFs</span>
+  <span class="spacer mr-2"></span>
+  <span
+    aria-label="External VRF count"
+    style="background: rgba(255, 255, 255, 0.2); border-radius: 999px; padding: 2px 10px; font-size: 12px"
+  >
+    {{ externalVrfConnections?.length || 0 }}
+  </span>
+</mat-toolbar>
+
+<div
+  *ngIf="vrf?.tenant?.routeControlStatus === 'ACTIVE' && vrf?.tenant?.routeControlRejectionReason"
+  class="mat-elevation-z2"
+  style="padding: 12px; margin-bottom: 12px"
+>
+  <div style="display: flex; align-items: center; gap: 8px">
+    <mat-icon color="warn">report_problem</mat-icon>
+    <div style="flex: 1 1 auto">Your last Route Control request was rejected.</div>
+    <a href="javascript:void(0)" (click)="openRejectionModal()" style="text-decoration: underline">View Rejection Reason</a>
+    <button mat-stroked-button (click)="goBackToVrf()">
+      <mat-icon style="margin-right: 4px">open_in_new</mat-icon>
+      Open VRF
+    </button>
+  </div>
+  <div class="text-muted" style="font-size: 0.85rem; margin-top: 6px; padding-left: 32px">Please review and resubmit a new request.</div>
+</div>
+
+<div
+  *ngIf="currentView === 'list' && !externalVrfConnections?.length"
+  class="mat-elevation-z1"
+  style="padding: 12px; color: rgba(0, 0, 0, 0.6)"
+>
+  No External VRF Connections found.
+  <span *ngIf="vrfId" style="margin-left: 4px">(VRF ID: {{ vrfId }})</span>
+</div>
+
+<mat-accordion *ngIf="currentView === 'list' && externalVrfConnections?.length" multi="true" displayMode="flat">
+  <mat-expansion-panel *ngFor="let conn of externalVrfConnections; trackBy: trackById">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div style="display: flex; align-items: center; gap: 8px; width: 100%">
+          <span style="font-weight: 600">{{ conn?.name || 'External VRF Connection' }}</span>
+          <mat-chip-listbox aria-label="external vrf summary" style="margin-left: auto">
+            <mat-chip> VRF: {{ conn?.externalVrf }} </mat-chip>
+            <mat-chip color="primary" selected> Internal: {{ conn?.internalRoutes?.length || 0 }} </mat-chip>
+            <mat-chip color="accent" selected> External: {{ conn?.externalRoutes?.length || 0 }} </mat-chip>
+          </mat-chip-listbox>
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <section class="mat-elevation-z1" style="padding: 12px; margin-bottom: 12px">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">External VRF</div>
+          <div>{{ conn?.externalVrf }}</div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">Underlay IPv4</div>
+          <div>{{ conn?.underlayIpv4Network || '-' }}</div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">Underlay IPv6</div>
+          <div>{{ conn?.underlayIpv6Network || '-' }}</div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">Underlay VLAN</div>
+          <div>{{ conn?.underlayVlan || '-' }}</div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">Default Route Injected</div>
+          <div>
+            <mat-chip [color]="conn?.injectDefaultRouteFromExternalVrf ? 'warn' : 'primary'" selected>
+              {{ conn?.injectDefaultRouteFromExternalVrf ? 'Yes' : 'No' }}
+            </mat-chip>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">Allow All Routes From External</div>
+          <div>
+            <mat-chip [color]="conn?.allowAllRoutesFromExternalVrf ? 'warn' : 'primary'" selected>
+              {{ conn?.allowAllRoutesFromExternalVrf ? 'Yes' : 'No' }}
+            </mat-chip>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: rgba(0, 0, 0, 0.6)">Advertise All Routes To External</div>
+          <div>
+            <mat-chip [color]="conn?.advertiseAllRoutesToExternalVrf ? 'warn' : 'primary'" selected>
+              {{ conn?.advertiseAllRoutesToExternalVrf ? 'Yes' : 'No' }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <app-external-vrf-route-detail
+      [externalVrfConnection]="conn"
+      [global]="false"
+      (manageSubnets)="openManageSubnets(conn)"
+      (manageRoutes)="openManageRoutes(conn)"
+      [blockChanges]="blockChanges"
+      [tenantRouteControlStatus]="vrf?.tenant?.routeControlStatus"
+    ></app-external-vrf-route-detail>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-container *ngIf="currentView === 'routes' && selectedExternalVrfConnection">
+  <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showList(); getVrf()">
+    <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
+    <span>Back to External VRF Connections</span>
+  </button>
+  <app-external-route
+    [externalVrfConnection]="selectedExternalVrfConnection"
+    [vrf]="vrf"
+    [environmentId]="environmentId"
+  ></app-external-route>
+</ng-container>
+
+<ng-container *ngIf="currentView === 'subnets' && selectedExternalVrfConnection">
+  <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showList(); getVrf()">
+    <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
+    <span>Back to External VRF Connections</span>
+  </button>
+  <app-internal-route
+    [externalVrfConnection]="selectedExternalVrfConnection"
+    [tenantId]="tenantId"
+    (back)="showList()"
+  ></app-internal-route>
+</ng-container>

@@ -15328,6 +15328,30 @@
         ]
       }
     },
+    "/v2/app-centric/tenants/{tenantId}/route-control/changes": {
+      "get": {
+        "operationId": "getRouteControlChangesTenant",
+        "summary": "Get route control changes for a tenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grouped audit log changes"
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
     "/v2/app-centric/tenants": {
       "post": {
         "operationId": "createOneTenant",
@@ -25497,24 +25521,24 @@
     },
     "/v2/routing/internal-routes/{routeId}": {
       "delete": {
-        "operationId": "removeInternalRouteFromWanForm",
-        "summary": "Remove Internal Route from WAN Form",
-        "description": "Remove an internal route from the specified WAN form",
+        "operationId": "removeInternalRouteFromExternalVrfConnection",
+        "summary": "Remove Internal Route from External VRF Connection",
+        "description": "Remove an internal route from the specified External VRF Connection",
         "parameters": [
           {
             "name": "routeId",
             "required": true,
             "in": "path",
-            "description": "ID of the route to remove from the WAN form",
+            "description": "ID of the route to remove from the External VRF Connection",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "wanFormId",
+            "name": "externalVrfConnectionId",
             "required": true,
             "in": "path",
-            "description": "ID of the WAN form to remove the route from",
+            "description": "ID of the External VRF Connection to remove the route from",
             "schema": {
               "type": "string"
             }
@@ -25907,17 +25931,17 @@
         ]
       }
     },
-    "/v3/global/wan-form-request": {
+    "/v3/global/route-control-request": {
       "post": {
-        "operationId": "createOneWanFormRequest",
-        "summary": "Create one WAN form request",
+        "operationId": "createOneRouteControlRequest",
+        "summary": "Create one Route Control Request",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WanFormRequestDto"
+                "$ref": "#/components/schemas/RouteControlRequestDto"
               }
             }
           }
@@ -25928,19 +25952,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WanFormRequest"
+                  "$ref": "#/components/schemas/RouteControlRequest"
                 }
               }
             }
           }
         },
         "tags": [
-          "v3/global/wan-form-request"
+          "v3/global/route-control-request"
         ]
       },
       "get": {
-        "operationId": "getManyWanFormRequests",
-        "summary": "Get many WAN form requests",
+        "operationId": "getManyRouteControlRequests",
+        "summary": "Get many Route Control Requests",
         "parameters": [
           {
             "name": "relations",
@@ -26057,7 +26081,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "GetManyWanFormRequestResponseDto",
+                  "title": "GetManyRouteControlRequestResponseDto",
                   "type": "object",
                   "properties": {
                     "totalPages": {
@@ -26078,7 +26102,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/WanFormRequest"
+                        "$ref": "#/components/schemas/RouteControlRequest"
                       }
                     }
                   },
@@ -26096,27 +26120,18 @@
           }
         },
         "tags": [
-          "v3/global/wan-form-request"
+          "v3/global/route-control-request"
         ]
       },
       "delete": {
-        "operationId": "deleteOneWanFormRequest",
-        "summary": "Delete one WAN form request",
+        "operationId": "deleteOneRouteControlRequest",
+        "summary": "Delete one Route Control Request",
         "parameters": [
           {
-            "name": "wanFormId",
+            "name": "routeControlRequestId",
             "required": false,
             "in": "query",
-            "description": "ID of the WAN form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "wanFormRequestId",
-            "required": false,
-            "in": "query",
-            "description": "ID of the WAN form request",
+            "description": "ID of the Route Control Request",
             "schema": {
               "type": "string"
             }
@@ -26128,14 +26143,45 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WanFormRequest"
+                  "$ref": "#/components/schemas/RouteControlRequest"
                 }
               }
             }
           }
         },
         "tags": [
-          "v3/global/wan-form-request"
+          "v3/global/route-control-request"
+        ]
+      }
+    },
+    "/v3/global/route-control-request/approve/{id}": {
+      "post": {
+        "operationId": "approveOneRouteControlRequest",
+        "summary": "Approve one Route Control Request",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteControlRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/route-control-request"
         ]
       }
     }
@@ -26672,6 +26718,12 @@
           },
           "externalVrfConnectionId": {
             "type": "string"
+          },
+          "routeControlVersion": {
+            "type": "number"
+          },
+          "tenantId": {
+            "type": "string"
           }
         }
       },
@@ -26719,6 +26771,9 @@
           "manual": {
             "type": "boolean"
           },
+          "routeControlVersion": {
+            "type": "number"
+          },
           "externalVrfConnection": {
             "readOnly": true,
             "allOf": [
@@ -26728,6 +26783,9 @@
             ]
           },
           "externalVrfConnectionId": {
+            "type": "string"
+          },
+          "tenantId": {
             "type": "string"
           }
         },
@@ -27054,7 +27112,11 @@
             }
           },
           "l3outType": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "external",
+              "intervrf"
+            ]
           },
           "propagateExternalRoutes": {
             "type": "boolean"
@@ -28142,9 +28204,10 @@
               "Subject",
               "Vrf",
               "Selector",
-              "WanForm",
+              "RouteControl",
               "ExternalRoute",
-              "InternalRoute"
+              "InternalRoute",
+              "ExternalVrfConnection"
             ]
           },
           "entityId": {
@@ -28389,9 +28452,10 @@
               "Subject",
               "Vrf",
               "Selector",
-              "WanForm",
+              "RouteControl",
               "ExternalRoute",
-              "InternalRoute"
+              "InternalRoute",
+              "ExternalVrfConnection"
             ]
           },
           "expectedTerraformAction": {
@@ -29291,7 +29355,12 @@
             "type": "string",
             "readOnly": true
           },
-          "wanFormStatus": {
+          "routeControlVersion": {
+            "type": "number",
+            "readOnly": true,
+            "default": 1
+          },
+          "routeControlStatus": {
             "type": "string",
             "readOnly": true,
             "default": "ACTIVE",
@@ -29349,6 +29418,10 @@
             "items": {
               "$ref": "#/components/schemas/Tier"
             }
+          },
+          "routeControlRejectionReason": {
+            "type": "string",
+            "maxLength": 500
           }
         },
         "required": [
@@ -36106,7 +36179,7 @@
         "type": "object",
         "properties": {}
       },
-      "WanFormRequestDto": {
+      "RouteControlRequestDto": {
         "type": "object",
         "properties": {
           "tenantId": {
@@ -36121,7 +36194,7 @@
           "organization"
         ]
       },
-      "WanFormRequest": {
+      "RouteControlRequest": {
         "type": "object",
         "properties": {
           "id": {
@@ -36152,10 +36225,14 @@
           },
           "status": {
             "type": "string"
+          },
+          "tenantAccountName": {
+            "type": "string"
           }
         },
         "required": [
-          "organization"
+          "organization",
+          "tenantAccountName"
         ]
       }
     }

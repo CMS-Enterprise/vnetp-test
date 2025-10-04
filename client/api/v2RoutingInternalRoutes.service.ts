@@ -80,11 +80,11 @@ export interface ProvisionOneInternalRouteRequestParams {
     id: string;
 }
 
-export interface RemoveInternalRouteFromWanFormRequestParams {
-    /** ID of the route to remove from the WAN form */
+export interface RemoveInternalRouteFromExternalVrfConnectionRequestParams {
+    /** ID of the route to remove from the External VRF Connection */
     routeId: string;
-    /** ID of the WAN form to remove the route from */
-    wanFormId: string;
+    /** ID of the External VRF Connection to remove the route from */
+    externalVrfConnectionId: string;
 }
 
 export interface RestoreOneInternalRouteRequestParams {
@@ -585,23 +585,23 @@ export class V2RoutingInternalRoutesService {
     }
 
     /**
-     * Remove Internal Route from WAN Form
-     * Remove an internal route from the specified WAN form
+     * Remove Internal Route from External VRF Connection
+     * Remove an internal route from the specified External VRF Connection
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeInternalRouteFromWanForm(requestParameters: RemoveInternalRouteFromWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InternalRoute>;
-    public removeInternalRouteFromWanForm(requestParameters: RemoveInternalRouteFromWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InternalRoute>>;
-    public removeInternalRouteFromWanForm(requestParameters: RemoveInternalRouteFromWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InternalRoute>>;
-    public removeInternalRouteFromWanForm(requestParameters: RemoveInternalRouteFromWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public removeInternalRouteFromExternalVrfConnection(requestParameters: RemoveInternalRouteFromExternalVrfConnectionRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InternalRoute>;
+    public removeInternalRouteFromExternalVrfConnection(requestParameters: RemoveInternalRouteFromExternalVrfConnectionRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InternalRoute>>;
+    public removeInternalRouteFromExternalVrfConnection(requestParameters: RemoveInternalRouteFromExternalVrfConnectionRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InternalRoute>>;
+    public removeInternalRouteFromExternalVrfConnection(requestParameters: RemoveInternalRouteFromExternalVrfConnectionRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const routeId = requestParameters.routeId;
         if (routeId === null || routeId === undefined) {
-            throw new Error('Required parameter routeId was null or undefined when calling removeInternalRouteFromWanForm.');
+            throw new Error('Required parameter routeId was null or undefined when calling removeInternalRouteFromExternalVrfConnection.');
         }
-        const wanFormId = requestParameters.wanFormId;
-        if (wanFormId === null || wanFormId === undefined) {
-            throw new Error('Required parameter wanFormId was null or undefined when calling removeInternalRouteFromWanForm.');
+        const externalVrfConnectionId = requestParameters.externalVrfConnectionId;
+        if (externalVrfConnectionId === null || externalVrfConnectionId === undefined) {
+            throw new Error('Required parameter externalVrfConnectionId was null or undefined when calling removeInternalRouteFromExternalVrfConnection.');
         }
 
         let headers = this.defaultHeaders;

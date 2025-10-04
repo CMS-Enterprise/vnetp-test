@@ -69,6 +69,15 @@ const routes: Routes = [
         },
         loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
       },
+      {
+        path: ':tenantId/route-config',
+        canActivate: [AuthGuard],
+        data: {
+          breadcrumb: 'Route Config',
+          title: 'Route Config',
+        },
+        loadChildren: () => import('../../components/routing/routing.module').then(m => m.RoutingModule),
+      },
     ],
   },
 ];

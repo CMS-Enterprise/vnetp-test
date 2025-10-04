@@ -9,15 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WanFormRequest } from './wanFormRequest';
 
 
-export interface GetManyWanFormRequestResponseDto { 
-    totalPages: number;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
-    data: Array<WanFormRequest>;
+export interface RouteControlRequestDto { 
+    tenantId: string;
+    organization: string;
 }
 
