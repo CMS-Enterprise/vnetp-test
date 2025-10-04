@@ -75,7 +75,10 @@ module.exports = {
             }
         ],
         "@typescript-eslint/consistent-type-assertions": "error",
-        "@typescript-eslint/dot-notation": "error",
+        "@typescript-eslint/dot-notation": ["error", {
+            "allowPrivateClassPropertyAccess": true,
+            "allowProtectedClassPropertyAccess": true
+        }],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-member-accessibility": [
             "off",
@@ -332,7 +335,7 @@ module.exports = {
         "space-before-function-paren": [
             "error",
             {
-                "anonymous": "never",
+                "anonymous": "always",
                 "asyncArrow": "always",
                 "named": "never"
             }
@@ -365,5 +368,13 @@ module.exports = {
         //         }
         //     }
         // ]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["**/*.spec.ts"],
+            "rules": {
+                "@typescript-eslint/dot-notation": "off"
+            }
+        }
+    ]
 };
