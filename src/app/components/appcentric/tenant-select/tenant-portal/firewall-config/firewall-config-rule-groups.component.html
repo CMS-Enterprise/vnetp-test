@@ -1,0 +1,9 @@
+<h4>{{ firewallName }}</h4>
+
+<app-table [config]="ruleGroupConfig" [data]="ruleGroupsTableData" [(itemsPerPage)]="perPage"></app-table>
+
+<ng-template #actionsTemplate let-ruleGroup="datum">
+  <section>
+    <app-icon-button icon="edit" [label]="editActionLabel" (handleClick)="editRuleGroup(ruleGroup)"></app-icon-button>
+  </section>
+</ng-template>

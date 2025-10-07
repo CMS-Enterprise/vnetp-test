@@ -1,25 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FirewallConfigResolvedData, FirewallConfigType } from './firewall-config.resolver';
 
 @Component({
-  selector: 'app-firewall-config',
+  selector: 'app-firewall-config-container',
   templateUrl: './firewall-config.component.html',
-  styleUrls: ['./firewall-config.component.css'],
+  styleUrls: ['./firewall-config.component.scss'],
 })
-export class FirewallConfigComponent implements OnInit {
-  public firewallType = '';
-  public firewallId = '';
-  public firewallName = '';
-  public serviceGraphId = '';
+export class FirewallConfigComponent {
+  tabs = [
+    { name: 'Firewall Rules', route: ['rules'], requiresSelection: true },
+    { name: 'NAT Rules', route: ['nat'], requiresSelection: true },
+    { name: 'Network Objects', route: ['network-objects'], requiresSelection: true },
+    { name: 'Service Objects', route: ['service-objects'], requiresSelection: true },
+  ];
 
-  constructor(private route: ActivatedRoute) {}
+  hasSelection = false;
+  public resolvedData: FirewallConfigResolvedData | null = null;
+  public firewallName: string;
+  public firewallType: FirewallConfigType;
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.firewallType = params.type || 'unknown';
-      this.firewallId = params.firewallId || '';
-      this.firewallName = params.firewallName || '';
-      this.serviceGraphId = params.serviceGraphId || '';
+  constructor(private route: ActivatedRoute) {
+    this.route.data.subscribe(data => {
+      this.resolvedData = data?.firewall as FirewallConfigResolvedData;
+      this.firewallName = this.resolvedData?.firewall?.name;
+      this.firewallType = this.resolvedData?.firewallType;
     });
   }
 }

@@ -40,6 +40,8 @@ import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-trac
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
+import { TierContextService } from '../../../services/tier-context.service';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -141,6 +143,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private hitcountService: V1RuntimeDataHitcountService,
     private runtimeDataService: RuntimeDataService,
     private activatedRoute: ActivatedRoute,
+    private tierContextService: TierContextService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
     advancedSearchAdapterObject.setService(this.natRuleService);
@@ -149,8 +152,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(data => {
-      this.applicationMode = data.mode;
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+
+    if (this.applicationMode !== ApplicationMode.TENANTV2) {
       this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
         if (cd) {
           this.tiers = cd.tiers;
@@ -167,15 +171,28 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           });
         }
       });
-    });
+    } else {
+      this.routeParamSubscription = this.route.paramMap.subscribe(params => {
+        const newId = params.get('id') || '';
+        if (newId !== this.Id) {
+          this.Id = newId;
+          this.currentTierIds = [this.tierContextService.currentTierValue.id];
+          this.getNatRuleGroup();
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
-    this.currentDatacenterSubscription.unsubscribe();
+    if (this.currentDatacenterSubscription) {
+      this.currentDatacenterSubscription.unsubscribe();
+    }
     if (this.routeParamSubscription) {
       this.routeParamSubscription.unsubscribe();
     }
-    this.datacenterService.unlockDatacenter();
+    if (this.applicationMode !== ApplicationMode.TENANTV2) {
+      this.datacenterService.unlockDatacenter();
+    }
   }
 
   refresh(): void {
@@ -188,6 +205,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   public openNatRuleOperationModal(natRule: NatRule): void {
+    // TODO: Re-enable for TENANTV2 mode - update routing logic to support named outlets and tenant context
+    // Currently disabled in template for TENANTV2 mode (see template line ~48)
     const dto: RuleOperationModalDto = {
       tierId: this.TierId,
       ruleId: natRule.id,
@@ -395,6 +414,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   importNatRulesConfig(event: NatRuleImport[]): void {
+    // TODO: Re-enable for TENANTV2 mode - implement tenant-based import instead of datacenter-based
+    // Currently disabled in template for TENANTV2 mode (see template line ~85)
+    // Issue: depends on datacenterService.currentDatacenterValue.id which is not available in TENANTV2 mode
     const nrDto: NatRuleImportCollectionDto = {
       dryRun: true,
       datacenterId: this.datacenterService.currentDatacenterValue.id,
@@ -462,6 +484,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       const modalData: PreviewModalDto<NatRule> = modal.getData() as any;
       modal.removeData();
       if (modalData && modalData.confirm) {
+        // TODO: Update for TENANTV2 mode - use tenant context instead of datacenter
         const natConfirmDto: NatRuleImportCollectionDto = {
           datacenterId: this.datacenterService.currentDatacenterValue.id,
           natRules: this.sanitizeData(natRules),
@@ -639,6 +662,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   refreshHitcount(): void {
+    // TODO: Re-enable for TENANTV2 mode - implement datacenter-independent hitcount refresh
+    // Currently disabled in template for TENANTV2 mode (see template line ~292)
+    // Issue: depends on datacenterService.currentDatacenterValue.id which is not available in TENANTV2 mode
     this.isRefreshingRuntimeData = true;
     this.hitcountService
       .createRuntimeDataJobHitcount({

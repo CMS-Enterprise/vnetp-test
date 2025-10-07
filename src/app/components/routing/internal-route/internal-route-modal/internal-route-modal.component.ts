@@ -95,8 +95,9 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const firewallExternalVrfs = this.externalVrfConnection
-      .externalFirewall.externalVrfConnections.map(connection => connection.externalVrf);
+    const firewallExternalVrfs = this.externalVrfConnection.externalFirewall.externalVrfConnections.map(
+      connection => connection.externalVrf,
+    );
 
     this.vrfOptions = Object.values(ExternalVrfConnectionExternalVrfEnum)
       .filter(enumValue => firewallExternalVrfs.includes(enumValue))

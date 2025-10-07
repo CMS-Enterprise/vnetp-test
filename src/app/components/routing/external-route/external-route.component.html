@@ -83,7 +83,12 @@
                 <button mat-icon-button matTooltip="Restore Route" color="primary" (click)="restoreRoute(route)">
                   <mat-icon>undo</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="Permanently Delete Route" color="warn" (click)="removeRouteFromExternalVrfConnection(route)">
+                <button
+                  mat-icon-button
+                  matTooltip="Permanently Delete Route"
+                  color="warn"
+                  (click)="removeRouteFromExternalVrfConnection(route)"
+                >
                   <mat-icon>delete_forever</mat-icon>
                 </button>
               </ng-container>

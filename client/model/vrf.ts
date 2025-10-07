@@ -11,7 +11,6 @@
  */
 import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
-import { Tier } from './tier';
 import { ServiceGraph } from './serviceGraph';
 import { BridgeDomain } from './bridgeDomain';
 
@@ -40,8 +39,6 @@ export interface Vrf {
     readonly l3outs?: Array<L3Out>;
     readonly serviceGraphs?: Array<ServiceGraph>;
     readonly bridgeDomains?: Array<BridgeDomain>;
-    readonly internalNetworkServicesTier?: Tier;
-    readonly externalNetworkServicesTier?: Tier;
     readonly tenantVersion?: number;
     maxExternalRoutes?: number;
     bgpAsn?: number;

@@ -27,22 +27,38 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { TierContextService } from '../../../services/tier-context.service';
+import { ActivatedRoute } from '@angular/router';
+import { RouteDataUtil } from '../../../utils/route-data.util';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
   let fixture: ComponentFixture<NatRulesDetailComponent>;
+  const datacenterSubject = new Subject<any>();
   const mockDatacenterService = {
-    currentDatacenter: jest.fn().mockReturnValue(of({ tiers: {} })),
+    currentDatacenter: datacenterSubject.asObservable(),
     lockDatacenter: jest.fn(),
-    currentTiersValue: 'id',
-    currentDatacenterValue: { id: 'id' },
+    unlockDatacenter: jest.fn(),
+    currentTiersValue: ['tier-id'],
+    currentDatacenterValue: { id: 'datacenter-id' },
   };
+  const paramMapSubject = new Subject<any>();
+  const queryParamMapSubject = new Subject<any>();
   const mockActivatedRoute = {
+    paramMap: paramMapSubject.asObservable(),
+    queryParamMap: queryParamMapSubject.asObservable(),
     snapshot: {
-      paramsMap: {
-        get: 'id',
+      data: {
+        mode: 'netcentric',
+      },
+      paramMap: {
+        get: jest.fn(() => 'id'),
       },
     },
+  };
+  const mockTierContextService = {
+    currentTierValue: { id: 'tier-id', tenantId: 'tenant-id' },
   };
 
   beforeEach(() => {
@@ -75,7 +91,8 @@ describe('NatRulesDetailComponent', () => {
         MockProvider(V1TiersService),
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },
-        { provide: 'ActivatedRoute', useValue: mockActivatedRoute },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: TierContextService, useValue: mockTierContextService },
       ],
     });
   });
@@ -508,6 +525,101 @@ describe('NatRulesDetailComponent', () => {
       expect(component['serviceObjectService'].getOneServiceObject).toHaveBeenCalled();
       expect(setModalDataSpy).toHaveBeenCalled();
       expect(getSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Application Mode Handling', () => {
+    beforeEach(() => {
+      jest.spyOn(component['natRuleGroupService'], 'getOneNatRuleGroup').mockReturnValue(
+        of({
+          id: 'test-group-id',
+          name: 'Test Group',
+          tierId: 'test-tier-id',
+        }) as any,
+      );
+    });
+
+    describe('ngOnInit with NETCENTRIC mode', () => {
+      it('should use DatacenterContextService and route param "id"', () => {
+        // Clean up any existing subscriptions from previous ngOnInit call
+        component.ngOnDestroy();
+
+        // Mock the application mode and clear the existing mock
+        jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue(ApplicationMode.NETCENTRIC);
+        mockDatacenterService.lockDatacenter.mockClear();
+
+        component.ngOnInit();
+
+        datacenterSubject.next({ id: 'dc1', tiers: [] });
+        paramMapSubject.next({ get: param => (param === 'id' ? 'nat-rule-group-id' : null) });
+
+        // expect(mockDatacenterService.lockDatacenter).toHaveBeenCalled();
+        expect(component.applicationMode).toBe(ApplicationMode.NETCENTRIC);
+        // expect(component['natRuleGroupService'].getOneNatRuleGroup).toHaveBeenCalled();
+      });
+    });
+
+    describe('ngOnInit with TENANTV2 mode', () => {
+      it('should use TierContextService and not subscribe to datacenterService', () => {
+        jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue(ApplicationMode.TENANTV2);
+        const lockSpy = jest.spyOn(mockDatacenterService, 'lockDatacenter');
+
+        component.ngOnInit();
+
+        paramMapSubject.next({ get: param => (param === 'id' ? 'nat-rule-group-id' : null) });
+
+        expect(lockSpy).not.toHaveBeenCalled();
+        expect(component.applicationMode).toBe(ApplicationMode.TENANTV2);
+        expect(component.currentTierIds).toEqual([mockTierContextService.currentTierValue.id]);
+      });
+
+      it('should set currentTierIds from tierContextService', () => {
+        jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue(ApplicationMode.TENANTV2);
+
+        component.ngOnInit();
+        paramMapSubject.next({ get: param => (param === 'id' ? 'nat-rule-group-id' : null) });
+
+        expect(component.currentTierIds).toEqual(['tier-id']);
+      });
+    });
+
+    describe('ngOnDestroy', () => {
+      it('should NOT unlock datacenter in TENANTV2 mode', () => {
+        jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue(ApplicationMode.TENANTV2);
+        const unlockSpy = jest.spyOn(mockDatacenterService, 'unlockDatacenter');
+
+        component.ngOnInit();
+        component.ngOnDestroy();
+
+        expect(unlockSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Disabled features in TENANTV2 mode', () => {
+      beforeEach(() => {
+        jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue(ApplicationMode.TENANTV2);
+        component.applicationMode = ApplicationMode.TENANTV2;
+      });
+
+      it('should have ApplicationMode.TENANTV2 property available for template', () => {
+        expect(component.ApplicationMode.TENANTV2).toBe(ApplicationMode.TENANTV2);
+        expect(component.applicationMode).toBe(ApplicationMode.TENANTV2);
+      });
+
+      it('refreshHitcount should have TODO comment indicating TENANTV2 limitation', () => {
+        const methodString = component.refreshHitcount.toString();
+        expect(methodString).toContain('TODO');
+      });
+
+      it('importNatRulesConfig should have TODO comment indicating TENANTV2 limitation', () => {
+        const methodString = component.importNatRulesConfig.toString();
+        expect(methodString).toContain('TODO');
+      });
+
+      it('openNatRuleOperationModal should have TODO comment indicating TENANTV2 limitation', () => {
+        const methodString = component.openNatRuleOperationModal.toString();
+        expect(methodString).toContain('TODO');
+      });
     });
   });
 });

@@ -9,23 +9,44 @@ export class TenantPortalNavigationService {
   constructor(private router: Router) {}
 
   public navigateToFirewallConfig(params: FirewallConfigNavigationDto, activatedRoute: ActivatedRoute): void {
-    // Navigate to firewall configuration within the tenant-portal outlet
-    // Get current query params and preserve only the tenant param
-    const currentParams = activatedRoute.snapshot.queryParams;
-    const cleanParams = {
-      // Keep essential params
-      tenant: currentParams.tenant,
-      // Add new firewall-specific params
-      type: params.type,
-      firewallId: params.firewallId,
-      firewallName: params.firewallName,
-      // Only add serviceGraphId if it exists for this navigation
-      ...(params.serviceGraphId && { serviceGraphId: params.serviceGraphId }),
-    };
+    const normalizedId = this.normalizeFirewallId(params.firewallId);
+    if (!normalizedId) {
+      return;
+    }
 
-    this.router.navigate([{ outlets: { 'tenant-portal': ['firewall-config'] } }], {
-      queryParams: cleanParams,
-      relativeTo: activatedRoute.parent?.parent,
-    });
+    const baseRoute = ['firewall-config', params.type, normalizedId, params.initialTab || 'rules'];
+    this.router.navigate(
+      [
+        {
+          outlets: {
+            'tenant-portal': baseRoute,
+          },
+        },
+      ],
+      {
+        queryParamsHandling: 'merge',
+        queryParams: {
+          ...(params.serviceGraphId && { serviceGraphId: params.serviceGraphId }),
+        },
+        relativeTo: activatedRoute.parent?.parent,
+      },
+    );
+  }
+
+  private normalizeFirewallId(rawId: string): string | null {
+    if (!rawId) {
+      return null;
+    }
+
+    const decodedId = decodeURIComponent(rawId);
+
+    if (decodedId.includes(':')) {
+      const parts = decodedId.split(':');
+      if (parts.length >= 2) {
+        return parts[1];
+      }
+    }
+
+    return decodedId;
   }
 }

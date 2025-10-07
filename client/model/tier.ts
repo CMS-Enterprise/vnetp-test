@@ -19,7 +19,6 @@ import { LoadBalancerNode } from './loadBalancerNode';
 import { LoadBalancerHealthMonitor } from './loadBalancerHealthMonitor';
 import { LoadBalancerSelfIp } from './loadBalancerSelfIp';
 import { Vlan } from './vlan';
-import { Vrf } from './vrf';
 import { LoadBalancerPool } from './loadBalancerPool';
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
@@ -43,7 +42,8 @@ export interface Tier {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    datacenterId: string;
+    datacenterId?: string;
+    tenantId?: string;
     tierGroupId?: string;
     readonly tierGroup?: TierGroup;
     tierType?: TierTierTypeEnum;
@@ -68,13 +68,10 @@ export interface Tier {
     readonly loadBalancerVlans?: Array<LoadBalancerVlan>;
     readonly loadBalancerSelfIps?: Array<LoadBalancerSelfIp>;
     readonly loadBalancerRoutes?: Array<LoadBalancerRoute>;
-    readonly internalForAppCentricVrf?: Vrf;
-    readonly externalForAppCentricVrf?: Vrf;
     readonly tenantVersion?: number;
     readonly appVersion?: string;
     readonly appIdEnabled?: boolean;
     runtimeDataLastRefreshed?: string;
-    transitTenantVrfs?: Array<TierTransitTenantVrfsEnum>;
 }
 export enum TierTierTypeEnum {
     Presentation = 'Presentation',
@@ -93,26 +90,8 @@ export enum TierTierClassEnum {
     Tst = 'TST',
     Bck = 'BCK',
     Mgt = 'MGT',
-    Sec = 'SEC'
-};
-export enum TierTransitTenantVrfsEnum {
-    CmsEntsrvInet = 'cms-entsrv-inet',
-    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
-    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
-    CmsEntsrvMon = 'cms-entsrv-mon',
-    CmsEntsrvPres = 'cms-entsrv-pres',
-    CmsEntsrvSec = 'cms-entsrv-sec',
-    CmsEntsrvVpn = 'cms-entsrv-vpn',
-    CmsnetAppdev = 'cmsnet_appdev',
-    CmsnetAppprod = 'cmsnet_appprod',
-    CmsnetDatadev = 'cmsnet_datadev',
-    CmsnetDataprod = 'cmsnet_dataprod',
-    CmsnetEdcVpn = 'cmsnet_edc_vpn',
-    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
-    CmsnetPresdev = 'cmsnet_presdev',
-    CmsnetPresprod = 'cmsnet_presprod',
-    CmsnetSec = 'cmsnet_sec',
-    CmsnetTransport = 'cmsnet_transport'
+    Sec = 'SEC',
+    Fw = 'FW'
 };
 
 

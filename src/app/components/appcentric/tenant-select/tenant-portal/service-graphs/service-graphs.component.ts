@@ -8,7 +8,6 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { RouteDataUtil } from '../../../../../utils/route-data.util';
 import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
-import { TenantPortalNavigationService } from 'src/app/services/tenant-portal-navigation.service';
 
 @Component({
   selector: 'app-service-graphs',
@@ -49,7 +48,6 @@ export class ServiceGraphsComponent implements OnInit {
     private tableContextService: TableContextService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private tenantPortalNavigation: TenantPortalNavigationService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<ServiceGraph>();
     advancedSearchAdapter.setService(this.serviceGraphService);
@@ -123,17 +121,24 @@ export class ServiceGraphsComponent implements OnInit {
   }
 
   public editFirewallConfig(serviceGraph: ServiceGraph): void {
-    // Use navigation service to handle firewall config navigation
-    if (serviceGraph.serviceGraphFirewall) {
-      this.tenantPortalNavigation.navigateToFirewallConfig(
-        {
-          type: 'service-graph-firewall',
-          firewallId: serviceGraph.serviceGraphFirewall.id,
-          firewallName: serviceGraph.serviceGraphFirewall.name,
-          serviceGraphId: serviceGraph.id,
-        },
-        this.activatedRoute,
-      );
+    if (!serviceGraph.serviceGraphFirewall) {
+      return;
     }
+
+    this.router.navigate(
+      [
+        '/tenantv2/tenant-select/edit',
+        this.tenantId,
+        'home',
+        {
+          outlets: {
+            'tenant-portal': ['firewall-config', 'service-graph-firewall', serviceGraph.serviceGraphFirewall.id],
+          },
+        },
+      ],
+      {
+        queryParamsHandling: 'preserve',
+      },
+    );
   }
 }

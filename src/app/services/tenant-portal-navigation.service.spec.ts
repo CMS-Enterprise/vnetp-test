@@ -17,15 +17,14 @@ describe('TenantPortalNavigationService', () => {
 
     service.navigateToFirewallConfig({ type: 'external-firewall', firewallId: 'fid', firewallName: 'fname' }, activatedRoute);
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([{ outlets: { 'tenant-portal': ['firewall-config'] } }], {
-      queryParams: {
-        tenant: 't1',
-        type: 'external-firewall',
-        firewallId: 'fid',
-        firewallName: 'fname',
+    expect(routerMock.navigate).toHaveBeenCalledWith(
+      [{ outlets: { 'tenant-portal': ['firewall-config', 'external-firewall', 'fid', 'rules'] } }],
+      {
+        queryParamsHandling: 'merge',
+        queryParams: {},
+        relativeTo: activatedRoute.parent.parent,
       },
-      relativeTo: activatedRoute.parent.parent,
-    });
+    );
   });
 
   it('navigates to firewall-config with serviceGraphId', () => {
@@ -44,15 +43,15 @@ describe('TenantPortalNavigationService', () => {
       activatedRoute,
     );
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([{ outlets: { 'tenant-portal': ['firewall-config'] } }], {
-      queryParams: {
-        tenant: 't2',
-        type: 'service-graph-firewall',
-        firewallId: 'fid2',
-        firewallName: 'fname2',
-        serviceGraphId: 'sg1',
+    expect(routerMock.navigate).toHaveBeenCalledWith(
+      [{ outlets: { 'tenant-portal': ['firewall-config', 'service-graph-firewall', 'fid2', 'rules'] } }],
+      {
+        queryParamsHandling: 'merge',
+        queryParams: {
+          serviceGraphId: 'sg1',
+        },
+        relativeTo: activatedRoute.parent.parent,
       },
-      relativeTo: activatedRoute.parent.parent,
-    });
+    );
   });
 });

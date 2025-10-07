@@ -36,7 +36,8 @@ describe('ExternalFirewallsComponent', () => {
 
     mockRouter = {
       routerState: { snapshot: { url: `/tenantv2/tenant-select/edit/${tenantId}/home/(tenant-portal:vrf)` } },
-    } as Partial<Router> as any;
+      navigate: jest.fn(),
+    } as any;
 
     mockActivatedRoute = {} as Partial<ActivatedRoute> as any;
 
@@ -136,12 +137,23 @@ describe('ExternalFirewallsComponent', () => {
     expect(spy).toHaveBeenCalledWith(params);
   });
 
-  it('editFirewallConfig delegates to navigation service', () => {
+  it('editFirewallConfig navigates to firewall config route', () => {
     const fw = { id: 'f1', name: 'FW-1' } as any;
     component.editFirewallConfig(fw);
-    expect(mockNav.navigateToFirewallConfig).toHaveBeenCalledWith(
-      { type: 'external-firewall', firewallId: 'f1', firewallName: 'FW-1' },
-      mockActivatedRoute,
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      [
+        '/tenantv2/tenant-select/edit',
+        tenantId,
+        'home',
+        {
+          outlets: {
+            'tenant-portal': ['firewall-config', 'external-firewall', 'f1'],
+          },
+        },
+      ],
+      {
+        queryParamsHandling: 'preserve',
+      },
     );
   });
 

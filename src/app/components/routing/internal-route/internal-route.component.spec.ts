@@ -30,7 +30,6 @@ describe('InternalRoutesComponent', () => {
   let mockTableContextService: any;
 
   beforeEach(async () => {
-    let capturedCloseCb: (() => void) | null = null;
     mockNgxSmartModalService = {
       close: jest.fn(),
       resetModalData: jest.fn(),
@@ -39,10 +38,7 @@ describe('InternalRoutesComponent', () => {
       getModal: jest.fn().mockReturnValue({
         open: jest.fn(),
         onCloseFinished: {
-          subscribe: jest.fn((cb: () => void) => {
-            capturedCloseCb = cb;
-            return { unsubscribe: jest.fn() };
-          }),
+          subscribe: jest.fn(() => ({ unsubscribe: jest.fn() })),
         },
       }),
     };

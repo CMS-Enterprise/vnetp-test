@@ -31,7 +31,6 @@ export class WorkflowViewModalComponent {
       })
       .subscribe(workflow => {
         this.workflow = workflow;
-        console.log('here');
         if (this.workflow.plan?.planJson) {
           const planObject = this.workflow.plan.planJson;
           this.planJson = JSON.stringify(planObject, null, 2);

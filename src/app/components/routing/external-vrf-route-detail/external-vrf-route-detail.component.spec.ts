@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { ExternalVrfRouteDetailComponent } from './external-vrf-route-detail.component';
 import { ExternalVrfConnection } from '../../../../../client';
 

@@ -3,4 +3,5 @@ export interface FirewallConfigNavigationDto {
   firewallId: string;
   firewallName: string;
   serviceGraphId?: string;
+  initialTab?: 'summary' | 'rules' | 'nat' | 'network-objects' | 'service-objects';
 }

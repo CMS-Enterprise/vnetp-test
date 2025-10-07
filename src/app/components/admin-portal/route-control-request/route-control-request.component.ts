@@ -37,9 +37,11 @@ export class RouteControlRequestComponent implements OnInit {
 
   public getPendingRouteControlRequests(): void {
     this.isLoading = true;
-    (this.routeControlRequestService.getManyRouteControlRequests({
-      filter: ['status||eq||PENDING']
-    }) as unknown as Observable<RouteControlRequest[]>)
+    (
+      this.routeControlRequestService.getManyRouteControlRequests({
+        filter: ['status||eq||PENDING'],
+      }) as unknown as Observable<RouteControlRequest[]>
+    )
       .pipe(
         switchMap(requests => {
           if (requests.length === 0) {
@@ -62,7 +64,7 @@ export class RouteControlRequestComponent implements OnInit {
         }),
       )
       .subscribe({
-        next: (result) => {
+        next: result => {
           const { requests, tenants, changes, tenantIds } = result as unknown as {
             requests: RouteControlRequest[];
             tenants: Map<string, string>;
@@ -86,8 +88,8 @@ export class RouteControlRequestComponent implements OnInit {
       const changeGroups: any[] = Array.isArray(requestChanges?.routeControlChanges)
         ? requestChanges.routeControlChanges
         : Array.isArray(requestChanges?.wanFormChanges)
-          ? requestChanges.wanFormChanges
-          : [];
+        ? requestChanges.wanFormChanges
+        : [];
       const additions = changeGroups.reduce(
         (acc: number, curr: any) => acc + (curr.addedInternalRoutes?.length || 0) + (curr.addedExternalRoutes?.length || 0),
         0,

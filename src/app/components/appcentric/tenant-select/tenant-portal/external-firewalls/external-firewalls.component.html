@@ -12,12 +12,15 @@
 
 <ng-template #actionsTemplate let-externalFirewall="datum">
   <section class="table__actions">
-    <app-icon-button
-      icon="edit"
-      label="Edit Firewall Configuration"
-      type="default"
-      (handleClick)="editFirewallConfig(externalFirewall)"
-    ></app-icon-button>
+    <a
+      class="btn btn-icon"
+      title="Edit Firewall Configuration"
+      aria-label="Edit Firewall Configuration"
+      (click)="editFirewallConfig(externalFirewall)"
+      queryParamsHandling="merge"
+    >
+      <fa-icon class="icon" [icon]="['fas', 'pencil-alt']"></fa-icon>
+    </a>
   </section>
 </ng-template>
 

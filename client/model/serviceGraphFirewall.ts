@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { Tenant } from './tenant';
+import { Tier } from './tier';
 import { ServiceGraph } from './serviceGraph';
 
 
@@ -27,5 +28,7 @@ export interface ServiceGraphFirewall {
     readonly tenant?: Tenant;
     tenantId?: string;
     vsysName: string;
+    readonly tier?: Tier;
+    tierId?: string;
 }
 

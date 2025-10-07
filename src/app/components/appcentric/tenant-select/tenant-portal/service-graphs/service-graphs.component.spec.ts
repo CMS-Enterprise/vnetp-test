@@ -16,6 +16,7 @@ describe('ServiceGraphsComponent', () => {
 
   const mockRouter = {
     routerState: { snapshot: { url: '/tenantv2/tenant-select/edit/11111111-1111-1111-1111-111111111111/home' } },
+    navigate: jest.fn(),
   } as any as Router;
 
   const mockActivatedRoute = {
@@ -91,16 +92,27 @@ describe('ServiceGraphsComponent', () => {
   it('editFirewallConfig navigates when serviceGraphFirewall present', () => {
     const sg = { id: 'sg1', serviceGraphFirewall: { id: 'fw1', name: 'FW' } } as any;
     component.editFirewallConfig(sg);
-    expect(mockTenantPortalNav.navigateToFirewallConfig).toHaveBeenCalledWith(
-      { type: 'service-graph-firewall', firewallId: 'fw1', firewallName: 'FW', serviceGraphId: 'sg1' },
-      mockActivatedRoute,
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      [
+        '/tenantv2/tenant-select/edit',
+        '11111111-1111-1111-1111-111111111111',
+        'home',
+        {
+          outlets: {
+            'tenant-portal': ['firewall-config', 'service-graph-firewall', 'fw1'],
+          },
+        },
+      ],
+      {
+        queryParamsHandling: 'preserve',
+      },
     );
   });
 
   it('editFirewallConfig no-op when serviceGraphFirewall missing', () => {
-    (mockTenantPortalNav.navigateToFirewallConfig as jest.Mock).mockClear();
+    (mockRouter.navigate as jest.Mock).mockClear();
     const sg = { id: 'sg2' } as any;
     component.editFirewallConfig(sg);
-    expect(mockTenantPortalNav.navigateToFirewallConfig).not.toHaveBeenCalled();
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 });

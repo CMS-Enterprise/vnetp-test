@@ -11,6 +11,7 @@
  */
 import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
+import { Tier } from './tier';
 import { ExternalVrfConnection } from './externalVrfConnection';
 
 
@@ -32,5 +33,7 @@ export interface ExternalFirewall {
     tenantId?: string;
     bgpAsn?: number;
     routingCost?: number;
+    readonly tier?: Tier;
+    tierId?: string;
 }
 

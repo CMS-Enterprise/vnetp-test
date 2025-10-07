@@ -45,9 +45,9 @@ export class TierContextService {
     this.router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
         this.getTiers();
-      }
-      if (this.lockCurrentTierSubject.value && e instanceof NavigationEnd) {
-        this.lockCurrentTierSubject.next(false);
+        if (this.lockCurrentTierSubject.value) {
+          this.lockCurrentTierSubject.next(false);
+        }
       }
     });
 
@@ -116,7 +116,7 @@ export class TierContextService {
     });
   }
 
-  public switchTier(tierId: string): boolean {
+  public switchTier(tierId: string, setQueryParam: boolean = true): boolean {
     if (this.lockCurrentTierSubject.value) {
       return false;
     }
@@ -135,10 +135,12 @@ export class TierContextService {
     }
     this.currentTierSubject.next(tier);
     this.ignoreNextQueryParamEvent = true;
-    this.router.navigate([], {
-      queryParams: { tier: tier.id },
-      queryParamsHandling: 'merge',
-    });
+    if (setQueryParam) {
+      this.router.navigate([], {
+        queryParams: { tier: tier.id },
+        queryParamsHandling: 'merge',
+      });
+    }
     return true;
   }
 
@@ -149,5 +151,21 @@ export class TierContextService {
       queryParams: { tier: null },
       queryParamsHandling: 'merge',
     });
+  }
+
+  public setTenantTiers(tiers: Tier[], currentTierId?: string): void {
+    this._tiers = tiers || [];
+    this.tiersSubject.next(this._tiers);
+
+    const targetTierId = currentTierId && this._tiers.some(t => t.id === currentTierId) ? currentTierId : this._tiers[0]?.id;
+
+    if (targetTierId) {
+      // Pass false, otherwise the router.navigate([]) will be called and will stop navigation.
+      this.switchTier(targetTierId, false);
+    }
+  }
+
+  public get tiersInternal(): Tier[] {
+    return this._tiers;
   }
 }

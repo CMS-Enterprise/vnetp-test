@@ -81,9 +81,8 @@ export class InternalRouteComponent implements OnInit {
 
   getConnectionChildren(): Observable<ExternalVrfConnection> {
     return this.externalVrfConnectionService.getOneExternalVrfConnection({
-      id: this.externalVrfConnection.id, relations: [
-        'externalFirewall.externalVrfConnections',
-      ]
+      id: this.externalVrfConnection.id,
+      relations: ['externalFirewall.externalVrfConnections'],
     });
   }
 
@@ -137,14 +136,14 @@ export class InternalRouteComponent implements OnInit {
         perPage: this.tableComponentDto.perPage,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.internalRoutes = data;
           this.isLoading = false;
         },
         error: () => {
           this.isLoading = false;
         },
-    });
+      });
   }
 
   public deleteInternalRoute(internalRoute: InternalRoute): void {

@@ -69,9 +69,8 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   getConnectionChildren(): Observable<ExternalVrfConnection> {
     return this.externalVrfConnectionService.getOneExternalVrfConnection({
-      id: this.externalVrfConnection.id, relations: [
-        'externalFirewall.externalVrfConnections',
-      ]
+      id: this.externalVrfConnection.id,
+      relations: ['externalFirewall.externalVrfConnections'],
     });
   }
 
@@ -101,8 +100,9 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   }
 
   getAllRoutes(): void {
-    const availableExternalVrfs = this.externalVrfConnection.
-      externalFirewall.externalVrfConnections.map(connection => connection.externalVrf).join(',');
+    const availableExternalVrfs = this.externalVrfConnection.externalFirewall.externalVrfConnections
+      .map(connection => connection.externalVrf)
+      .join(',');
     forkJoin({
       globalRoutes: this._fetchGlobalRoutes(availableExternalVrfs),
       assignedRoutes: this._fetchAssignedRoutes(),
@@ -116,7 +116,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
       .getManyExternalRoutes({
         environmentId: this.environmentId,
         limit: 50000,
-        filter: [`externalVrf||in||${availableExternalVrfs}`,],
+        filter: [`externalVrf||in||${availableExternalVrfs}`],
       })
       .pipe(map(response => (response || []) as GlobalExternalRoute[]));
   }
@@ -132,8 +132,9 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   private _processRoutesData(globalRoutes: GlobalExternalRoute[], assignedRoutes: ExternalRoute[]): void {
     this.allGlobalRoutes = globalRoutes;
-    this.availableVrfs = [...new Set(
-      this.externalVrfConnection.externalFirewall.externalVrfConnections.map(connection => connection.externalVrf))].sort();
+    this.availableVrfs = [
+      ...new Set(this.externalVrfConnection.externalFirewall.externalVrfConnections.map(connection => connection.externalVrf)),
+    ].sort();
 
     const localRoutes = assignedRoutes as ExternalRouteWithGlobalRoute[];
     localRoutes.forEach(route => {
@@ -162,8 +163,8 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
       return false;
     }
     const routeTagString = route.tag != null ? String(route.tag) : '';
-    const parentAsnString = this.externalVrfConnection.externalFirewall.bgpAsn != null ?
-      String(this.externalVrfConnection.externalFirewall.bgpAsn) : '';
+    const parentAsnString =
+      this.externalVrfConnection.externalFirewall.bgpAsn != null ? String(this.externalVrfConnection.externalFirewall.bgpAsn) : '';
     return routeTagString !== '' && parentAsnString !== '' && routeTagString === parentAsnString;
   }
 
@@ -171,7 +172,6 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     if (this.isRouteBgpTagBlocked(route)) {
       return 'Add disabled: route tag matches the parent VRF external BGP ASN';
     }
-
 
     return 'Add Route to External VRF Connection';
   }
@@ -207,9 +207,13 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   public openModal(): void {
     this.subscribeToModal();
-    this.ngx.setModalData({
-      externalVrfConnectionId: this.externalVrfConnection.id, tenantId: this.externalVrfConnection.tenantId
-    }, 'externalRouteModal');
+    this.ngx.setModalData(
+      {
+        externalVrfConnectionId: this.externalVrfConnection.id,
+        tenantId: this.externalVrfConnection.tenantId,
+      },
+      'externalRouteModal',
+    );
     this.ngx.getModal('externalRouteModal').open();
   }
 
