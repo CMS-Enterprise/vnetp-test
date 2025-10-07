@@ -14,7 +14,7 @@ module.exports = {
     '^lodash-es$': 'lodash',
   },
   testMatch: ['<rootDir>/src/**/*.spec.ts'],
-  coverageReporters: ['text', 'lcov'],
+  coverageReporters: ['text', 'lcov', 'html'],
   coverageThreshold: {
     global: {
       branches: 56,
