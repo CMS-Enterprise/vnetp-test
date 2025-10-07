@@ -30,6 +30,6 @@ describe('AdminPortalDashboardComponent', () => {
 
     component.getGlobalMessages();
 
-    expect(messageService.getMessagesMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
+    expect(messageService.getManyMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
   });
 });
