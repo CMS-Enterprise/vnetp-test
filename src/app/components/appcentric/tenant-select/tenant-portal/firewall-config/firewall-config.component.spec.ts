@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirewallConfigComponent } from './firewall-config.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 
 describe('FirewallConfigComponent', () => {
@@ -15,6 +15,7 @@ describe('FirewallConfigComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [FirewallConfigComponent],
+      imports: [RouterModule],
       providers: [{ provide: ActivatedRoute, useValue: mockRoute }],
     }).compileComponents();
 

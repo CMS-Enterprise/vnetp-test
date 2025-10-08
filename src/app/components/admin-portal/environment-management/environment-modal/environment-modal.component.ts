@@ -150,8 +150,8 @@ export class EnvironmentModalComponent implements OnInit {
       return;
     }
 
-    console.log('Save - Modal Mode:', this.modalMode); // Debug log
-    console.log('Save - Environment ID:', this.environmentId); // Debug log
+    // console.log('Save - Modal Mode:', this.modalMode); // Debug log
+    // console.log('Save - Environment ID:', this.environmentId); // Debug log
 
     const { name, description, externalVrfs } = this.form.getRawValue(); // Use getRawValue to include disabled fields
     const environment = {

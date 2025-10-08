@@ -62,7 +62,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
 
     if (!this.applicationMode) {
-      console.error('InternalRouteModalComponent: Application mode could not be determined via RouteDataUtil.');
+      // console.error('InternalRouteModalComponent: Application mode could not be determined via RouteDataUtil.');
       // Fallback or error handling if necessary
     }
 

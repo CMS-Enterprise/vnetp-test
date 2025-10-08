@@ -76,8 +76,8 @@ export class RouteControlRequestComponent implements OnInit {
           this.changesByTenantId = new Map((tenantIds as string[]).map((id, i) => [id, changes[i]]));
           this.buildDisplayItems();
         },
-        error: err => {
-          console.error('Error fetching WAN form requests:', err);
+        error: () => {
+          // console.error('Error fetching WAN form requests:', err);
         },
       });
   }

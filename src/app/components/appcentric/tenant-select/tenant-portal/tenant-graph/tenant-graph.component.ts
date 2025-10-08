@@ -51,7 +51,7 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
     // Subscribe to path trace state changes
     this.tenantGraphCore.pathTraceStateChange.pipe(takeUntil(this.destroy$)).subscribe(state => {
       this.pathTraceState = state;
-      console.log('PathTrace state changed:', state);
+      // console.log('PathTrace state changed:', state);
     });
   }
 
@@ -76,12 +76,12 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
         next: (graph: TenantConnectivityGraph) => {
           this.graph = graph;
           this.isLoading = false;
-          console.log('Tenant graph loaded:', graph);
+          // console.log('Tenant graph loaded:', graph);
           // Small delay to ensure DOM is ready
           setTimeout(() => this.renderGraph(), 100);
         },
         error: (err: any) => {
-          console.error('Failed to load tenant graph:', err);
+          // console.error('Failed to load tenant graph:', err);
           this.error = err?.message || 'Failed to load tenant graph';
           this.isLoading = false;
         },

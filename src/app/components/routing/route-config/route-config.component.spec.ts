@@ -9,6 +9,8 @@ import {
   Vrf,
 } from '../../../../../client';
 import { RouteConfigComponent } from './route-config.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('RouteConfigComponent', () => {
   let component: RouteConfigComponent;
@@ -51,6 +53,7 @@ describe('RouteConfigComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [RouteConfigComponent],
+      imports: [MatToolbarModule, MatIconModule],
       providers: [
         { provide: ActivatedRoute, useValue: mockRoute },
         { provide: V2AppCentricVrfsService, useValue: mockVrfService },

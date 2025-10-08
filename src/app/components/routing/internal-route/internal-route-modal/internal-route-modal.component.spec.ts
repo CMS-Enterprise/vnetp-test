@@ -13,6 +13,7 @@ import {
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterContextService } from '../../../../services/datacenter-context.service';
 import { InternalRouteModalComponent } from './internal-route-modal.component';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 
 describe('InternalRouteModalComponent', () => {
   let component: InternalRouteModalComponent;
@@ -57,7 +58,7 @@ describe('InternalRouteModalComponent', () => {
     vrfService = {} as Partial<V2AppCentricVrfsService> as any;
 
     await TestBed.configureTestingModule({
-      declarations: [InternalRouteModalComponent],
+      declarations: [InternalRouteModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       imports: [ReactiveFormsModule],
       providers: [
         { provide: NgxSmartModalService, useValue: ngx },

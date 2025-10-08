@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ExternalVrfRouteDetailComponent } from './external-vrf-route-detail.component';
 import { ExternalVrfConnection } from '../../../../../client';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ExternalVrfRouteDetailComponent', () => {
   let component: ExternalVrfRouteDetailComponent;
@@ -23,6 +24,7 @@ describe('ExternalVrfRouteDetailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ExternalVrfRouteDetailComponent],
+      imports: [MatTooltipModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
