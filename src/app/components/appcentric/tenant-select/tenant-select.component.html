@@ -59,6 +59,12 @@
   <section class="table__actions">
     <app-icon-button
       *ngIf="!tenant?.deletedAt && applicationMode === ApplicationMode.ADMINPORTAL"
+      icon="clock"
+      label="Edit Tenant"
+      (handleClick)="openAWSModal(tenant)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="!tenant?.deletedAt && applicationMode === ApplicationMode.ADMINPORTAL"
       icon="edit"
       label="Edit Tenant"
       (handleClick)="navigateToTenantInfrastructure('edit', tenant)"

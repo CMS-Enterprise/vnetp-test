@@ -47,6 +47,7 @@ export class TenantSelectComponent implements OnInit {
     ],
   };
   typeDeletemodalSubscription: Subscription;
+  awsModalSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -63,6 +64,7 @@ export class TenantSelectComponent implements OnInit {
 
   private determineApplicationMode(): void {
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+    console.log('this.applicationMode', this.applicationMode);
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -247,5 +249,35 @@ export class TenantSelectComponent implements OnInit {
     this.selectedTenantToDelete = tenant;
     this.subscribeToTypeDeleteModal();
     this.ngx.getModal('typeDeleteModal').open();
+  }
+
+  // public subscribeToAWSModal(): void {
+  //   this.awsModalSubscription = this.ngx.getModal('aws').onCloseFinished.subscribe(() => {
+  //     this.ngx.resetModalData('typeDeleteModal');
+  //     this.typeDeletemodalSubscription.unsubscribe();
+  //     this.getTenants();
+  //   });
+  // }
+
+  public openAWSModal() {
+    const modalDto = new YesNoModalDto('Deploy tenant in AWS', 'Are you sure you want to deploy this tenant into AWS?');
+    const onConfirm = () => {
+      // this.tenantService
+      //   .softDeleteOneTenant({
+      //     id: tenant.id,
+      //   })
+      //   .subscribe(() => {
+      //     const params = this.tableContextService.getSearchLocalStorage();
+      //     const { filteredResults } = params;
+      //     // if filtered results boolean is true, apply search params in the
+      //     // subsequent get call
+      //     if (filteredResults) {
+      //       this.getTenants();
+      //     } else {
+      //       this.getTenants();
+      //     }
+      //   });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 }
