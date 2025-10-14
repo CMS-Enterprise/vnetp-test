@@ -29346,6 +29346,9 @@
             "type": "boolean",
             "readOnly": true
           },
+          "awsManaged": {
+            "type": "boolean"
+          },
           "tenantVersion": {
             "type": "number",
             "readOnly": true,
@@ -29427,6 +29430,7 @@
         "required": [
           "datacenter",
           "allowServiceGraphBypass",
+          "awsManaged",
           "environmentId"
         ]
       },

@@ -259,7 +259,7 @@ export class TenantSelectComponent implements OnInit {
   //   });
   // }
 
-  public openAWSModal() {
+  public openAWSModal(tenant) {
     const modalDto = new YesNoModalDto('Deploy tenant in AWS', 'Are you sure you want to deploy this tenant into AWS?');
     const onConfirm = () => {
       // this.tenantService
@@ -277,6 +277,12 @@ export class TenantSelectComponent implements OnInit {
       //       this.getTenants();
       //     }
       //   });
+      tenant.awsManaged = true;
+      delete tenant.routeControlRejectionReason;
+      delete tenant.name;
+      this.tenantService.updateOneTenant({ id: tenant.id, tenant }).subscribe(data => {
+        console.log('data', data);
+      });
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }

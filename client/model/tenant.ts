@@ -61,6 +61,7 @@ export interface Tenant {
     readonly datacenterId?: string;
     readonly datacenter: Datacenter;
     readonly allowServiceGraphBypass: boolean;
+    awsManaged: boolean;
     readonly tenantVersion?: number;
     readonly environmentId: string;
     readonly routeControlVersion?: number;
