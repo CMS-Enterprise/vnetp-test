@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyMessageResponseDto, Message, V3GlobalMessagesService } from 'client';
+import { Message, GetManyMessageResponseDto, V3GlobalMessagesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';

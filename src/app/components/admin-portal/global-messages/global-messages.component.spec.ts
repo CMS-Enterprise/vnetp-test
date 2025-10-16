@@ -10,7 +10,7 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { GetManyMessageResponseDto, Message, V3GlobalMessagesService } from 'client';
+import { Message, GetManyMessageResponseDto, V3GlobalMessagesService } from 'client';
 import { GlobalMessagesComponent } from './global-messages.component';
 import { Subject, Subscription, of } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -52,7 +52,10 @@ describe('GlobalMessagesComponent', () => {
         count: 2,
         page: 1,
         pageCount: 1,
-        data: [{ id: '1', description: 'message1', timestamp: new Date().toISOString() } as Message, { id: '2', description: 'message2', timestamp: new Date().toISOString() } as Message],
+        data: [
+          { id: '1', description: 'message1', timestamp: '2021-01-01' },
+          { id: '2', description: 'message2', timestamp: '2021-01-02' },
+        ],
       };
       component.messages = messagesMock;
 

@@ -122,10 +122,6 @@ spec:
         }
         success {
                 script {
-                    if (env.GIT_BRANCH == 'int' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master') {
-                        sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
-                        cobertura(coberturaReportFile: 'cobertura-coverage.xml')
-                    }
                     slackSend(channel: 'cds-draas-jenkins')
                 }
             }
