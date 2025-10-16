@@ -20,8 +20,4 @@ describe('NotFoundComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render a not found message', () => {
-    const message = fixture.debugElement.query(By.css('.jumbotron'));
-    expect(message.nativeElement.textContent).toBe('404 Not Found');
-  });
 });

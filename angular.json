@@ -21,7 +21,7 @@
             "polyfills": ["src/polyfills.ts"],
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/assets/styles/main.scss", "node_modules/@ng-select/ng-select/themes/default.theme.css"],
+            "styles": ["src/assets/styles/main.scss", "node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "node_modules/@ng-select/ng-select/themes/default.theme.css"],
             "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
             "extractLicenses": false,
             "sourceMap": true,

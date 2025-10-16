@@ -9,6 +9,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
 import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
 import { Subject, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 interface Data {
   name: string;
@@ -17,8 +18,17 @@ interface Data {
 describe('TableComponent', () => {
   let component: TableComponent<Data>;
   let fixture: ComponentFixture<TableComponent<Data>>;
+  let mockActivatedRoute: any;
 
   beforeEach(() => {
+    mockActivatedRoute = {
+      snapshot: {
+        queryParams: {
+          tenant: '',
+        },
+      },
+    };
+
     TestBed.configureTestingModule({
       imports: [],
       declarations: [
@@ -29,7 +39,7 @@ describe('TableComponent', () => {
         MockComponent({ selector: 'app-advanced-search-modal', inputs: ['objectType', 'formInputs', 'advancedSearchAdapterSubject'] }),
         MockNgxSmartModalComponent,
       ],
-      providers: [AdvancedSearchComponent, SearchBarComponent, MockProvider(NgxSmartModalService)],
+      providers: [AdvancedSearchComponent, SearchBarComponent, MockProvider(NgxSmartModalService), { provide: ActivatedRoute, useValue: mockActivatedRoute }],
     });
 
     fixture = TestBed.createComponent(TableComponent);

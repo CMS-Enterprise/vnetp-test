@@ -175,9 +175,6 @@ export class TableComponent<T> implements AfterViewInit, OnChanges {
     const cols = this.config?.columns || [];
     this.materialColumns = cols.map((col, index) => ({ id: this.generateColumnId(col, index), col }));
     this.displayedColumns = this.materialColumns.map(mc => mc.id);
-    if (this.expandableRows) {
-      this.displayedColumns = [this.expanderColumnId, ...this.displayedColumns];
-    }
 
     this.changeRef.detectChanges();
   }

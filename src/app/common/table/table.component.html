@@ -22,16 +22,6 @@
     </div>
   }
   <table mat-table [dataSource]="dataSourceData" class="mat-elevation-z1 w-100" [multiTemplateDataRows]="true">
-    @if (expandableRows) {
-      <ng-container [matColumnDef]="expanderColumnId">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let datum" class="text-center" style="width: 40px">
-          <button mat-icon-button type="button" (click)="toggleExpand($event, datum)">
-            <fa-icon [icon]="['fas', datum.expanded ? 'chevron-down' : 'chevron-right']"></fa-icon>
-          </button>
-        </td>
-      </ng-container>
-    }
     <ng-container *ngFor="let mc of materialColumns; trackBy: trackByMaterialColumn" [matColumnDef]="mc.id">
       <th mat-header-cell *matHeaderCellDef>{{ mc.col.name }}</th>
       <td mat-cell *matCellDef="let datum">
@@ -44,31 +34,45 @@
       </td>
     </ng-container>
 
+    <!-- Always render headers -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      [ngStyle]="getRowStyle(row)"
-      [class.expandableRow]="expandableRows"
-      [attr.aria-expanded]="row.expanded ? 'true' : 'false'"
-      [ngClass]="{ expanded: row.expanded }"
-    ></tr>
+    @if (dataSourceData?.length > 0) {
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [ngStyle]="getRowStyle(row)"
+        [class.expandableRow]="expandableRows"
+        [attr.aria-expanded]="row.expanded ? 'true' : 'false'"
+        [ngClass]="{ expanded: row.expanded }"
+        (click)="toggleExpand($event, row)"
+      ></tr>
 
-    @if (expandableRows) {
-      <ng-container matColumnDef="detail">
-        <td mat-cell *matCellDef="let datum" [attr.colspan]="displayedColumns.length">
-          <ng-container *ngTemplateOutlet="config.expandableRows(); context: { datum: datum }"></ng-container>
+      @if (expandableRows) {
+        <ng-container matColumnDef="detail">
+          <td mat-cell *matCellDef="let datum" [attr.colspan]="displayedColumns.length">
+            <ng-container *ngTemplateOutlet="config.expandableRows(); context: { datum: datum }"></ng-container>
+          </td>
+        </ng-container>
+        <tr mat-row *matRowDef="let row; columns: detailColumns; when: isExpanded" class="expanded"></tr>
+      }
+    } @else {
+      <tr class="mat-row">
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="text-align: center; color: #757575; padding: 16px">
+          No data available
         </td>
-      </ng-container>
-      <tr mat-row *matRowDef="let row; columns: detailColumns; when: isExpanded" class="expanded"></tr>
+      </tr>
     }
   </table>
+  @if (!(dataSourceData?.length > 0)) {
+    <div style="text-align: center; color: #757575; padding: 16px">No data available</div>
+  }
   @if (paginationControlsOn) {
     <mat-paginator
       [length]="data?.total || 0"
       [pageIndex]="(data?.page || 1) - 1"
       [pageSize]="itemsPerPage || data?.total / data?.pageCount || 20"
       [pageSizeOptions]="[20, 50, 100]"
+      [hidePageSize]="false"
       (page)="handleMatPage($event)"
     />
   }
