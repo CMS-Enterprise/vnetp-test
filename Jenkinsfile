@@ -9,7 +9,7 @@ spec:
   restartPolicy: Never
   containers:
   - name: node
-    image: artifactory.cloud.cms.gov/docker/node:20.16
+    image: artifactory.cloud.cms.gov/docker/node:22.18
     command: ['cat']
     tty: true
     resources:
