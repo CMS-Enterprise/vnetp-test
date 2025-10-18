@@ -11,14 +11,18 @@
  */
 
 
-export interface SubjectToFilter { 
+export interface PathTraceControlPlaneMetadata { 
     /**
-     * Subject ID
+     * Whether this hop is a control plane node
      */
-    subjectId: string;
+    allowed: boolean;
     /**
-     * Filter ID
+     * Reason for the allowed status.
      */
-    filterId: string;
+    allowedReason: string;
+    /**
+     * TODO: Generated configuration for the allowed status.
+     */
+    generatedConfiguration: object;
 }
 

@@ -8,7 +8,7 @@ export { TenantGraphUIService } from './tenant-graph-ui.service';
 export { TenantGraphInteractionService } from './tenant-graph-interaction.service';
 
 // Re-export interfaces from their respective services
-export type { PathTraceNode, PathTraceHop, PathTraceData, PathTraceState } from './tenant-graph-path-trace.service';
+export type { PathTraceNode, PathTraceData, PathTraceState, PathInfo } from './tenant-graph-path-trace.service';
 
 export type { EdgeStyle, TenantEdgeStyleMap } from './tenant-graph-highlight.service';
 

@@ -35,6 +35,10 @@ export interface TenantConnectivityGraph {
      */
     tenantId?: string;
     /**
+     * Version of the tenant this graph represents
+     */
+    tenantVersion?: number;
+    /**
      * Performance indexes for fast lookups
      */
     indexes: GraphIndexes;

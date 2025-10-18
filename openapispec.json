@@ -15930,7 +15930,7 @@
       "get": {
         "operationId": "getTenantInfrastructureGraph",
         "summary": "Get tenant infrastructure graph",
-        "description": "Get tenant infrastructure graph",
+        "description": "Get tenant infrastructure graph with caching support",
         "parameters": [
           {
             "name": "id",
@@ -22624,7 +22624,7 @@
         ]
       }
     },
-    "/v2/utilities/connectivity/report": {
+    "/v2/utilities/ecu/ip-connectivity": {
       "post": {
         "operationId": "generateConnectivityReportUtilities",
         "summary": "Generate connectivity report between two endpoints",
@@ -22645,7 +22645,39 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EndpointConnectionUtilityResponse"
+                  "$ref": "#/components/schemas/PathResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utilities"
+        ]
+      }
+    },
+    "/v2/utilities/ecu/node-connectivity": {
+      "post": {
+        "operationId": "generateNodeConnectivityReportUtilities",
+        "summary": "Generate connectivity report between two graph nodes.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointConnectivityNodeQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connectivity report generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PathResult"
                 }
               }
             }
@@ -22820,6 +22852,648 @@
         },
         "tags": [
           "v1/runtime-data/aci-runtime"
+        ]
+      }
+    },
+    "/v3/global/external-routes/environment/{environmentId}/external-routes": {
+      "get": {
+        "operationId": "getManyExternalRoutes",
+        "summary": "Get many External Routes for an Environment",
+        "parameters": [
+          {
+            "name": "environmentId",
+            "required": true,
+            "in": "path",
+            "description": "Environment ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyGlobalExternalRouteResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GlobalExternalRoute"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/external-routes"
+        ]
+      }
+    },
+    "/v3/global/external-routes/environment/{environmentId}/vrf/{vrf}/external-routes": {
+      "get": {
+        "operationId": "getManyExternalRoutesByVrf",
+        "summary": "Get many External Routes for a specific VRF",
+        "parameters": [
+          {
+            "name": "environmentId",
+            "required": true,
+            "in": "path",
+            "description": "Environment ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vrf",
+            "required": true,
+            "in": "path",
+            "description": "VRF enum value",
+            "schema": {
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyGlobalExternalRouteResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GlobalExternalRoute"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/external-routes"
+        ]
+      }
+    },
+    "/v3/global/external-routes/environments/{environmentId}/vrf/{vrf}/sync": {
+      "post": {
+        "operationId": "syncExternalRoutes",
+        "summary": "Sync External Routes",
+        "description": "Bulk sync external routes with automatic creation, update, and expiration",
+        "parameters": [
+          {
+            "name": "environmentId",
+            "required": true,
+            "in": "path",
+            "description": "Environment ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vrf",
+            "required": true,
+            "in": "path",
+            "description": "VRF enum value",
+            "schema": {
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Array of external routes to sync",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ExternalRouteSyncDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "created": {
+                      "type": "number",
+                      "example": 10
+                    },
+                    "updated": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "expired": {
+                      "type": "number",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/external-routes"
+        ]
+      }
+    },
+    "/v3/global/environments": {
+      "post": {
+        "operationId": "createOneEnvironment",
+        "summary": "Create one Environment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Environment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environments"
+        ]
+      },
+      "get": {
+        "operationId": "getManyEnvironments",
+        "summary": "Get many Environments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Environment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environments"
+        ]
+      }
+    },
+    "/v3/global/environments/{id}": {
+      "put": {
+        "operationId": "updateOneEnvironment",
+        "summary": "Update one Environment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Environment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environments"
+        ]
+      },
+      "get": {
+        "operationId": "getOneEnvironment",
+        "summary": "Get one Environment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environments"
+        ]
+      }
+    },
+    "/v3/global/environments/summary": {
+      "get": {
+        "operationId": "getManyEnvironmentSummaries",
+        "summary": "Get many Environment Summaries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnvironmentSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environments"
+        ]
+      }
+    },
+    "/v3/global/environments/{id}/summary": {
+      "get": {
+        "operationId": "getOneEnvironmentSummary",
+        "summary": "Get one Environment Summary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environments"
         ]
       }
     },
@@ -24681,648 +25355,6 @@
         },
         "tags": [
           "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v3/global/external-routes/environment/{environmentId}/external-routes": {
-      "get": {
-        "operationId": "getManyExternalRoutes",
-        "summary": "Get many External Routes for an Environment",
-        "parameters": [
-          {
-            "name": "environmentId",
-            "required": true,
-            "in": "path",
-            "description": "Environment ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyGlobalExternalRouteResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/GlobalExternalRoute"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/external-routes"
-        ]
-      }
-    },
-    "/v3/global/external-routes/environment/{environmentId}/vrf/{vrf}/external-routes": {
-      "get": {
-        "operationId": "getManyExternalRoutesByVrf",
-        "summary": "Get many External Routes for a specific VRF",
-        "parameters": [
-          {
-            "name": "environmentId",
-            "required": true,
-            "in": "path",
-            "description": "Environment ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "vrf",
-            "required": true,
-            "in": "path",
-            "description": "VRF enum value",
-            "schema": {
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyGlobalExternalRouteResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/GlobalExternalRoute"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/external-routes"
-        ]
-      }
-    },
-    "/v3/global/external-routes/environment/{environmentId}/vrf/{vrf}/sync": {
-      "post": {
-        "operationId": "syncExternalRoutes",
-        "summary": "Sync External Routes",
-        "description": "Bulk sync external routes with automatic creation, update, and expiration",
-        "parameters": [
-          {
-            "name": "environmentId",
-            "required": true,
-            "in": "path",
-            "description": "Environment ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "vrf",
-            "required": true,
-            "in": "path",
-            "description": "VRF enum value",
-            "schema": {
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "description": "Array of external routes to sync",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ExternalRouteSyncDto"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "created": {
-                      "type": "number",
-                      "example": 10
-                    },
-                    "updated": {
-                      "type": "number",
-                      "example": 5
-                    },
-                    "expired": {
-                      "type": "number",
-                      "example": 2
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/external-routes"
-        ]
-      }
-    },
-    "/v3/global/environments": {
-      "post": {
-        "operationId": "createOneEnvironment",
-        "summary": "Create one Environment",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Environment"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Environment"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/environments"
-        ]
-      },
-      "get": {
-        "operationId": "getManyEnvironments",
-        "summary": "Get many Environments",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Environment"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/environments"
-        ]
-      }
-    },
-    "/v3/global/environments/{id}": {
-      "put": {
-        "operationId": "updateOneEnvironment",
-        "summary": "Update one Environment",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Environment"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Environment"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/environments"
-        ]
-      },
-      "get": {
-        "operationId": "getOneEnvironment",
-        "summary": "Get one Environment",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Environment"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/environments"
-        ]
-      }
-    },
-    "/v3/global/environments/summary": {
-      "get": {
-        "operationId": "getManyEnvironmentSummaries",
-        "summary": "Get many Environment Summaries",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EnvironmentSummary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/environments"
-        ]
-      }
-    },
-    "/v3/global/environments/{id}/summary": {
-      "get": {
-        "operationId": "getOneEnvironmentSummary",
-        "summary": "Get one Environment Summary",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EnvironmentSummary"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/environments"
         ]
       }
     },
@@ -33833,6 +33865,10 @@
             "type": "string",
             "description": "Tenant ID this graph represents"
           },
+          "tenantVersion": {
+            "type": "number",
+            "description": "Version of the tenant this graph represents"
+          },
           "indexes": {
             "description": "Performance indexes for fast lookups",
             "allOf": [
@@ -34002,7 +34038,7 @@
               "maxExternalRoutes": 1000
             }
           },
-          "entityId": {
+          "databaseId": {
             "type": "string",
             "description": "Entity ID if this represents a database entity",
             "example": "uuid-1234-5678-9abc-def0"
@@ -34157,7 +34193,10 @@
               "CONTRACT_TO_SUBJECT",
               "FILTER_TO_FILTER_ENTRY",
               "BRIDGE_DOMAIN_TO_SUBNET",
-              "ENDPOINT_TO_ENDPOINT_GROUP"
+              "ESG_TO_SELECTOR",
+              "EPG_TO_SELECTOR",
+              "ENDPOINT_TO_ENDPOINT_GROUP",
+              "ENDPOINT_TO_ENDPOINT_IP_ADDRESS"
             ],
             "example": "VRF_TO_L3OUT"
           },
@@ -34939,6 +34978,10 @@
           "tenantId": {
             "type": "string",
             "description": "Tenant ID"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "description": "Version of the tenant"
           }
         },
         "required": [
@@ -34950,272 +34993,311 @@
           "bypassServiceGraph",
           "generateConfig",
           "bidirectional",
-          "tenantId"
+          "tenantId",
+          "tenantVersion"
         ]
       },
-      "SubjectToFilter": {
+      "PathTraceNode": {
         "type": "object",
         "properties": {
-          "subjectId": {
+          "id": {
             "type": "string",
-            "description": "Subject ID"
+            "description": "Unique identifier of the node",
+            "example": "endpoint:12345:aa:bb:cc:dd:ee:ff"
           },
-          "filterId": {
+          "name": {
             "type": "string",
-            "description": "Filter ID"
+            "description": "Human-readable name of the node",
+            "example": "web-server-01"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the node",
+            "example": "ENDPOINT"
           }
         },
         "required": [
-          "subjectId",
-          "filterId"
+          "id",
+          "name",
+          "type"
         ]
       },
-      "ContractToEpg": {
+      "PathTraceControlPlaneMetadata": {
         "type": "object",
         "properties": {
-          "contractId": {
-            "type": "string",
-            "description": "Contract ID"
+          "allowed": {
+            "type": "boolean",
+            "description": "Whether this hop is a control plane node",
+            "example": true
           },
-          "epgId": {
+          "allowedReason": {
             "type": "string",
-            "description": "Endpoint Group ID"
+            "description": "Reason for the allowed status."
           },
-          "contractRelationType": {
-            "type": "string",
-            "description": "Contract Relation Type",
-            "enum": [
-              "Provider",
-              "Consumer",
-              "Intra"
-            ]
+          "generatedConfiguration": {
+            "type": "object",
+            "description": "TODO: Generated configuration for the allowed status."
           }
         },
         "required": [
-          "contractId",
-          "epgId",
-          "contractRelationType"
+          "allowed",
+          "allowedReason",
+          "generatedConfiguration"
         ]
       },
-      "ContractToEsg": {
-        "type": "object",
-        "properties": {
-          "contractId": {
-            "type": "string",
-            "description": "Contract ID"
-          },
-          "esgId": {
-            "type": "string",
-            "description": "Endpoint Group ID"
-          },
-          "contractRelationType": {
-            "type": "string",
-            "description": "Contract Relation Type",
-            "enum": [
-              "Provider",
-              "Consumer",
-              "Intra"
-            ]
-          }
-        },
-        "required": [
-          "contractId",
-          "esgId",
-          "contractRelationType"
-        ]
-      },
-      "EndpointConnectivityGeneratedConfig": {
-        "type": "object",
-        "properties": {
-          "existingContract": {
-            "type": "boolean"
-          },
-          "Contracts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "Subjects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          },
-          "Filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "FilterEntries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "SubjectToFilter": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubjectToFilter"
-            }
-          },
-          "ContractToEpg": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ContractToEpg"
-            }
-          },
-          "ContractToEsg": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ContractToEsg"
-            }
-          },
-          "FirewallRules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FirewallRule"
-            }
-          }
-        },
-        "required": [
-          "existingContract",
-          "Contracts",
-          "Subjects",
-          "Filters",
-          "FilterEntries",
-          "SubjectToFilter",
-          "ContractToEpg",
-          "ContractToEsg",
-          "FirewallRules"
-        ]
-      },
-      "ConnectivityNode": {
+      "PathTraceHop": {
         "type": "object",
         "properties": {
           "nodeId": {
             "type": "string",
-            "description": "The ID of the node"
+            "description": "Node ID for this hop",
+            "example": "endpoint-group:epg-web"
+          },
+          "nodeName": {
+            "type": "string",
+            "description": "Human-readable node name",
+            "example": "web-tier-epg"
           },
           "nodeType": {
             "type": "string",
-            "description": "The type of the node",
-            "enum": [
-              "external_endpoint",
-              "endpoint",
-              "epg",
-              "esg",
-              "contract",
-              "subject",
-              "filter",
-              "filter_entry",
-              "service_graph",
-              "tenant"
-            ]
+            "description": "Node type for this hop",
+            "example": "ENDPOINT_GROUP"
           },
-          "generated": {
-            "type": "boolean",
-            "description": "Whether the node is generated"
-          },
-          "name": {
+          "edgeId": {
             "type": "string",
-            "description": "The name of the node"
-          }
-        }
-      },
-      "ConnectionTrace": {
-        "type": "object",
-        "properties": {
-          "sourcePath": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConnectivityNode"
-            }
+            "description": "Edge ID connecting to the next hop",
+            "example": "edge:epg-web-to-bd-web"
           },
-          "contractPath": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConnectivityNode"
-            }
+          "cost": {
+            "type": "number",
+            "description": "Routing cost for this hop (0 for non-firewall nodes)",
+            "example": 100
           },
-          "destinationPath": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConnectivityNode"
-            }
+          "isLastHop": {
+            "type": "boolean",
+            "description": "Whether this is the last hop in an incomplete path",
+            "example": false
           },
-          "fullPath": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConnectivityNode"
-            }
+          "controlPlaneMetadata": {
+            "description": "Control plane metadata for this hop",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathTraceControlPlaneMetadata"
+              }
+            ]
           }
         },
         "required": [
-          "sourcePath",
-          "contractPath",
-          "destinationPath",
-          "fullPath"
+          "nodeId",
+          "nodeName",
+          "nodeType",
+          "cost",
+          "isLastHop",
+          "controlPlaneMetadata"
         ]
       },
-      "EndpointConnectionUtilityResponse": {
+      "PathTraceData": {
         "type": "object",
         "properties": {
-          "connectivityResult": {
+          "source": {
+            "description": "Source node information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathTraceNode"
+              }
+            ]
+          },
+          "target": {
+            "description": "Target/destination node information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathTraceNode"
+              }
+            ]
+          },
+          "path": {
+            "description": "Complete path as a sequence of hops",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PathTraceHop"
+            }
+          },
+          "isComplete": {
+            "type": "boolean",
+            "description": "Whether a complete path was found from source to target",
+            "example": true
+          },
+          "totalCost": {
+            "type": "number",
+            "description": "Total routing cost (sum of all hop costs)",
+            "example": 200
+          },
+          "lastHopNodeId": {
             "type": "string",
-            "description": "The source endpoint",
-            "enum": [
-              "allowed",
-              "denied",
-              "not-supported",
-              "denied-generated-config"
-            ]
+            "description": "Last reachable node ID for incomplete paths",
+            "example": "vrf:production"
+          }
+        },
+        "required": [
+          "source",
+          "target",
+          "path",
+          "isComplete",
+          "totalCost"
+        ]
+      },
+      "PathInfo": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "description": "Node IDs in path order",
+            "example": [
+              "endpoint:src",
+              "epg:web",
+              "vrf:prod",
+              "epg:app",
+              "endpoint:dst"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
-          "connectivityResultDetail": {
-            "type": "string",
-            "description": "The detail of the connectivity result"
+          "edges": {
+            "description": "Edge IDs in path order",
+            "example": [
+              "edge:ep-to-epg",
+              "edge:epg-to-vrf",
+              "edge:vrf-to-epg"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
-          "generatedConfig": {
-            "description": "Generated configuration when connectivity requires new config",
-            "readOnly": true,
+          "costs": {
+            "description": "Per-edge routing costs",
+            "example": [
+              0,
+              0,
+              100,
+              0
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "totalCost": {
+            "type": "number",
+            "description": "Sum of all routing costs",
+            "example": 100
+          },
+          "hopCount": {
+            "type": "number",
+            "description": "Number of nodes in the path",
+            "example": 5
+          },
+          "isComplete": {
+            "type": "boolean",
+            "description": "Whether a complete path was found",
+            "example": true
+          },
+          "pathTraceData": {
+            "description": "Rich visualization data for path tracing",
             "allOf": [
               {
-                "$ref": "#/components/schemas/EndpointConnectivityGeneratedConfig"
-              }
-            ]
-          },
-          "sourceEndpoint": {
-            "description": "The source endpoint",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Endpoint"
-              }
-            ]
-          },
-          "destinationEndpoint": {
-            "description": "The destination endpoint",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Endpoint"
-              }
-            ]
-          },
-          "connectionTrace": {
-            "description": "The connection trace",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ConnectionTrace"
+                "$ref": "#/components/schemas/PathTraceData"
               }
             ]
           }
         },
         "required": [
-          "connectivityResult",
-          "connectivityResultDetail",
-          "sourceEndpoint",
-          "destinationEndpoint",
-          "connectionTrace"
+          "nodes",
+          "edges",
+          "costs",
+          "totalCost",
+          "hopCount",
+          "isComplete",
+          "pathTraceData"
+        ]
+      },
+      "PathResult": {
+        "type": "object",
+        "properties": {
+          "graphTenantVersion": {
+            "type": "number",
+            "description": "Version of the graph used to calculate the path",
+            "example": 1
+          },
+          "dataPath": {
+            "description": "Data plane path (infrastructure/physical connectivity)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathInfo"
+              }
+            ]
+          },
+          "controlPath": {
+            "description": "Control plane path (policy/contract connectivity)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathInfo"
+              }
+            ]
+          },
+          "traversalScope": {
+            "type": "string",
+            "description": "Traversal scope",
+            "example": "intravrf"
+          },
+          "controlPlaneAllowed": {
+            "type": "boolean",
+            "description": "Whether all control plane checks passed (true = allowed, false = denied, undefined = not yet evaluated)",
+            "example": true
+          },
+          "adjacencyList": {
+            "type": "object",
+            "description": "Adjacency list used for path calculation (debug info)"
+          },
+          "queryOutdated": {
+            "type": "boolean",
+            "description": "Whether the query is outdated (tenant version changed)",
+            "example": false
+          }
+        },
+        "required": [
+          "graphTenantVersion",
+          "dataPath",
+          "controlPath",
+          "traversalScope"
+        ]
+      },
+      "EndpointConnectivityNodeQuery": {
+        "type": "object",
+        "properties": {
+          "sourceNodeId": {
+            "type": "string",
+            "description": "Source Node ID"
+          },
+          "destinationNodeId": {
+            "type": "string",
+            "description": "Destination Node ID"
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "description": "Version of the tenant"
+          }
+        },
+        "required": [
+          "sourceNodeId",
+          "destinationNodeId",
+          "tenantId",
+          "tenantVersion"
         ]
       },
       "AciRuntimeJobCreateDto": {
@@ -35243,6 +35325,140 @@
         },
         "required": [
           "type"
+        ]
+      },
+      "ExternalRouteSyncDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network prefix in CIDR notation",
+            "example": "192.168.1.0/24"
+          },
+          "protocol": {
+            "type": "string",
+            "description": "Routing protocol",
+            "example": "BGP"
+          },
+          "asPath": {
+            "description": "AS Path as array of AS numbers (4-byte BGP ASNs supported)",
+            "example": [
+              100,
+              200,
+              300,
+              4294967295
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tag": {
+            "type": "string",
+            "description": "Route tag",
+            "example": "10001"
+          }
+        },
+        "required": [
+          "network",
+          "protocol"
+        ]
+      },
+      "GlobalExternalRouteSummary": {
+        "type": "object",
+        "properties": {
+          "vrfName": {
+            "type": "string",
+            "description": "External VRF name",
+            "example": "appprod"
+          },
+          "numberOfRoutes": {
+            "type": "integer",
+            "description": "Number of routes in this VRF",
+            "example": 750
+          }
+        },
+        "required": [
+          "vrfName",
+          "numberOfRoutes"
+        ]
+      },
+      "EnvironmentSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Environment ID",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "name": {
+            "type": "string",
+            "description": "Environment name",
+            "example": "Production Environment"
+          },
+          "description": {
+            "type": "string",
+            "description": "Environment description",
+            "example": "Main production environment",
+            "nullable": true
+          },
+          "lastRouteSyncAt": {
+            "type": "string",
+            "description": "Last time routes were synchronized",
+            "example": "2024-01-15T10:30:00Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "externalVrfs": {
+            "type": "array",
+            "description": "External VRFs allowed for this environment",
+            "example": [
+              "cmsnet_transport"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ]
+            }
+          },
+          "totalRoutes": {
+            "type": "integer",
+            "description": "Total number of external routes in this environment",
+            "example": 1250
+          },
+          "globalExternalRoutes": {
+            "description": "Route count summary by VRF",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalExternalRouteSummary"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "lastRouteSyncAt",
+          "externalVrfs",
+          "totalRoutes",
+          "globalExternalRoutes"
         ]
       },
       "SyncEndpoint": {
@@ -35988,140 +36204,6 @@
       "UpdateTierAppVersionDto": {
         "type": "object",
         "properties": {}
-      },
-      "ExternalRouteSyncDto": {
-        "type": "object",
-        "properties": {
-          "network": {
-            "type": "string",
-            "description": "Network prefix in CIDR notation",
-            "example": "192.168.1.0/24"
-          },
-          "protocol": {
-            "type": "string",
-            "description": "Routing protocol",
-            "example": "BGP"
-          },
-          "asPath": {
-            "description": "AS Path as array of AS numbers (4-byte BGP ASNs supported)",
-            "example": [
-              100,
-              200,
-              300,
-              4294967295
-            ],
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "tag": {
-            "type": "string",
-            "description": "Route tag",
-            "example": "10001"
-          }
-        },
-        "required": [
-          "network",
-          "protocol"
-        ]
-      },
-      "GlobalExternalRouteSummary": {
-        "type": "object",
-        "properties": {
-          "vrfName": {
-            "type": "string",
-            "description": "External VRF name",
-            "example": "appprod"
-          },
-          "numberOfRoutes": {
-            "type": "integer",
-            "description": "Number of routes in this VRF",
-            "example": 750
-          }
-        },
-        "required": [
-          "vrfName",
-          "numberOfRoutes"
-        ]
-      },
-      "EnvironmentSummary": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Environment ID",
-            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-          },
-          "name": {
-            "type": "string",
-            "description": "Environment name",
-            "example": "Production Environment"
-          },
-          "description": {
-            "type": "string",
-            "description": "Environment description",
-            "example": "Main production environment",
-            "nullable": true
-          },
-          "lastRouteSyncAt": {
-            "type": "string",
-            "description": "Last time routes were synchronized",
-            "example": "2024-01-15T10:30:00Z",
-            "format": "date-time",
-            "nullable": true
-          },
-          "externalVrfs": {
-            "type": "array",
-            "description": "External VRFs allowed for this environment",
-            "example": [
-              "cmsnet_transport"
-            ],
-            "items": {
-              "type": "string",
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ]
-            }
-          },
-          "totalRoutes": {
-            "type": "integer",
-            "description": "Total number of external routes in this environment",
-            "example": 1250
-          },
-          "globalExternalRoutes": {
-            "description": "Route count summary by VRF",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GlobalExternalRouteSummary"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "description",
-          "lastRouteSyncAt",
-          "externalVrfs",
-          "totalRoutes",
-          "globalExternalRoutes"
-        ]
       },
       "PaginationDTO": {
         "type": "object",

@@ -33,7 +33,7 @@ export interface GraphNodeDto {
     /**
      * Entity ID if this represents a database entity
      */
-    entityId?: string;
+    databaseId?: string;
     /**
      * Tenant ID this node belongs to
      */

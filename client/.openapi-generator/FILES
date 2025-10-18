@@ -75,11 +75,7 @@ model/applicationProfile.ts
 model/auditLog.ts
 model/auditLogValidationResult.ts
 model/bridgeDomain.ts
-model/connectionTrace.ts
-model/connectivityNode.ts
 model/contract.ts
-model/contractToEpg.ts
-model/contractToEsg.ts
 model/createGlobalBgpRangeDto.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
@@ -133,8 +129,7 @@ model/defaultRoutePath.ts
 model/edgeProperties.ts
 model/edgePropertiesFirewallContext.ts
 model/endpoint.ts
-model/endpointConnectionUtilityResponse.ts
-model/endpointConnectivityGeneratedConfig.ts
+model/endpointConnectivityNodeQuery.ts
 model/endpointConnectivityQuery.ts
 model/endpointGroup.ts
 model/endpointIpAddress.ts
@@ -269,6 +264,12 @@ model/nodeValidationContext.ts
 model/paginationDTO.ts
 model/panosApplication.ts
 model/panosApplicationReferences.ts
+model/pathInfo.ts
+model/pathResult.ts
+model/pathTraceControlPlaneMetadata.ts
+model/pathTraceData.ts
+model/pathTraceHop.ts
+model/pathTraceNode.ts
 model/poolImportCollectionDto.ts
 model/routeControlRequest.ts
 model/routeControlRequestDto.ts
@@ -290,7 +291,6 @@ model/serviceObjectGroupRelationBulkImportCollectionDto.ts
 model/serviceObjectGroupRelationBulkImportDto.ts
 model/staticRoute.ts
 model/subject.ts
-model/subjectToFilter.ts
 model/subnet.ts
 model/subnetImport.ts
 model/subnetImportCollectionDto.ts

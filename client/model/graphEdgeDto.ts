@@ -72,7 +72,10 @@ export enum GraphEdgeDtoTypeEnum {
     ContractToSubject = 'CONTRACT_TO_SUBJECT',
     FilterToFilterEntry = 'FILTER_TO_FILTER_ENTRY',
     BridgeDomainToSubnet = 'BRIDGE_DOMAIN_TO_SUBNET',
-    EndpointToEndpointGroup = 'ENDPOINT_TO_ENDPOINT_GROUP'
+    EsgToSelector = 'ESG_TO_SELECTOR',
+    EpgToSelector = 'EPG_TO_SELECTOR',
+    EndpointToEndpointGroup = 'ENDPOINT_TO_ENDPOINT_GROUP',
+    EndpointToEndpointIpAddress = 'ENDPOINT_TO_ENDPOINT_IP_ADDRESS'
 };
 
 

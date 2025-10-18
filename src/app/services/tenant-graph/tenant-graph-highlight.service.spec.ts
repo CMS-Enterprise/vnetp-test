@@ -2,12 +2,28 @@
 import { TenantGraphHighlightService, EdgeStyle, TenantEdgeStyleMap } from './tenant-graph-highlight.service';
 import { PathTraceState } from './tenant-graph-path-trace.service';
 
+// Mock D3 module
+jest.mock('d3', () => ({
+  select: jest.fn().mockReturnValue({
+    select: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    on: jest.fn().mockReturnThis(),
+    each: jest.fn().mockReturnThis(),
+  }),
+}));
+
 describe('TenantGraphHighlightService', () => {
   let service: TenantGraphHighlightService;
   let mockNodeSelection: any;
   let mockLinkSelection: any;
   let mockCircleSelection: any;
   let mockTextSelection: any;
+  let mockIndicatorSelection: any;
   let mockGraphData: { nodes: any[]; links: any[] };
 
   beforeEach(() => {
@@ -22,13 +38,23 @@ describe('TenantGraphHighlightService', () => {
     mockTextSelection = {
       attr: jest.fn().mockReturnThis(),
       style: jest.fn().mockReturnThis(),
+      remove: jest.fn().mockReturnThis(),
+    };
+
+    mockIndicatorSelection = {
+      remove: jest.fn().mockReturnThis(),
     };
 
     mockNodeSelection = {
       selectAll: jest.fn().mockImplementation((selector: string) => {
         if (selector === 'circle') return mockCircleSelection;
         if (selector === 'text') return mockTextSelection;
+        if (selector === '.control-plane-indicator') return mockIndicatorSelection;
         return mockCircleSelection;
+      }),
+      each: jest.fn().mockImplementation((callback: any) => {
+        // Mock the each() method for rendering control plane indicators
+        return mockNodeSelection;
       }),
     };
 
@@ -97,12 +123,18 @@ describe('TenantGraphHighlightService', () => {
         style: jest.fn().mockReturnThis(),
       };
 
+      const newMockIndicatorSelection = {
+        remove: jest.fn().mockReturnThis(),
+      };
+
       const newNodeSelection = {
         selectAll: jest.fn().mockImplementation((selector: string) => {
           if (selector === 'circle') return newMockCircleSelection;
           if (selector === 'text') return newMockTextSelection;
+          if (selector === '.control-plane-indicator') return newMockIndicatorSelection;
           return newMockCircleSelection;
         }),
+        each: jest.fn().mockReturnThis(),
       };
 
       const newLinkSelection = {
@@ -200,7 +232,7 @@ describe('TenantGraphHighlightService', () => {
           target: { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL' },
           path: [],
           isComplete: false,
-          calculationSource: 'client',
+          totalCost: 0,
           lastHopNodeId: 'firewall-1',
         },
       };
@@ -535,7 +567,7 @@ describe('TenantGraphHighlightService', () => {
           target: { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL' },
           path: [],
           isComplete: false,
-          calculationSource: 'client',
+          totalCost: 0,
           // No lastHopNodeId
         },
       };

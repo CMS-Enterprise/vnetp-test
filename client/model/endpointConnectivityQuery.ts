@@ -52,5 +52,9 @@ export interface EndpointConnectivityQuery {
      * Tenant ID
      */
     tenantId: string;
+    /**
+     * Version of the tenant
+     */
+    tenantVersion: number;
 }
 
