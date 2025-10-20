@@ -104,7 +104,7 @@ describe('ServiceGraphsComponent', () => {
         },
       ],
       {
-        queryParamsHandling: 'preserve',
+        queryParamsHandling: 'merge',
       },
     );
   });

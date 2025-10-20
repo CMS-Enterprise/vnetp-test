@@ -26,23 +26,23 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface BuildTenantInfrastructureGraphRequestParams {
+export interface BuildTenantInfrastructureGraphTenantOrchestratorRequestParams {
     tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
-export interface ConfigureTenantInfrastructureRequestParams {
+export interface ConfigureTenantInfrastructureTenantOrchestratorRequestParams {
     tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
-export interface GetTenantInfrastructureConfigRequestParams {
+export interface GetTenantInfrastructureConfigTenantOrchestratorRequestParams {
     id: string;
 }
 
-export interface GetTenantInfrastructureGraphRequestParams {
+export interface GetTenantInfrastructureGraphTenantOrchestratorRequestParams {
     id: string;
 }
 
-export interface ValidateTenantInfrastructureRequestParams {
+export interface ValidateTenantInfrastructureTenantOrchestratorRequestParams {
     tenantInfrastructureConfigDto: TenantInfrastructureConfigDto;
 }
 
@@ -114,13 +114,13 @@ export class V2AdminTenantOrchestratorService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
-    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
-    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
-    public buildTenantInfrastructureGraph(requestParameters: BuildTenantInfrastructureGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public buildTenantInfrastructureGraphTenantOrchestrator(requestParameters: BuildTenantInfrastructureGraphTenantOrchestratorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
+    public buildTenantInfrastructureGraphTenantOrchestrator(requestParameters: BuildTenantInfrastructureGraphTenantOrchestratorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
+    public buildTenantInfrastructureGraphTenantOrchestrator(requestParameters: BuildTenantInfrastructureGraphTenantOrchestratorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
+    public buildTenantInfrastructureGraphTenantOrchestrator(requestParameters: BuildTenantInfrastructureGraphTenantOrchestratorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const tenantInfrastructureConfigDto = requestParameters.tenantInfrastructureConfigDto;
         if (tenantInfrastructureConfigDto === null || tenantInfrastructureConfigDto === undefined) {
-            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling buildTenantInfrastructureGraph.');
+            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling buildTenantInfrastructureGraphTenantOrchestrator.');
         }
 
         let headers = this.defaultHeaders;
@@ -171,13 +171,13 @@ export class V2AdminTenantOrchestratorService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureResponse>;
-    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureResponse>>;
-    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureResponse>>;
-    public configureTenantInfrastructure(requestParameters: ConfigureTenantInfrastructureRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public configureTenantInfrastructureTenantOrchestrator(requestParameters: ConfigureTenantInfrastructureTenantOrchestratorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureResponse>;
+    public configureTenantInfrastructureTenantOrchestrator(requestParameters: ConfigureTenantInfrastructureTenantOrchestratorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureResponse>>;
+    public configureTenantInfrastructureTenantOrchestrator(requestParameters: ConfigureTenantInfrastructureTenantOrchestratorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureResponse>>;
+    public configureTenantInfrastructureTenantOrchestrator(requestParameters: ConfigureTenantInfrastructureTenantOrchestratorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const tenantInfrastructureConfigDto = requestParameters.tenantInfrastructureConfigDto;
         if (tenantInfrastructureConfigDto === null || tenantInfrastructureConfigDto === undefined) {
-            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling configureTenantInfrastructure.');
+            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling configureTenantInfrastructureTenantOrchestrator.');
         }
 
         let headers = this.defaultHeaders;
@@ -228,13 +228,13 @@ export class V2AdminTenantOrchestratorService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureConfigDto>;
-    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureConfigDto>>;
-    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureConfigDto>>;
-    public getTenantInfrastructureConfig(requestParameters: GetTenantInfrastructureConfigRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getTenantInfrastructureConfigTenantOrchestrator(requestParameters: GetTenantInfrastructureConfigTenantOrchestratorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureConfigDto>;
+    public getTenantInfrastructureConfigTenantOrchestrator(requestParameters: GetTenantInfrastructureConfigTenantOrchestratorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureConfigDto>>;
+    public getTenantInfrastructureConfigTenantOrchestrator(requestParameters: GetTenantInfrastructureConfigTenantOrchestratorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureConfigDto>>;
+    public getTenantInfrastructureConfigTenantOrchestrator(requestParameters: GetTenantInfrastructureConfigTenantOrchestratorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getTenantInfrastructureConfig.');
+            throw new Error('Required parameter id was null or undefined when calling getTenantInfrastructureConfigTenantOrchestrator.');
         }
 
         let headers = this.defaultHeaders;
@@ -275,13 +275,13 @@ export class V2AdminTenantOrchestratorService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
-    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
-    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
-    public getTenantInfrastructureGraph(requestParameters: GetTenantInfrastructureGraphRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getTenantInfrastructureGraphTenantOrchestrator(requestParameters: GetTenantInfrastructureGraphTenantOrchestratorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
+    public getTenantInfrastructureGraphTenantOrchestrator(requestParameters: GetTenantInfrastructureGraphTenantOrchestratorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
+    public getTenantInfrastructureGraphTenantOrchestrator(requestParameters: GetTenantInfrastructureGraphTenantOrchestratorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
+    public getTenantInfrastructureGraphTenantOrchestrator(requestParameters: GetTenantInfrastructureGraphTenantOrchestratorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getTenantInfrastructureGraph.');
+            throw new Error('Required parameter id was null or undefined when calling getTenantInfrastructureGraphTenantOrchestrator.');
         }
 
         let headers = this.defaultHeaders;
@@ -322,13 +322,13 @@ export class V2AdminTenantOrchestratorService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureValidationResponse>;
-    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureValidationResponse>>;
-    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureValidationResponse>>;
-    public validateTenantInfrastructure(requestParameters: ValidateTenantInfrastructureRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public validateTenantInfrastructureTenantOrchestrator(requestParameters: ValidateTenantInfrastructureTenantOrchestratorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantInfrastructureValidationResponse>;
+    public validateTenantInfrastructureTenantOrchestrator(requestParameters: ValidateTenantInfrastructureTenantOrchestratorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantInfrastructureValidationResponse>>;
+    public validateTenantInfrastructureTenantOrchestrator(requestParameters: ValidateTenantInfrastructureTenantOrchestratorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantInfrastructureValidationResponse>>;
+    public validateTenantInfrastructureTenantOrchestrator(requestParameters: ValidateTenantInfrastructureTenantOrchestratorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const tenantInfrastructureConfigDto = requestParameters.tenantInfrastructureConfigDto;
         if (tenantInfrastructureConfigDto === null || tenantInfrastructureConfigDto === undefined) {
-            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling validateTenantInfrastructure.');
+            throw new Error('Required parameter tenantInfrastructureConfigDto was null or undefined when calling validateTenantInfrastructureTenantOrchestrator.');
         }
 
         let headers = this.defaultHeaders;

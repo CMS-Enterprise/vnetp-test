@@ -113,11 +113,11 @@ describe('TenantInfrastructureComponent', () => {
     parentParamMapSubject = new BehaviorSubject(new Map());
 
     mockOrchestrator = {
-      validateTenantInfrastructure: jest.fn().mockReturnValue(of(mockValidationResponse) as any),
-      buildTenantInfrastructureGraph: jest.fn().mockReturnValue(of(mockGraph) as any),
-      getTenantInfrastructureGraph: jest.fn().mockReturnValue(of(mockGraph) as any),
-      configureTenantInfrastructure: jest.fn().mockReturnValue(of({ success: true }) as any),
-      getTenantInfrastructureConfig: jest.fn().mockReturnValue(of(mockConfig) as any),
+      validateTenantInfrastructureTenantOrchestrator: jest.fn().mockReturnValue(of(mockValidationResponse) as any),
+      buildTenantInfrastructureGraphTenantOrchestrator: jest.fn().mockReturnValue(of(mockGraph) as any),
+      getTenantInfrastructureGraphTenantOrchestrator: jest.fn().mockReturnValue(of(mockGraph) as any),
+      configureTenantInfrastructureTenantOrchestrator: jest.fn().mockReturnValue(of({ success: true }) as any),
+      getTenantInfrastructureConfigTenantOrchestrator: jest.fn().mockReturnValue(of(mockConfig) as any),
     } as any;
 
     mockTenantGraphCore = {
@@ -221,7 +221,7 @@ describe('TenantInfrastructureComponent', () => {
 
       expect(component.mode).toBe('edit');
       expect(component.tenantId).toBe('tenant-123');
-      expect(mockOrchestrator.getTenantInfrastructureConfig).toHaveBeenCalledWith({ id: 'tenant-123' });
+      expect(mockOrchestrator.getTenantInfrastructureConfigTenantOrchestrator).toHaveBeenCalledWith({ id: 'tenant-123' });
     }));
 
     it('should setup debounced graph updates on init', fakeAsync(() => {
@@ -255,7 +255,7 @@ describe('TenantInfrastructureComponent', () => {
       (component as any).generateGraphInternal();
       tick(200); // Wait for both the observable and the setTimeout
 
-      expect(mockOrchestrator.buildTenantInfrastructureGraph).toHaveBeenCalledWith({
+      expect(mockOrchestrator.buildTenantInfrastructureGraphTenantOrchestrator).toHaveBeenCalledWith({
         tenantInfrastructureConfigDto: mockConfig,
       });
       expect(mockTenantGraphCore.renderGraph).toHaveBeenCalledWith({
@@ -277,7 +277,7 @@ describe('TenantInfrastructureComponent', () => {
       (component as any).generateGraphInternal();
       tick(200); // Wait for both the observable and the setTimeout
 
-      expect(mockOrchestrator.getTenantInfrastructureGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
+      expect(mockOrchestrator.getTenantInfrastructureGraphTenantOrchestrator).toHaveBeenCalledWith({ id: 'tenant-123' });
       expect(mockTenantGraphCore.renderGraph).toHaveBeenCalledWith({
         graph: mockGraph,
         containerSelector: '#graphContainer',
@@ -328,14 +328,14 @@ describe('TenantInfrastructureComponent', () => {
       component.loadExistingConfig();
       tick(300); // Wait for both config load and graph generation with all setTimeout calls
 
-      expect(mockOrchestrator.getTenantInfrastructureConfig).toHaveBeenCalledWith({ id: 'tenant-123' });
+      expect(mockOrchestrator.getTenantInfrastructureConfigTenantOrchestrator).toHaveBeenCalledWith({ id: 'tenant-123' });
       expect(component.config).toEqual(mockConfig);
       expect(component.rightPanelView).toBe('graph');
     }));
 
     it('should handle config loading error', fakeAsync(() => {
       component.tenantId = 'tenant-123';
-      mockOrchestrator.getTenantInfrastructureConfig.mockReturnValue(throwError({ message: 'Config not found' }) as any);
+      mockOrchestrator.getTenantInfrastructureConfigTenantOrchestrator.mockReturnValue(throwError({ message: 'Config not found' }) as any);
 
       component.loadExistingConfig();
       tick();
@@ -373,12 +373,12 @@ describe('TenantInfrastructureComponent', () => {
     });
 
     it('should validate configuration successfully', fakeAsync(() => {
-      mockOrchestrator.validateTenantInfrastructure.mockReturnValue(of(mockValidationResponse) as any);
+      mockOrchestrator.validateTenantInfrastructureTenantOrchestrator.mockReturnValue(of(mockValidationResponse) as any);
 
       component.validate();
       tick();
 
-      expect(mockOrchestrator.validateTenantInfrastructure).toHaveBeenCalledWith({
+      expect(mockOrchestrator.validateTenantInfrastructureTenantOrchestrator).toHaveBeenCalledWith({
         tenantInfrastructureConfigDto: mockConfig,
       });
       expect(component.validation).toEqual(mockValidationResponse);
@@ -395,7 +395,7 @@ describe('TenantInfrastructureComponent', () => {
           },
         },
       };
-      mockOrchestrator.validateTenantInfrastructure.mockReturnValue(throwError(errorResponse) as any);
+      mockOrchestrator.validateTenantInfrastructureTenantOrchestrator.mockReturnValue(throwError(errorResponse) as any);
 
       component.validate();
       tick();
@@ -436,12 +436,12 @@ describe('TenantInfrastructureComponent', () => {
 
     it('should save configuration successfully', fakeAsync(() => {
       const saveResponse: TenantInfrastructureResponse = { success: true } as any;
-      mockOrchestrator.configureTenantInfrastructure.mockReturnValue(of(saveResponse) as any);
+      mockOrchestrator.configureTenantInfrastructureTenantOrchestrator.mockReturnValue(of(saveResponse) as any);
 
       component.saveConfig();
       tick();
 
-      expect(mockOrchestrator.configureTenantInfrastructure).toHaveBeenCalledWith({
+      expect(mockOrchestrator.configureTenantInfrastructureTenantOrchestrator).toHaveBeenCalledWith({
         tenantInfrastructureConfigDto: mockConfig,
       });
       expect(component.saveResponse).toEqual(saveResponse);
@@ -451,7 +451,7 @@ describe('TenantInfrastructureComponent', () => {
     }));
 
     it('should handle save errors', fakeAsync(() => {
-      mockOrchestrator.configureTenantInfrastructure.mockReturnValue(throwError({ message: 'Save failed' }) as any);
+      mockOrchestrator.configureTenantInfrastructureTenantOrchestrator.mockReturnValue(throwError({ message: 'Save failed' }) as any);
 
       component.saveConfig();
       tick();
@@ -467,7 +467,7 @@ describe('TenantInfrastructureComponent', () => {
 
       component.saveConfig();
 
-      expect(mockOrchestrator.configureTenantInfrastructure).not.toHaveBeenCalled();
+      expect(mockOrchestrator.configureTenantInfrastructureTenantOrchestrator).not.toHaveBeenCalled();
     });
   });
 

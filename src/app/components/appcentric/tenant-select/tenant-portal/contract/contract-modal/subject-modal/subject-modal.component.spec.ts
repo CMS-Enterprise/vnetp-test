@@ -83,7 +83,6 @@ describe('SubjectModalComponent', () => {
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
-      applyBothDirections: true,
       reverseFilterPorts: true,
       globalAlias: '',
       name: 'subject1',
@@ -105,7 +104,6 @@ describe('SubjectModalComponent', () => {
     component.modalMode = ModalMode.Edit;
     component.contractId = '123';
     component.form.setValue({
-      applyBothDirections: true,
       reverseFilterPorts: true,
       globalAlias: '',
       name: 'subject',

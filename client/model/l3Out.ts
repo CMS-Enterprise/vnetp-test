@@ -38,9 +38,9 @@ export interface L3Out {
     propagateExternalRoutes?: boolean;
     readonly externalFirewall?: ExternalFirewall;
     externalFirewallId?: string;
-    underlayIpv4Network: string;
-    underlayIpv6Network: string;
-    underlayVlan: number;
+    underlayIpv4Network?: string;
+    underlayIpv6Network?: string;
+    underlayVlan?: number;
 }
 export enum L3OutL3outTypeEnum {
     External = 'external',

@@ -15298,7 +15298,7 @@
     },
     "/v2/app-centric/tenants/{id}/tenant-graph": {
       "get": {
-        "operationId": "buildTenantFullGraph",
+        "operationId": "buildTenantFullGraphTenant",
         "summary": "Build tenant full connectivity graph",
         "description": "Build a comprehensive connectivity graph including all tenant entities and their relationships",
         "parameters": [
@@ -15820,7 +15820,7 @@
     },
     "/v2/admin/tenant/orchestrator/configure": {
       "post": {
-        "operationId": "configureTenantInfrastructure",
+        "operationId": "configureTenantInfrastructureTenantOrchestrator",
         "summary": "Configure complete tenant infrastructure",
         "description": "Create tenant with VRFs, L3Outs, firewalls, and external VRF connections from declarative configuration",
         "parameters": [],
@@ -15863,7 +15863,7 @@
     },
     "/v2/admin/tenant/orchestrator/validate": {
       "post": {
-        "operationId": "validateTenantInfrastructure",
+        "operationId": "validateTenantInfrastructureTenantOrchestrator",
         "summary": "Validate tenant infrastructure configuration",
         "description": "Validate tenant infrastructure configuration",
         "parameters": [],
@@ -15896,7 +15896,7 @@
     },
     "/v2/admin/tenant/orchestrator/config/{id}": {
       "get": {
-        "operationId": "getTenantInfrastructureConfig",
+        "operationId": "getTenantInfrastructureConfigTenantOrchestrator",
         "summary": "Get tenant infrastructure configuration",
         "description": "Get tenant infrastructure configuration from existing tenant",
         "parameters": [
@@ -15928,7 +15928,7 @@
     },
     "/v2/admin/tenant/orchestrator/generate-graph/{id}": {
       "get": {
-        "operationId": "getTenantInfrastructureGraph",
+        "operationId": "getTenantInfrastructureGraphTenantOrchestrator",
         "summary": "Get tenant infrastructure graph",
         "description": "Get tenant infrastructure graph",
         "parameters": [
@@ -15960,7 +15960,7 @@
     },
     "/v2/admin/tenant/orchestrator/generate-graph": {
       "post": {
-        "operationId": "buildTenantInfrastructureGraph",
+        "operationId": "buildTenantInfrastructureGraphTenantOrchestrator",
         "summary": "Build tenant infrastructure graph",
         "description": "Build tenant infrastructure graph",
         "parameters": [],
@@ -26381,7 +26381,9 @@
             "readOnly": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
           },
           "firewallDeviceType": {
             "type": "string"
@@ -26406,7 +26408,9 @@
             "type": "string"
           },
           "vsysName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
           },
           "tier": {
             "readOnly": true,
@@ -26421,6 +26425,8 @@
           }
         },
         "required": [
+          "name",
+          "tenantId",
           "vsysName"
         ]
       },
@@ -26910,9 +26916,6 @@
           "allowAllRoutesFromExternalVrf",
           "advertiseHostBasedRoutesToExternalVrf",
           "advertiseAllRoutesToExternalVrf",
-          "underlayIpv4Network",
-          "underlayIpv6Network",
-          "underlayVlan",
           "externalFirewallId",
           "tenantId"
         ]
@@ -27145,10 +27148,7 @@
         "required": [
           "vrfId",
           "tenantId",
-          "l3outType",
-          "underlayIpv4Network",
-          "underlayIpv6Network",
-          "underlayVlan"
+          "l3outType"
         ]
       },
       "Vrf": {
@@ -27296,7 +27296,9 @@
             "readOnly": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
           },
           "serviceGraphFirewall": {
             "readOnly": true,
@@ -27305,6 +27307,9 @@
                 "$ref": "#/components/schemas/ServiceGraphFirewall"
               }
             ]
+          },
+          "serviceGraphType": {
+            "type": "string"
           },
           "serviceGraphFirewallId": {
             "type": "string"
@@ -27349,10 +27354,7 @@
           }
         },
         "required": [
-          "name",
-          "underlayIpv4Network",
-          "underlayIpv6Network",
-          "underlayVlan"
+          "name"
         ]
       },
       "FilterEntry": {
@@ -27616,10 +27618,6 @@
             "type": "string",
             "maxLength": 500
           },
-          "applyBothDirections": {
-            "type": "boolean",
-            "description": "Sets the contract filter to apply on both ingress and egress traffic directions."
-          },
           "reverseFilterPorts": {
             "type": "boolean",
             "description": "Enables the filter to apply on both ingress and egress traffic."
@@ -27670,7 +27668,6 @@
           }
         },
         "required": [
-          "applyBothDirections",
           "reverseFilterPorts",
           "globalAlias",
           "tenantId",

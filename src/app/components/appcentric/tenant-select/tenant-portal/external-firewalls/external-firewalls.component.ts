@@ -136,7 +136,7 @@ export class ExternalFirewallsComponent implements OnInit {
         },
       ],
       {
-        queryParamsHandling: 'preserve',
+        queryParamsHandling: 'merge',
       },
     );
   }

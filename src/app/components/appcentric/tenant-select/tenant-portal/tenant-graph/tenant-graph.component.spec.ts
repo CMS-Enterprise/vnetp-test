@@ -98,7 +98,7 @@ describe('TenantGraphComponent', () => {
     pathTraceStateChangeSubject = new Subject<PathTraceState>();
 
     mockTenantService = {
-      buildTenantFullGraph: jest.fn().mockReturnValue(of(mockGraph) as any),
+      buildTenantFullGraphTenant: jest.fn().mockReturnValue(of(mockGraph) as any),
     } as any;
 
     mockTenantGraphCore = {
@@ -159,14 +159,14 @@ describe('TenantGraphComponent', () => {
     it('should extract tenant ID from route params and load graph', fakeAsync(() => {
       const paramMap = new Map();
       paramMap.set('id', 'tenant-123');
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
 
       fixture.detectChanges();
       parentParentParamMapSubject.next(paramMap);
       tick(500);
 
       expect(component.tenantId).toBe('tenant-123');
-      expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
+      expect(mockTenantService.buildTenantFullGraphTenant).toHaveBeenCalledWith({ id: 'tenant-123' });
       expect(component.graph).toEqual(mockGraph);
     }));
 
@@ -176,7 +176,7 @@ describe('TenantGraphComponent', () => {
       tick(500);
 
       expect(component.tenantId).toBeUndefined();
-      expect(mockTenantService.buildTenantFullGraph).not.toHaveBeenCalled();
+      expect(mockTenantService.buildTenantFullGraphTenant).not.toHaveBeenCalled();
     }));
 
     it('should subscribe to context menu clicks on init', fakeAsync(() => {
@@ -223,7 +223,7 @@ describe('TenantGraphComponent', () => {
     });
 
     it('should load tenant graph successfully', fakeAsync(() => {
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
 
       (component as any).loadTenantGraph();
       tick(500);
@@ -231,13 +231,13 @@ describe('TenantGraphComponent', () => {
       expect(component.isLoading).toBe(false);
       expect(component.error).toBeNull();
       expect(component.graph).toEqual(mockGraph);
-      expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
+      expect(mockTenantService.buildTenantFullGraphTenant).toHaveBeenCalledWith({ id: 'tenant-123' });
     }));
 
     it('should set loading state while loading graph', fakeAsync(() => {
       // Create a delayed observable to test loading state
       const delayedObservable = new Subject();
-      mockTenantService.buildTenantFullGraph.mockReturnValue(delayedObservable as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(delayedObservable as any);
 
       (component as any).loadTenantGraph();
 
@@ -254,7 +254,7 @@ describe('TenantGraphComponent', () => {
 
     it('should handle graph loading error', fakeAsync(() => {
       const errorMessage = 'Failed to load graph';
-      mockTenantService.buildTenantFullGraph.mockReturnValue(throwError({ message: errorMessage }));
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(throwError({ message: errorMessage }));
 
       (component as any).loadTenantGraph();
       tick();
@@ -265,7 +265,7 @@ describe('TenantGraphComponent', () => {
     }));
 
     it('should handle graph loading error without message', fakeAsync(() => {
-      mockTenantService.buildTenantFullGraph.mockReturnValue(throwError({}));
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(throwError({}));
 
       (component as any).loadTenantGraph();
       tick();
@@ -279,7 +279,7 @@ describe('TenantGraphComponent', () => {
       (component as any).loadTenantGraph();
 
       expect(component.error).toBe('No tenant ID available');
-      expect(mockTenantService.buildTenantFullGraph).not.toHaveBeenCalled();
+      expect(mockTenantService.buildTenantFullGraphTenant).not.toHaveBeenCalled();
     });
   });
 
@@ -331,7 +331,7 @@ describe('TenantGraphComponent', () => {
 
       // Create a subject to control the observable timing
       const graphSubject = new Subject();
-      mockTenantService.buildTenantFullGraph.mockReturnValue(graphSubject as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(graphSubject as any);
 
       (component as any).loadTenantGraph();
 
@@ -419,7 +419,7 @@ describe('TenantGraphComponent', () => {
   describe('Public Methods', () => {
     it('should refresh graph when refreshGraph is called', () => {
       component.tenantId = 'tenant-123';
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
       const loadTenantGraphSpy = jest.spyOn(component, 'loadTenantGraph' as any);
 
       component.refreshGraph();
@@ -431,7 +431,7 @@ describe('TenantGraphComponent', () => {
   describe('Error Scenarios', () => {
     it('should handle network error during graph loading', fakeAsync(() => {
       component.tenantId = 'tenant-123';
-      mockTenantService.buildTenantFullGraph.mockReturnValue(throwError({ status: 500, statusText: 'Server Error' }));
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(throwError({ status: 500, statusText: 'Server Error' }));
 
       (component as any).loadTenantGraph();
       tick();
@@ -443,7 +443,7 @@ describe('TenantGraphComponent', () => {
 
     it('should handle timeout error during graph loading', fakeAsync(() => {
       component.tenantId = 'tenant-123';
-      mockTenantService.buildTenantFullGraph.mockReturnValue(throwError({ name: 'TimeoutError' }));
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(throwError({ name: 'TimeoutError' }));
 
       (component as any).loadTenantGraph();
       tick();
@@ -455,7 +455,7 @@ describe('TenantGraphComponent', () => {
     it('should reset error state when loading new graph', () => {
       component.error = 'Previous error';
       component.tenantId = 'tenant-123';
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
 
       (component as any).loadTenantGraph();
 
@@ -467,7 +467,7 @@ describe('TenantGraphComponent', () => {
     it('should complete full flow: route params -> load graph -> render graph', fakeAsync(() => {
       const paramMap = new Map();
       paramMap.set('id', 'tenant-123');
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
 
       fixture.detectChanges();
       parentParentParamMapSubject.next(paramMap);
@@ -481,7 +481,7 @@ describe('TenantGraphComponent', () => {
     }));
 
     it('should handle route param changes', fakeAsync(() => {
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
 
       fixture.detectChanges();
 
@@ -492,7 +492,7 @@ describe('TenantGraphComponent', () => {
       tick(500);
 
       expect(component.tenantId).toBe('tenant-123');
-      expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-123' });
+      expect(mockTenantService.buildTenantFullGraphTenant).toHaveBeenCalledWith({ id: 'tenant-123' });
 
       // Second tenant
       const paramMap2 = new Map();
@@ -501,8 +501,8 @@ describe('TenantGraphComponent', () => {
       tick(500);
 
       expect(component.tenantId).toBe('tenant-456');
-      expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledWith({ id: 'tenant-456' });
-      expect(mockTenantService.buildTenantFullGraph).toHaveBeenCalledTimes(2);
+      expect(mockTenantService.buildTenantFullGraphTenant).toHaveBeenCalledWith({ id: 'tenant-456' });
+      expect(mockTenantService.buildTenantFullGraphTenant).toHaveBeenCalledTimes(2);
     }));
 
     it('should handle context menu and path trace events simultaneously', fakeAsync(() => {
@@ -532,7 +532,7 @@ describe('TenantGraphComponent', () => {
     it('should properly clean up subscriptions', fakeAsync(() => {
       const paramMap = new Map();
       paramMap.set('id', 'tenant-123');
-      mockTenantService.buildTenantFullGraph.mockReturnValue(of(mockGraph) as any);
+      mockTenantService.buildTenantFullGraphTenant.mockReturnValue(of(mockGraph) as any);
 
       fixture.detectChanges();
       parentParentParamMapSubject.next(paramMap);

@@ -61,6 +61,9 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   private graphUpdateSubscription?: Subscription;
   leftPanelCollapsed = false;
   hasUnsavedChanges = false;
+  debounceTimeMs = 2000;
+  copyButtonText = 'Copy to Clipboard';
+  copyButtonState: 'idle' | 'success' | 'error' = 'idle';
 
   constructor(
     private route: ActivatedRoute,
@@ -88,7 +91,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       this.config = {
         tenant: {
           name: 'tenant1',
-          environmentId: '', // TODO: Placeholder, need to lookup from API.
+          environmentId: '',
           alias: 'Tenant 1',
           description: '',
         },
@@ -142,10 +145,8 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       this.updateRawFromConfig();
     }
 
-    const debounceTimeMs = 2000;
-
     // Setup debounced graph updates
-    this.graphUpdateSubscription = this.graphUpdateSubject.pipe(debounceTime(debounceTimeMs)).subscribe(() => {
+    this.graphUpdateSubscription = this.graphUpdateSubject.pipe(debounceTime(this.debounceTimeMs)).subscribe(() => {
       if (this.rightPanelView === 'graph') {
         this.generateGraphInternal();
       }
@@ -206,7 +207,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.validationErrors.clear();
 
     this.orchestrator
-      .validateTenantInfrastructure({ tenantInfrastructureConfigDto: this.config })
+      .validateTenantInfrastructureTenantOrchestrator({ tenantInfrastructureConfigDto: this.config })
       .pipe(
         finalize(() => {
           this.isSubmitting = false;
@@ -275,7 +276,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
   private generateGraphInternal(): void {
     if (this.mode === 'create') {
-      this.orchestrator.buildTenantInfrastructureGraph({ tenantInfrastructureConfigDto: this.config }).subscribe({
+      this.orchestrator.buildTenantInfrastructureGraphTenantOrchestrator({ tenantInfrastructureConfigDto: this.config }).subscribe({
         next: res => {
           this.graph = res as TenantConnectivityGraph;
           setTimeout(() => this.renderGraph(), 100);
@@ -285,7 +286,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         },
       });
     } else if (this.mode === 'edit') {
-      this.orchestrator.getTenantInfrastructureGraph({ id: this.tenantId }).subscribe({
+      this.orchestrator.getTenantInfrastructureGraphTenantOrchestrator({ id: this.tenantId }).subscribe({
         next: res => {
           this.graph = res as TenantConnectivityGraph;
           setTimeout(() => this.renderGraph(), 100);
@@ -300,7 +301,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     }
     this.isSubmitting = true;
     this.orchestrator
-      .configureTenantInfrastructure({ tenantInfrastructureConfigDto: this.config })
+      .configureTenantInfrastructureTenantOrchestrator({ tenantInfrastructureConfigDto: this.config })
       .pipe(
         finalize(() => {
           this.isSubmitting = false;
@@ -342,7 +343,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
     this.isLoadingConfig = true;
     this.orchestrator
-      .getTenantInfrastructureConfig({ id: this.tenantId })
+      .getTenantInfrastructureConfigTenantOrchestrator({ id: this.tenantId })
       .pipe(
         finalize(() => {
           this.isLoadingConfig = false;
@@ -479,25 +480,15 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   }
 
   private showCopyFeedback(message: string, type: 'success' | 'error'): void {
-    // Simple feedback mechanism - you can enhance this with toast notifications
-    const button = document.querySelector('button[title="Copy to clipboard"]') as HTMLElement;
-    if (button) {
-      const originalText = button.textContent;
-      const originalClass = button.className;
+    // Update component properties instead of DOM manipulation
+    this.copyButtonText = type === 'success' ? '✓ Copied!' : '✗ Failed';
+    this.copyButtonState = type;
 
-      // Update button appearance temporarily
-      button.textContent = type === 'success' ? '✓ Copied!' : '✗ Failed';
-      button.className =
-        type === 'success'
-          ? button.className.replace('btn-outline-secondary', 'btn-success')
-          : button.className.replace('btn-outline-secondary', 'btn-danger');
-
-      // Reset after 2 seconds
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.className = originalClass;
-      }, 2000);
-    }
+    // Reset after 2 seconds
+    setTimeout(() => {
+      this.copyButtonText = 'Copy to Clipboard';
+      this.copyButtonState = 'idle';
+    }, 2000);
   }
 
   setActiveTab(tab: 'tenant' | 'firewalls' | 'vrfs'): void {
