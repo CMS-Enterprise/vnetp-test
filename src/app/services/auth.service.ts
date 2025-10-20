@@ -75,7 +75,6 @@ export class AuthService {
   // if the variable is evaluated to be true then we reload the browser which keeps the returnURL in the /login URL
   // if there is passed in no variable or it is false, we redirect the user the the clean /login page
   logout(keepReturnUrl?: boolean) {
-    console.log('logout', keepReturnUrl);
     localStorage.clear();
     this.currentUserSubject.next(null);
     this.currentTenantSubject.next(null);

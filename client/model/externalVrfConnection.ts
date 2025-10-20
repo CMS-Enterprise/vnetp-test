@@ -28,9 +28,9 @@ export interface ExternalVrfConnection {
     allowAllRoutesFromExternalVrf: boolean;
     advertiseHostBasedRoutesToExternalVrf: boolean;
     advertiseAllRoutesToExternalVrf: boolean;
-    underlayIpv4Network: string;
-    underlayIpv6Network: string;
-    underlayVlan: number;
+    underlayIpv4Network?: string;
+    underlayIpv6Network?: string;
+    underlayVlan?: number;
     readonly internalRoutes?: Array<InternalRoute>;
     readonly externalRoutes?: Array<ExternalRoute>;
     readonly externalFirewall?: ExternalFirewall;

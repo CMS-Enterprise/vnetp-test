@@ -25,10 +25,11 @@ export interface ServiceGraph {
     readonly provisionedVersion?: number;
     name: string;
     readonly serviceGraphFirewall?: ServiceGraphFirewall;
+    serviceGraphType?: string;
     serviceGraphFirewallId?: string;
-    underlayIpv4Network: string;
-    underlayIpv6Network: string;
-    underlayVlan: number;
+    underlayIpv4Network?: string;
+    underlayIpv6Network?: string;
+    underlayVlan?: number;
     readonly subjects?: Array<Subject>;
     readonly vrf?: Vrf;
     vrfId?: string;

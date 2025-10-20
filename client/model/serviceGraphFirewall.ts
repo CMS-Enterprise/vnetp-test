@@ -22,11 +22,11 @@ export interface ServiceGraphFirewall {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name?: string;
+    name: string;
     firewallDeviceType?: string;
     readonly serviceGraph?: ServiceGraph;
     readonly tenant?: Tenant;
-    tenantId?: string;
+    tenantId: string;
     vsysName: string;
     readonly tier?: Tier;
     tierId?: string;

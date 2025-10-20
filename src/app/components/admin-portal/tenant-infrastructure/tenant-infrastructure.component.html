@@ -691,8 +691,18 @@
           >
             YAML
           </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="copyToClipboard()" title="Copy to clipboard">
-            Copy to Clipboard
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="{
+              'btn-outline-secondary': copyButtonState === 'idle',
+              'btn-success': copyButtonState === 'success',
+              'btn-danger': copyButtonState === 'error'
+            }"
+            (click)="copyToClipboard()"
+            [title]="copyButtonText"
+          >
+            {{ copyButtonText }}
           </button>
         </div>
       </div>

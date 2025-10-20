@@ -152,7 +152,7 @@ describe('ExternalFirewallsComponent', () => {
         },
       ],
       {
-        queryParamsHandling: 'preserve',
+        queryParamsHandling: 'merge',
       },
     );
   });

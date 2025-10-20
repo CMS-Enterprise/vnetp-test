@@ -27,10 +27,6 @@ export interface Subject {
     alias?: string;
     description?: string;
     /**
-     * Sets the contract filter to apply on both ingress and egress traffic directions.
-     */
-    applyBothDirections: boolean;
-    /**
      * Enables the filter to apply on both ingress and egress traffic.
      */
     reverseFilterPorts: boolean;

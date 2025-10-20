@@ -59,6 +59,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [FirewallConfigComponent, FirewallConfigRuleGroupsComponent],
   imports: [CommonModule, RouterModule.forChild(routes), TableModule, IconButtonModule, FirewallRulesModule, NatRulesModule],
-  exports: [RouterModule, FirewallConfigComponent],
+  exports: [FirewallConfigComponent],
 })
 export class FirewallConfigModule {}

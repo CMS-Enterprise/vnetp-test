@@ -70,7 +70,7 @@ export class TenantGraphComponent implements OnInit, OnDestroy {
     this.error = null;
 
     this.tenantService
-      .buildTenantFullGraph({ id: this.tenantId })
+      .buildTenantFullGraphTenant({ id: this.tenantId })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (graph: TenantConnectivityGraph) => {

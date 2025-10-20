@@ -96,7 +96,6 @@ export class SubjectModalComponent implements OnInit {
       });
     } else {
       this.form.controls.name.enable();
-      this.form.controls.applyBothDirections.setValue(true);
       this.form.controls.reverseFilterPorts.setValue(true);
     }
 
@@ -105,7 +104,6 @@ export class SubjectModalComponent implements OnInit {
       this.form.controls.name.disable();
       this.form.controls.description.setValue(subject.description);
       this.form.controls.alias.setValue(subject.alias);
-      this.form.controls.applyBothDirections.setValue(subject.applyBothDirections);
       this.form.controls.reverseFilterPorts.setValue(subject.reverseFilterPorts);
       this.form.controls.globalAlias.setValue(subject.globalAlias);
       this.form.controls.serviceGraphId.setValue(subject.serviceGraphId);
@@ -124,7 +122,6 @@ export class SubjectModalComponent implements OnInit {
       name: ['', NameValidator()],
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
-      applyBothDirections: [null],
       reverseFilterPorts: [null],
       globalAlias: ['', Validators.compose([Validators.maxLength(100)])],
       serviceGraphId: [null],
@@ -155,7 +152,7 @@ export class SubjectModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias, applyBothDirections, reverseFilterPorts, globalAlias, serviceGraphId } = this.form.value;
+    const { name, description, alias, reverseFilterPorts, globalAlias, serviceGraphId } = this.form.value;
 
     const tenantId = this.tenantId;
 
@@ -164,7 +161,6 @@ export class SubjectModalComponent implements OnInit {
       description,
       alias,
       tenantId,
-      applyBothDirections,
       reverseFilterPorts,
       globalAlias,
       serviceGraphId,

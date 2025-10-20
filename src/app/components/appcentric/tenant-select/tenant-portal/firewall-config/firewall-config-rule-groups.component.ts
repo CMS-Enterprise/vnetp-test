@@ -35,7 +35,7 @@ export class FirewallConfigRuleGroupsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.ruleGroupType = (data?.ruleGroupType as RuleGroupType) || 'nat';
+      this.ruleGroupType = (data?.ruleGroupType as RuleGroupType) || 'firewall';
       this.resolvedData = data?.firewall as FirewallConfigResolvedData;
       this.firewallName = this.resolvedData?.firewall?.name;
       this.updateTableConfig();
