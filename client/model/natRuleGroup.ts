@@ -32,6 +32,7 @@ export enum NatRuleGroupTypeEnum {
     Intervrf = 'Intervrf',
     External = 'External',
     ZoneBased = 'ZoneBased',
+    OneArmServiceGraph = 'OneArmServiceGraph',
     V2ZoneBased = 'V2ZoneBased'
 };
 

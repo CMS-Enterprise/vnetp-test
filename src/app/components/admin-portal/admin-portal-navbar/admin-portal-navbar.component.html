@@ -40,8 +40,12 @@
             Global BGP ASN
           </a>
 
-          <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="wan-form-request" queryParamsHandling="merge"
-            >WAN Form Requests</a
+          <a
+            *ngIf="userRoles?.includes('global-admin')"
+            class="dropdown-item"
+            routerLink="route-control-request"
+            queryParamsHandling="merge"
+            >Route Control Requests</a
           >
           <a
             *ngIf="userRoles?.includes('global-admin')"

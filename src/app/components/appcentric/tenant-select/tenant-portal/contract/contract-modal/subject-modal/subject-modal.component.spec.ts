@@ -83,12 +83,12 @@ describe('SubjectModalComponent', () => {
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
-      applyBothDirections: true,
       reverseFilterPorts: true,
       globalAlias: '',
       name: 'subject1',
       alias: '',
       description: 'description!',
+      serviceGraphId: null,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -104,12 +104,12 @@ describe('SubjectModalComponent', () => {
     component.modalMode = ModalMode.Edit;
     component.contractId = '123';
     component.form.setValue({
-      applyBothDirections: true,
       reverseFilterPorts: true,
       globalAlias: '',
       name: 'subject',
       alias: '',
       description: 'updated description!',
+      serviceGraphId: null,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));

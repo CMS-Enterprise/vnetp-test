@@ -1,0 +1,21 @@
+<div class="firewall-config-container">
+  <nav class="firewall-config-tabs">
+    <a
+      *ngFor="let tab of tabs"
+      class="tab-link"
+      [routerLink]="tab.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: tab.route.length === 0 }"
+      [queryParamsHandling]="'merge'"
+      [class.disabled]="tab.requiresSelection && !hasSelection"
+      [attr.aria-disabled]="tab.requiresSelection && !hasSelection"
+      (click)="tab.requiresSelection && !hasSelection ? $event.preventDefault() : null"
+    >
+      {{ tab.name }}
+    </a>
+  </nav>
+
+  <h4>{{ firewallName }}</h4>
+
+  <router-outlet></router-outlet>
+</div>

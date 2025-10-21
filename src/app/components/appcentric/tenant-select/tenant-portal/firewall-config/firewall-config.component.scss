@@ -1,0 +1,51 @@
+.firewall-config-container {
+  .firewall-config-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #dedede;
+
+    .tab-link {
+      padding: 0.5rem 0;
+      text-decoration: none;
+      color: #333;
+      border-bottom: 2px solid transparent;
+
+      &.active {
+        font-weight: 600;
+        border-color: #007bff;
+        color: #007bff;
+      }
+    }
+  }
+}
+
+.firewall-config-summary {
+  padding: 1rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+  h2 {
+    margin-top: 0;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-gap: 0.5rem 1rem;
+
+    dt {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+}

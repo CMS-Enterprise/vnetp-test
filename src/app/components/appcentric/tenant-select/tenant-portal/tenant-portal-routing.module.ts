@@ -52,55 +52,21 @@ const routes: Routes = [
       },
       {
         outlet,
-        path: 'internal-firewall',
-        data: {
-          breadcrumb: 'Internal Firewall',
-          title: 'Internal Firewall',
-        },
-        loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
+        path: 'external-firewalls',
+        data: { breadcrumb: 'External Firewalls', title: 'Tenant Portal - External Firewalls' },
+        loadChildren: () => import('./external-firewalls/external-firewalls.module').then(m => m.ExternalFirewallsModule),
       },
       {
         outlet,
-        path: 'internal-nat',
-        data: { breadcrumb: 'Internal NAT', title: 'Internal NAT' },
-        loadChildren: () => import('./tenant-v2-nat/tenant-v2-nat.module').then(m => m.TenantV2NatModule),
-      },
-
-      {
-        outlet,
-        path: 'internal-service-objects',
-        data: { breadcrumb: 'Internal Service Objects', title: 'Internal Service Objects' },
-        loadChildren: () =>
-          import('src/app/components/service-objects-groups/service-objects-groups.module').then(m => m.ServiceObjectsGroupsModule),
+        path: 'service-graphs',
+        data: { breadcrumb: 'Service Graphs', title: 'Tenant Portal - Service Graphs' },
+        loadChildren: () => import('./service-graphs/service-graphs.module').then(m => m.ServiceGraphsModule),
       },
       {
         outlet,
-        path: 'external-firewall',
-        data: {
-          breadcrumb: 'External Firewall',
-          title: 'External Firewall',
-        },
-        loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
-      },
-      {
-        outlet,
-        path: 'external-nat',
-        data: { breadcrumb: 'External NAT', title: 'External NAT' },
-        loadChildren: () => import('./tenant-v2-nat/tenant-v2-nat.module').then(m => m.TenantV2NatModule),
-      },
-      {
-        outlet,
-        path: 'external-service-objects',
-        data: { breadcrumb: 'External Service Objects', title: 'External Service Objects' },
-        loadChildren: () =>
-          import('src/app/components/service-objects-groups/service-objects-groups.module').then(m => m.ServiceObjectsGroupsModule),
-      },
-      {
-        outlet,
-        path: 'external-network-objects',
-        data: { breadcrumb: 'External Network Objects', title: 'External Network Objects' },
-        loadChildren: () =>
-          import('src/app/components/network-objects-groups/network-objects-groups.module').then(m => m.NetworkObjectsGroupsModule),
+        path: 'firewall-config',
+        data: { breadcrumb: 'Firewall Configuration', title: 'Tenant Portal - Firewall Configuration' },
+        loadChildren: () => import('./firewall-config/firewall-config.module').then(m => m.FirewallConfigModule),
       },
       {
         outlet,
@@ -120,6 +86,12 @@ const routes: Routes = [
         path: 'workflows',
         data: { breadcrumb: 'Workflows', title: 'Workflows' },
         loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule),
+      },
+      {
+        outlet,
+        path: 'tenant-graph',
+        data: { breadcrumb: 'Graph', title: 'Tenant Portal - Graph' },
+        loadChildren: () => import('./tenant-graph/tenant-graph.module').then(m => m.TenantGraphModule),
       },
     ],
   },

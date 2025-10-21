@@ -152,3 +152,9 @@
     ></app-icon-button>
   </section>
 </ng-template>
+
+<ng-template #subjectServiceGraphTemplate let-subject="datum">
+  <section>
+    <span>{{ subject?.serviceGraph?.name }}</span>
+  </section>
+</ng-template>

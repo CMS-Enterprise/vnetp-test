@@ -9,9 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ExternalVrfConnection } from './externalVrfConnection';
 import { AppCentricSubnet } from './appCentricSubnet';
-import { WanForm } from './wanForm';
-import { Subnet } from './subnet';
 
 
 export interface InternalRoute { 
@@ -22,35 +21,11 @@ export interface InternalRoute {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name: string;
-    description?: string;
-    exportedToVrfs: InternalRouteExportedToVrfsEnum;
-    wanFormId: string;
-    readonly wanForm?: WanForm;
-    readonly netcentricSubnet?: Subnet;
-    netcentricSubnetId?: string;
     readonly appcentricSubnet?: AppCentricSubnet;
     appcentricSubnetId?: string;
+    readonly externalVrfConnection?: ExternalVrfConnection;
+    externalVrfConnectionId?: string;
+    routeControlVersion?: number;
+    tenantId?: string;
 }
-export enum InternalRouteExportedToVrfsEnum {
-    CmsEntsrvInet = 'cms-entsrv-inet',
-    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
-    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
-    CmsEntsrvMon = 'cms-entsrv-mon',
-    CmsEntsrvPres = 'cms-entsrv-pres',
-    CmsEntsrvSec = 'cms-entsrv-sec',
-    CmsEntsrvVpn = 'cms-entsrv-vpn',
-    CmsnetAppdev = 'cmsnet_appdev',
-    CmsnetAppprod = 'cmsnet_appprod',
-    CmsnetDatadev = 'cmsnet_datadev',
-    CmsnetDataprod = 'cmsnet_dataprod',
-    CmsnetEdcVpn = 'cmsnet_edc_vpn',
-    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
-    CmsnetPresdev = 'cmsnet_presdev',
-    CmsnetPresprod = 'cmsnet_presprod',
-    CmsnetSec = 'cmsnet_sec',
-    CmsnetTransport = 'cmsnet_transport'
-};
-
-
 

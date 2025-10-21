@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WanForm } from './wanForm';
+import { ExternalVrfConnection } from './externalVrfConnection';
 
 
 export interface ExternalRoute { 
@@ -21,10 +21,11 @@ export interface ExternalRoute {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     network: string;
-    externalVrf?: string;
     globalExternalRouteId?: string;
     manual?: boolean;
-    readonly wanForm?: WanForm;
-    wanFormId: string;
+    routeControlVersion?: number;
+    readonly externalVrfConnection?: ExternalVrfConnection;
+    externalVrfConnectionId?: string;
+    tenantId?: string;
 }
 

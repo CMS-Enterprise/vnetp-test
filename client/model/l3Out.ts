@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 import { Tenant } from './tenant';
-import { UnderlayAllocation } from './underlayAllocation';
+import { ExternalFirewall } from './externalFirewall';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 
@@ -34,6 +34,18 @@ export interface L3Out {
     readonly tenantVersion?: number;
     readonly endpointGroups?: Array<L3Out>;
     readonly endpointSecurityGroups?: Array<L3Out>;
-    readonly underlayAllocation?: UnderlayAllocation;
+    l3outType: L3OutL3outTypeEnum;
+    propagateExternalRoutes?: boolean;
+    readonly externalFirewall?: ExternalFirewall;
+    externalFirewallId?: string;
+    underlayIpv4Network?: string;
+    underlayIpv6Network?: string;
+    underlayVlan?: number;
 }
+export enum L3OutL3outTypeEnum {
+    External = 'external',
+    Intervrf = 'intervrf'
+};
+
+
 

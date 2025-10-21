@@ -205,6 +205,18 @@ export class TenantSelectComponent implements OnInit {
     // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
+  public navigateToTenantInfrastructure(mode: 'create' | 'edit' = 'create', tenant?: Tenant): void {
+    if (mode === 'edit' && tenant?.id) {
+      this.router.navigate([`/adminportal/tenant-infrastructure/edit/${tenant.id}`], { queryParamsHandling: 'merge' });
+      return;
+    }
+    this.router.navigate(['/adminportal/tenant-infrastructure/create'], { queryParamsHandling: 'merge' });
+  }
+
+  public navigateToTenantPortal(tenant: Tenant): void {
+    this.router.navigate([`/tenantv2/tenant-select/edit/${tenant.id}/home`], { queryParamsHandling: 'merge' });
+  }
+
   public subscribeToTenantModal(): void {
     this.tenantModalSubscription = this.ngx.getModal('tenantModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('tenantModal');

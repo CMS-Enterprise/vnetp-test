@@ -5,8 +5,8 @@
     <button
       type="button"
       class="btn btn-success"
-      (click)="openTenantModal(ModalMode.Create)"
-      [disabled]="applicationMode === ApplicationMode.TENANTV2"
+      (click)="navigateToTenantInfrastructure('create')"
+      [disabled]="applicationMode !== ApplicationMode.ADMINPORTAL"
     >
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Tenant</span>
@@ -31,14 +31,21 @@
 
 <ng-template #tenantSelectNameTemplate let-tenant="datum">
   <section>
+    <!-- when in Admin Portal mode, click navigates to tenant infrastructure -->
+    <a
+      href="javascript:void(0)"
+      (click)="navigateToTenantInfrastructure('edit', tenant)"
+      *ngIf="applicationMode === ApplicationMode.ADMINPORTAL"
+      >{{ tenant.name }}</a
+    >
     <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
     <a
       routerLink="/tenantv2/tenant-select/edit/{{ tenant.id }}/home"
       queryParamsHandling="merge"
-      *ngIf="applicationMode === ApplicationMode.ADMINPORTAL || applicationMode === ApplicationMode.TENANTV2"
+      *ngIf="applicationMode === ApplicationMode.TENANTV2"
       >{{ tenant.name }}</a
     >
-    <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
+    <!-- when in AppCentric mode navigate to appcentric/tenant-select/edit -->
     <a
       routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home"
       queryParamsHandling="merge"
@@ -51,10 +58,18 @@
 <ng-template #actionsTemplate let-tenant="datum">
   <section class="table__actions">
     <app-icon-button
-      *ngIf="!tenant?.deletedAt"
+      *ngIf="!tenant?.deletedAt && applicationMode === ApplicationMode.ADMINPORTAL"
       icon="edit"
       label="Edit Tenant"
-      (handleClick)="openTenantModal(ModalMode.Edit, tenant)"
+      (handleClick)="navigateToTenantInfrastructure('edit', tenant)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="!tenant?.deletedAt && applicationMode === ApplicationMode.ADMINPORTAL"
+      icon="paperPlane"
+      label="View in Tenant Portal"
+      type="default"
+      (handleClick)="navigateToTenantPortal(tenant)"
     ></app-icon-button>
 
     <app-icon-button
@@ -78,6 +93,5 @@
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
-<app-tenant-select-modal></app-tenant-select-modal>
 <app-yes-no-modal></app-yes-no-modal>
 <app-type-delete-modal [objectType]="objectType" [objectToDelete]="selectedTenantToDelete"></app-type-delete-modal>

@@ -32,7 +32,19 @@ export class HttpConfigInterceptor {
         tenant = qp.tenant;
       });
 
+      // Fallback: If tenant not found in route query params, parse from current URL
+      if (!tenant) {
+        const urlParams = new URLSearchParams(window.location.search);
+        tenant = urlParams.get('tenant') || '';
+      }
+
+      // Fallback: Use tenant from localStorage if available
+      if (!tenant && this.auth.currentTenantValue) {
+        tenant = this.auth.currentTenantValue;
+      }
+
       if (this.tenantStateService.isTenantSet() && this.auth.isGlobalAdmin(currentUser)) {
+        // Tenant State should only be set when doing multi-tenant actions.
         tenant = this.tenantStateService.getTenant();
       }
 

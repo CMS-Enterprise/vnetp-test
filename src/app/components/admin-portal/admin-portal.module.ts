@@ -64,10 +64,28 @@ const routes: Routes = [
         loadChildren: () => import('../appcentric/tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
       },
       {
-        path: 'wan-form-request',
+        path: 'tenant-infrastructure/create',
         canActivate: [AdminAuthGuard],
-        data: { breadcrumb: 'WAN Form Requests', title: 'WAN Form Requests' },
-        loadChildren: () => import('./wan-form-request/wan-form-request.module').then(m => m.WanFormRequestModule),
+        data: {
+          breadcrumb: 'Tenant Infrastructure',
+          title: 'Tenant Infrastructure',
+        },
+        loadChildren: () => import('./tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
+      },
+      {
+        path: 'tenant-infrastructure/edit/:id',
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Tenant Infrastructure',
+          title: 'Tenant Infrastructure',
+        },
+        loadChildren: () => import('./tenant-infrastructure/tenant-infrastructure.module').then(m => m.TenantInfrastructureModule),
+      },
+      {
+        path: 'route-control-request',
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'Route Control Requests', title: 'Route Control Requests' },
+        loadChildren: () => import('./route-control-request/route-control-request.module').then(m => m.RouteControlRequestModule),
       },
       {
         path: 'app-id-maintenance',

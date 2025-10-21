@@ -6,6 +6,7 @@ export interface Tab {
   route?: string[];
   subTabs?: Tab[];
   isSubTab?: boolean;
+  navToFirstSubTab?: boolean;
   id?: string; // Optional ID for the tab
 }
 
@@ -21,6 +22,8 @@ export class TabsComponent implements OnInit, OnChanges {
 
   public activeTab: Tab;
   public activeSubTab: Tab;
+
+  constructor() {}
 
   ngOnInit(): void {
     this.setActiveTab(this.tabs[this.initialTabIndex]);

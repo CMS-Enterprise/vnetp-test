@@ -66,5 +66,6 @@ const routes: Routes = [
     NatRuleModalComponent,
     NatRulesOperationModalComponent,
   ],
+  exports: [NatRulesDetailComponent],
 })
 export class NatRulesModule {}

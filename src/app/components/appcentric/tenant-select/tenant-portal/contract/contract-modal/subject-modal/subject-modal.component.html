@@ -75,22 +75,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-3">
-          <label for="applyBothDirections">Apply Both Directions</label>
-          <select
-            id="applyBothDirections"
-            formControlName="applyBothDirections"
-            class="form-control"
-            [class.is-invalid]="submitted && f.applyBothDirections.errors"
-            aria-label="Apply Both Directions"
-          >
-            <option></option>
-            <option [ngValue]="true">True</option>
-            <option [ngValue]="false">False</option>
-          </select>
-        </div>
-
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-6">
           <label for="reverseFilterPorts">Reverse Filter Ports</label>
           <select
             id="reverseFilterPorts"
@@ -104,6 +89,10 @@
             <option [ngValue]="false">False</option>
           </select>
         </div>
+      </div>
+      <div class="form-group">
+        <label for="serviceGraphId">Service Graph</label>
+        <ng-select formControlName="serviceGraphId" [items]="serviceGraphs" id="serviceGraphId" bindLabel="name" bindValue="id"></ng-select>
       </div>
 
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>

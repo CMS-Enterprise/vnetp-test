@@ -75,9 +75,10 @@ export enum MergedAuditLogEntityTypeEnum {
     Subject = 'Subject',
     Vrf = 'Vrf',
     Selector = 'Selector',
-    WanForm = 'WanForm',
+    RouteControl = 'RouteControl',
     ExternalRoute = 'ExternalRoute',
-    InternalRoute = 'InternalRoute'
+    InternalRoute = 'InternalRoute',
+    ExternalVrfConnection = 'ExternalVrfConnection'
 };
 export enum MergedAuditLogExpectedTerraformActionEnum {
     NoOp = 'no-op',

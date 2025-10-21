@@ -44,6 +44,7 @@ export class ContractModalComponent implements OnInit {
   public perPage = 20;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('subjectServiceGraphTemplate') subjectServiceGraphTemplate: TemplateRef<any>;
 
   public searchColumns: SearchColumnConfig[] = [];
 
@@ -53,6 +54,9 @@ export class ContractModalComponent implements OnInit {
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
       { name: 'Description', property: 'description' },
+      { name: 'Apply Both Directions', property: 'applyBothDirections' },
+      { name: 'Reverse Filter Ports', property: 'reverseFilterPorts' },
+      { name: 'Service Graph', template: () => this.subjectServiceGraphTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -105,6 +109,7 @@ export class ContractModalComponent implements OnInit {
     if (contract !== undefined) {
       this.form.controls.name.setValue(contract.name);
       this.form.controls.name.disable();
+      this.form.controls.scope.disable();
       this.form.controls.description.setValue(contract.description);
       this.form.controls.alias.setValue(contract.alias);
     }
@@ -134,6 +139,7 @@ export class ContractModalComponent implements OnInit {
 
   private editContract(contract: Contract): void {
     delete contract.name;
+    delete contract.scope;
     delete contract.tenantId;
     this.contractService
       .updateOneContract({
@@ -185,6 +191,7 @@ export class ContractModalComponent implements OnInit {
         page: 1,
         perPage: 1000,
         filter: [`contractId||eq||${this.contractId}`, eventParams],
+        relations: ['serviceGraph'],
       })
       .subscribe(
         data => {

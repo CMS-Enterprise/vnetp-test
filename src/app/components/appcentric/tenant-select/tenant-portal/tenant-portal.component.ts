@@ -1,21 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Datacenter,
-  FirewallRuleGroup,
-  GetManyTenantResponseDto,
-  NatRuleGroup,
-  Tier,
-  V2AppCentricTenantsService,
-  Vrf,
-  Tenant,
-} from 'client';
+import { GetManyTenantResponseDto, V2AppCentricTenantsService, Tenant } from 'client';
 import { Tab, TabsComponent } from 'src/app/common/tabs/tabs.component';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
-import { V1DatacentersService } from 'client';
-import { V1TiersService } from 'client';
-import { TierContextService } from 'src/app/services/tier-context.service';
-import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { RouteDataUtil } from '../../../../utils/route-data.util';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -30,25 +17,22 @@ const tabs: Tab[] = [
   { name: 'Contract', route: ['contract'], id: 'contract' },
   { name: 'Filter', route: ['filter'], id: 'filter' },
   {
-    name: 'Internal Firewall',
-    tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
-    id: 'tv2-internal-firewall',
-    subTabs: [
-      { name: 'Firewall Rules', route: ['internal-firewall'], id: 'tv2-internal-firewall-firewall-rules' },
-      { name: 'NAT Rules', route: ['internal-nat'], id: 'tv2-internal-firewall-nat-rules' },
-      { name: 'Service Objects', route: ['internal-service-objects'], id: 'tv2-internal-firewall-service-objects' },
-    ],
+    name: 'Service Graphs',
+    tooltip: 'Manage service graphs and their firewall configurations.',
+    id: 'tv2-service-graphs',
+    route: ['service-graphs'],
   },
   {
-    name: 'External Firewall',
-    tooltip: 'These firewall rules are applied between the ACI environment and external networks.',
-    id: 'tv2-external-firewall',
-    subTabs: [
-      { name: 'Firewall Rules', route: ['external-firewall'], id: 'tv2-external-firewall-firewall-rules' },
-      { name: 'NAT Rules', route: ['external-nat'], id: 'tv2-external-firewall-nat-rules' },
-      { name: 'Network Objects', route: ['external-network-objects'], id: 'tv2-external-firewall-network-objects' },
-      { name: 'Service Objects', route: ['external-service-objects'], id: 'tv2-external-firewall-service-objects' },
-    ],
+    name: 'External Firewalls',
+    tooltip: 'Manage external firewalls and their configurations.',
+    id: 'tv2-external-firewalls',
+    route: ['external-firewalls'],
+  },
+  {
+    name: 'Graph',
+    tooltip: 'View the complete tenant connectivity graph showing all entities and their relationships.',
+    id: 'tv2-tenant-graph',
+    route: ['tenant-graph'],
   },
   {
     name: 'Endpoint Connectivity Utility',
@@ -80,22 +64,11 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   public tenantId: string;
   public applicationMode: ApplicationMode;
   public ApplicationMode = ApplicationMode;
-  public networkServicesContainerDatacenter: Datacenter;
 
   // Loading states
   public isLoadingTenant = false;
   public isLoadingVrfData = false;
   public isLoadingTiers = false;
-
-  // VRF-based properties with improved type safety
-  public tenantVrfs: Vrf[] = [];
-  public selectedVrf: Vrf | null = null;
-  public selectedVrfInternalTier: Tier | null = null;
-  public selectedVrfExternalTier: Tier | null = null;
-  public selectedVrfInternalFirewallRuleGroup: FirewallRuleGroup | null = null;
-  public selectedVrfExternalFirewallRuleGroup: FirewallRuleGroup | null = null;
-  public selectedVrfInternalNatRuleGroup: NatRuleGroup | null = null;
-  public selectedVrfExternalNatRuleGroup: NatRuleGroup | null = null;
 
   public tabs: Tab[] = [];
 
@@ -103,20 +76,11 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private subscriptions: Subscription[] = [];
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private tenantService: V2AppCentricTenantsService,
-    private datacenterService: V1DatacentersService,
-    private tierService: V1TiersService,
-    private tierContextService: TierContextService,
-    private datacenterContextService: DatacenterContextService,
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private tenantService: V2AppCentricTenantsService) {}
 
   private initializeTabs(): void {
     if (this.applicationMode === ApplicationMode.TENANTV2) {
       // Show all tabs including firewalls for V2, preserving subTabs
-      this.datacenterContextService.refreshDatacenters();
       this.tabs = [...tabs];
     } else {
       // Filter out tenant v2 tabs
@@ -148,292 +112,22 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     return currentTab?.id || null;
   }
 
-  /**
-   * Check if current context is internal firewall
-   */
-  private isInternalFirewallContext(currentTabId: string | null, parentTabId: string | null): boolean {
-    return currentTabId === 'tv2-internal-firewall' || parentTabId === 'tv2-internal-firewall';
-  }
-
-  /**
-   * Check if current context is external firewall
-   */
-  private isExternalFirewallContext(currentTabId: string | null, parentTabId: string | null): boolean {
-    return currentTabId === 'tv2-external-firewall' || parentTabId === 'tv2-external-firewall';
-  }
-
-  /**
-   * Select a VRF and load its associated tiers and rule groups
-   */
-  public selectVrf(vrf: Vrf | null): void {
-    if (!vrf) {
-      console.warn('Cannot select null VRF');
-      return;
-    }
-
-    this.selectedVrf = vrf;
-    this.isLoadingVrfData = true;
-    this.loadVrfTiersAndRuleGroups(vrf);
-  }
-
-  /**
-   * Load tiers and rule groups for the selected VRF
-   */
-  private loadVrfTiersAndRuleGroups(vrf: Vrf): void {
-    if (!vrf) {
-      console.warn('Cannot load tiers for null VRF');
-      this.isLoadingVrfData = false;
-      return;
-    }
-
-    this.selectedVrfInternalTier = vrf.internalNetworkServicesTier || null;
-    this.selectedVrfExternalTier = vrf.externalNetworkServicesTier || null;
-
-    // If we have tier IDs but not the full tier objects with rule groups, fetch them
-    const internalTierId = this.selectedVrfInternalTier?.id;
-    const externalTierId = this.selectedVrfExternalTier?.id;
-
-    if (internalTierId || externalTierId) {
-      const tierIds = [internalTierId, externalTierId].filter(Boolean) as string[];
-
-      if (tierIds.length > 0) {
-        this.isLoadingTiers = true;
-
-        // Get the full tier objects with rule groups
-        this.tierService
-          .getManyTier({
-            filter: [`id||in||${tierIds.join(',')}`],
-            join: ['firewallRuleGroups', 'natRuleGroups'],
-            page: 1,
-            perPage: 10,
-          })
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: tierResponse => {
-              try {
-                if (!tierResponse?.data) {
-                  throw new Error('Invalid tier response data');
-                }
-
-                const tiersById = new Map(tierResponse.data.map(t => [t.id, t]));
-
-                // Update internal tier and rule groups with type safety
-                if (internalTierId) {
-                  const fullInternalTier = tiersById.get(internalTierId);
-                  if (fullInternalTier) {
-                    this.selectedVrfInternalTier = fullInternalTier;
-                    this.selectedVrfInternalFirewallRuleGroup = fullInternalTier.firewallRuleGroups?.[0] || null;
-                    this.selectedVrfInternalNatRuleGroup = fullInternalTier.natRuleGroups?.[0] || null;
-                  }
-                }
-
-                // Update external tier and rule groups with type safety
-                if (externalTierId) {
-                  const fullExternalTier = tiersById.get(externalTierId);
-                  if (fullExternalTier) {
-                    this.selectedVrfExternalTier = fullExternalTier;
-                    this.selectedVrfExternalFirewallRuleGroup = fullExternalTier.firewallRuleGroups?.[0] || null;
-                    this.selectedVrfExternalNatRuleGroup = fullExternalTier.natRuleGroups?.[0] || null;
-                  }
-                }
-
-                this.isLoadingTiers = false;
-                this.isLoadingVrfData = false;
-                // After rule groups are loaded, re-trigger current subtab navigation
-                this.retriggerCurrentSubtab();
-              } catch (error) {
-                this.isLoadingTiers = false;
-                this.isLoadingVrfData = false;
-              }
-            },
-            error: () => {
-              this.isLoadingTiers = false;
-              this.isLoadingVrfData = false;
-              // Still attempt to retrigger with existing data
-              this.retriggerCurrentSubtab();
-            },
-          });
-      }
-    } else {
-      // If no additional loading needed, still check for navigation
-      this.isLoadingVrfData = false;
-      this.retriggerCurrentSubtab();
-    }
-  }
-
-  /**
-   * Helper method to switch tier context safely
-   */
-  private switchTierContext(tierId: string): void {
-    this.tierContextService.unlockTier();
-    this.tierContextService.switchTier(tierId);
-    this.tierContextService.lockTier();
-  }
-
-  /**
-   * Navigate to a specific rule group with tier context switching
-   */
-  private navigateToRuleGroup(routePath: string[], ruleGroupId: string | null, tierId: string | null): void {
-    if (ruleGroupId && tierId) {
-      this.switchTierContext(tierId);
-      this.router.navigate([{ outlets: { 'tenant-portal': [...routePath, 'edit', ruleGroupId] } }], {
-        queryParamsHandling: 'merge',
-        relativeTo: this.activatedRoute,
-      });
-    }
-  }
-
-  /**
-   * Re-trigger the current subtab to navigate to the new VRF's rule group
-   */
-  private retriggerCurrentSubtab(): void {
-    const currentUrl = this.router.url;
-
-    // Define route mappings for cleaner logic
-    const routeMappings = [
-      {
-        urlPattern: 'internal-firewall/edit/',
-        routePath: ['internal-firewall'],
-        ruleGroupId: this.selectedVrfInternalFirewallRuleGroup?.id || null,
-        tierId: this.selectedVrfInternalTier?.id || null,
-      },
-      {
-        urlPattern: 'external-firewall/edit/',
-        routePath: ['external-firewall'],
-        ruleGroupId: this.selectedVrfExternalFirewallRuleGroup?.id || null,
-        tierId: this.selectedVrfExternalTier?.id || null,
-      },
-      {
-        urlPattern: 'internal-nat/edit/',
-        routePath: ['internal-nat'],
-        ruleGroupId: this.selectedVrfInternalNatRuleGroup?.id || null,
-        tierId: this.selectedVrfInternalTier?.id || null,
-      },
-      {
-        urlPattern: 'external-nat/edit/',
-        routePath: ['external-nat'],
-        ruleGroupId: this.selectedVrfExternalNatRuleGroup?.id || null,
-        tierId: this.selectedVrfExternalTier?.id || null,
-      },
-    ];
-
-    // Find matching route and navigate
-    const matchingRoute = routeMappings.find(route => currentUrl.includes(route.urlPattern));
-    if (matchingRoute) {
-      this.navigateToRuleGroup(matchingRoute.routePath, matchingRoute.ruleGroupId, matchingRoute.tierId);
-    }
-  }
-
   public async handleTabChange(tab: Tab): Promise<any> {
     if (!tab) {
       return;
     }
-
-    // Get current tab ID and parent tab ID safely
-    const currentTabId = this.getCurrentTabId();
-    const parentTabId = currentTabId; // Store the parent context before potential change
 
     // Update current tab unless this is a sub-tab
     if (!tab.isSubTab) {
       this.currentTab = tab.name;
     }
 
-    // Use the name of the tab to determine the action to take
-    switch (tab.name) {
-      case 'Internal Firewall':
-        // Preset the Tier to the Internal Tier of selected VRF
-        if (this.selectedVrfInternalTier?.id) {
-          this.switchTierContext(this.selectedVrfInternalTier.id);
-        }
-        break;
-      case 'External Firewall':
-        // Preset the Tier to the External Tier of selected VRF
-        if (this.selectedVrfExternalTier?.id) {
-          this.switchTierContext(this.selectedVrfExternalTier.id);
-        }
-        break;
-      case 'Network Objects':
-        if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          if (this.selectedVrfExternalTier?.id) {
-            this.switchTierContext(this.selectedVrfExternalTier.id);
-            this.router.navigate([{ outlets: { 'tenant-portal': ['external-network-objects'] } }], {
-              queryParamsHandling: 'merge',
-              relativeTo: this.activatedRoute,
-            });
-          }
-        }
-        return;
-
-      case 'Service Objects':
-        // Check if we're under Internal or External based on parent tab context
-        if (this.isInternalFirewallContext(currentTabId, parentTabId)) {
-          if (this.selectedVrfInternalTier?.id) {
-            this.switchTierContext(this.selectedVrfInternalTier.id);
-            this.router.navigate([{ outlets: { 'tenant-portal': ['internal-service-objects'] } }], {
-              queryParamsHandling: 'merge',
-              relativeTo: this.activatedRoute,
-            });
-          }
-        } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          if (this.selectedVrfExternalTier?.id) {
-            this.switchTierContext(this.selectedVrfExternalTier.id);
-            this.router.navigate([{ outlets: { 'tenant-portal': ['external-service-objects'] } }], {
-              queryParamsHandling: 'merge',
-              relativeTo: this.activatedRoute,
-            });
-          }
-        }
-        return;
-
-      case 'Firewall Rules':
-        // Check if we're under Internal or External based on parent tab context
-        if (this.isInternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['internal-firewall'],
-            this.selectedVrfInternalFirewallRuleGroup?.id || null,
-            this.selectedVrfInternalTier?.id || null,
-          );
-        } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['external-firewall'],
-            this.selectedVrfExternalFirewallRuleGroup?.id || null,
-            this.selectedVrfExternalTier?.id || null,
-          );
-        }
-        break;
-      case 'NAT Rules':
-        if (this.isInternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['internal-nat'],
-            this.selectedVrfInternalNatRuleGroup?.id || null,
-            this.selectedVrfInternalTier?.id || null,
-          );
-        } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
-          this.navigateToRuleGroup(
-            ['external-nat'],
-            this.selectedVrfExternalNatRuleGroup?.id || null,
-            this.selectedVrfExternalTier?.id || null,
-          );
-        }
-        break;
-
-      default:
-        // For any other tab, look up its route and navigate using type-safe lookup
-        const routeTab = this.hasValidTabId(tab) ? this.tabs.find(t => t.id === tab.id) : this.tabs.find(t => t.name === tab.name);
-
-        if (routeTab && this.hasValidRoute(routeTab)) {
-          this.router.navigate([{ outlets: { 'tenant-portal': routeTab.route } }], {
-            queryParamsHandling: 'merge',
-            relativeTo: this.activatedRoute,
-          });
-        } else if (this.hasValidRoute(tab)) {
-          // If we couldn't find it in the lookup but it has a route, use that
-          this.router.navigate([{ outlets: { 'tenant-portal': tab.route } }], {
-            queryParamsHandling: 'merge',
-            relativeTo: this.activatedRoute,
-          });
-        }
-        break;
+    if (tab.route) {
+      await this.router.navigate([{ outlets: { 'tenant-portal': tab.route } }], {
+        queryParamsHandling: 'merge',
+        relativeTo: this.activatedRoute,
+      });
+      return;
     }
   }
 
@@ -442,7 +136,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tenantService
       .getOneTenant({
         id: this.tenantId,
-        join: ['vrfs', 'vrfs.internalNetworkServicesTier', 'vrfs.externalNetworkServicesTier'],
+        join: ['vrfs'],
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -450,68 +144,12 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
           this.currentTenant = response;
           this.currentTenantName = response.name;
           this.isLoadingTenant = false;
-
-          if (this.applicationMode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
-            this.tenantVrfs = response.vrfs || [];
-            this.initializeVrfSelection();
-            this.getNetworkServicesContainerDatacenter(response.datacenterId);
-          }
         },
         () => {
           this.tenants = null;
           this.isLoadingTenant = false;
         },
       );
-  }
-
-  /**
-   * Initialize VRF selection - select first VRF or only VRF if there's only one
-   */
-  private initializeVrfSelection(): void {
-    if (!this.tenantVrfs || this.tenantVrfs.length === 0) {
-      console.warn('No VRFs available for selection');
-      return;
-    }
-
-    // If there's only one VRF or if no VRF is selected yet, select the first one
-    if (this.tenantVrfs.length === 1 || !this.selectedVrf) {
-      const firstVrf = this.tenantVrfs[0];
-      if (firstVrf) {
-        this.selectVrf(firstVrf);
-      }
-    }
-  }
-
-  public getNetworkServicesContainerDatacenter(datacenterId: string): void {
-    this.datacenterService
-      .getOneDatacenter({
-        id: datacenterId,
-        join: ['tiers', 'tiers.firewallRuleGroups', 'tiers.natRuleGroups'],
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: response => {
-          this.networkServicesContainerDatacenter = response;
-          this.datacenterContextService.unlockDatacenter();
-          this.datacenterContextService.switchDatacenter(response.id);
-          this.datacenterContextService.lockDatacenter();
-
-          // Load tiers and rule groups for the selected VRF
-          if (this.selectedVrf) {
-            this.loadVrfTiersAndRuleGroups(this.selectedVrf);
-          }
-
-          // Call getInitialTabIndex after we have all the necessary data
-          this.getInitialTabIndex();
-        },
-        error: () => {
-          // Still attempt to proceed with available data
-          if (this.selectedVrf) {
-            this.loadVrfTiersAndRuleGroups(this.selectedVrf);
-          }
-          this.getInitialTabIndex();
-        },
-      });
   }
 
   ngOnInit(): void {

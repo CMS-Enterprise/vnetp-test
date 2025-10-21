@@ -11,6 +11,7 @@
  */
 import { Tenant } from './tenant';
 import { Filter } from './filter';
+import { ServiceGraph } from './serviceGraph';
 import { Contract } from './contract';
 
 
@@ -26,10 +27,6 @@ export interface Subject {
     alias?: string;
     description?: string;
     /**
-     * Sets the contract filter to apply on both ingress and egress traffic directions.
-     */
-    applyBothDirections: boolean;
-    /**
      * Enables the filter to apply on both ingress and egress traffic.
      */
     reverseFilterPorts: boolean;
@@ -37,6 +34,8 @@ export interface Subject {
      * The scope of a contract between two or more EPGs.
      */
     globalAlias: string;
+    readonly serviceGraph?: ServiceGraph;
+    serviceGraphId?: string;
     readonly tenant?: Tenant;
     tenantId: string;
     readonly contract?: Contract;

@@ -10,19 +10,25 @@
  * Do not edit the class manually.
  */
 import { L3Out } from './l3Out';
+import { ServiceGraphFirewall } from './serviceGraphFirewall';
+import { Tier } from './tier';
 import { EndpointGroup } from './endpointGroup';
+import { ExternalVrfConnection } from './externalVrfConnection';
 import { Workflow } from './workflow';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 import { AuditLog } from './auditLog';
 import { Subject } from './subject';
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
+import { Endpoint } from './endpoint';
+import { ExternalFirewall } from './externalFirewall';
 import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
+import { ServiceGraph } from './serviceGraph';
 import { Datacenter } from './datacenter';
 import { AppCentricSubnet } from './appCentricSubnet';
-import { WanForm } from './wanForm';
 import { ApplicationProfile } from './applicationProfile';
+import { EndpointIpAddress } from './endpointIpAddress';
 import { Contract } from './contract';
 import { Selector } from './selector';
 
@@ -51,18 +57,24 @@ export interface Tenant {
     readonly filterEntries?: Array<FilterEntry>;
     readonly l3outs?: Array<L3Out>;
     readonly auditLogs?: Array<AuditLog>;
-    readonly wanForms?: WanForm;
     readonly workflows?: Array<Workflow>;
     readonly datacenterId?: string;
     readonly datacenter: Datacenter;
-    readonly multiVrf: boolean;
-    readonly multiL3out: boolean;
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
     readonly environmentId: string;
-    readonly wanFormStatus?: TenantWanFormStatusEnum;
+    readonly routeControlVersion?: number;
+    readonly routeControlStatus?: TenantRouteControlStatusEnum;
+    readonly externalFirewalls?: Array<ExternalFirewall>;
+    readonly externalVrfConnections?: Array<ExternalVrfConnection>;
+    readonly serviceGraphFirewalls?: Array<ServiceGraphFirewall>;
+    readonly serviceGraphs?: Array<ServiceGraph>;
+    readonly endpoints?: Array<Endpoint>;
+    readonly endpointIpAddresses?: Array<EndpointIpAddress>;
+    readonly tiers?: Array<Tier>;
+    routeControlRejectionReason?: string;
 }
-export enum TenantWanFormStatusEnum {
+export enum TenantRouteControlStatusEnum {
     Pending = 'PENDING',
     Approved = 'APPROVED',
     Active = 'ACTIVE'

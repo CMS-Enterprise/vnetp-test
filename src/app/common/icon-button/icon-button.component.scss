@@ -37,4 +37,13 @@
       color: $c-blue-700;
     }
   }
+
+  &--primary {
+    color: $c-blue-300;
+
+    &:hover,
+    &:focus {
+      color: $c-blue-700;
+    }
+  }
 }

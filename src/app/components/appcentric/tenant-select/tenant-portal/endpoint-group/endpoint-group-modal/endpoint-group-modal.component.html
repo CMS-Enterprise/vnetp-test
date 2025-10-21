@@ -7,7 +7,7 @@
   (onClose)="reset()"
 >
   <header class="modal-header">
-    <h4 class="modal-title">Endpoint Group</h4>
+    <h4 class="modal-title">Endpoint Group {{ f?.name?.value }}</h4>
   </header>
   <app-tabs
     *ngIf="ModalMode === 'Edit'"

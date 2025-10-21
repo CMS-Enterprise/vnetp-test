@@ -19,14 +19,16 @@ import { Observable }                                        from 'rxjs';
 
 import { CreateManyTenantDto } from '../model/models';
 import { GetManyTenantResponseDto } from '../model/models';
-import { SimplifiedTenantWanFormResponse } from '../model/models';
 import { Tenant } from '../model/models';
-import { TenantWanFormChanges } from '../model/models';
-import { UpdateUnderlayAllocationsDto } from '../model/models';
+import { TenantConnectivityGraph } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
+
+export interface BuildTenantFullGraphTenantRequestParams {
+    id: string;
+}
 
 export interface CreateManyTenantRequestParams {
     createManyTenantDto: CreateManyTenantDto;
@@ -78,12 +80,8 @@ export interface GetOneTenantRequestParams {
     join?: Array<string>;
 }
 
-export interface GetTenantWithWanFormsTenantRequestParams {
-    id: string;
-}
-
-export interface GetWanFormChangesTenantRequestParams {
-    id: string;
+export interface GetRouteControlChangesTenantRequestParams {
+    tenantId: string;
 }
 
 export interface ProvisionOneTenantRequestParams {
@@ -105,11 +103,6 @@ export interface UpdateOneTenantRequestParams {
     /** UUID. */
     id: string;
     tenant: Tenant;
-}
-
-export interface UpdateUnderlayAllocationsTenantRequestParams {
-    id: string;
-    updateUnderlayAllocationsDto: UpdateUnderlayAllocationsDto;
 }
 
 
@@ -171,6 +164,53 @@ export class V2AppCentricTenantsService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * Build tenant full connectivity graph
+     * Build a comprehensive connectivity graph including all tenant entities and their relationships
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public buildTenantFullGraphTenant(requestParameters: BuildTenantFullGraphTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantConnectivityGraph>;
+    public buildTenantFullGraphTenant(requestParameters: BuildTenantFullGraphTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantConnectivityGraph>>;
+    public buildTenantFullGraphTenant(requestParameters: BuildTenantFullGraphTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantConnectivityGraph>>;
+    public buildTenantFullGraphTenant(requestParameters: BuildTenantFullGraphTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling buildTenantFullGraphTenant.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<TenantConnectivityGraph>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/tenant-graph`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -548,18 +588,18 @@ export class V2AppCentricTenantsService {
     }
 
     /**
-     * Get Tenant with Wan Forms
+     * Get route control changes for a tenant
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTenantWithWanFormsTenant(requestParameters: GetTenantWithWanFormsTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<SimplifiedTenantWanFormResponse>;
-    public getTenantWithWanFormsTenant(requestParameters: GetTenantWithWanFormsTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<SimplifiedTenantWanFormResponse>>;
-    public getTenantWithWanFormsTenant(requestParameters: GetTenantWithWanFormsTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<SimplifiedTenantWanFormResponse>>;
-    public getTenantWithWanFormsTenant(requestParameters: GetTenantWithWanFormsTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getTenantWithWanFormsTenant.');
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public getRouteControlChangesTenant(requestParameters: GetRouteControlChangesTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const tenantId = requestParameters.tenantId;
+        if (tenantId === null || tenantId === undefined) {
+            throw new Error('Required parameter tenantId was null or undefined when calling getRouteControlChangesTenant.');
         }
 
         let headers = this.defaultHeaders;
@@ -568,7 +608,6 @@ export class V2AppCentricTenantsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -582,53 +621,7 @@ export class V2AppCentricTenantsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<SimplifiedTenantWanFormResponse>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/wan-forms`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Get Tenant with Wan Forms Changes
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getWanFormChangesTenant(requestParameters: GetWanFormChangesTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TenantWanFormChanges>;
-    public getWanFormChangesTenant(requestParameters: GetWanFormChangesTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TenantWanFormChanges>>;
-    public getWanFormChangesTenant(requestParameters: GetWanFormChangesTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TenantWanFormChanges>>;
-    public getWanFormChangesTenant(requestParameters: GetWanFormChangesTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getWanFormChangesTenant.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<TenantWanFormChanges>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/wan-forms/changes`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(tenantId))}/route-control/changes`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -826,66 +819,6 @@ export class V2AppCentricTenantsService {
 
         return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}`,
             tenant,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update Tenant Underlay Allocations
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateUnderlayAllocationsTenant(requestParameters: UpdateUnderlayAllocationsTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tenant>;
-    public updateUnderlayAllocationsTenant(requestParameters: UpdateUnderlayAllocationsTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tenant>>;
-    public updateUnderlayAllocationsTenant(requestParameters: UpdateUnderlayAllocationsTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tenant>>;
-    public updateUnderlayAllocationsTenant(requestParameters: UpdateUnderlayAllocationsTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateUnderlayAllocationsTenant.');
-        }
-        const updateUnderlayAllocationsDto = requestParameters.updateUnderlayAllocationsDto;
-        if (updateUnderlayAllocationsDto === null || updateUnderlayAllocationsDto === undefined) {
-            throw new Error('Required parameter updateUnderlayAllocationsDto was null or undefined when calling updateUnderlayAllocationsTenant.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants/${encodeURIComponent(String(id))}/underlay-allocations`,
-            updateUnderlayAllocationsDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

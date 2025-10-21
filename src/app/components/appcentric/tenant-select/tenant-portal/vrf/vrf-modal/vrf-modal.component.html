@@ -29,15 +29,6 @@
             <div class="form-control-plaintext">{{ currentVrf.description || 'Not set' }}</div>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="form-label"
-              ><strong>Host-Based Routes to External VRFs</strong>
-              <tooltip [message]="helpText.HostBasedRoutesToExternalVrfs"></tooltip>
-            </label>
-            <div class="form-control-plaintext">{{ currentVrf.hostBasedRoutesToExternalVrfs || 'Not set' }}</div>
-          </div>
-        </div>
       </div>
 
       <div class="row">
@@ -84,43 +75,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="form-label"><strong>BGP ASN</strong></label>
-            <div class="form-control-plaintext">Internal: {{ currentVrf.internalBgpAsn || 'Not set' }}</div>
-            <div class="form-control-plaintext">External: {{ currentVrf.externalBgpAsn || 'Not set' }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="form-label"
-              ><strong>External VRFs</strong>
-              <tooltip [message]="helpText.ExternalVrfs"></tooltip>
-            </label>
-            <div class="form-control-plaintext">
-              <span *ngIf="!currentVrf.externalVrfs || currentVrf.externalVrfs.length === 0" class="text-muted">
-                No external VRFs configured
-              </span>
-              <span *ngIf="currentVrf.externalVrfs && currentVrf.externalVrfs.length > 0">
-                <span *ngFor="let vrf of currentVrf.externalVrfs" class="vrf-tag">
-                  {{ vrf }}
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="form-label"
-              ><strong>Default External VRF</strong>
-              <tooltip [message]="helpText.DefaultExternalVrf"></tooltip>
-            </label>
-            <div class="form-control-plaintext">
-              <span *ngIf="!currentVrf.defaultExternalVrf" class="text-muted">No default VRF set</span>
-              <span *ngIf="currentVrf.defaultExternalVrf" class="vrf-tag default-vrf">
-                {{ currentVrf.defaultExternalVrf }}
-              </span>
-            </div>
+            <div class="form-control-plaintext">{{ currentVrf.bgpAsn || 'Not set' }}</div>
           </div>
         </div>
       </div>

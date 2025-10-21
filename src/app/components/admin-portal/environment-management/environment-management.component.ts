@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Environment, V3GlobalEnvironmentService } from 'client';
+import { Environment, V3GlobalEnvironmentsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription, forkJoin } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -60,7 +60,7 @@ export class EnvironmentManagementComponent implements OnInit {
 
   public tableComponentDto = new TableComponentDto();
 
-  constructor(private environmentService: V3GlobalEnvironmentService, public ngx: NgxSmartModalService) {}
+  constructor(private environmentService: V3GlobalEnvironmentsService, public ngx: NgxSmartModalService) {}
 
   ngOnInit(): void {
     this.getEnvironments();

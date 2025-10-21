@@ -45,11 +45,20 @@
   <section class="table__actions">
     <app-icon-button *ngIf="checkUndeployedChanges(natRule)" icon="asterisk" label="Undeployed Changes" [type]="'info'"></app-icon-button>
 
+    <!-- TODO: Re-enable Move/Clone for TENANTV2 mode - needs routing/navigation updates -->
     <app-icon-button
-      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased' && applicationMode !== ApplicationMode.TENANTV2"
       icon="clone"
       label="Move/Clone Nat Rule"
       (handleClick)="openNatRuleOperationModal(natRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased' && applicationMode === ApplicationMode.TENANTV2"
+      icon="clone"
+      label="Move/Clone Nat Rule (Disabled in TenantV2)"
+      [disabled]="true"
+      type="default"
     ></app-icon-button>
 
     <app-icon-button
@@ -82,7 +91,9 @@
 </ng-template>
 
 <section class="btn-toolbar" role="toolbar">
+  <!-- TODO: Re-enable Import/Export for TENANTV2 mode - implement tenant-based import instead of datacenter-based -->
   <app-import-export
+    *ngIf="applicationMode !== ApplicationMode.TENANTV2"
     [exportObject]="natRules"
     exportFileName="natRules-{{ TierName }}-{{ NatRuleGroup?.name }}"
     (import)="importNatRulesConfig($event)"
@@ -289,7 +300,9 @@
       </span>
     </div>
 
+    <!-- TODO: Re-enable Refresh Hitcount for TENANTV2 mode - needs datacenter-independent implementation -->
     <button
+      *ngIf="applicationMode !== ApplicationMode.TENANTV2"
       (click)="refreshHitcount()"
       class="refresh-button"
       [ngClass]="{ 'green-button': isRecentlyRefreshed() }"
@@ -301,6 +314,10 @@
         Refreshing...
       </ng-container>
       <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed</ng-container>
+    </button>
+
+    <button *ngIf="applicationMode === ApplicationMode.TENANTV2" class="refresh-button" [disabled]="true">
+      Refresh Hitcount (Disabled in TenantV2)
     </button>
   </div>
 </ng-template>

@@ -10,7 +10,6 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
-import { TenantSelectModalComponent } from './tenant-select-modal/tenant-select-modal.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
@@ -29,7 +28,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [TenantSelectComponent, TenantSelectModalComponent],
+  declarations: [TenantSelectComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -45,6 +44,6 @@ const routes: Routes = [
     TypeDeleteModalModule,
     TooltipModule,
   ],
-  exports: [TenantSelectComponent, TenantSelectModalComponent],
+  exports: [TenantSelectComponent],
 })
 export class TenantSelectModule {}
