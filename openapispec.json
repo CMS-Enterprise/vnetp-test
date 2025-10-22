@@ -22626,7 +22626,7 @@
     },
     "/v2/utilities/ecu/ip-connectivity": {
       "post": {
-        "operationId": "generateConnectivityReportUtilities",
+        "operationId": "checkIpConnectivityUtilities",
         "summary": "Generate connectivity report between two endpoints",
         "parameters": [],
         "requestBody": {
@@ -22658,7 +22658,7 @@
     },
     "/v2/utilities/ecu/node-connectivity": {
       "post": {
-        "operationId": "generateNodeConnectivityReportUtilities",
+        "operationId": "checkNodeConnectivityUtilities",
         "summary": "Generate connectivity report between two graph nodes.",
         "parameters": [],
         "requestBody": {
@@ -35042,6 +35042,18 @@
           "generatedConfiguration"
         ]
       },
+      "PathTraceDataPlaneMetadata": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "description": "TODO: Data plane metadata for this hop"
+          }
+        },
+        "required": [
+          "metadata"
+        ]
+      },
       "PathTraceHop": {
         "type": "object",
         "properties": {
@@ -35060,20 +35072,32 @@
             "description": "Node type for this hop",
             "example": "ENDPOINT_GROUP"
           },
-          "edgeId": {
-            "type": "string",
-            "description": "Edge ID connecting to the next hop",
-            "example": "edge:epg-web-to-bd-web"
+          "incomingEdges": {
+            "description": "Edge IDs of all edges coming into this node",
+            "example": [
+              "edge:epg-web-provides-contract1",
+              "edge:epg-web-provides-contract2"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outgoingEdges": {
+            "description": "Edge IDs of all edges going out from this node",
+            "example": [
+              "edge:contract1-consumed-by-epg-app",
+              "edge:contract2-consumed-by-epg-app"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "cost": {
             "type": "number",
             "description": "Routing cost for this hop (0 for non-firewall nodes)",
             "example": 100
-          },
-          "isLastHop": {
-            "type": "boolean",
-            "description": "Whether this is the last hop in an incomplete path",
-            "example": false
           },
           "controlPlaneMetadata": {
             "description": "Control plane metadata for this hop",
@@ -35082,15 +35106,31 @@
                 "$ref": "#/components/schemas/PathTraceControlPlaneMetadata"
               }
             ]
+          },
+          "dataPlaneMetadata": {
+            "description": "Data plane metadata for this hop",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathTraceDataPlaneMetadata"
+              }
+            ]
+          },
+          "hopIndex": {
+            "type": "number",
+            "description": "Hop Index",
+            "example": 0
           }
         },
         "required": [
           "nodeId",
           "nodeName",
           "nodeType",
+          "incomingEdges",
+          "outgoingEdges",
           "cost",
-          "isLastHop",
-          "controlPlaneMetadata"
+          "controlPlaneMetadata",
+          "dataPlaneMetadata",
+          "hopIndex"
         ]
       },
       "PathTraceData": {
@@ -35128,11 +35168,6 @@
             "type": "number",
             "description": "Total routing cost (sum of all hop costs)",
             "example": 200
-          },
-          "lastHopNodeId": {
-            "type": "string",
-            "description": "Last reachable node ID for incomplete paths",
-            "example": "vrf:production"
           }
         },
         "required": [
@@ -35172,19 +35207,6 @@
               "type": "string"
             }
           },
-          "costs": {
-            "description": "Per-edge routing costs",
-            "example": [
-              0,
-              0,
-              100,
-              0
-            ],
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
-          },
           "totalCost": {
             "type": "number",
             "description": "Sum of all routing costs",
@@ -35212,7 +35234,6 @@
         "required": [
           "nodes",
           "edges",
-          "costs",
           "totalCost",
           "hopCount",
           "isComplete",

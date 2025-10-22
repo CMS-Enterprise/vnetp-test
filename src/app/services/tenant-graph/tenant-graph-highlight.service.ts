@@ -18,6 +18,7 @@ import { PathTraceState } from './tenant-graph-path-trace.service';
  * - **Path Node Highlighting**: Blue highlighting for nodes in the traced path
  * - **Incomplete Path Indicators**: Red highlighting for incomplete path endpoints
  * - **Edge Path Highlighting**: Orange highlighting for edges in the traced path
+ * - **Hop Index Labels**: Numerical hop count displayed on nodes (toggleable: control/data/none)
  *
  * ### 2. **Multi-state Visual Management**
  * - **Normal State**: All nodes and edges at full opacity
@@ -36,6 +37,7 @@ import { PathTraceState } from './tenant-graph-path-trace.service';
  * - **Color Preservation**: Maintains original colors for non-path edges
  * - **Special Edge Types**: Preserves special styling for inter-VRF connections
  * - **Dynamic Width Adjustment**: Adjusts edge width based on highlighting state
+ * - **Hop Index Display**: Shows numerical hop count on nodes (control/data path selectable)
  *
  * ## Visual State Types
  *
@@ -148,8 +150,22 @@ export class TenantGraphHighlightService {
     const highlightedEdgeIds = new Set(highlightedPath.edges);
 
     // Create sets for control and data plane edges
+    // Include both the flat edges array AND edges from pathTraceData hops
     const controlPathEdges = new Set(pathTraceState.controlPath?.edges || []);
+    if (pathTraceState.controlPath?.pathTraceData) {
+      pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
+        hop.incomingEdges.forEach(edge => controlPathEdges.add(edge));
+        hop.outgoingEdges.forEach(edge => controlPathEdges.add(edge));
+      });
+    }
+
     const dataPathEdges = new Set(pathTraceState.dataPath?.edges || []);
+    if (pathTraceState.dataPath?.pathTraceData) {
+      pathTraceState.dataPath.pathTraceData.path.forEach(hop => {
+        hop.incomingEdges.forEach(edge => dataPathEdges.add(edge));
+        hop.outgoingEdges.forEach(edge => dataPathEdges.add(edge));
+      });
+    }
 
     // Build control plane metadata map from pathTraceData
     const controlPlaneMetadataMap = new Map<string, { allowed: boolean; allowedReason: string }>();
@@ -170,7 +186,7 @@ export class TenantGraphHighlightService {
       .attr('stroke', (d: any) => {
         if (highlightedNodeIds.has(d.id)) {
           // Check if this is the last hop of an incomplete path
-          if (pathTraceState.pathTraceData?.lastHopNodeId === d.id && !pathTraceState.pathTraceData.isComplete) {
+          if (pathTraceState.pathTraceData && !pathTraceState.pathTraceData.isComplete) {
             return '#dc3545'; // Red for incomplete path last hop
           }
           // Highlight selected/path nodes
@@ -213,6 +229,9 @@ export class TenantGraphHighlightService {
 
     // Render control plane metadata indicators
     this.renderControlPlaneIndicators(controlPlaneMetadataMap, pathTraceState.showPathOnly);
+
+    // Render hop index labels on edges
+    this.renderHopIndexLabels(pathTraceState);
 
     // Update edge highlighting
     this.linkSelection
@@ -291,6 +310,86 @@ export class TenantGraphHighlightService {
   }
 
   /**
+   * Render hop index labels on nodes
+   */
+  private renderHopIndexLabels(pathTraceState: PathTraceState): void {
+    if (!this.nodeSelection) {
+      return;
+    }
+
+    // Remove any existing hop index labels
+    this.nodeSelection.selectAll('.hop-index-label').remove();
+
+    // Check display mode
+    const displayMode = pathTraceState.hopIndexDisplayMode ?? 'control';
+    if (displayMode === 'none' || !pathTraceState.pathExists) {
+      return;
+    }
+
+    // Build a map of node IDs to hop indices based on display mode
+    const nodeHopIndexMap = new Map<string, number>();
+    let pathLabel = '';
+    let badgeColor = '#007bff';
+
+    if (displayMode === 'control' && pathTraceState.controlPath?.pathTraceData) {
+      pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
+        nodeHopIndexMap.set(hop.nodeId, hop.hopIndex);
+      });
+      pathLabel = 'Control Path';
+      badgeColor = '#28a745'; // Green for control path
+    } else if (displayMode === 'data' && pathTraceState.dataPath?.pathTraceData) {
+      pathTraceState.dataPath.pathTraceData.path.forEach(hop => {
+        nodeHopIndexMap.set(hop.nodeId, hop.hopIndex);
+      });
+      pathLabel = 'Data Path';
+      badgeColor = '#007bff'; // Blue for data path
+    }
+
+    if (nodeHopIndexMap.size === 0) {
+      return;
+    }
+
+    // Render hop index labels on each node in the path
+    this.nodeSelection.each((d: any, i: number, nodes: any[]) => {
+      const hopIndex = nodeHopIndexMap.get(d.id);
+
+      if (hopIndex !== undefined) {
+        const nodeGroup = nodes[i];
+        const selection = d3.select(nodeGroup);
+
+        // Only show indicator if node is visible
+        const isVisible = pathTraceState.showPathOnly ? nodeHopIndexMap.has(d.id) : true;
+        if (!isVisible) {
+          return;
+        }
+
+        // Create hop index label group positioned at bottom right of node
+        const labelGroup = selection
+          .append('g')
+          .attr('class', 'hop-index-label')
+          .attr('transform', 'translate(15, 15)');
+
+        // Background circle for better visibility
+        labelGroup.append('circle').attr('r', 12).attr('fill', badgeColor).attr('stroke', '#fff').attr('stroke-width', 2);
+
+        // Hop index text (display 1-indexed)
+        labelGroup
+          .append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'central')
+          .attr('font-size', 11)
+          .attr('font-weight', 'bold')
+          .attr('fill', '#fff')
+          .attr('pointer-events', 'none')
+          .text(hopIndex + 1);
+
+        // Add title for tooltip
+        labelGroup.append('title').text(`${pathLabel} Hop: ${hopIndex + 1}`);
+      }
+    });
+  }
+
+  /**
    * Render control plane metadata indicators on nodes
    */
   private renderControlPlaneIndicators(
@@ -321,7 +420,10 @@ export class TenantGraphHighlightService {
       }
 
       // Create indicator group
-      const indicator = selection.append('g').attr('class', 'control-plane-indicator').attr('transform', 'translate(0, -25)'); // Position above the node
+      const indicator = selection
+        .append('g')
+        .attr('class', 'control-plane-indicator')
+        .attr('transform', 'translate(0, -25)'); // Position above the node
 
       // Background circle for better visibility
       indicator
@@ -360,6 +462,9 @@ export class TenantGraphHighlightService {
 
     // Remove control plane indicators
     this.nodeSelection.selectAll('.control-plane-indicator').remove();
+
+    // Remove hop index labels
+    this.nodeSelection.selectAll('.hop-index-label').remove();
 
     // Reset edges to normal appearance
     this.linkSelection

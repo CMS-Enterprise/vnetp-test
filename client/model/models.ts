@@ -197,6 +197,7 @@ export * from './pathInfo';
 export * from './pathResult';
 export * from './pathTraceControlPlaneMetadata';
 export * from './pathTraceData';
+export * from './pathTraceDataPlaneMetadata';
 export * from './pathTraceHop';
 export * from './pathTraceNode';
 export * from './poolImportCollectionDto';

@@ -268,6 +268,7 @@ model/pathInfo.ts
 model/pathResult.ts
 model/pathTraceControlPlaneMetadata.ts
 model/pathTraceData.ts
+model/pathTraceDataPlaneMetadata.ts
 model/pathTraceHop.ts
 model/pathTraceNode.ts
 model/poolImportCollectionDto.ts

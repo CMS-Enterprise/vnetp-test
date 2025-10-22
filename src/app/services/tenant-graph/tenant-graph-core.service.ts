@@ -466,6 +466,7 @@ export class TenantGraphCoreService {
         () => this.pathTraceService.togglePathOnlyView(),
         () => this.pathTraceService.toggleControlPath(),
         () => this.pathTraceService.toggleDataPath(),
+        () => this.pathTraceService.toggleHopIndex(),
         () => this.pathTraceService.clearPathTrace(),
       );
     }
@@ -488,6 +489,7 @@ export class TenantGraphCoreService {
           () => this.pathTraceService.togglePathOnlyView(),
           () => this.pathTraceService.toggleControlPath(),
           () => this.pathTraceService.toggleDataPath(),
+          () => this.pathTraceService.toggleHopIndex(),
           () => this.pathTraceService.clearPathTrace(),
         );
       }

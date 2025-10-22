@@ -85,6 +85,9 @@ import { PathTraceState } from './tenant-graph-path-trace.service';
  *       svg,
  *       pathTraceState,
  *       () => this.togglePathOnly(),
+ *       () => this.toggleControlPath(),
+ *       () => this.toggleDataPath(),
+ *       () => this.toggleHopIndex(),
  *       () => this.clearPath()
  *     );
  *   }
@@ -418,6 +421,7 @@ export class TenantGraphUIService {
     onTogglePathOnly: () => void,
     onToggleControlPath: () => void,
     onToggleDataPath: () => void,
+    onToggleHopIndex: () => void,
     onClear: () => void,
   ): void {
     // Remove existing PathTrace status box
@@ -466,7 +470,13 @@ export class TenantGraphUIService {
       checkboxSection = checkboxHeight * 2 + padding;
     }
 
-    const boxHeight = headerHeight + contentLines * lineHeight + buttonHeight + padding * 2 + checkboxSection;
+    // Add extra space for hop index toggle button if paths exist
+    let hopIndexButtonSection = 0;
+    if (pathTraceState.pathExists) {
+      hopIndexButtonSection = buttonHeight + padding / 2;
+    }
+
+    const boxHeight = headerHeight + contentLines * lineHeight + buttonHeight + padding * 2 + checkboxSection + hopIndexButtonSection;
 
     // Background
     pathTraceBox
@@ -636,6 +646,71 @@ export class TenantGraphUIService {
         this.renderCheckbox(pathTraceBox, padding, currentY, 'Show Data Path', pathTraceState.showDataPath ?? true, onToggleDataPath);
         currentY += checkboxHeight;
       }
+    }
+
+    // Hop Index Toggle button (only if path exists)
+    if (pathTraceState.pathExists) {
+      currentY += padding / 2;
+
+      const hopIndexButton = pathTraceBox.append('g').attr('class', 'hop-index-button').style('cursor', 'pointer');
+
+      const hopIndexButtonWidth = boxWidth - padding * 2;
+      const hopIndexButtonX = padding;
+      const hopIndexButtonHeight = 20;
+
+      // Determine button label based on current mode
+      const hopMode = pathTraceState.hopIndexDisplayMode ?? 'control';
+      let hopModeLabel = '';
+      let hopModeColor = '#007bff';
+
+      if (hopMode === 'control') {
+        hopModeLabel = 'Hop Index: Control Path';
+        hopModeColor = '#28a745'; // Green for control
+      } else if (hopMode === 'data') {
+        hopModeLabel = 'Hop Index: Data Path';
+        hopModeColor = '#007bff'; // Blue for data
+      } else {
+        hopModeLabel = 'Hop Index: Hidden';
+        hopModeColor = '#6c757d'; // Gray for none
+      }
+
+      hopIndexButton
+        .append('rect')
+        .attr('x', hopIndexButtonX)
+        .attr('y', currentY)
+        .attr('width', hopIndexButtonWidth)
+        .attr('height', hopIndexButtonHeight)
+        .attr('fill', hopModeColor)
+        .attr('rx', 3)
+        .on('mouseover', function () {
+          const currentFill = d3.select(this).attr('fill');
+          // Darken on hover
+          if (currentFill === '#28a745') {
+            d3.select(this).attr('fill', '#218838');
+          } else if (currentFill === '#007bff') {
+            d3.select(this).attr('fill', '#0056b3');
+          } else {
+            d3.select(this).attr('fill', '#5a6268');
+          }
+        })
+        .on('mouseout', function () {
+          d3.select(this).attr('fill', hopModeColor);
+        });
+
+      hopIndexButton
+        .append('text')
+        .attr('x', hopIndexButtonX + hopIndexButtonWidth / 2)
+        .attr('y', currentY + 14)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 10)
+        .attr('fill', 'white')
+        .attr('font-weight', 'bold')
+        .text(hopModeLabel)
+        .style('pointer-events', 'none');
+
+      hopIndexButton.on('click', onToggleHopIndex);
+
+      currentY += hopIndexButtonHeight + padding / 2;
     }
 
     // Buttons

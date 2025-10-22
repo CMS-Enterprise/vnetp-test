@@ -34,9 +34,5 @@ export interface PathTraceData {
      * Total routing cost (sum of all hop costs)
      */
     totalCost: number;
-    /**
-     * Last reachable node ID for incomplete paths
-     */
-    lastHopNodeId?: string;
 }
 

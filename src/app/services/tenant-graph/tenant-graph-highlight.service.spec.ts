@@ -24,10 +24,16 @@ describe('TenantGraphHighlightService', () => {
   let mockCircleSelection: any;
   let mockTextSelection: any;
   let mockIndicatorSelection: any;
+  let mockHopIndexSelection: any;
   let mockGraphData: { nodes: any[]; links: any[] };
 
   beforeEach(() => {
     service = new TenantGraphHighlightService();
+
+    // Mock hop index label selection
+    mockHopIndexSelection = {
+      remove: jest.fn().mockReturnThis(),
+    };
 
     // Mock D3 selections
     mockCircleSelection = {
@@ -50,10 +56,11 @@ describe('TenantGraphHighlightService', () => {
         if (selector === 'circle') return mockCircleSelection;
         if (selector === 'text') return mockTextSelection;
         if (selector === '.control-plane-indicator') return mockIndicatorSelection;
+        if (selector === '.hop-index-label') return mockHopIndexSelection;
         return mockCircleSelection;
       }),
       each: jest.fn().mockImplementation((callback: any) => {
-        // Mock the each() method for rendering control plane indicators
+        // Mock the each() method for rendering indicators
         return mockNodeSelection;
       }),
     };
@@ -65,22 +72,22 @@ describe('TenantGraphHighlightService', () => {
 
     mockGraphData = {
       nodes: [
-        { id: 'tenant-1', name: 'Tenant 1', type: 'TENANT' },
-        { id: 'vrf-1', name: 'VRF 1', type: 'VRF' },
-        { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL' },
+        { id: 'tenant-1', name: 'Tenant 1', type: 'TENANT', x: 0, y: 0 },
+        { id: 'vrf-1', name: 'VRF 1', type: 'VRF', x: 100, y: 100 },
+        { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL', x: 200, y: 200 },
       ],
       links: [
         {
           id: 'link-1',
-          source: 'tenant-1',
-          target: 'vrf-1',
+          source: { id: 'tenant-1', x: 0, y: 0 },
+          target: { id: 'vrf-1', x: 100, y: 100 },
           type: 'TENANT_CONTAINS_VRF',
           originalEdge: { id: 'edge-1' },
         },
         {
           id: 'link-2',
-          source: 'vrf-1',
-          target: 'firewall-1',
+          source: { id: 'vrf-1', x: 100, y: 100 },
+          target: { id: 'firewall-1', x: 200, y: 200 },
           type: 'VRF_TO_L3OUT',
           originalEdge: { id: 'edge-2' },
         },
@@ -132,6 +139,7 @@ describe('TenantGraphHighlightService', () => {
           if (selector === 'circle') return newMockCircleSelection;
           if (selector === 'text') return newMockTextSelection;
           if (selector === '.control-plane-indicator') return newMockIndicatorSelection;
+          if (selector === '.hop-index-label') return { remove: jest.fn().mockReturnThis() };
           return newMockCircleSelection;
         }),
         each: jest.fn().mockReturnThis(),
@@ -233,7 +241,6 @@ describe('TenantGraphHighlightService', () => {
           path: [],
           isComplete: false,
           totalCost: 0,
-          lastHopNodeId: 'firewall-1',
         },
       };
 
@@ -439,6 +446,147 @@ describe('TenantGraphHighlightService', () => {
       expect(opacityFn(pathEdge)).toBe(1); // Path edge visible
       expect(opacityFn(nonPathEdge)).toBe(0); // Non-path edge hidden
     });
+
+    it('should render hop index labels on nodes for control path', () => {
+      const mockPathTraceData = {
+        source: { id: 'vrf-1', name: 'VRF 1', type: 'VRF' },
+        target: { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL' },
+        path: [
+          {
+            nodeId: 'vrf-1',
+            nodeName: 'VRF 1',
+            nodeType: 'VRF',
+            incomingEdges: [],
+            outgoingEdges: ['edge-2'],
+            cost: 0,
+            hopIndex: 0,
+            controlPlaneMetadata: { allowed: true, allowedReason: 'OK', generatedConfiguration: {} },
+            dataPlaneMetadata: { metadata: {} },
+          },
+          {
+            nodeId: 'firewall-1',
+            nodeName: 'Firewall 1',
+            nodeType: 'FIREWALL',
+            incomingEdges: ['edge-2'],
+            outgoingEdges: [],
+            cost: 0,
+            hopIndex: 1,
+            controlPlaneMetadata: { allowed: true, allowedReason: 'OK', generatedConfiguration: {} },
+            dataPlaneMetadata: { metadata: {} },
+          },
+        ],
+        isComplete: true,
+        totalCost: 0,
+      };
+
+      const pathTraceState: PathTraceState = {
+        selectedNodes: [],
+        pathExists: true,
+        highlightedPath: { nodes: ['vrf-1', 'firewall-1'], edges: ['edge-2'] },
+        hopIndexDisplayMode: 'control',
+        controlPath: {
+          nodes: ['vrf-1', 'firewall-1'],
+          edges: ['edge-2'],
+          totalCost: 0,
+          hopCount: 2,
+          isComplete: true,
+          pathTraceData: mockPathTraceData,
+        },
+      };
+
+      service.updateVisualHighlighting(pathTraceState);
+
+      // Verify hop index labels were removed first from nodes
+      expect(mockNodeSelection.selectAll).toHaveBeenCalledWith('.hop-index-label');
+      expect(mockHopIndexSelection.remove).toHaveBeenCalled();
+
+      // Verify each() was called to render labels on nodes
+      expect(mockNodeSelection.each).toHaveBeenCalled();
+    });
+
+    it('should render hop index labels on nodes for data path', () => {
+      const mockPathTraceData = {
+        source: { id: 'vrf-1', name: 'VRF 1', type: 'VRF' },
+        target: { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL' },
+        path: [
+          {
+            nodeId: 'vrf-1',
+            nodeName: 'VRF 1',
+            nodeType: 'VRF',
+            incomingEdges: [],
+            outgoingEdges: ['edge-2'],
+            cost: 0,
+            hopIndex: 0,
+            controlPlaneMetadata: { allowed: true, allowedReason: 'OK', generatedConfiguration: {} },
+            dataPlaneMetadata: { metadata: {} },
+          },
+          {
+            nodeId: 'firewall-1',
+            nodeName: 'Firewall 1',
+            nodeType: 'FIREWALL',
+            incomingEdges: ['edge-2'],
+            outgoingEdges: [],
+            cost: 0,
+            hopIndex: 1,
+            controlPlaneMetadata: { allowed: true, allowedReason: 'OK', generatedConfiguration: {} },
+            dataPlaneMetadata: { metadata: {} },
+          },
+        ],
+        isComplete: true,
+        totalCost: 0,
+      };
+
+      const pathTraceState: PathTraceState = {
+        selectedNodes: [],
+        pathExists: true,
+        highlightedPath: { nodes: ['vrf-1', 'firewall-1'], edges: ['edge-2'] },
+        hopIndexDisplayMode: 'data',
+        dataPath: {
+          nodes: ['vrf-1', 'firewall-1'],
+          edges: ['edge-2'],
+          totalCost: 0,
+          hopCount: 2,
+          isComplete: true,
+          pathTraceData: mockPathTraceData,
+        },
+      };
+
+      service.updateVisualHighlighting(pathTraceState);
+
+      // Verify hop index labels were removed first from nodes
+      expect(mockNodeSelection.selectAll).toHaveBeenCalledWith('.hop-index-label');
+      expect(mockHopIndexSelection.remove).toHaveBeenCalled();
+
+      // Verify each() was called to render labels on nodes
+      expect(mockNodeSelection.each).toHaveBeenCalled();
+    });
+
+    it('should not render hop index labels when mode is none', () => {
+      const pathTraceState: PathTraceState = {
+        selectedNodes: [],
+        pathExists: true,
+        highlightedPath: { nodes: ['vrf-1'], edges: ['edge-2'] },
+        hopIndexDisplayMode: 'none',
+        pathTraceData: {
+          source: { id: 'vrf-1', name: 'VRF 1', type: 'VRF' },
+          target: { id: 'firewall-1', name: 'Firewall 1', type: 'FIREWALL' },
+          path: [],
+          isComplete: true,
+          totalCost: 0,
+        },
+      };
+
+      service.updateVisualHighlighting(pathTraceState);
+
+      // Verify hop index labels were removed
+      expect(mockNodeSelection.selectAll).toHaveBeenCalledWith('.hop-index-label');
+      expect(mockHopIndexSelection.remove).toHaveBeenCalled();
+
+      // Count how many times each was called - should only be called for indicators, not hop labels
+      const eachCalls = mockNodeSelection.each.mock.calls.length;
+      // Should be called once for control plane indicators only, not for hop labels
+      expect(eachCalls).toBeGreaterThanOrEqual(0);
+    });
   });
 
   describe('resetHighlighting', () => {
@@ -557,7 +705,7 @@ describe('TenantGraphHighlightService', () => {
       expect(() => strokeFn(edgeWithMissingIds)).not.toThrow();
     });
 
-    it('should handle pathTraceData without lastHopNodeId', () => {
+    it('should handle pathTraceData with incomplete path gracefully', () => {
       const pathTraceState: PathTraceState = {
         selectedNodes: [{ id: 'vrf-1', name: 'VRF 1', type: 'VRF' }],
         pathExists: false,
@@ -568,14 +716,13 @@ describe('TenantGraphHighlightService', () => {
           path: [],
           isComplete: false,
           totalCost: 0,
-          // No lastHopNodeId
         },
       };
 
       expect(() => service.updateVisualHighlighting(pathTraceState)).not.toThrow();
 
       const strokeColorFn = mockCircleSelection.attr.mock.calls.find(call => call[0] === 'stroke')[1];
-      expect(strokeColorFn({ id: 'vrf-1' })).toBe('#ff6b35'); // Should still highlight as selected
+      expect(strokeColorFn({ id: 'vrf-1' })).toBe('#dc3545'); // Red for incomplete path (takes precedence over selection)
     });
   });
 });

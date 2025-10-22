@@ -71,6 +71,15 @@ import { of } from 'rxjs';
  * clearPath() {
  *   this.pathTraceService.clearPathTrace();
  * }
+ *
+ * // Toggle hop index display (cycles through: control -> data -> none -> control)
+ * toggleHopIndex() {
+ *   this.pathTraceService.toggleHopIndex();
+ * }
+ *
+ * // Check current hop index display mode
+ * const mode = this.pathTraceService.getPathTraceState().hopIndexDisplayMode;
+ * // mode can be: 'control', 'data', or 'none'
  * ```
  *
  * ## PathTrace State Interface
@@ -86,6 +95,7 @@ import { of } from 'rxjs';
  *   };
  *   pathTraceData?: PathTraceData;      // Complete path information
  *   showPathOnly?: boolean;             // Path-only view mode
+ *   hopIndexDisplayMode?: HopIndexDisplayMode; // 'control', 'data', or 'none'
  *   isCalculating?: boolean;            // API calculation in progress
  *   calculationError?: string;          // Error message if calculation failed
  * }
@@ -102,6 +112,8 @@ import { of } from 'rxjs';
 // Re-export types from client for convenience
 export type { PathTraceNode, PathTraceData, PathInfo } from 'client';
 
+export type HopIndexDisplayMode = 'none' | 'control' | 'data';
+
 export interface PathTraceState {
   selectedNodes: PathTraceNode[];
   pathExists: boolean;
@@ -114,6 +126,7 @@ export interface PathTraceState {
   showPathOnly?: boolean;
   showControlPath?: boolean;
   showDataPath?: boolean;
+  hopIndexDisplayMode?: HopIndexDisplayMode;
   isCalculating?: boolean;
   calculationError?: string;
 }
@@ -134,6 +147,7 @@ export class TenantGraphPathTraceService {
     showPathOnly: false,
     showControlPath: true,
     showDataPath: true,
+    hopIndexDisplayMode: 'control',
     isCalculating: false,
     calculationError: undefined,
   };
@@ -165,6 +179,7 @@ export class TenantGraphPathTraceService {
   public clearPathTrace(): void {
     const showControlPath = this.pathTraceState.showControlPath;
     const showDataPath = this.pathTraceState.showDataPath;
+    const hopIndexDisplayMode = this.pathTraceState.hopIndexDisplayMode;
 
     this.pathTraceState = {
       selectedNodes: [],
@@ -176,6 +191,7 @@ export class TenantGraphPathTraceService {
       showPathOnly: false,
       showControlPath: showControlPath ?? true,
       showDataPath: showDataPath ?? true,
+      hopIndexDisplayMode: hopIndexDisplayMode ?? 'control',
       isCalculating: false,
       calculationError: undefined,
     };
@@ -189,9 +205,16 @@ export class TenantGraphPathTraceService {
     this.pathTraceState.pathTraceData = pathTraceData;
 
     // Convert to highlightedPath format
+    // Collect all edges from incomingEdges and outgoingEdges of all hops
+    const allEdges = new Set<string>();
+    pathTraceData.path.forEach(hop => {
+      hop.incomingEdges.forEach(edge => allEdges.add(edge));
+      hop.outgoingEdges.forEach(edge => allEdges.add(edge));
+    });
+
     this.pathTraceState.highlightedPath = {
       nodes: pathTraceData.path.map(hop => hop.nodeId),
-      edges: pathTraceData.path.map(hop => hop.edgeId).filter(id => id) as string[],
+      edges: Array.from(allEdges),
     };
 
     this.pathTraceStateChange.emit(this.pathTraceState);
@@ -211,6 +234,19 @@ export class TenantGraphPathTraceService {
   public toggleDataPath(): void {
     this.pathTraceState.showDataPath = !this.pathTraceState.showDataPath;
     this.updateCombinedHighlightedPath();
+    this.pathTraceStateChange.emit(this.pathTraceState);
+  }
+
+  public toggleHopIndex(): void {
+    // Cycle through: control -> data -> none -> control
+    const currentMode = this.pathTraceState.hopIndexDisplayMode ?? 'control';
+    if (currentMode === 'control') {
+      this.pathTraceState.hopIndexDisplayMode = 'data';
+    } else if (currentMode === 'data') {
+      this.pathTraceState.hopIndexDisplayMode = 'none';
+    } else {
+      this.pathTraceState.hopIndexDisplayMode = 'control';
+    }
     this.pathTraceStateChange.emit(this.pathTraceState);
   }
 
@@ -265,7 +301,7 @@ export class TenantGraphPathTraceService {
 
     // Call API
     this.utilitiesService
-      .generateNodeConnectivityReportUtilities({ endpointConnectivityNodeQuery: query })
+      .checkNodeConnectivityUtilities({ endpointConnectivityNodeQuery: query })
       .pipe(
         catchError(err => {
           console.error('Path trace API error:', err);
@@ -333,12 +369,28 @@ export class TenantGraphPathTraceService {
     if (this.pathTraceState.showControlPath && this.pathTraceState.controlPath) {
       this.pathTraceState.controlPath.nodes.forEach(node => allNodes.add(node));
       this.pathTraceState.controlPath.edges.forEach(edge => allEdges.add(edge));
+
+      // Also collect all edges from pathTraceData to handle multiple parallel paths
+      if (this.pathTraceState.controlPath.pathTraceData) {
+        this.pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
+          hop.incomingEdges.forEach(edge => allEdges.add(edge));
+          hop.outgoingEdges.forEach(edge => allEdges.add(edge));
+        });
+      }
     }
 
     // Add data path nodes/edges if visible
     if (this.pathTraceState.showDataPath && this.pathTraceState.dataPath) {
       this.pathTraceState.dataPath.nodes.forEach(node => allNodes.add(node));
       this.pathTraceState.dataPath.edges.forEach(edge => allEdges.add(edge));
+
+      // Also collect all edges from pathTraceData to handle multiple parallel paths
+      if (this.pathTraceState.dataPath.pathTraceData) {
+        this.pathTraceState.dataPath.pathTraceData.path.forEach(hop => {
+          hop.incomingEdges.forEach(edge => allEdges.add(edge));
+          hop.outgoingEdges.forEach(edge => allEdges.add(edge));
+        });
+      }
     }
 
     this.pathTraceState.highlightedPath = {

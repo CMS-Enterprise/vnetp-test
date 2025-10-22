@@ -22,10 +22,6 @@ export interface PathInfo {
      */
     edges: Array<string>;
     /**
-     * Per-edge routing costs
-     */
-    costs: Array<number>;
-    /**
      * Sum of all routing costs
      */
     totalCost: number;

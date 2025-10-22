@@ -85,7 +85,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       tenantVersion: this.tenantVersion,
     };
 
-    this.utilitiesService.generateConnectivityReportUtilities({ endpointConnectivityQuery: query }).subscribe({
+    this.utilitiesService.checkIpConnectivityUtilities({ endpointConnectivityQuery: query }).subscribe({
       next: (result: PathResult) => {
         this.isLoading = false;
         this.connectivityResult = result;

@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PathTraceDataPlaneMetadata } from './pathTraceDataPlaneMetadata';
 import { PathTraceControlPlaneMetadata } from './pathTraceControlPlaneMetadata';
 
 
@@ -26,20 +27,28 @@ export interface PathTraceHop {
      */
     nodeType: string;
     /**
-     * Edge ID connecting to the next hop
+     * Edge IDs of all edges coming into this node
      */
-    edgeId?: string;
+    incomingEdges: Array<string>;
+    /**
+     * Edge IDs of all edges going out from this node
+     */
+    outgoingEdges: Array<string>;
     /**
      * Routing cost for this hop (0 for non-firewall nodes)
      */
     cost: number;
     /**
-     * Whether this is the last hop in an incomplete path
-     */
-    isLastHop: boolean;
-    /**
      * Control plane metadata for this hop
      */
     controlPlaneMetadata: PathTraceControlPlaneMetadata;
+    /**
+     * Data plane metadata for this hop
+     */
+    dataPlaneMetadata: PathTraceDataPlaneMetadata;
+    /**
+     * Hop Index
+     */
+    hopIndex: number;
 }
 

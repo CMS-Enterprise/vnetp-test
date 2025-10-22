@@ -25,11 +25,11 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface GenerateConnectivityReportUtilitiesRequestParams {
+export interface CheckIpConnectivityUtilitiesRequestParams {
     endpointConnectivityQuery: EndpointConnectivityQuery;
 }
 
-export interface GenerateNodeConnectivityReportUtilitiesRequestParams {
+export interface CheckNodeConnectivityUtilitiesRequestParams {
     endpointConnectivityNodeQuery: EndpointConnectivityNodeQuery;
 }
 
@@ -100,13 +100,13 @@ export class UtilitiesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PathResult>;
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PathResult>>;
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PathResult>>;
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public checkIpConnectivityUtilities(requestParameters: CheckIpConnectivityUtilitiesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PathResult>;
+    public checkIpConnectivityUtilities(requestParameters: CheckIpConnectivityUtilitiesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PathResult>>;
+    public checkIpConnectivityUtilities(requestParameters: CheckIpConnectivityUtilitiesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PathResult>>;
+    public checkIpConnectivityUtilities(requestParameters: CheckIpConnectivityUtilitiesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const endpointConnectivityQuery = requestParameters.endpointConnectivityQuery;
         if (endpointConnectivityQuery === null || endpointConnectivityQuery === undefined) {
-            throw new Error('Required parameter endpointConnectivityQuery was null or undefined when calling generateConnectivityReportUtilities.');
+            throw new Error('Required parameter endpointConnectivityQuery was null or undefined when calling checkIpConnectivityUtilities.');
         }
 
         let headers = this.defaultHeaders;
@@ -156,13 +156,13 @@ export class UtilitiesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public generateNodeConnectivityReportUtilities(requestParameters: GenerateNodeConnectivityReportUtilitiesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PathResult>;
-    public generateNodeConnectivityReportUtilities(requestParameters: GenerateNodeConnectivityReportUtilitiesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PathResult>>;
-    public generateNodeConnectivityReportUtilities(requestParameters: GenerateNodeConnectivityReportUtilitiesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PathResult>>;
-    public generateNodeConnectivityReportUtilities(requestParameters: GenerateNodeConnectivityReportUtilitiesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public checkNodeConnectivityUtilities(requestParameters: CheckNodeConnectivityUtilitiesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PathResult>;
+    public checkNodeConnectivityUtilities(requestParameters: CheckNodeConnectivityUtilitiesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PathResult>>;
+    public checkNodeConnectivityUtilities(requestParameters: CheckNodeConnectivityUtilitiesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PathResult>>;
+    public checkNodeConnectivityUtilities(requestParameters: CheckNodeConnectivityUtilitiesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const endpointConnectivityNodeQuery = requestParameters.endpointConnectivityNodeQuery;
         if (endpointConnectivityNodeQuery === null || endpointConnectivityNodeQuery === undefined) {
-            throw new Error('Required parameter endpointConnectivityNodeQuery was null or undefined when calling generateNodeConnectivityReportUtilities.');
+            throw new Error('Required parameter endpointConnectivityNodeQuery was null or undefined when calling checkNodeConnectivityUtilities.');
         }
 
         let headers = this.defaultHeaders;

@@ -6,19 +6,23 @@ import { UtilitiesService, PathResult, PathTraceHop } from 'client';
 
 describe('TenantGraphPathTraceService', () => {
   let service: TenantGraphPathTraceService;
-  let mockGenerateNodeConnectivity: jest.Mock;
+  let mockCheckNodeConnectivityUtilities: jest.Mock;
 
   const mockPathTraceHop1: PathTraceHop = {
     nodeId: 'vrf-1',
     nodeName: 'VRF 1',
     nodeType: 'VRF',
-    edgeId: 'edge-1',
+    incomingEdges: [],
+    outgoingEdges: ['edge-1'],
     cost: 0,
-    isLastHop: false,
+    hopIndex: 0,
     controlPlaneMetadata: {
       allowed: true,
       allowedReason: 'Contract allows traffic',
       generatedConfiguration: {},
+    },
+    dataPlaneMetadata: {
+      metadata: {},
     },
   };
 
@@ -26,13 +30,17 @@ describe('TenantGraphPathTraceService', () => {
     nodeId: 'firewall-1',
     nodeName: 'Firewall 1',
     nodeType: 'EXTERNAL_FIREWALL',
-    edgeId: 'edge-2',
+    incomingEdges: ['edge-1'],
+    outgoingEdges: ['edge-2'],
     cost: 100,
-    isLastHop: false,
+    hopIndex: 1,
     controlPlaneMetadata: {
       allowed: true,
       allowedReason: 'Firewall rule allows traffic',
       generatedConfiguration: {},
+    },
+    dataPlaneMetadata: {
+      metadata: {},
     },
   };
 
@@ -40,12 +48,17 @@ describe('TenantGraphPathTraceService', () => {
     nodeId: 'vrf-2',
     nodeName: 'VRF 2',
     nodeType: 'VRF',
+    incomingEdges: ['edge-2'],
+    outgoingEdges: [],
     cost: 0,
-    isLastHop: true,
+    hopIndex: 2,
     controlPlaneMetadata: {
       allowed: true,
       allowedReason: 'Destination reached',
       generatedConfiguration: {},
+    },
+    dataPlaneMetadata: {
+      metadata: {},
     },
   };
 
@@ -60,7 +73,6 @@ describe('TenantGraphPathTraceService', () => {
   const mockControlPath: PathInfo = {
     nodes: ['vrf-1', 'firewall-1', 'vrf-2'],
     edges: ['edge-1', 'edge-2'],
-    costs: [0, 100, 0],
     totalCost: 100,
     hopCount: 3,
     isComplete: true,
@@ -70,7 +82,6 @@ describe('TenantGraphPathTraceService', () => {
   const mockDataPath: PathInfo = {
     nodes: ['vrf-1', 'firewall-1', 'vrf-2'],
     edges: ['edge-1', 'edge-2'],
-    costs: [0, 100, 0],
     totalCost: 100,
     hopCount: 3,
     isComplete: true,
@@ -85,10 +96,10 @@ describe('TenantGraphPathTraceService', () => {
   };
 
   beforeEach(() => {
-    mockGenerateNodeConnectivity = jest.fn().mockReturnValue(of(mockPathResult));
+    mockCheckNodeConnectivityUtilities = jest.fn().mockReturnValue(of(mockPathResult));
 
     const mockUtilitiesService = {
-      generateNodeConnectivityReportUtilities: mockGenerateNodeConnectivity,
+      checkNodeConnectivityUtilities: mockCheckNodeConnectivityUtilities,
     };
 
     TestBed.configureTestingModule({
@@ -123,12 +134,12 @@ describe('TenantGraphPathTraceService', () => {
       const node1: PathTraceNode = { id: 'vrf-1', name: 'VRF 1', type: 'VRF' };
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(mockPathResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(mockPathResult));
 
       service.handlePathTraceAdd(node1);
       service.handlePathTraceAdd(node2);
 
-      expect(mockGenerateNodeConnectivity).toHaveBeenCalledWith({
+      expect(mockCheckNodeConnectivityUtilities).toHaveBeenCalledWith({
         endpointConnectivityNodeQuery: {
           sourceNodeId: 'vrf-1',
           destinationNodeId: 'vrf-2',
@@ -164,7 +175,7 @@ describe('TenantGraphPathTraceService', () => {
       const node1: PathTraceNode = { id: 'vrf-1', name: 'VRF 1', type: 'VRF' };
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(mockPathResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(mockPathResult));
 
       // Subscribe to final state after path calculation
       service.pathTraceStateChange.subscribe(state => {
@@ -188,7 +199,7 @@ describe('TenantGraphPathTraceService', () => {
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
       const node3: PathTraceNode = { id: 'vrf-3', name: 'VRF 3', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(mockPathResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(mockPathResult));
 
       service.handlePathTraceAdd(node1);
       service.handlePathTraceAdd(node2);
@@ -205,7 +216,7 @@ describe('TenantGraphPathTraceService', () => {
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
 
       const errorMessage = 'API connection failed';
-      mockGenerateNodeConnectivity.mockReturnValue(throwError({ message: errorMessage }));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(throwError({ message: errorMessage }));
 
       let errorHandled = false;
       service.pathTraceStateChange.subscribe(state => {
@@ -235,7 +246,7 @@ describe('TenantGraphPathTraceService', () => {
         queryOutdated: true,
       };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(outdatedResponse));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(outdatedResponse));
 
       let errorHandled = false;
       service.pathTraceStateChange.subscribe(state => {
@@ -257,7 +268,7 @@ describe('TenantGraphPathTraceService', () => {
 
     it('should handle missing tenantId', () => {
       // Create service without setting tenant ID
-      const mockUtilService = { generateNodeConnectivityReportUtilities: jest.fn() };
+      const mockUtilService = { checkNodeConnectivityUtilities: jest.fn() };
       const serviceWithoutTenant = new TenantGraphPathTraceService(mockUtilService as any);
 
       const node1: PathTraceNode = { id: 'vrf-1', name: 'VRF 1', type: 'VRF' };
@@ -272,7 +283,7 @@ describe('TenantGraphPathTraceService', () => {
       const state = serviceWithoutTenant.getPathTraceState();
       expect(state.calculationError).toBe('Tenant ID not configured for path calculation');
       expect(state.isCalculating).toBe(false);
-      expect(mockUtilService.generateNodeConnectivityReportUtilities).not.toHaveBeenCalled();
+      expect(mockUtilService.checkNodeConnectivityUtilities).not.toHaveBeenCalled();
     });
 
     it('should handle incomplete path from API', done => {
@@ -285,13 +296,11 @@ describe('TenantGraphPathTraceService', () => {
         path: [mockPathTraceHop1, mockPathTraceHop2],
         isComplete: false,
         totalCost: 100,
-        lastHopNodeId: 'firewall-1',
       };
 
       const incompleteControlPath: PathInfo = {
         nodes: ['vrf-1', 'firewall-1'],
         edges: ['edge-1'],
-        costs: [10, 20],
         totalCost: 100,
         hopCount: 2,
         isComplete: false,
@@ -304,13 +313,12 @@ describe('TenantGraphPathTraceService', () => {
         dataPath: incompleteControlPath,
       };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(incompleteResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(incompleteResult));
 
       service.pathTraceStateChange.subscribe(state => {
         if (state.isCalculating === false && state.pathTraceData) {
           expect(state.pathExists).toBe(false);
           expect(state.pathTraceData.isComplete).toBe(false);
-          expect(state.pathTraceData.lastHopNodeId).toBe('firewall-1');
           done();
         }
       });
@@ -323,7 +331,7 @@ describe('TenantGraphPathTraceService', () => {
       const node1: PathTraceNode = { id: 'vrf-1', name: 'VRF 1', type: 'VRF' };
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(null));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(null));
 
       service.pathTraceStateChange.subscribe(state => {
         if (state.isCalculating === false && state.selectedNodes.length === 2) {
@@ -392,10 +400,9 @@ describe('TenantGraphPathTraceService', () => {
       const pathTraceData: PathTraceData = {
         source: { id: 'vrf-1', name: 'VRF 1', type: 'VRF' },
         target: { id: 'vrf-2', name: 'VRF 2', type: 'VRF' },
-        path: [mockPathTraceHop1, { ...mockPathTraceHop2, isLastHop: true }],
+        path: [mockPathTraceHop1, { ...mockPathTraceHop2, hopIndex: 1 }],
         isComplete: false,
         totalCost: 100,
-        lastHopNodeId: 'firewall-1',
       };
 
       service.setExternalPathTraceData(pathTraceData);
@@ -404,14 +411,13 @@ describe('TenantGraphPathTraceService', () => {
       expect(state.pathExists).toBe(false);
       expect(state.pathLength).toBe(2);
       expect(state.pathTraceData?.isComplete).toBe(false);
-      expect(state.pathTraceData?.lastHopNodeId).toBe('firewall-1');
     });
 
-    it('should filter out undefined edge IDs from highlighted path', () => {
+    it('should collect all edges from incomingEdges and outgoingEdges', () => {
       const pathTraceData: PathTraceData = {
         source: { id: 'vrf-1', name: 'VRF 1', type: 'VRF' },
         target: { id: 'vrf-2', name: 'VRF 2', type: 'VRF' },
-        path: [mockPathTraceHop1, { ...mockPathTraceHop2, edgeId: undefined }, mockPathTraceHop3],
+        path: [mockPathTraceHop1, { ...mockPathTraceHop2, incomingEdges: ['edge-1'], outgoingEdges: [] }, mockPathTraceHop3],
         isComplete: true,
         totalCost: 100,
       };
@@ -419,7 +425,8 @@ describe('TenantGraphPathTraceService', () => {
       service.setExternalPathTraceData(pathTraceData);
 
       const state = service.getPathTraceState();
-      expect(state.highlightedPath?.edges).toEqual(['edge-1']);
+      expect(state.highlightedPath?.edges).toContain('edge-1');
+      expect(state.highlightedPath?.edges).toContain('edge-2');
     });
   });
 
@@ -440,6 +447,31 @@ describe('TenantGraphPathTraceService', () => {
       service.togglePathOnlyView();
       expect(service.getPathTraceState().showPathOnly).toBe(false);
       expect(stateChangeSpy).toHaveBeenCalledWith(expect.objectContaining({ showPathOnly: false }));
+    });
+  });
+
+  describe('toggleHopIndex', () => {
+    it('should cycle through hop index display modes: control -> data -> none -> control', () => {
+      const stateChangeSpy = jest.fn();
+      service.pathTraceStateChange.subscribe(stateChangeSpy);
+
+      // Initially 'control' (enabled by default)
+      expect(service.getPathTraceState().hopIndexDisplayMode).toBe('control');
+
+      // Toggle to 'data'
+      service.toggleHopIndex();
+      expect(service.getPathTraceState().hopIndexDisplayMode).toBe('data');
+      expect(stateChangeSpy).toHaveBeenCalledWith(expect.objectContaining({ hopIndexDisplayMode: 'data' }));
+
+      // Toggle to 'none'
+      service.toggleHopIndex();
+      expect(service.getPathTraceState().hopIndexDisplayMode).toBe('none');
+      expect(stateChangeSpy).toHaveBeenCalledWith(expect.objectContaining({ hopIndexDisplayMode: 'none' }));
+
+      // Toggle back to 'control'
+      service.toggleHopIndex();
+      expect(service.getPathTraceState().hopIndexDisplayMode).toBe('control');
+      expect(stateChangeSpy).toHaveBeenCalledWith(expect.objectContaining({ hopIndexDisplayMode: 'control' }));
     });
   });
 
@@ -522,7 +554,7 @@ describe('TenantGraphPathTraceService', () => {
       const node1: PathTraceNode = { id: 'vrf-1', name: 'VRF 1', type: 'VRF' };
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(mockPathResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(mockPathResult));
 
       let hasSeenLoadingState = false;
       service.pathTraceStateChange.subscribe(state => {
@@ -547,12 +579,12 @@ describe('TenantGraphPathTraceService', () => {
       const node1: PathTraceNode = { id: 'source-node', name: 'Source', type: 'VRF' };
       const node2: PathTraceNode = { id: 'dest-node', name: 'Destination', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(mockPathResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(mockPathResult));
 
       service.pathTraceStateChange.subscribe(() => {
         // Check API was called with correct params
-        if (mockGenerateNodeConnectivity.mock.calls.length > 0) {
-          expect(mockGenerateNodeConnectivity).toHaveBeenCalledWith({
+        if (mockCheckNodeConnectivityUtilities.mock.calls.length > 0) {
+          expect(mockCheckNodeConnectivityUtilities).toHaveBeenCalledWith({
             endpointConnectivityNodeQuery: {
               sourceNodeId: 'source-node',
               destinationNodeId: 'dest-node',
@@ -571,7 +603,7 @@ describe('TenantGraphPathTraceService', () => {
       const node1: PathTraceNode = { id: 'vrf-1', name: 'VRF 1', type: 'VRF' };
       const node2: PathTraceNode = { id: 'vrf-2', name: 'VRF 2', type: 'VRF' };
 
-      mockGenerateNodeConnectivity.mockReturnValue(of(mockPathResult));
+      mockCheckNodeConnectivityUtilities.mockReturnValue(of(mockPathResult));
 
       service.pathTraceStateChange.subscribe(state => {
         if (state.isCalculating === false && state.pathTraceData) {
