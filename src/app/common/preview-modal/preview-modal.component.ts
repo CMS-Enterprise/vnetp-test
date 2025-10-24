@@ -15,8 +15,9 @@ export class PreviewModalComponent<T> {
   config: TableConfig<T> = {
     description: 'Import Preview',
     columns: [],
+    hideAdvancedSearch: true,
   };
-  data: T[];
+  data: { data: T[]; count: number; total: number; page: number; pageCount: number };
 
   constructor(private ngx: NgxSmartModalService) {}
 

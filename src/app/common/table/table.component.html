@@ -23,7 +23,7 @@
   }
   <table mat-table [dataSource]="dataSourceData" class="mat-elevation-z1 w-100" [multiTemplateDataRows]="true">
     <ng-container *ngFor="let mc of materialColumns; trackBy: trackByMaterialColumn" [matColumnDef]="mc.id">
-      <th mat-header-cell *matHeaderCellDef>{{ mc.col.name }}</th>
+      <th mat-header-cell *matHeaderCellDef><b>{{ mc.col.name }}</b></th>
       <td mat-cell *matCellDef="let datum">
         @if (mc.col.property) {
           {{ datum[mc.col.property] }}

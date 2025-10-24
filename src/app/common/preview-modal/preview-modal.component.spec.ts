@@ -33,10 +33,16 @@ describe('PreviewModalComponent', () => {
       description: 'Sample Table',
       columns: [],
     };
-    component.data = [
-      { prop1: 'Value 1A', prop2: 'Value 1B' },
-      { prop1: 'Value 2A', prop2: 'Value 2B' },
-    ];
+    component.data = {
+        data: [
+          { prop1: 'Value 1A', prop2: 'Value 1B' },
+          { prop1: 'Value 2A', prop2: 'Value 2B' },
+        ],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      };
 
     fixture.detectChanges();
   });

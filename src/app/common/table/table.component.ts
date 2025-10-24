@@ -123,66 +123,18 @@ export class TableComponent<T> implements AfterViewInit, OnChanges {
     }
 
     this.show = true;
-    this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
-    // list of components that should have the search bar hidden when a user navigates to them
-    const badList = [
-      'managed-network',
-      'unused-network-objects/groups',
-      'unused-service-objects/groups',
-      'import-preview',
-      'pools-in-the-currently-selected-tier',
-      'static-routes-listed-by-tier',
-      'static-routes-for-the-currently-selected-tier',
-      'audit-log',
-      'detailed-audit-log-entry',
-      'consumed-contracts',
-      'provided-contracts',
-      'subnets',
-      'subjects',
-      'filterentries',
-      'self-services',
-      'subject-filters',
-      'l3out-modal',
-      'bd-l3outs',
-      'tiers-in-the-currently-selected-datacenter',
-      'tenants-and-datacenters',
-      'object-usage',
-      'tenants',
-    ];
-
-    const hidePagination = [
-      'import-preview',
-      'detailed-audit-log-entry',
-      'unused-network-objects/groups',
-      'unused-service-objects/groups',
-      'bd-l3outs',
-      'tenants-and-datacenters',
-      'object-usage',
-    ];
-
-    // if tableId is a badList ID, we hide the search bar
-    if (badList.includes(this.uniqueTableId)) {
-      this.showSearchBar = false;
-    }
-
-    if (hidePagination.includes(this.uniqueTableId)) {
-      this.paginationControlsOn = false;
-    }
-
-    this.expandableRows = Boolean(this.config.expandableRows);
-
-    // Prepare Material table columns based on config to avoid downstream changes
-    const cols = this.config?.columns || [];
-    this.materialColumns = cols.map((col, index) => ({ id: this.generateColumnId(col, index), col }));
-    this.displayedColumns = this.materialColumns.map(mc => mc.id);
-
-    this.changeRef.detectChanges();
+    this.updateFromConfig();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data) {
       this.dataSourceData = this.data && Array.isArray(this.data.data) ? this.data.data : [];
       // Render rows to ensure Material recalculates predicate rows
+      Promise.resolve().then(() => this.table?.renderRows());
+    }
+    if (changes.config && this.config) {
+      this.updateFromConfig();
+      // After columns update, ensure table recalculates headers/rows
       Promise.resolve().then(() => this.table?.renderRows());
     }
   }
@@ -278,6 +230,57 @@ export class TableComponent<T> implements AfterViewInit, OnChanges {
       return base.replace(/\s+/g, '_').replace(/[^A-Za-z0-9_\-]/g, '_');
     }
     return `col_${index}`;
+  }
+
+  private updateFromConfig(): void {
+    this.uniqueTableId = (this.config?.description || '').toLowerCase().replace(/ /gm, '-');
+
+    const badList = [
+      'managed-network',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
+      'import-preview',
+      'pools-in-the-currently-selected-tier',
+      'static-routes-listed-by-tier',
+      'static-routes-for-the-currently-selected-tier',
+      'audit-log',
+      'detailed-audit-log-entry',
+      'consumed-contracts',
+      'provided-contracts',
+      'subnets',
+      'subjects',
+      'filterentries',
+      'self-services',
+      'subject-filters',
+      'l3out-modal',
+      'bd-l3outs',
+      'tiers-in-the-currently-selected-datacenter',
+      'tenants-and-datacenters',
+      'object-usage',
+      'tenants',
+    ];
+
+    const hidePagination = [
+      'import-preview',
+      'detailed-audit-log-entry',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
+      'bd-l3outs',
+      'tenants-and-datacenters',
+      'object-usage',
+    ];
+
+    this.showSearchBar = !badList.includes(this.uniqueTableId);
+
+    this.paginationControlsOn = !hidePagination.includes(this.uniqueTableId);
+
+    this.expandableRows = Boolean(this.config?.expandableRows);
+
+    const cols = this.config?.columns || [];
+    this.materialColumns = cols.map((col, index) => ({ id: this.generateColumnId(col, index), col }));
+    this.displayedColumns = this.materialColumns.map(mc => mc.id);
+
+    this.changeRef.detectChanges();
   }
 
   handleMatPage(event: PageEvent): void {
