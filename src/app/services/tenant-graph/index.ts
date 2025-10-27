@@ -1,6 +1,7 @@
 // Tenant Graph Services
 export { TenantGraphCoreService } from './tenant-graph-core.service';
 export { TenantGraphPathTraceService } from './tenant-graph-path-trace.service';
+export { TenantGraphQueryService } from './tenant-graph-query.service';
 export { TenantGraphHighlightService } from './tenant-graph-highlight.service';
 export { TenantGraphDataService } from './tenant-graph-data.service';
 export { TenantGraphLayoutService } from './tenant-graph-layout.service';

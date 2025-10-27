@@ -1,7 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { UtilitiesService, EndpointConnectivityNodeQuery, PathResult, PathTraceData, PathTraceNode, PathInfo } from 'client';
+import { PathResult, PathTraceData, PathTraceNode, PathInfo } from 'client';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { TenantGraphQueryService } from './tenant-graph-query.service';
 
 /**
  * # Tenant Graph PathTrace Service
@@ -155,7 +156,7 @@ export class TenantGraphPathTraceService {
   private tenantId?: string;
   private tenantVersion?: number;
 
-  constructor(private utilitiesService: UtilitiesService) {}
+  constructor(private queryService: TenantGraphQueryService) {}
 
   public setTenantId(tenantId: string): void {
     this.tenantId = tenantId;
@@ -291,17 +292,9 @@ export class TenantGraphPathTraceService {
     };
     this.pathTraceStateChange.emit(this.pathTraceState);
 
-    // Build API query
-    const query: EndpointConnectivityNodeQuery = {
-      sourceNodeId: source.id,
-      destinationNodeId: target.id,
-      tenantId: this.tenantId,
-      tenantVersion: this.tenantVersion,
-    };
-
-    // Call API
-    this.utilitiesService
-      .checkNodeConnectivityUtilities({ endpointConnectivityNodeQuery: query })
+    // Call query service
+    this.queryService
+      .checkNodeConnectivity(source.id, target.id, this.tenantId, this.tenantVersion)
       .pipe(
         catchError(err => {
           console.error('Path trace API error:', err);

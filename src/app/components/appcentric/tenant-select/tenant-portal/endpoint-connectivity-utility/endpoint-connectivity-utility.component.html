@@ -83,5 +83,71 @@
         </div>
       </form>
     </div>
+
+    <!-- Result Summary -->
+    <div *ngIf="connectivityResult" class="result-summary">
+      <h2>Connectivity Test Result</h2>
+      <div class="result-info">
+        <div class="result-item">
+          <span class="result-label">Control Plane:</span>
+          <span
+            class="result-value"
+            [ngClass]="{
+              'status-allowed': connectivityResult.controlPlaneAllowed === true,
+              'status-denied': connectivityResult.controlPlaneAllowed === false,
+              'status-unknown': connectivityResult.controlPlaneAllowed === undefined
+            }"
+          >
+            {{
+              connectivityResult.controlPlaneAllowed === true
+                ? '✓ Allowed'
+                : connectivityResult.controlPlaneAllowed === false
+                  ? '✗ Denied'
+                  : 'Unknown'
+            }}
+          </span>
+        </div>
+        <div class="result-item" *ngIf="connectivityResult.controlPath">
+          <span class="result-label">Control Path:</span>
+          <span class="result-value">{{ connectivityResult.controlPath.hopCount }} hops, cost {{ connectivityResult.controlPath.totalCost }}</span>
+        </div>
+        <div class="result-item" *ngIf="connectivityResult.dataPath">
+          <span class="result-label">Data Path:</span>
+          <span class="result-value">{{ connectivityResult.dataPath.hopCount }} hops, cost {{ connectivityResult.dataPath.totalCost }}</span>
+        </div>
+        <div class="result-item" *ngIf="connectivityResult.queryOutdated" class="warning">
+          <span class="result-label">Warning:</span>
+          <span class="result-value">Query is outdated. Tenant version has changed. Please refresh the graph.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graph Visualization -->
+    <div class="graph-section">
+      <h2>Tenant Graph Visualization</h2>
+
+      <!-- Graph Loading State -->
+      <div *ngIf="isGraphLoading" class="graph-loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading tenant graph...</div>
+      </div>
+
+      <!-- Graph Error State -->
+      <div *ngIf="graphError && !isGraphLoading" class="graph-error">
+        <div class="error-icon">⚠️</div>
+        <div class="error-text">{{ graphError }}</div>
+      </div>
+
+      <!-- Graph Container -->
+      <div *ngIf="graph && !isGraphLoading && !graphError" id="endpointGraphContainer" class="graph-container">
+        <svg id="endpointGraphSvg" class="graph-svg"></svg>
+      </div>
+
+      <!-- No Graph State -->
+      <div *ngIf="!graph && !isGraphLoading && !graphError" class="graph-placeholder">
+        <div class="placeholder-icon">📊</div>
+        <div class="placeholder-text">Graph will load automatically</div>
+      </div>
+    </div>
   </div>
 </div>
