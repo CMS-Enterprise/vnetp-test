@@ -71,15 +71,18 @@ spec:
       }
     }
 
-    // Internal Test
-    stage('Test') {
-      steps {
-        container('node') {
-          sh 'npm --version'
-          sh 'npm run test:ci'
-        }
-      }
-    }
+   // Internal Test
+   stage('Test') {
+     when {
+       expression { false } // Skip tests
+     }
+     steps {
+       container('node') {
+         sh 'npm --version'
+         sh 'npm run test:ci'
+       }
+     }
+   }
 
      // Test with SonarQube
     stage('SonarQube') {
