@@ -23,7 +23,12 @@ export class ImportExportComponent {
 
   @Output() import = new EventEmitter<any>();
 
-  constructor(private sanitizer: DomSanitizer, private papa: Papa) {}
+  private readonly uid = `imp-exp-${globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
+
+  constructor(
+    private sanitizer: DomSanitizer,
+    private papa: Papa,
+  ) {}
 
   public importFile(event: Event): void {
     this.Import(event, importObjects => this.importCallback(importObjects));
@@ -94,5 +99,9 @@ export class ImportExportComponent {
         const exportJson = JSON.stringify(exportObject);
         return this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(exportJson));
     }
+  }
+
+  makeId(key: string): string {
+    return `${this.uid}-${key}`;
   }
 }
