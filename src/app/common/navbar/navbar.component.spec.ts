@@ -9,6 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { HttpClientModule } from '@angular/common/http';
 import { V3GlobalMessagesService } from 'client';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -19,7 +20,7 @@ describe('NavbarComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [NavbarComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      imports: [RouterTestingModule, HttpClientModule],
+      imports: [RouterTestingModule, HttpClientModule, FormsModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
 
