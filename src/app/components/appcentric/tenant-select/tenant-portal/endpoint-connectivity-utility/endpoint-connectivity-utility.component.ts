@@ -32,6 +32,17 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
   // Protocol options for the form
   protocolOptions = ['tcp', 'udp', 'icmp'];
 
+  // Expansion state for path details
+  isControlPathExpanded = false;
+  isDataPathExpanded = false;
+
+  // Expansion state for individual hops
+  expandedHops = new Map<string, boolean>();
+
+  // Expansion state for evaluation details and generated config
+  expandedEvalDetails = new Map<string, boolean>();
+  expandedGeneratedConfig = new Map<string, boolean>();
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -179,15 +190,9 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
     // Clear any existing path trace
     this.pathTraceService.clearPathTrace();
 
-    // Inject control path by default (contains policy validation)
-    if (result.controlPath?.pathTraceData) {
-      this.pathTraceService.setExternalPathTraceData(result.controlPath.pathTraceData);
-
-      // Also set both control and data paths for comprehensive view
-      if (result.controlPath && result.dataPath) {
-        // The service already has methods to handle this through setExternalPathTraceData
-        // which sets up the highlighting properly
-      }
+    // Inject the full PathResult with both control and data paths
+    if (result.controlPath || result.dataPath) {
+      this.pathTraceService.setExternalPathTraceResult(result);
     }
   }
 
@@ -202,8 +207,78 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
     });
     this.connectivityResult = null;
     this.error = null;
+    this.isControlPathExpanded = false;
+    this.isDataPathExpanded = false;
+    this.expandedHops.clear();
+    this.expandedEvalDetails.clear();
+    this.expandedGeneratedConfig.clear();
 
     // Clear path trace highlighting
     this.pathTraceService.clearPathTrace();
+  }
+
+  // Toggle control path expansion
+  toggleControlPath(): void {
+    this.isControlPathExpanded = !this.isControlPathExpanded;
+  }
+
+  // Toggle data path expansion
+  toggleDataPath(): void {
+    this.isDataPathExpanded = !this.isDataPathExpanded;
+  }
+
+  // Toggle hop expansion
+  toggleHop(pathType: 'control' | 'data', hopIndex: number): void {
+    const key = `${pathType}-${hopIndex}`;
+    this.expandedHops.set(key, !this.expandedHops.get(key));
+  }
+
+  // Check if hop is expanded
+  isHopExpanded(pathType: 'control' | 'data', hopIndex: number): boolean {
+    const key = `${pathType}-${hopIndex}`;
+    return this.expandedHops.get(key) ?? false;
+  }
+
+  // Toggle evaluation details expansion
+  toggleEvalDetails(pathType: 'control' | 'data', hopIndex: number): void {
+    const key = `${pathType}-${hopIndex}`;
+    this.expandedEvalDetails.set(key, !this.expandedEvalDetails.get(key));
+  }
+
+  // Check if evaluation details is expanded
+  isEvalDetailsExpanded(pathType: 'control' | 'data', hopIndex: number): boolean {
+    const key = `${pathType}-${hopIndex}`;
+    return this.expandedEvalDetails.get(key) ?? false;
+  }
+
+  // Toggle generated config expansion
+  toggleGeneratedConfig(pathType: 'control' | 'data', hopIndex: number): void {
+    const key = `${pathType}-${hopIndex}`;
+    this.expandedGeneratedConfig.set(key, !this.expandedGeneratedConfig.get(key));
+  }
+
+  // Check if generated config is expanded
+  isGeneratedConfigExpanded(pathType: 'control' | 'data', hopIndex: number): boolean {
+    const key = `${pathType}-${hopIndex}`;
+    return this.expandedGeneratedConfig.get(key) ?? false;
+  }
+
+  // Get control plane status display text
+  getControlPlaneStatusText(allowed?: boolean): string {
+    if (allowed === true) return '✓ Allowed';
+    if (allowed === false) return '✗ Denied';
+    return 'Unknown';
+  }
+
+  // Get control plane metadata status display
+  getMetadataStatusText(metadata: any): string {
+    if (!metadata) return '';
+    return metadata.allowed ? '✓ Allowed' : '✗ Denied';
+  }
+
+  // Format JSON for display
+  formatJson(obj: any): string {
+    if (!obj) return '';
+    return JSON.stringify(obj, null, 2);
   }
 }

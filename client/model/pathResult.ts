@@ -30,6 +30,10 @@ export interface PathResult {
      */
     traversalScope: string;
     /**
+     * Whether the VRF is enforced, only matters for intra-VRF traversal scope.
+     */
+    vrfEnforced: boolean;
+    /**
      * Whether all control plane checks passed (true = allowed, false = denied, undefined = not yet evaluated)
      */
     controlPlaneAllowed?: boolean;

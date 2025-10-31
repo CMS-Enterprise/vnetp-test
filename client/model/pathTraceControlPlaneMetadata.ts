@@ -13,13 +13,33 @@
 
 export interface PathTraceControlPlaneMetadata { 
     /**
-     * Whether this hop is a control plane node
+     * Whether this evaluation level allowed traffic
      */
     allowed: boolean;
     /**
-     * Reason for the allowed status.
+     * Reason for the allowed status at this evaluation level
      */
     allowedReason: string;
+    /**
+     * Type of control plane evaluator that produced this result
+     */
+    evaluatorType: string;
+    /**
+     * Database ID of the evaluated entity
+     */
+    databaseId: string;
+    /**
+     * Name of the evaluated entity
+     */
+    entityName: string;
+    /**
+     * Evaluation-specific details for this level
+     */
+    evaluationDetails?: object;
+    /**
+     * Nested policy node evaluation result (e.g., Contract → Service Graph → Firewall Rule Group)
+     */
+    policyNodeEvaluation?: PathTraceControlPlaneMetadata;
     /**
      * TODO: Generated configuration for the allowed status.
      */

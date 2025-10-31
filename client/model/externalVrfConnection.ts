@@ -11,6 +11,7 @@
  */
 import { ExternalFirewall } from './externalFirewall';
 import { ExternalRoute } from './externalRoute';
+import { Zone } from './zone';
 import { InternalRoute } from './internalRoute';
 
 
@@ -36,6 +37,8 @@ export interface ExternalVrfConnection {
     readonly externalFirewall?: ExternalFirewall;
     externalFirewallId: string;
     tenantId: string;
+    readonly zone?: Zone;
+    zoneId?: string;
 }
 export enum ExternalVrfConnectionExternalVrfEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

@@ -11,6 +11,7 @@
  */
 import { Tenant } from './tenant';
 import { ExternalFirewall } from './externalFirewall';
+import { Zone } from './zone';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 
@@ -41,6 +42,8 @@ export interface L3Out {
     underlayIpv4Network?: string;
     underlayIpv6Network?: string;
     underlayVlan?: number;
+    readonly zone?: Zone;
+    zoneId?: string;
 }
 export enum L3OutL3outTypeEnum {
     External = 'external',

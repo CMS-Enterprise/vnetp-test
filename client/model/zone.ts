@@ -9,6 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
+import { ServiceGraphFirewall } from './serviceGraphFirewall';
+import { ExternalVrfConnection } from './externalVrfConnection';
 import { NatRule } from './natRule';
 import { FirewallRule } from './firewallRule';
 
@@ -29,5 +32,8 @@ export interface Zone {
     readonly natRulesFrom?: Array<NatRule>;
     readonly natRulesTo?: Array<NatRule>;
     readonly tenantVersion?: number;
+    readonly l3out?: L3Out;
+    readonly externalVrfConnection?: ExternalVrfConnection;
+    readonly serviceGraphFirewall?: ServiceGraphFirewall;
 }
 

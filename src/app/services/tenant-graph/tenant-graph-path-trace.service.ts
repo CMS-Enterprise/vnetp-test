@@ -221,6 +221,31 @@ export class TenantGraphPathTraceService {
     this.pathTraceStateChange.emit(this.pathTraceState);
   }
 
+  public setExternalPathTraceResult(result: PathResult): void {
+    // Set source and target nodes from the first path available
+    const primaryPath = result.controlPath || result.dataPath;
+    if (!primaryPath?.pathTraceData) {
+      return;
+    }
+
+    this.pathTraceState.selectedNodes = [primaryPath.pathTraceData.source, primaryPath.pathTraceData.target];
+    this.pathTraceState.pathExists = primaryPath.isComplete;
+    this.pathTraceState.pathLength = primaryPath.hopCount;
+
+    // Store both control and data paths
+    this.pathTraceState.controlPath = result.controlPath;
+    this.pathTraceState.dataPath = result.dataPath;
+    this.pathTraceState.controlPlaneAllowed = result.controlPlaneAllowed;
+
+    // Use primary path for backward compatibility
+    this.pathTraceState.pathTraceData = primaryPath.pathTraceData;
+
+    // Combine both paths for highlighting
+    this.updateCombinedHighlightedPath();
+
+    this.pathTraceStateChange.emit(this.pathTraceState);
+  }
+
   public togglePathOnlyView(): void {
     this.pathTraceState.showPathOnly = !this.pathTraceState.showPathOnly;
     this.pathTraceStateChange.emit(this.pathTraceState);

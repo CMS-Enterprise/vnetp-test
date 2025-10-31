@@ -19,6 +19,10 @@ export interface PathTraceHop {
      */
     nodeId: string;
     /**
+     * Database ID for this hop
+     */
+    databaseId: string;
+    /**
      * Human-readable node name
      */
     nodeName: string;

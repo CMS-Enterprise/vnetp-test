@@ -23521,6 +23521,980 @@
         ]
       }
     },
+    "/v2/routing/external-routes": {
+      "post": {
+        "operationId": "createOneExternalRoute",
+        "summary": "Create one ExternalRoute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalRoute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      },
+      "get": {
+        "operationId": "getManyExternalRoute",
+        "summary": "Get many ExternalRoute",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyExternalRouteResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ExternalRoute"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/external-routes/bulk": {
+      "post": {
+        "operationId": "createManyExternalRoute",
+        "summary": "Create many ExternalRoute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyExternalRouteDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ExternalRoute"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalRoute"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/external-routes/{id}": {
+      "get": {
+        "operationId": "getOneExternalRoute",
+        "summary": "Get one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneExternalRoute",
+        "summary": "Update one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalRoute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneExternalRoute",
+        "summary": "Delete one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/external-routes/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneExternalRoute",
+        "summary": "Soft delete one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/external-routes/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneExternalRoute",
+        "summary": "Restore one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/external-routes/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneExternalRoute",
+        "summary": "Provision one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/external-routes/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneExternalRoute",
+        "summary": "Deprovision one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/external-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes": {
+      "post": {
+        "operationId": "createOneInternalRoute",
+        "summary": "Create one InternalRoute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InternalRoute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      },
+      "get": {
+        "operationId": "getManyInternalRoute",
+        "summary": "Get many InternalRoute",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyInternalRouteResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InternalRoute"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/{routeId}": {
+      "delete": {
+        "operationId": "removeInternalRouteFromExternalVrfConnection",
+        "summary": "Remove Internal Route from External VRF Connection",
+        "description": "Remove an internal route from the specified External VRF Connection",
+        "parameters": [
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to remove from the External VRF Connection",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalVrfConnectionId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the External VRF Connection to remove the route from",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/bulk": {
+      "post": {
+        "operationId": "createManyInternalRoute",
+        "summary": "Create many InternalRoute",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyInternalRouteDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/InternalRoute"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InternalRoute"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/{id}": {
+      "get": {
+        "operationId": "getOneInternalRoute",
+        "summary": "Get one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneInternalRoute",
+        "summary": "Update one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InternalRoute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneInternalRoute",
+        "summary": "Delete one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneInternalRoute",
+        "summary": "Soft delete one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneInternalRoute",
+        "summary": "Restore one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneInternalRoute",
+        "summary": "Provision one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
+    "/v2/routing/internal-routes/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneInternalRoute",
+        "summary": "Deprovision one InternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/routing/internal-routes"
+        ]
+      }
+    },
     "/v2/workflows": {
       "post": {
         "operationId": "createOneWorkflow",
@@ -24892,980 +25866,6 @@
         ]
       }
     },
-    "/v2/routing/external-routes": {
-      "post": {
-        "operationId": "createOneExternalRoute",
-        "summary": "Create one ExternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExternalRoute"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      },
-      "get": {
-        "operationId": "getManyExternalRoute",
-        "summary": "Get many ExternalRoute",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyExternalRouteResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ExternalRoute"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/external-routes/bulk": {
-      "post": {
-        "operationId": "createManyExternalRoute",
-        "summary": "Create many ExternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyExternalRouteDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ExternalRoute"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExternalRoute"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/external-routes/{id}": {
-      "get": {
-        "operationId": "getOneExternalRoute",
-        "summary": "Get one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneExternalRoute",
-        "summary": "Update one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExternalRoute"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneExternalRoute",
-        "summary": "Delete one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/external-routes/{id}/soft": {
-      "delete": {
-        "operationId": "softDeleteOneExternalRoute",
-        "summary": "Soft delete one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/external-routes/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneExternalRoute",
-        "summary": "Restore one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/external-routes/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneExternalRoute",
-        "summary": "Provision one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/external-routes/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneExternalRoute",
-        "summary": "Deprovision one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/external-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes": {
-      "post": {
-        "operationId": "createOneInternalRoute",
-        "summary": "Create one InternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InternalRoute"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      },
-      "get": {
-        "operationId": "getManyInternalRoute",
-        "summary": "Get many InternalRoute",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyInternalRouteResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/InternalRoute"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/{routeId}": {
-      "delete": {
-        "operationId": "removeInternalRouteFromExternalVrfConnection",
-        "summary": "Remove Internal Route from External VRF Connection",
-        "description": "Remove an internal route from the specified External VRF Connection",
-        "parameters": [
-          {
-            "name": "routeId",
-            "required": true,
-            "in": "path",
-            "description": "ID of the route to remove from the External VRF Connection",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "externalVrfConnectionId",
-            "required": true,
-            "in": "path",
-            "description": "ID of the External VRF Connection to remove the route from",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/bulk": {
-      "post": {
-        "operationId": "createManyInternalRoute",
-        "summary": "Create many InternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyInternalRouteDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/InternalRoute"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/InternalRoute"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/{id}": {
-      "get": {
-        "operationId": "getOneInternalRoute",
-        "summary": "Get one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneInternalRoute",
-        "summary": "Update one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InternalRoute"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneInternalRoute",
-        "summary": "Delete one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/{id}/soft": {
-      "delete": {
-        "operationId": "softDeleteOneInternalRoute",
-        "summary": "Soft delete one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneInternalRoute",
-        "summary": "Restore one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneInternalRoute",
-        "summary": "Provision one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
-    "/v2/routing/internal-routes/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneInternalRoute",
-        "summary": "Deprovision one InternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/routing/internal-routes"
-        ]
-      }
-    },
     "/v3/global/messages": {
       "get": {
         "operationId": "getMessagesMessage",
@@ -26377,7 +26377,7 @@
           "datacenterId"
         ]
       },
-      "ServiceGraphFirewall": {
+      "NetworkObjectGroup": {
         "type": "object",
         "properties": {
           "id": {
@@ -26417,16 +26417,972 @@
             "minLength": 3,
             "maxLength": 100
           },
-          "firewallDeviceType": {
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "networkObjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObject"
+            }
+          },
+          "tierId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
+      },
+      "NetworkObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
             "type": "string"
           },
-          "serviceGraph": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "Range",
+              "Fqdn"
+            ]
+          },
+          "fqdn": {
+            "type": "string"
+          },
+          "ipAddress": {
+            "type": "string"
+          },
+          "startIpAddress": {
+            "type": "string"
+          },
+          "endIpAddress": {
+            "type": "string"
+          },
+          "nat": {
+            "type": "boolean"
+          },
+          "translatedIpAddress": {
+            "type": "string"
+          },
+          "natDirection": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "natType": {
+            "type": "string",
+            "enum": [
+              "Intervrf",
+              "External"
+            ]
+          },
+          "natService": {
+            "type": "boolean"
+          },
+          "natProtocol": {
+            "type": "string",
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
+          },
+          "natSourcePort": {
+            "type": "string"
+          },
+          "natTranslatedPort": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "networkObjectGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObjectGroup"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "tierId"
+        ]
+      },
+      "ServiceObjectGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "TCP",
+              "UDP",
+              "TCPUDP"
+            ]
+          },
+          "serviceObjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceObject"
+            }
+          },
+          "tierId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "tierId"
+        ]
+      },
+      "ServiceObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "TCP",
+              "UDP"
+            ]
+          },
+          "sourcePorts": {
+            "type": "string"
+          },
+          "destinationPorts": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "serviceObjectGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceObjectGroup"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "protocol",
+          "sourcePorts",
+          "destinationPorts",
+          "tierId"
+        ]
+      },
+      "PanosApplication": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "panosId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "appVersion": {
+            "type": "string"
+          },
+          "minver": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "oriCountry": {
+            "type": "string"
+          },
+          "oriLanguage": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "subCategory": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "virusIdent": {
+            "type": "boolean"
+          },
+          "evasiveBehavior": {
+            "type": "boolean"
+          },
+          "consumeBigBandwidth": {
+            "type": "boolean"
+          },
+          "usedByMalware": {
+            "type": "boolean"
+          },
+          "ableToTransferFile": {
+            "type": "boolean"
+          },
+          "hasKnownVulnerability": {
+            "type": "boolean"
+          },
+          "tunnelOtherApplication": {
+            "type": "boolean"
+          },
+          "proneToMisuse": {
+            "type": "boolean"
+          },
+          "pervasiveUse": {
+            "type": "boolean"
+          },
+          "references": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              }
+            }
+          },
+          "useApplicationsMembers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultPortMember": {
+            "type": "string"
+          },
+          "identByIpProtocol": {
+            "type": "string"
+          },
+          "risk": {
+            "type": "string"
+          },
+          "firewallRules": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "references"
+        ]
+      },
+      "FirewallRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 28
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "Permit",
+              "Deny"
+            ]
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
+          },
+          "logging": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "sourceAddressType": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
+            ]
+          },
+          "destinationAddressType": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
+            ]
+          },
+          "serviceType": {
+            "type": "string",
+            "enum": [
+              "Port",
+              "ServiceObject",
+              "ServiceObjectGroup"
+            ]
+          },
+          "sourceIpAddress": {
+            "type": "string"
+          },
+          "sourceNetworkObjectId": {
+            "type": "string"
+          },
+          "sourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "destinationIpAddress": {
+            "type": "string"
+          },
+          "destinationNetworkObjectId": {
+            "type": "string"
+          },
+          "destinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "sourcePorts": {
+            "type": "string"
+          },
+          "destinationPorts": {
+            "type": "string"
+          },
+          "serviceObjectId": {
+            "type": "string"
+          },
+          "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "sourceEndpointGroupId": {
+            "type": "string"
+          },
+          "sourceEndpointSecurityGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointSecurityGroupId": {
+            "type": "string"
+          },
+          "firewallRuleGroupId": {
+            "type": "string"
+          },
+          "sourceNetworkObject": {
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/ServiceGraph"
+                "$ref": "#/components/schemas/NetworkObject"
               }
             ]
+          },
+          "sourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "destinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "destinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "serviceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "serviceObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObjectGroup"
+              }
+            ]
+          },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "sourceEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "destinationEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "sourceEndpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            ]
+          },
+          "destinationEndpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            ]
+          },
+          "hitCount": {
+            "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true,
+            "default": 1
+          },
+          "panosApplications": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "direction",
+          "action",
+          "protocol",
+          "logging",
+          "enabled",
+          "ruleIndex",
+          "sourceAddressType",
+          "destinationAddressType",
+          "serviceType",
+          "firewallRuleGroupId"
+        ]
+      },
+      "NatRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 60
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "translationType": {
+            "type": "string",
+            "enum": [
+              "Static",
+              "DynamicIp",
+              "DynamicIpAndPort",
+              "Nat64"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "biDirectional": {
+            "type": "boolean"
+          },
+          "originalSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "translatedServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "natRuleGroupId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalServiceObjectId": {
+            "type": "string"
+          },
+          "translatedServiceObjectId": {
+            "type": "string"
+          },
+          "toZoneId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "translatedServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "toZone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "hitCount": {
+            "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true,
+            "default": 1
+          }
+        },
+        "required": [
+          "name",
+          "enabled",
+          "ruleIndex",
+          "translationType",
+          "direction",
+          "biDirectional",
+          "originalSourceAddressType",
+          "translatedSourceAddressType",
+          "originalDestinationAddressType",
+          "translatedDestinationAddressType",
+          "originalServiceType",
+          "translatedServiceType",
+          "natRuleGroupId"
+        ]
+      },
+      "Vrf": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "policyControlEnforced": {
+            "type": "boolean",
+            "description": "Default True, Security rules (contracts) will be enforced."
+          },
+          "policyControlEnforcementIngress": {
+            "type": "boolean",
+            "description": "Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic."
           },
           "tenant": {
             "readOnly": true,
@@ -26439,27 +27395,46 @@
           "tenantId": {
             "type": "string"
           },
-          "vsysName": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "tier": {
+          "l3outs": {
             "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tier"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
           },
-          "tierId": {
-            "type": "string"
+          "serviceGraphs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceGraph"
+            }
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true,
+            "default": 1
+          },
+          "maxExternalRoutes": {
+            "type": "number"
+          },
+          "bgpAsn": {
+            "type": "number"
+          },
+          "displayOrder": {
+            "type": "number"
           }
         },
         "required": [
-          "name",
-          "tenantId",
-          "vsysName"
+          "policyControlEnforced",
+          "policyControlEnforcementIngress",
+          "tenantId"
         ]
       },
       "AppCentricSubnet": {
@@ -26939,6 +27914,17 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "zone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "zoneId": {
+            "type": "string"
           }
         },
         "required": [
@@ -27175,6 +28161,17 @@
           },
           "underlayVlan": {
             "type": "number"
+          },
+          "zone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "zoneId": {
+            "type": "string"
           }
         },
         "required": [
@@ -27183,7 +28180,7 @@
           "l3outType"
         ]
       },
-      "Vrf": {
+      "Zone": {
         "type": "object",
         "properties": {
           "id": {
@@ -27223,21 +28220,125 @@
             "minLength": 3,
             "maxLength": 100
           },
-          "alias": {
+          "description": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "firewallRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "firewallRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "natRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          },
+          "natRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true,
+            "default": 1
+          },
+          "l3out": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/L3Out"
+              }
+            ]
+          },
+          "externalVrfConnection": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExternalVrfConnection"
+              }
+            ]
+          },
+          "serviceGraphFirewall": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceGraphFirewall"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
+      },
+      "ServiceGraphFirewall": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
             "maxLength": 100
           },
-          "description": {
-            "type": "string",
-            "maxLength": 500
+          "firewallDeviceType": {
+            "type": "string"
           },
-          "policyControlEnforced": {
-            "type": "boolean",
-            "description": "Default True, Security rules (contracts) will be enforced."
-          },
-          "policyControlEnforcementIngress": {
-            "type": "boolean",
-            "description": "Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic."
+          "serviceGraph": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceGraph"
+              }
+            ]
           },
           "tenant": {
             "readOnly": true,
@@ -27250,46 +28351,38 @@
           "tenantId": {
             "type": "string"
           },
-          "l3outs": {
+          "vsysName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "tier": {
             "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier"
+              }
+            ]
           },
-          "serviceGraphs": {
+          "tierId": {
+            "type": "string"
+          },
+          "zone": {
             "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ServiceGraph"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
           },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true,
-            "default": 1
-          },
-          "maxExternalRoutes": {
-            "type": "number"
-          },
-          "bgpAsn": {
-            "type": "number"
-          },
-          "displayOrder": {
-            "type": "number"
+          "zoneId": {
+            "type": "string"
           }
         },
         "required": [
-          "policyControlEnforced",
-          "policyControlEnforcementIngress",
-          "tenantId"
+          "name",
+          "tenantId",
+          "vsysName"
         ]
       },
       "ServiceGraph": {
@@ -29879,1042 +30972,6 @@
           "nextHop",
           "metric",
           "tierId"
-        ]
-      },
-      "NetworkObjectGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "networkObjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NetworkObject"
-            }
-          },
-          "tierId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "tierId"
-        ]
-      },
-      "NetworkObject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "IpAddress",
-              "Range",
-              "Fqdn"
-            ]
-          },
-          "fqdn": {
-            "type": "string"
-          },
-          "ipAddress": {
-            "type": "string"
-          },
-          "startIpAddress": {
-            "type": "string"
-          },
-          "endIpAddress": {
-            "type": "string"
-          },
-          "nat": {
-            "type": "boolean"
-          },
-          "translatedIpAddress": {
-            "type": "string"
-          },
-          "natDirection": {
-            "type": "string",
-            "enum": [
-              "In",
-              "Out"
-            ]
-          },
-          "natType": {
-            "type": "string",
-            "enum": [
-              "Intervrf",
-              "External"
-            ]
-          },
-          "natService": {
-            "type": "boolean"
-          },
-          "natProtocol": {
-            "type": "string",
-            "enum": [
-              "IP",
-              "ICMP",
-              "TCP",
-              "UDP"
-            ]
-          },
-          "natSourcePort": {
-            "type": "string"
-          },
-          "natTranslatedPort": {
-            "type": "string"
-          },
-          "tierId": {
-            "type": "string"
-          },
-          "networkObjectGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NetworkObjectGroup"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "type",
-          "tierId"
-        ]
-      },
-      "ServiceObjectGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "TCP",
-              "UDP",
-              "TCPUDP"
-            ]
-          },
-          "serviceObjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ServiceObject"
-            }
-          },
-          "tierId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "type",
-          "tierId"
-        ]
-      },
-      "ServiceObject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "protocol": {
-            "type": "string",
-            "enum": [
-              "TCP",
-              "UDP"
-            ]
-          },
-          "sourcePorts": {
-            "type": "string"
-          },
-          "destinationPorts": {
-            "type": "string"
-          },
-          "tierId": {
-            "type": "string"
-          },
-          "serviceObjectGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ServiceObjectGroup"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "protocol",
-          "sourcePorts",
-          "destinationPorts",
-          "tierId"
-        ]
-      },
-      "NatRule": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 60
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "ruleIndex": {
-            "type": "number",
-            "minimum": 1
-          },
-          "translationType": {
-            "type": "string",
-            "enum": [
-              "Static",
-              "DynamicIp",
-              "DynamicIpAndPort",
-              "Nat64"
-            ]
-          },
-          "direction": {
-            "type": "string",
-            "enum": [
-              "In",
-              "Out"
-            ]
-          },
-          "biDirectional": {
-            "type": "boolean"
-          },
-          "originalSourceAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "translatedSourceAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "originalDestinationAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "translatedDestinationAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "originalServiceType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "ServiceObject"
-            ]
-          },
-          "translatedServiceType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "ServiceObject"
-            ]
-          },
-          "natRuleGroupId": {
-            "type": "string"
-          },
-          "originalSourceNetworkObjectId": {
-            "type": "string"
-          },
-          "originalSourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "translatedSourceNetworkObjectId": {
-            "type": "string"
-          },
-          "translatedSourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "originalDestinationNetworkObjectId": {
-            "type": "string"
-          },
-          "originalDestinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "translatedDestinationNetworkObjectId": {
-            "type": "string"
-          },
-          "translatedDestinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "originalServiceObjectId": {
-            "type": "string"
-          },
-          "translatedServiceObjectId": {
-            "type": "string"
-          },
-          "toZoneId": {
-            "type": "string"
-          },
-          "originalSourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "originalSourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "translatedSourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "translatedSourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "originalDestinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "originalDestinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "translatedDestinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "translatedDestinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "originalServiceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          },
-          "translatedServiceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          },
-          "toZone": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Zone"
-              }
-            ]
-          },
-          "fromZone": {
-            "readOnly": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Zone"
-            }
-          },
-          "hitCount": {
-            "type": "number"
-          },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true,
-            "default": 1
-          }
-        },
-        "required": [
-          "name",
-          "enabled",
-          "ruleIndex",
-          "translationType",
-          "direction",
-          "biDirectional",
-          "originalSourceAddressType",
-          "translatedSourceAddressType",
-          "originalDestinationAddressType",
-          "translatedDestinationAddressType",
-          "originalServiceType",
-          "translatedServiceType",
-          "natRuleGroupId"
-        ]
-      },
-      "Zone": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string"
-          },
-          "tierId": {
-            "type": "string"
-          },
-          "firewallRulesTo": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FirewallRule"
-            }
-          },
-          "firewallRulesFrom": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FirewallRule"
-            }
-          },
-          "natRulesFrom": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NatRule"
-            }
-          },
-          "natRulesTo": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NatRule"
-            }
-          },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true,
-            "default": 1
-          }
-        },
-        "required": [
-          "name",
-          "tierId"
-        ]
-      },
-      "PanosApplication": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "panosId": {
-            "type": "string",
-            "readOnly": true
-          },
-          "appVersion": {
-            "type": "string"
-          },
-          "minver": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "oriCountry": {
-            "type": "string"
-          },
-          "oriLanguage": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string"
-          },
-          "subCategory": {
-            "type": "string"
-          },
-          "technology": {
-            "type": "string"
-          },
-          "virusIdent": {
-            "type": "boolean"
-          },
-          "evasiveBehavior": {
-            "type": "boolean"
-          },
-          "consumeBigBandwidth": {
-            "type": "boolean"
-          },
-          "usedByMalware": {
-            "type": "boolean"
-          },
-          "ableToTransferFile": {
-            "type": "boolean"
-          },
-          "hasKnownVulnerability": {
-            "type": "boolean"
-          },
-          "tunnelOtherApplication": {
-            "type": "boolean"
-          },
-          "proneToMisuse": {
-            "type": "boolean"
-          },
-          "pervasiveUse": {
-            "type": "boolean"
-          },
-          "references": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "link": {
-                "type": "string"
-              }
-            }
-          },
-          "useApplicationsMembers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "defaultPortMember": {
-            "type": "string"
-          },
-          "identByIpProtocol": {
-            "type": "string"
-          },
-          "risk": {
-            "type": "string"
-          },
-          "firewallRules": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FirewallRule"
-            }
-          }
-        },
-        "required": [
-          "references"
-        ]
-      },
-      "FirewallRule": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "direction": {
-            "type": "string",
-            "enum": [
-              "In",
-              "Out"
-            ]
-          },
-          "action": {
-            "type": "string",
-            "enum": [
-              "Permit",
-              "Deny"
-            ]
-          },
-          "protocol": {
-            "type": "string",
-            "enum": [
-              "IP",
-              "ICMP",
-              "TCP",
-              "UDP"
-            ]
-          },
-          "logging": {
-            "type": "boolean"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "ruleIndex": {
-            "type": "number",
-            "minimum": 1
-          },
-          "sourceAddressType": {
-            "type": "string",
-            "enum": [
-              "IpAddress",
-              "NetworkObject",
-              "NetworkObjectGroup",
-              "EndpointGroup",
-              "EndpointSecurityGroup"
-            ]
-          },
-          "destinationAddressType": {
-            "type": "string",
-            "enum": [
-              "IpAddress",
-              "NetworkObject",
-              "NetworkObjectGroup",
-              "EndpointGroup",
-              "EndpointSecurityGroup"
-            ]
-          },
-          "serviceType": {
-            "type": "string",
-            "enum": [
-              "Port",
-              "ServiceObject",
-              "ServiceObjectGroup"
-            ]
-          },
-          "sourceIpAddress": {
-            "type": "string"
-          },
-          "sourceNetworkObjectId": {
-            "type": "string"
-          },
-          "sourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "destinationIpAddress": {
-            "type": "string"
-          },
-          "destinationNetworkObjectId": {
-            "type": "string"
-          },
-          "destinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "sourcePorts": {
-            "type": "string"
-          },
-          "destinationPorts": {
-            "type": "string"
-          },
-          "serviceObjectId": {
-            "type": "string"
-          },
-          "serviceObjectGroupId": {
-            "type": "string"
-          },
-          "sourceEndpointGroupId": {
-            "type": "string"
-          },
-          "sourceEndpointSecurityGroupId": {
-            "type": "string"
-          },
-          "destinationEndpointGroupId": {
-            "type": "string"
-          },
-          "destinationEndpointSecurityGroupId": {
-            "type": "string"
-          },
-          "firewallRuleGroupId": {
-            "type": "string"
-          },
-          "sourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "sourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "destinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "destinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "serviceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          },
-          "serviceObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObjectGroup"
-              }
-            ]
-          },
-          "toZone": {
-            "readOnly": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Zone"
-            }
-          },
-          "fromZone": {
-            "readOnly": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Zone"
-            }
-          },
-          "sourceEndpointGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            ]
-          },
-          "destinationEndpointGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            ]
-          },
-          "sourceEndpointSecurityGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EndpointSecurityGroup"
-              }
-            ]
-          },
-          "destinationEndpointSecurityGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EndpointSecurityGroup"
-              }
-            ]
-          },
-          "hitCount": {
-            "type": "number"
-          },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true,
-            "default": 1
-          },
-          "panosApplications": {
-            "readOnly": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PanosApplication"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "direction",
-          "action",
-          "protocol",
-          "logging",
-          "enabled",
-          "ruleIndex",
-          "sourceAddressType",
-          "destinationAddressType",
-          "serviceType",
-          "firewallRuleGroupId"
         ]
       },
       "FirewallRuleGroup": {
@@ -35024,12 +35081,44 @@
         "properties": {
           "allowed": {
             "type": "boolean",
-            "description": "Whether this hop is a control plane node",
+            "description": "Whether this evaluation level allowed traffic",
             "example": true
           },
           "allowedReason": {
             "type": "string",
-            "description": "Reason for the allowed status."
+            "description": "Reason for the allowed status at this evaluation level",
+            "example": "Filter entry matched"
+          },
+          "evaluatorType": {
+            "type": "string",
+            "description": "Type of control plane evaluator that produced this result",
+            "example": "Contract"
+          },
+          "databaseId": {
+            "type": "string",
+            "description": "Database ID of the evaluated entity",
+            "example": "4a251e41-8c31-4aad-9605-82e8a471a0f9"
+          },
+          "entityName": {
+            "type": "string",
+            "description": "Name of the evaluated entity",
+            "example": "web-contract"
+          },
+          "evaluationDetails": {
+            "type": "object",
+            "description": "Evaluation-specific details for this level",
+            "example": {
+              "filterEntryId": "fe-123",
+              "filterEntrySpecificity": 4
+            }
+          },
+          "policyNodeEvaluation": {
+            "description": "Nested policy node evaluation result (e.g., Contract → Service Graph → Firewall Rule Group)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PathTraceControlPlaneMetadata"
+              }
+            ]
           },
           "generatedConfiguration": {
             "type": "object",
@@ -35039,6 +35128,9 @@
         "required": [
           "allowed",
           "allowedReason",
+          "evaluatorType",
+          "databaseId",
+          "entityName",
           "generatedConfiguration"
         ]
       },
@@ -35061,6 +35153,11 @@
             "type": "string",
             "description": "Node ID for this hop",
             "example": "endpoint-group:epg-web"
+          },
+          "databaseId": {
+            "type": "string",
+            "description": "Database ID for this hop",
+            "example": "1234567890"
           },
           "nodeName": {
             "type": "string",
@@ -35123,6 +35220,7 @@
         },
         "required": [
           "nodeId",
+          "databaseId",
           "nodeName",
           "nodeType",
           "incomingEdges",
@@ -35269,6 +35367,11 @@
             "description": "Traversal scope",
             "example": "intravrf"
           },
+          "vrfEnforced": {
+            "type": "boolean",
+            "description": "Whether the VRF is enforced, only matters for intra-VRF traversal scope.",
+            "example": true
+          },
           "controlPlaneAllowed": {
             "type": "boolean",
             "description": "Whether all control plane checks passed (true = allowed, false = denied, undefined = not yet evaluated)",
@@ -35288,7 +35391,8 @@
           "graphTenantVersion",
           "dataPath",
           "controlPath",
-          "traversalScope"
+          "traversalScope",
+          "vrfEnforced"
         ]
       },
       "EndpointConnectivityNodeQuery": {
