@@ -16,6 +16,7 @@ api/v1LoadBalancerRoutes.service.ts
 api/v1LoadBalancerSelfIps.service.ts
 api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
+api/v1Mail.service.ts
 api/v1NetworkScopeFormsWanForm.service.ts
 api/v1NetworkScopeFormsWanFormSubnet.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts

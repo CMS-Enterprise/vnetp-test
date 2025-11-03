@@ -16,6 +16,7 @@ import { V1LoadBalancerRoutesService } from './api/v1LoadBalancerRoutes.service'
 import { V1LoadBalancerSelfIpsService } from './api/v1LoadBalancerSelfIps.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
+import { V1MailService } from './api/v1Mail.service';
 import { V1NetworkScopeFormsWanFormService } from './api/v1NetworkScopeFormsWanForm.service';
 import { V1NetworkScopeFormsWanFormSubnetService } from './api/v1NetworkScopeFormsWanFormSubnet.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';

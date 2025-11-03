@@ -1,6 +1,31 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/v1/mail": {
+      "post": {
+        "operationId": "createOneMail",
+        "summary": "Create one Mail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ]
+      }
+    },
     "/v1/auth/token": {
       "post": {
         "operationId": "getTokenLdapAuth",
@@ -21703,6 +21728,10 @@
   ],
   "components": {
     "schemas": {
+      "Object": {
+        "type": "object",
+        "properties": {}
+      },
       "UserPass": {
         "type": "object",
         "properties": {

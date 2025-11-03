@@ -3,11 +3,12 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Datacenter, Tier, UserDto } from '../../../../client';
+import { Datacenter, Tier, UserDto, V1MailService } from '../../../../client';
 import { environment } from 'src/environments/environment';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+// import { createTransport } from 'nodemailer'
 
 @Component({
   selector: 'app-navbar',
@@ -39,6 +40,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private datacenterContextService: DatacenterContextService,
     private tierContextService: TierContextService,
     private formBuilder: UntypedFormBuilder,
+    private mailService: V1MailService,
   ) {}
 
   comps = ['Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'Firewall Rules', 'VLANs', 'Tiers', 'Subnets', 'NAT Rules'];
@@ -122,17 +124,33 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return form;
   }
 
-  public saveFeedback(type): void {
+  public async saveFeedback(type): Promise<any> {
+    // const transporter = createTransport({
+    //   host: "smtp.example.com",
+    //   port: 587,
+    //   secure: false, // upgrade later with STARTTLS
+    //   // auth: {
+    //   //   user: process.env.SMTP_USER,
+    //   //   pass: process.env.SMTP_PASS,
+    //   // },
+    // });
+    // console.log('transporter', transporter)
+    // await transporter.verify();
     this.submitted = true;
     let form = type.includes('issue') ? this.issueForm : this.rfeForm;
     if (form.invalid) {
       return;
     }
     form = this.addUserInfo(form, type);
-    // this.feedbackService.postCommentFeedback(form.value).subscribe(
-    //   () => this.closeModal(),
-    //   () => {},
-    // );
+    console.log('form', form);
+    const mailBody = form.value;
+    console.log('mailBody', mailBody);
+    // const jsonBody = JSON.parse(mailBody);
+    // console.log('jsonBody',jsonBody)
+    this.mailService.createOneMail({ body: mailBody }).subscribe(
+      () => this.closeModal(),
+      () => {},
+    );
     console.log('form', form);
   }
 
