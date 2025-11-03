@@ -17,6 +17,10 @@ export interface PathTraceControlPlaneMetadata {
      */
     allowed: boolean;
     /**
+     * Whether traffic is allowed considering this level and all nested policy evaluations (rolled-up result)
+     */
+    policyAllowed: boolean;
+    /**
      * Reason for the allowed status at this evaluation level
      */
     allowedReason: string;

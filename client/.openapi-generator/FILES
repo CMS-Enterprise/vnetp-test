@@ -125,7 +125,6 @@ model/createManyZoneDto.ts
 model/createWorkflowDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
-model/defaultRoutePath.ts
 model/edgeProperties.ts
 model/edgePropertiesFirewallContext.ts
 model/endpoint.ts
@@ -274,8 +273,6 @@ model/pathTraceNode.ts
 model/poolImportCollectionDto.ts
 model/routeControlRequest.ts
 model/routeControlRequestDto.ts
-model/routingLoop.ts
-model/routingPaths.ts
 model/ruleOperationDto.ts
 model/selector.ts
 model/selfService.ts

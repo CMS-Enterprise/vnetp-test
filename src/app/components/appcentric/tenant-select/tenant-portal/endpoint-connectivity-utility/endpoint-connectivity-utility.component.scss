@@ -651,6 +651,69 @@
                       margin-left: 22px;
                       font-style: italic;
                     }
+
+                    .nested-policy-section {
+                      margin-top: 8px;
+                      margin-left: 22px;
+
+                      .collapsible-section-header {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        cursor: pointer;
+                        padding: 4px 6px;
+                        background-color: rgba(0, 123, 255, 0.05);
+                        border-radius: 3px;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                          background-color: rgba(0, 123, 255, 0.1);
+                        }
+
+                        .section-expand-icon {
+                          color: #007bff;
+                          font-size: 9px;
+                          transition: transform 0.2s ease;
+                          min-width: 9px;
+                        }
+
+                        .evaluation-details-title,
+                        .generated-config-title {
+                          font-weight: 600;
+                          color: #495057;
+                          font-size: 11px;
+                          margin: 0;
+                        }
+                      }
+
+                      .json-display {
+                        background-color: #f8f9fa;
+                        border: 1px solid #dee2e6;
+                        border-radius: 3px;
+                        padding: 8px;
+                        font-size: 10px;
+                        font-family: 'Courier New', monospace;
+                        color: #495057;
+                        overflow-x: auto;
+                        max-height: 250px;
+                        overflow-y: auto;
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+                        margin-top: 6px;
+                        animation: slideDown 0.2s ease;
+
+                        @keyframes slideDown {
+                          from {
+                            opacity: 0;
+                            max-height: 0;
+                          }
+                          to {
+                            opacity: 1;
+                            max-height: 250px;
+                          }
+                        }
+                      }
+                    }
                   }
                 }
 

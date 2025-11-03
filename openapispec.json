@@ -33536,146 +33536,6 @@
           "vrfToFirewalls"
         ]
       },
-      "DefaultRoutePath": {
-        "type": "object",
-        "properties": {
-          "sourceVrfId": {
-            "type": "string",
-            "description": "Source VRF node ID"
-          },
-          "externalVrf": {
-            "type": "string",
-            "description": "External VRF providing the default route"
-          },
-          "path": {
-            "description": "Path of node IDs from VRF to external VRF",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "isActive": {
-            "type": "boolean",
-            "description": "Whether this path is currently active"
-          }
-        },
-        "required": [
-          "sourceVrfId",
-          "externalVrf",
-          "path",
-          "isActive"
-        ]
-      },
-      "RoutingLoop": {
-        "type": "object",
-        "properties": {
-          "nodeIds": {
-            "description": "Nodes involved in the loop",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "edgeIds": {
-            "description": "Edges involved in the loop",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "loopType": {
-            "type": "string",
-            "description": "Type of loop (default route, BGP, etc.)"
-          },
-          "severity": {
-            "type": "string",
-            "description": "Severity of the loop",
-            "enum": [
-              "WARNING",
-              "ERROR"
-            ]
-          }
-        },
-        "required": [
-          "nodeIds",
-          "edgeIds",
-          "loopType",
-          "severity"
-        ]
-      },
-      "RoutingPaths": {
-        "type": "object",
-        "properties": {
-          "defaultRoutePaths": {
-            "description": "Default route paths in the graph",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DefaultRoutePath"
-            }
-          },
-          "vrfConnectivityMatrix": {
-            "type": "object",
-            "description": "VRF connectivity matrix (serialized from Map<string, Map<string, ConnectionPath>> to nested objects)",
-            "additionalProperties": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "edges": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "weight": {
-                    "type": "number"
-                  },
-                  "allowsExternalRoutePropagation": {
-                    "type": "boolean"
-                  }
-                }
-              }
-            },
-            "example": {
-              "vrf:tenant1:production": {
-                "vrf:tenant1:staging": {
-                  "path": [
-                    "vrf:tenant1:production",
-                    "l3out:tenant1:production:intervrf",
-                    "external-firewall:fw1",
-                    "l3out:tenant1:staging:intervrf",
-                    "vrf:tenant1:staging"
-                  ],
-                  "edges": [
-                    "vrf:tenant1:production-to-l3out:tenant1:production:intervrf",
-                    "l3out:tenant1:production:intervrf-to-external-firewall:fw1"
-                  ],
-                  "weight": 2,
-                  "allowsExternalRoutePropagation": true
-                }
-              }
-            }
-          },
-          "potentialRoutingLoops": {
-            "description": "Potential routing loops detected",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoutingLoop"
-            }
-          }
-        },
-        "required": [
-          "defaultRoutePaths",
-          "vrfConnectivityMatrix",
-          "potentialRoutingLoops"
-        ]
-      },
       "GraphMetadata": {
         "type": "object",
         "properties": {
@@ -33931,14 +33791,6 @@
               }
             ]
           },
-          "routingPaths": {
-            "description": "Routing analysis results",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/RoutingPaths"
-              }
-            ]
-          },
           "metadata": {
             "description": "Graph metadata",
             "allOf": [
@@ -33961,7 +33813,6 @@
           "edges",
           "buildStrategy",
           "indexes",
-          "routingPaths",
           "metadata",
           "utils"
         ]
@@ -35017,17 +34868,9 @@
             "type": "string",
             "description": "IP protocol"
           },
-          "bypassServiceGraph": {
-            "type": "boolean",
-            "description": "Does the user want to bypass the service graph?"
-          },
           "generateConfig": {
             "type": "boolean",
             "description": "Generate configuration to enable connectivity if not already possible."
-          },
-          "bidirectional": {
-            "type": "boolean",
-            "description": "Check for bi-directional connectivity."
           },
           "tenantId": {
             "type": "string",
@@ -35044,9 +34887,7 @@
           "destinationEndpointIp",
           "destinationEndpointPort",
           "ipProtocol",
-          "bypassServiceGraph",
           "generateConfig",
-          "bidirectional",
           "tenantId",
           "tenantVersion"
         ]
@@ -35082,6 +34923,11 @@
           "allowed": {
             "type": "boolean",
             "description": "Whether this evaluation level allowed traffic",
+            "example": true
+          },
+          "policyAllowed": {
+            "type": "boolean",
+            "description": "Whether traffic is allowed considering this level and all nested policy evaluations (rolled-up result)",
             "example": true
           },
           "allowedReason": {
@@ -35127,6 +34973,7 @@
         },
         "required": [
           "allowed",
+          "policyAllowed",
           "allowedReason",
           "evaluatorType",
           "databaseId",

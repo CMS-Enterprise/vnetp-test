@@ -393,7 +393,7 @@ export class TenantGraphHighlightService {
    * Render control plane metadata indicators on nodes
    */
   private renderControlPlaneIndicators(
-    controlPlaneMetadataMap: Map<string, { allowed: boolean; allowedReason: string }>,
+    controlPlaneMetadataMap: Map<string, { allowed: boolean; allowedReason: string; policyAllowed?: boolean }>,
     showPathOnly: boolean = false,
   ): void {
     if (!this.nodeSelection) {
@@ -429,7 +429,7 @@ export class TenantGraphHighlightService {
       indicator
         .append('circle')
         .attr('r', 10)
-        .attr('fill', metadata.allowed ? '#28a745' : '#dc3545')
+        .attr('fill', metadata.allowed && metadata.policyAllowed ? '#28a745' : '#dc3545')
         .attr('stroke', '#fff')
         .attr('stroke-width', 2);
 
@@ -442,7 +442,7 @@ export class TenantGraphHighlightService {
         .attr('font-weight', 'bold')
         .attr('fill', '#fff')
         .attr('pointer-events', 'none')
-        .text(metadata.allowed ? '✓' : '✗');
+        .text(metadata.allowed && metadata.policyAllowed ? '✓' : '✗');
 
       // Add title for tooltip
       indicator.append('title').text(`Control Plane: ${metadata.allowed ? 'Allowed' : 'Denied'}\n${metadata.allowedReason}`);

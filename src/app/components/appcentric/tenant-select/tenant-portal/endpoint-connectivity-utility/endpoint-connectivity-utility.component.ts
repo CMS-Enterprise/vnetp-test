@@ -3,8 +3,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TenantConnectivityGraph, PathResult, Tenant, V2AppCentricTenantsService, EndpointConnectivityQuery } from '../../../../../../../client';
-import { TenantGraphCoreService, TenantGraphQueryService, TenantGraphPathTraceService, TenantGraphRenderConfig } from 'src/app/services/tenant-graph';
+import {
+  TenantConnectivityGraph,
+  PathResult,
+  Tenant,
+  V2AppCentricTenantsService,
+  EndpointConnectivityQuery,
+} from '../../../../../../../client';
+import {
+  TenantGraphCoreService,
+  TenantGraphQueryService,
+  TenantGraphPathTraceService,
+  TenantGraphRenderConfig,
+} from 'src/app/services/tenant-graph';
 
 @Component({
   selector: 'app-endpoint-connectivity-utility',
@@ -42,6 +53,10 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
   // Expansion state for evaluation details and generated config
   expandedEvalDetails = new Map<string, boolean>();
   expandedGeneratedConfig = new Map<string, boolean>();
+
+  // Expansion state for nested policy evaluation details and generated config
+  expandedNestedPolicyEvalDetails = new Map<string, boolean>();
+  expandedNestedPolicyGeneratedConfig = new Map<string, boolean>();
 
   private destroy$ = new Subject<void>();
 
@@ -155,9 +170,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
       destinationEndpointIp: formValue.destinationEndpointIp,
       destinationEndpointPort: formValue.destinationEndpointPort ? Number(formValue.destinationEndpointPort) : null,
       ipProtocol: formValue.ipProtocol,
-      bypassServiceGraph: formValue.bypassServiceGraph,
       generateConfig: formValue.generateConfig,
-      bidirectional: formValue.bidirectional,
       tenantId: this.tenantId,
       tenantVersion: this.tenantVersion,
     };
@@ -212,6 +225,8 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
     this.expandedHops.clear();
     this.expandedEvalDetails.clear();
     this.expandedGeneratedConfig.clear();
+    this.expandedNestedPolicyEvalDetails.clear();
+    this.expandedNestedPolicyGeneratedConfig.clear();
 
     // Clear path trace highlighting
     this.pathTraceService.clearPathTrace();
@@ -263,22 +278,54 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
     return this.expandedGeneratedConfig.get(key) ?? false;
   }
 
+  // Toggle nested policy evaluation details expansion
+  toggleNestedPolicyEvalDetails(pathType: 'control' | 'data', hopIndex: number, policyPath: string): void {
+    const key = `${pathType}-${hopIndex}-${policyPath}`;
+    this.expandedNestedPolicyEvalDetails.set(key, !this.expandedNestedPolicyEvalDetails.get(key));
+  }
+
+  // Check if nested policy evaluation details is expanded
+  isNestedPolicyEvalDetailsExpanded(pathType: 'control' | 'data', hopIndex: number, policyPath: string): boolean {
+    const key = `${pathType}-${hopIndex}-${policyPath}`;
+    return this.expandedNestedPolicyEvalDetails.get(key) ?? false;
+  }
+
+  // Toggle nested policy generated config expansion
+  toggleNestedPolicyGeneratedConfig(pathType: 'control' | 'data', hopIndex: number, policyPath: string): void {
+    const key = `${pathType}-${hopIndex}-${policyPath}`;
+    this.expandedNestedPolicyGeneratedConfig.set(key, !this.expandedNestedPolicyGeneratedConfig.get(key));
+  }
+
+  // Check if nested policy generated config is expanded
+  isNestedPolicyGeneratedConfigExpanded(pathType: 'control' | 'data', hopIndex: number, policyPath: string): boolean {
+    const key = `${pathType}-${hopIndex}-${policyPath}`;
+    return this.expandedNestedPolicyGeneratedConfig.get(key) ?? false;
+  }
+
   // Get control plane status display text
   getControlPlaneStatusText(allowed?: boolean): string {
-    if (allowed === true) return '✓ Allowed';
-    if (allowed === false) return '✗ Denied';
+    if (allowed === true) {
+      return '✓ Allowed';
+    }
+    if (allowed === false) {
+      return '✗ Denied';
+    }
     return 'Unknown';
   }
 
   // Get control plane metadata status display
   getMetadataStatusText(metadata: any): string {
-    if (!metadata) return '';
-    return metadata.allowed ? '✓ Allowed' : '✗ Denied';
+    if (!metadata) {
+      return '';
+    }
+    return metadata.allowed ? 'Allowed' : 'Denied';
   }
 
   // Format JSON for display
   formatJson(obj: any): string {
-    if (!obj) return '';
+    if (!obj) {
+      return '';
+    }
     return JSON.stringify(obj, null, 2);
   }
 }

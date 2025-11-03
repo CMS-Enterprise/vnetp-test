@@ -127,8 +127,8 @@
         <div *ngIf="isControlPathExpanded" class="path-card-body">
           <div class="hops-container">
             <div *ngFor="let hop of connectivityResult.controlPath.pathTraceData.path; let i = index" class="hop-item" [ngClass]="{
-              'hop-allowed': hop.controlPlaneMetadata?.allowed === true,
-              'hop-denied': hop.controlPlaneMetadata?.allowed === false
+              'hop-allowed': hop.controlPlaneMetadata?.policyAllowed === true,
+              'hop-denied': hop.controlPlaneMetadata?.policyAllowed === false
             }">
               <div class="hop-header-collapsible" (click)="toggleHop('control', hop.hopIndex)">
                 <span class="hop-expand-icon">{{ isHopExpanded('control', hop.hopIndex) ? '▼' : '▶' }}</span>
@@ -160,11 +160,6 @@
                         <span class="detail-value">{{ hop.controlPlaneMetadata.allowedReason }}</span>
                       </div>
 
-                      <!-- Nested Policy Evaluation (Recursive) -->
-                      <div *ngIf="hop.controlPlaneMetadata.policyNodeEvaluation" class="nested-policy">
-                        <div class="nested-policy-title">Policy Evaluation Chain:</div>
-                        <ng-container *ngTemplateOutlet="policyEvaluationTemplate; context: { $implicit: hop.controlPlaneMetadata.policyNodeEvaluation, level: 0 }"></ng-container>
-                      </div>
 
                       <!-- Evaluation Details -->
                       <div *ngIf="hop.controlPlaneMetadata.evaluationDetails" class="evaluation-details">
@@ -182,6 +177,18 @@
                           <span class="generated-config-title">Generated Configuration</span>
                         </div>
                         <pre *ngIf="isGeneratedConfigExpanded('control', hop.hopIndex)" class="json-display">{{ formatJson(hop.controlPlaneMetadata.generatedConfiguration) }}</pre>
+                      </div>
+
+                      <!-- Nested Policy Evaluation (Recursive) -->
+                      <div *ngIf="hop.controlPlaneMetadata.policyNodeEvaluation" class="nested-policy">
+                        <div class="nested-policy-title">Policy Evaluation Chain:</div>
+                        <ng-container *ngTemplateOutlet="policyEvaluationTemplate; context: { 
+                          $implicit: hop.controlPlaneMetadata.policyNodeEvaluation, 
+                          level: 0,
+                          pathType: 'control',
+                          hopIndex: hop.hopIndex,
+                          policyPath: '0'
+                        }"></ng-container>
                       </div>
                     </div>
                   </div>
@@ -263,7 +270,7 @@
     </div>
 
     <!-- Recursive Template for Nested Policy Evaluations -->
-    <ng-template #policyEvaluationTemplate let-policy let-level="level">
+    <ng-template #policyEvaluationTemplate let-policy let-level="level" let-pathType="pathType" let-hopIndex="hopIndex" let-policyPath="policyPath">
       <div class="policy-node" [style.margin-left.px]="level * 20">
         <div class="policy-node-header" [ngClass]="{
           'policy-allowed': policy.allowed,
@@ -275,9 +282,33 @@
         </div>
         <div class="policy-node-reason">{{ policy.allowedReason }}</div>
 
+        <!-- Evaluation Details -->
+        <div *ngIf="policy.evaluationDetails" class="nested-policy-section">
+          <div class="collapsible-section-header" (click)="toggleNestedPolicyEvalDetails(pathType, hopIndex, policyPath); $event.stopPropagation()">
+            <span class="section-expand-icon">{{ isNestedPolicyEvalDetailsExpanded(pathType, hopIndex, policyPath) ? '▼' : '▶' }}</span>
+            <span class="evaluation-details-title">Evaluation Details</span>
+          </div>
+          <pre *ngIf="isNestedPolicyEvalDetailsExpanded(pathType, hopIndex, policyPath)" class="json-display">{{ formatJson(policy.evaluationDetails) }}</pre>
+        </div>
+
+        <!-- Generated Configuration -->
+        <div *ngIf="policy.generatedConfiguration" class="nested-policy-section">
+          <div class="collapsible-section-header" (click)="toggleNestedPolicyGeneratedConfig(pathType, hopIndex, policyPath); $event.stopPropagation()">
+            <span class="section-expand-icon">{{ isNestedPolicyGeneratedConfigExpanded(pathType, hopIndex, policyPath) ? '▼' : '▶' }}</span>
+            <span class="generated-config-title">Generated Configuration</span>
+          </div>
+          <pre *ngIf="isNestedPolicyGeneratedConfigExpanded(pathType, hopIndex, policyPath)" class="json-display">{{ formatJson(policy.generatedConfiguration) }}</pre>
+        </div>
+
         <!-- Recursive nested policy -->
         <div *ngIf="policy.policyNodeEvaluation">
-          <ng-container *ngTemplateOutlet="policyEvaluationTemplate; context: { $implicit: policy.policyNodeEvaluation, level: level + 1 }"></ng-container>
+          <ng-container *ngTemplateOutlet="policyEvaluationTemplate; context: { 
+            $implicit: policy.policyNodeEvaluation, 
+            level: level + 1,
+            pathType: pathType,
+            hopIndex: hopIndex,
+            policyPath: policyPath + '-' + (level + 1)
+          }"></ng-container>
         </div>
       </div>
     </ng-template>
