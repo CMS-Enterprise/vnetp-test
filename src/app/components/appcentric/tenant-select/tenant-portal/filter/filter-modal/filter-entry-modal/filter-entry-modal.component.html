@@ -12,10 +12,10 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="mb-3">
-        <label for="name">Name</label>
+        <label for="filter-entry-name">Name</label>
         <input
           type="text"
-          id="name"
+          id="filter-entry-name"
           formControlName="name"
           class="form-control"
           [class.is-invalid]="submitted && f.name.errors"
@@ -37,14 +37,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="alias">Alias</label>
+        <label for="filter-entry-alias">Alias</label>
         <input
           type="text"
-          id="alias"
+          id="filter-entry-alias"
           formControlName="alias"
           class="form-control"
           [class.is-invalid]="submitted && f.alias.errors"
-          aria-label="Alias"
+          aria-labelledby="filter-entry-alias"
         />
         @if (submitted && f.alias.errors) {
         <div class="invalid-feedback">
@@ -56,14 +56,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="description">Description</label>
+        <label for="filter-entry-description">Description</label>
         <input
           type="text"
-          id="description"
+          id="filter-entry-description"
           formControlName="description"
           class="form-control"
           [class.is-invalid]="submitted && f.description.errors"
-          aria-label="Description"
+          aria-labelledby="filter-entry-description"
         />
         @if (submitted && f.description.errors) {
         <div class="invalid-feedback">
@@ -107,13 +107,13 @@
         </div>
 
         <div class="mb-3 col-md-6">
-          <label for="matchOnlyFragments">Match Only Fragments</label>
+          <label for="filter-entry-matchOnlyFragments">Match Only Fragments</label>
           <select
-            id="matchOnlyFragments"
+            id="filter-entry-matchOnlyFragments"
             formControlName="matchOnlyFragments"
             class="form-select"
             [class.is-invalid]="submitted && f.matchOnlyFragments.errors"
-            aria-label="Match Only Fragments"
+            aria-labelledby="filter-entry-matchOnlyFragments"
           >
             <option></option>
             <option [ngValue]="true">True</option>

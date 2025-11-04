@@ -1,9 +1,10 @@
-<label for="contracts">Contracts</label>
+<label id="consumed-contracts-label" for="consumed-contracts">Contracts</label>
 <ng-select
+  [labelForId]="'consumed-contracts'"
   [(ngModel)]="selectedContract"
   [ngModelOptions]="{ standalone: true }"
   [items]="contracts"
-  id="contracts"
+  aria-labelledby="consumed-contracts"
   bindLabel="name"
 ></ng-select>
 <button type="button" class="btn btn-info" (click)="addContract()" [disabled]="!selectedContract">

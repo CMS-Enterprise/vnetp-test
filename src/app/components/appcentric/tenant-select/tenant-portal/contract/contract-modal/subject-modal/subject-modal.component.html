@@ -12,14 +12,14 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="mb-3">
-        <label for="name">Name</label>
+        <label for="subject-name">Name</label>
         <input
           type="text"
-          id="name"
+          id="subject-name"
           formControlName="name"
           class="form-control"
           [class.is-invalid]="submitted && f.name.errors"
-          aria-label="Name"
+          aria-labelledby="subject-name"
         />
         @if (submitted && f.name.errors) {
         <div class="invalid-feedback">
@@ -37,14 +37,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="alias">Alias</label>
+        <label for="subject-alias">Alias</label>
         <input
           type="text"
-          id="alias"
+          id="subject-alias"
           formControlName="alias"
           class="form-control"
           [class.is-invalid]="submitted && f.alias.errors"
-          aria-label="Alias"
+          aria-labelledby="subject-alias"
         />
         @if (submitted && f.alias.errors) {
         <div class="invalid-feedback">
@@ -56,14 +56,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="description">Description</label>
+        <label for="subject-description">Description</label>
         <input
           type="text"
-          id="description"
+          id="subject-description"
           formControlName="description"
           class="form-control"
           [class.is-invalid]="submitted && f.description.errors"
-          aria-label="Description"
+          aria-labelledby="subject-description"
         />
         @if (submitted && f.description.errors) {
         <div class="invalid-feedback">
