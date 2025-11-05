@@ -182,15 +182,6 @@ describe('EnvironmentModalComponent', () => {
       expect(updateSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'N', description: 'D', externalVrfs: ['X'] }));
     });
 
-    it('should log error on unknown mode', () => {
-      (component as any).modalMode = 999;
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
-      component.form.setValue({ name: 'N', description: 'D', externalVrfs: ['X'] });
-      component.save();
-      expect(errorSpy).toHaveBeenCalled();
-      errorSpy.mockRestore();
-    });
-
     it('createEnvironment success should close modal', () => {
       const closeSpy = jest.spyOn(component, 'closeModal');
       (component as any).createEnvironment({ name: 'N' });

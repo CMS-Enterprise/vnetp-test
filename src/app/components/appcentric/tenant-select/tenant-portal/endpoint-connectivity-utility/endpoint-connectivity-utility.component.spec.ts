@@ -1,5 +1,12 @@
 /* eslint-disable max-len */
 
+// Mock tenant-graph services before they're imported to avoid D3 dependency issues
+jest.mock('src/app/services/tenant-graph', () => ({
+  TenantGraphCoreService: jest.fn().mockImplementation(() => ({})),
+  TenantGraphQueryService: jest.fn().mockImplementation(() => ({})),
+  TenantGraphPathTraceService: jest.fn().mockImplementation(() => ({})),
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -48,6 +55,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
     mockPathTraceService = {
       clearPathTrace: jest.fn(),
       setExternalPathTraceData: jest.fn(),
+      setExternalPathTraceResult: jest.fn(),
     };
     mockRouter = {
       navigate: jest.fn(),
@@ -239,9 +247,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
         destinationEndpointIp: '2.2.2.2',
         destinationEndpointPort: 200,
         ipProtocol: 'tcp',
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
         tenantId: mockTenantId,
         tenantVersion: mockTenantVersion,
       };
@@ -251,7 +257,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
       expect(component.connectivityResult).toEqual(mockPathResult);
       expect(component.error).toBeNull();
       expect(mockPathTraceService.clearPathTrace).toHaveBeenCalled();
-      expect(mockPathTraceService.setExternalPathTraceData).toHaveBeenCalledWith(mockPathResult.controlPath.pathTraceData);
+      expect(mockPathTraceService.setExternalPathTraceResult).toHaveBeenCalledWith(mockPathResult);
     });
 
     it('should handle null ports correctly', () => {
@@ -308,6 +314,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
 
   describe('Graph Loading', () => {
     it('should set error if no tenantId is available', () => {
+      jest.clearAllMocks(); // Clear the call from ngOnInit
       component.tenantId = '';
       component['loadTenantGraph']();
       expect(component.graphError).toBe('No tenant ID available');

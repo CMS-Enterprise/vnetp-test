@@ -120,7 +120,6 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
         next: (graph: TenantConnectivityGraph) => {
           this.graph = graph;
           this.isGraphLoading = false;
-          console.log('Tenant graph loaded for connectivity utility:', graph);
           // Render graph after short delay to ensure DOM is ready
           setTimeout(() => this.renderGraph(), 100);
         },
@@ -183,7 +182,6 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
         next: (result: PathResult) => {
           this.isLoading = false;
           this.connectivityResult = result;
-          console.log('Connectivity result:', result);
 
           // Inject path trace into graph
           this.injectPathTraceResult(result);
@@ -327,5 +325,14 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
       return '';
     }
     return JSON.stringify(obj, null, 2);
+  }
+
+  // Determine if a hop is allowed (uses policyAllowed if present, otherwise falls back to allowed)
+  isHopAllowed(hop: any): boolean | undefined {
+    if (!hop?.controlPlaneMetadata) {
+      return undefined;
+    }
+    const metadata = hop.controlPlaneMetadata;
+    return metadata.policyAllowed !== undefined ? metadata.policyAllowed : metadata.allowed;
   }
 }

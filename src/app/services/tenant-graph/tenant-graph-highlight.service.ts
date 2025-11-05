@@ -168,13 +168,14 @@ export class TenantGraphHighlightService {
     }
 
     // Build control plane metadata map from pathTraceData
-    const controlPlaneMetadataMap = new Map<string, { allowed: boolean; allowedReason: string }>();
+    const controlPlaneMetadataMap = new Map<string, { allowed: boolean; allowedReason: string; policyAllowed?: boolean }>();
     if (pathTraceState.controlPath?.pathTraceData) {
       pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
         if (hop.controlPlaneMetadata) {
           controlPlaneMetadataMap.set(hop.nodeId, {
             allowed: hop.controlPlaneMetadata.allowed,
             allowedReason: hop.controlPlaneMetadata.allowedReason,
+            policyAllowed: hop.controlPlaneMetadata.policyAllowed,
           });
         }
       });
@@ -425,11 +426,20 @@ export class TenantGraphHighlightService {
         .attr('class', 'control-plane-indicator')
         .attr('transform', 'translate(0, -25)'); // Position above the node
 
+      // Determine final allowed state: policyAllowed is the rolled-up result, use it directly if present
+      let finalAllowed = false;
+
+      if (metadata.policyAllowed !== undefined && metadata.policyAllowed !== null) {
+        finalAllowed = metadata.policyAllowed;
+      } else {
+        finalAllowed = metadata.allowed;
+      }
+
       // Background circle for better visibility
       indicator
         .append('circle')
         .attr('r', 10)
-        .attr('fill', metadata.allowed && metadata.policyAllowed ? '#28a745' : '#dc3545')
+        .attr('fill', finalAllowed ? '#28a745' : '#dc3545')
         .attr('stroke', '#fff')
         .attr('stroke-width', 2);
 
@@ -442,10 +452,12 @@ export class TenantGraphHighlightService {
         .attr('font-weight', 'bold')
         .attr('fill', '#fff')
         .attr('pointer-events', 'none')
-        .text(metadata.allowed && metadata.policyAllowed ? '✓' : '✗');
+        .text(finalAllowed ? '✓' : '✗');
 
       // Add title for tooltip
-      indicator.append('title').text(`Control Plane: ${metadata.allowed ? 'Allowed' : 'Denied'}\n${metadata.allowedReason}`);
+      const statusText = finalAllowed ? 'Allowed' : 'Denied';
+      const policyText = metadata.policyAllowed !== undefined ? `\nPolicy Level: ${metadata.policyAllowed ? 'Allowed' : 'Denied'}` : '';
+      indicator.append('title').text(`Control Plane: ${statusText}${policyText}\n${metadata.allowedReason}`);
     });
   }
 

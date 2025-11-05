@@ -9,7 +9,8 @@ describe('TenantGraphPathTraceService', () => {
   let mockCheckNodeConnectivityUtilities: jest.Mock;
 
   const mockPathTraceHop1: PathTraceHop = {
-    nodeId: 'vrf-1',
+    nodeId: 'vrf-1',  
+    databaseId: 'vrf-1',
     nodeName: 'VRF 1',
     nodeType: 'VRF',
     incomingEdges: [],
@@ -20,6 +21,10 @@ describe('TenantGraphPathTraceService', () => {
       allowed: true,
       allowedReason: 'Contract allows traffic',
       generatedConfiguration: {},
+      policyAllowed: true,
+      evaluatorType: 'VRF',
+      databaseId: 'vrf-1',
+      entityName: 'VRF 1',
     },
     dataPlaneMetadata: {
       metadata: {},
@@ -28,6 +33,7 @@ describe('TenantGraphPathTraceService', () => {
 
   const mockPathTraceHop2: PathTraceHop = {
     nodeId: 'firewall-1',
+    databaseId: 'firewall-1',
     nodeName: 'Firewall 1',
     nodeType: 'EXTERNAL_FIREWALL',
     incomingEdges: ['edge-1'],
@@ -38,6 +44,10 @@ describe('TenantGraphPathTraceService', () => {
       allowed: true,
       allowedReason: 'Firewall rule allows traffic',
       generatedConfiguration: {},
+      policyAllowed: true,
+      evaluatorType: 'FIREWALL',
+      databaseId: 'firewall-1',
+      entityName: 'Firewall 1',
     },
     dataPlaneMetadata: {
       metadata: {},
@@ -46,6 +56,7 @@ describe('TenantGraphPathTraceService', () => {
 
   const mockPathTraceHop3: PathTraceHop = {
     nodeId: 'vrf-2',
+    databaseId: 'vrf-2',
     nodeName: 'VRF 2',
     nodeType: 'VRF',
     incomingEdges: ['edge-2'],
@@ -56,6 +67,10 @@ describe('TenantGraphPathTraceService', () => {
       allowed: true,
       allowedReason: 'Destination reached',
       generatedConfiguration: {},
+      policyAllowed: true,
+      evaluatorType: 'VRF',
+      databaseId: 'vrf-2',
+      entityName: 'VRF 2',
     },
     dataPlaneMetadata: {
       metadata: {},
@@ -93,6 +108,7 @@ describe('TenantGraphPathTraceService', () => {
     dataPath: mockDataPath,
     controlPath: mockControlPath,
     traversalScope: 'intervrf',
+    vrfEnforced: true,
   };
 
   beforeEach(() => {
@@ -244,6 +260,7 @@ describe('TenantGraphPathTraceService', () => {
         controlPath: mockControlPath,
         traversalScope: 'intervrf',
         queryOutdated: true,
+        vrfEnforced: true,
       };
 
       mockCheckNodeConnectivityUtilities.mockReturnValue(of(outdatedResponse));

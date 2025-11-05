@@ -40,6 +40,7 @@ describe('TenantGraphQueryService', () => {
     },
     traversalScope: 'FULL',
     controlPlaneAllowed: true,
+    vrfEnforced: true,
   };
 
   beforeEach(() => {
@@ -144,9 +145,7 @@ describe('TenantGraphQueryService', () => {
         ipProtocol: 'tcp',
         tenantId: 'tenant-123',
         tenantVersion: 1,
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
       };
 
       service.checkIpConnectivity(query).subscribe(result => {
@@ -167,9 +166,7 @@ describe('TenantGraphQueryService', () => {
         ipProtocol: 'tcp',
         tenantId: 'tenant-123',
         tenantVersion: 1,
-        bypassServiceGraph: false,
         generateConfig: false,
-        bidirectional: false,
       };
 
       service.checkIpConnectivity(query).subscribe(result => {
@@ -192,9 +189,7 @@ describe('TenantGraphQueryService', () => {
         ipProtocol: 'tcp',
         tenantId: 'tenant-123',
         tenantVersion: 1,
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
       };
 
       mockUtilitiesService.checkIpConnectivityUtilities.mockReturnValue(throwError(() => error));
@@ -221,9 +216,7 @@ describe('TenantGraphQueryService', () => {
         ipProtocol: 'tcp',
         tenantId: 'tenant-123',
         tenantVersion: 1,
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
       };
 
       service.checkIpConnectivity(query).subscribe({
@@ -245,9 +238,7 @@ describe('TenantGraphQueryService', () => {
         ipProtocol: 'tcp',
         tenantId: 'tenant-123',
         tenantVersion: 1,
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
       };
 
       service.checkIpConnectivity(minimalQuery).subscribe(result => {
@@ -284,9 +275,7 @@ describe('TenantGraphQueryService', () => {
         ipProtocol: 'tcp',
         tenantId: 'tenant-123',
         tenantVersion: 1,
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
       };
 
       mockUtilitiesService.checkIpConnectivityUtilities.mockReturnValue(throwError(() => customError));

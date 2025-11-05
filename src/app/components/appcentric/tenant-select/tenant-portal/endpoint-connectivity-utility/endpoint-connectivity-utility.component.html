@@ -127,8 +127,8 @@
         <div *ngIf="isControlPathExpanded" class="path-card-body">
           <div class="hops-container">
             <div *ngFor="let hop of connectivityResult.controlPath.pathTraceData.path; let i = index" class="hop-item" [ngClass]="{
-              'hop-allowed': hop.controlPlaneMetadata?.policyAllowed === true,
-              'hop-denied': hop.controlPlaneMetadata?.policyAllowed === false
+              'hop-allowed': isHopAllowed(hop) === true,
+              'hop-denied': isHopAllowed(hop) === false
             }">
               <div class="hop-header-collapsible" (click)="toggleHop('control', hop.hopIndex)">
                 <span class="hop-expand-icon">{{ isHopExpanded('control', hop.hopIndex) ? '▼' : '▶' }}</span>
@@ -227,8 +227,8 @@
         <div *ngIf="isDataPathExpanded" class="path-card-body">
           <div class="hops-container">
             <div *ngFor="let hop of connectivityResult.dataPath.pathTraceData.path; let i = index" class="hop-item" [ngClass]="{
-              'hop-allowed': hop.controlPlaneMetadata?.allowed === true,
-              'hop-denied': hop.controlPlaneMetadata?.allowed === false
+              'hop-allowed': isHopAllowed(hop) === true,
+              'hop-denied': isHopAllowed(hop) === false
             }">
               <div class="hop-header-collapsible" (click)="toggleHop('data', hop.hopIndex)">
                 <span class="hop-expand-icon">{{ isHopExpanded('data', hop.hopIndex) ? '▼' : '▶' }}</span>

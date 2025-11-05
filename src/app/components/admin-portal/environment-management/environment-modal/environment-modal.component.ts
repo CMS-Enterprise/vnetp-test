@@ -51,12 +51,8 @@ export class EnvironmentModalComponent implements OnInit {
     const dto = Object.assign({}, this.ngx.getModalData('environmentModal') as any);
     this.modalMode = dto.ModalMode;
 
-    console.log('Modal Data:', dto); // Debug log
-    console.log('Modal Mode:', this.modalMode); // Debug log
-
     if (this.modalMode === ModalMode.Edit && dto.environment) {
       this.environmentId = dto.environment.id;
-      console.log('Environment ID:', this.environmentId); // Debug log
       this.loadEnvironment(dto.environment.id);
     } else if (this.modalMode === ModalMode.Create) {
       this.form.reset();
@@ -150,9 +146,6 @@ export class EnvironmentModalComponent implements OnInit {
       return;
     }
 
-    console.log('Save - Modal Mode:', this.modalMode); // Debug log
-    console.log('Save - Environment ID:', this.environmentId); // Debug log
-
     const { name, description, externalVrfs } = this.form.getRawValue(); // Use getRawValue to include disabled fields
     const environment = {
       name,
@@ -162,13 +155,9 @@ export class EnvironmentModalComponent implements OnInit {
     };
 
     if (this.modalMode === ModalMode.Create) {
-      console.log('Creating environment:', environment); // Debug log
       this.createEnvironment(environment);
     } else if (this.modalMode === ModalMode.Edit) {
-      console.log('Updating environment:', environment, 'ID:', this.environmentId); // Debug log
       this.updateEnvironment(environment);
-    } else {
-      console.error('Unknown modal mode:', this.modalMode); // Debug log
     }
   }
 
