@@ -34,7 +34,7 @@ describe('AdminPortalDashboardComponent', () => {
     };
 
     mockGlobalMessagesService = {
-      getMessagesMessage: jest.fn().mockReturnValue(of({ total: 5 })),
+      getManyMessage: jest.fn().mockReturnValue(of({ total: 5 })),
     };
 
     TestBed.configureTestingModule({
@@ -111,7 +111,7 @@ describe('AdminPortalDashboardComponent', () => {
 
   it('getGlobalMessages should fetch messages and update status', () => {
     component.getGlobalMessages();
-    expect(mockGlobalMessagesService.getMessagesMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
+    expect(mockGlobalMessagesService.getManyMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
     expect(component.globalMessages).toBe(5);
     expect(component.status[1].status).toBe('green');
   });

@@ -9,13 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Message } from './message';
 
 
-export interface PaginationDTO { 
-    data: Array<string>;
+export interface GetManyMessageResponseDto { 
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Message>;
 }
 

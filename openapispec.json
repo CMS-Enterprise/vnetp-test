@@ -25867,33 +25867,27 @@
       }
     },
     "/v3/global/messages": {
-      "get": {
-        "operationId": "getMessagesMessage",
-        "parameters": [
-          {
-            "name": "page",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "number"
+      "post": {
+        "operationId": "createOneMessage",
+        "summary": "Create one Message",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginationDTO"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -25903,9 +25897,284 @@
           "v3/global/messages"
         ]
       },
+      "get": {
+        "operationId": "getManyMessage",
+        "summary": "Get many Message",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyMessageResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Message"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      }
+    },
+    "/v3/global/messages/bulk": {
       "post": {
-        "operationId": "createMessageMessage",
+        "operationId": "createManyMessage",
+        "summary": "Create many Message",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyMessageDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Message"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      }
+    },
+    "/v3/global/messages/{id}": {
+      "get": {
+        "operationId": "getOneMessage",
+        "summary": "Get one Message",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneMessage",
+        "summary": "Update one Message",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -25931,16 +26200,16 @@
         "tags": [
           "v3/global/messages"
         ]
-      }
-    },
-    "/v3/global/messages/{messageId}": {
+      },
       "delete": {
-        "operationId": "deleteMessageMessage",
+        "operationId": "deleteOneMessage",
+        "summary": "Delete one Message",
         "parameters": [
           {
-            "name": "messageId",
+            "name": "id",
             "required": true,
             "in": "path",
+            "description": "UUID.",
             "schema": {
               "type": "string"
             }
@@ -25952,7 +26221,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteResult"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -36174,15 +36443,40 @@
         "type": "object",
         "properties": {}
       },
+<<<<<<< HEAD
       "PaginationDTO": {
         "type": "object",
         "properties": {
           "data": {
+=======
+      "ExternalRouteSyncDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network prefix in CIDR notation",
+            "example": "192.168.1.0/24"
+          },
+          "protocol": {
+            "type": "string",
+            "description": "Routing protocol",
+            "example": "BGP"
+          },
+          "asPath": {
+            "description": "AS Path as array of AS numbers (4-byte BGP ASNs supported)",
+            "example": [
+              100,
+              200,
+              300,
+              4294967295
+            ],
+>>>>>>> task/tenant-v2
             "type": "array",
             "items": {
               "type": "string"
             }
           },
+<<<<<<< HEAD
           "count": {
             "type": "number"
           },
@@ -36202,13 +36496,136 @@
           "total",
           "page",
           "pageCount"
+=======
+          "tag": {
+            "type": "string",
+            "description": "Route tag",
+            "example": "10001"
+          }
+        },
+        "required": [
+          "network",
+          "protocol"
+        ]
+      },
+      "GlobalExternalRouteSummary": {
+        "type": "object",
+        "properties": {
+          "vrfName": {
+            "type": "string",
+            "description": "External VRF name",
+            "example": "appprod"
+          },
+          "numberOfRoutes": {
+            "type": "integer",
+            "description": "Number of routes in this VRF",
+            "example": 750
+          }
+        },
+        "required": [
+          "vrfName",
+          "numberOfRoutes"
+        ]
+      },
+      "EnvironmentSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Environment ID",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "name": {
+            "type": "string",
+            "description": "Environment name",
+            "example": "Production Environment"
+          },
+          "description": {
+            "type": "string",
+            "description": "Environment description",
+            "example": "Main production environment",
+            "nullable": true
+          },
+          "lastRouteSyncAt": {
+            "type": "string",
+            "description": "Last time routes were synchronized",
+            "example": "2024-01-15T10:30:00Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "externalVrfs": {
+            "type": "array",
+            "description": "External VRFs allowed for this environment",
+            "example": [
+              "cmsnet_transport"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ]
+            }
+          },
+          "totalRoutes": {
+            "type": "integer",
+            "description": "Total number of external routes in this environment",
+            "example": 1250
+          },
+          "globalExternalRoutes": {
+            "description": "Route count summary by VRF",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalExternalRouteSummary"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "lastRouteSyncAt",
+          "externalVrfs",
+          "totalRoutes",
+          "globalExternalRoutes"
+>>>>>>> task/tenant-v2
         ]
       },
       "Message": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
           },
           "description": {
             "type": "string",
@@ -36221,14 +36638,9 @@
           }
         },
         "required": [
-          "id",
           "description",
           "timestamp"
         ]
-      },
-      "DeleteResult": {
-        "type": "object",
-        "properties": {}
       },
       "RouteControlRequestDto": {
         "type": "object",
