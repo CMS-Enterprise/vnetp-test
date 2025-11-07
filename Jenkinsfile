@@ -56,6 +56,7 @@ spec:
           items:
             - key: .dockerconfigjson
               path: config.json
+    """
     }
   }
   
