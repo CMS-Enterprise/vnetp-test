@@ -10,7 +10,7 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Message, PaginationDTO, V3GlobalMessagesService } from 'client';
+import { Message, GetManyMessageResponseDto, V3GlobalMessagesService } from 'client';
 import { GlobalMessagesComponent } from './global-messages.component';
 import { Subject, Subscription, of } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -51,18 +51,34 @@ describe('GlobalMessagesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should call getGlobalMessages', () => {
-      const getGlobalMessagesSpy = jest.spyOn(component, 'getGlobalMessages').mockImplementation();
-      component.ngOnInit();
-      expect(getGlobalMessagesSpy).toHaveBeenCalled();
+  describe('Get Messages', () => {
+    it('should fetch messages', () => {
+      const messageService = TestBed.inject(V3GlobalMessagesService);
+      const messagesMock: GetManyMessageResponseDto = {
+        totalPages: 1,
+        total: 2,
+        count: 2,
+        page: 1,
+        pageCount: 1,
+        data: [
+          { id: '1', description: 'message1', timestamp: '2021-01-01' },
+          { id: '2', description: 'message2', timestamp: '2021-01-02' },
+        ],
+      };
+      component.messages = messagesMock;
+
+      const getManyMessagesSpy = jest.spyOn(messageService, 'getManyMessage').mockReturnValue(of({ data: messagesMock } as any));
+
+      messageService.getManyMessage({ page: 1, perPage: 50 });
+      expect(getManyMessagesSpy).toHaveBeenCalled();
+      expect(component['messages']).toEqual(messagesMock);
     });
   });
 
   describe('getGlobalMessages', () => {
     let getMessagesServiceSpy: jest.SpyInstance;
     beforeEach(() => {
-      getMessagesServiceSpy = jest.spyOn(globalMessagesService, 'getMessagesMessage').mockReturnValue(of({} as PaginationDTO) as any);
+      getMessagesServiceSpy = jest.spyOn(globalMessagesService, 'getManyMessage').mockReturnValue(of({} as GetManyMessageResponseDto) as any);
     });
 
     it('should use default pagination when no event is provided', () => {
@@ -91,7 +107,7 @@ describe('GlobalMessagesComponent', () => {
     });
 
     it('should assign the returned data to messages', () => {
-      const messagesMock: PaginationDTO = { total: 1, count: 1, page: 1, pageCount: 1, data: ['message1'] };
+      const messagesMock: GetManyMessageResponseDto = { totalPages: 1, total: 1, count: 1, page: 1, pageCount: 1, data: [{ id: '1', description: 'message1', timestamp: '2021-01-01' }] };
       getMessagesServiceSpy.mockReturnValue(of(messagesMock) as any);
       component.getGlobalMessages();
       expect(component.messages).toEqual(messagesMock);
@@ -165,7 +181,7 @@ describe('GlobalMessagesComponent', () => {
     };
 
     beforeEach(() => {
-      deleteMessageSpy = jest.spyOn(globalMessagesService, 'deleteMessageMessage').mockReturnValue(of(null));
+      deleteMessageSpy = jest.spyOn(globalMessagesService, 'deleteOneMessage').mockReturnValue(of(null as any));
       getGlobalMessagesSpy = jest.spyOn(component, 'getGlobalMessages').mockImplementation();
     });
 

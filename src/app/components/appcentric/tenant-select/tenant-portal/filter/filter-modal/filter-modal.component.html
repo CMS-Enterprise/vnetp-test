@@ -142,9 +142,9 @@
 
 <ng-template #destinationPortTemplate let-filterEntry="datum">
   <section>
-    <span *ngIf="filterEntry.destinationFromPort && filterEntry.destinationToPort"
-      >{{ filterEntry?.destinationFromPort }} - {{ filterEntry?.destinationToPort }}</span
-    >
+    <span *ngIf="filterEntry.destinationFromPort || filterEntry.destinationToPort">
+      {{ filterEntry.destinationFromPort ? filterEntry.destinationFromPort + ' - ' : '' }}{{ filterEntry.destinationToPort || '' }}
+    </span>
   </section>
 </ng-template>
 <app-filter-entry-modal [tenantId]="tenantId"></app-filter-entry-modal>

@@ -66,7 +66,7 @@ describe('GlobalMessagesModalComponent', () => {
 
   it('should call to create a message when the form is valid', () => {
     const service = TestBed.inject(V3GlobalMessagesService);
-    const createSubnetSpy = jest.spyOn(service, 'createMessageMessage');
+    const createSubnetSpy = jest.spyOn(service, 'createOneMessage');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
@@ -81,7 +81,7 @@ describe('GlobalMessagesModalComponent', () => {
 
   it('should not call to create a message when the form is invalid', () => {
     const service = TestBed.inject(V3GlobalMessagesService);
-    const createSubnetSpy = jest.spyOn(service, 'createMessageMessage');
+    const createSubnetSpy = jest.spyOn(service, 'createOneMessage');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({

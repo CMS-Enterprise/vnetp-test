@@ -14,8 +14,8 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 4000m
-        memory: 10Gi
+        cpu: 500m
+        memory: 5Gi
         
   - name: sonarcli
     image: artifactory.cloud.cms.gov/docker/sonarsource/sonar-scanner-cli:5
@@ -23,7 +23,7 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 2000m
+        cpu: 500m
         memory: 5Gi
     
   - name: jfrogcli
@@ -32,8 +32,8 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 2000m
-        memory: 5Gi
+        cpu: 1000m
+        memory: 1024Mi
 
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
@@ -42,7 +42,7 @@ spec:
     tty: true
     resources:
       limits:
-        cpu: 2000m
+        cpu: 1000m
     volumeMounts:
       - name: jenkins-docker-cfg
         mountPath: /kaniko/.docker
@@ -56,7 +56,6 @@ spec:
           items:
             - key: .dockerconfigjson
               path: config.json
-"""
     }
   }
   
