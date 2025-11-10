@@ -6,9 +6,10 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouterModule } from '@angular/router';
 import { IconButtonModule } from '../icon-button/icon-button.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RequestEnhancementModalComponent } from './request-enhancement-modal/request-enhancement-modal.component';
 
 @NgModule({
-  declarations: [NavbarComponent],
+  declarations: [NavbarComponent, RequestEnhancementModalComponent],
   imports: [FormsModule, ReactiveFormsModule, CommonModule, FontAwesomeModule, NgxSmartModalModule, RouterModule, IconButtonModule],
   exports: [NavbarComponent],
 })

@@ -125,17 +125,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   public async saveFeedback(type): Promise<any> {
-    // const transporter = createTransport({
-    //   host: "smtp.example.com",
-    //   port: 587,
-    //   secure: false, // upgrade later with STARTTLS
-    //   // auth: {
-    //   //   user: process.env.SMTP_USER,
-    //   //   pass: process.env.SMTP_PASS,
-    //   // },
-    // });
-    // console.log('transporter', transporter)
-    // await transporter.verify();
     this.submitted = true;
     let form = type.includes('issue') ? this.issueForm : this.rfeForm;
     if (form.invalid) {

@@ -1,0 +1,61 @@
+<!-- Request Enhancement -->
+<ngx-smart-modal #requestEnhancementModal identifier="requestEnhancementModal" [dismissable]="false" (onClose)="closeModal()">
+  <header class="modal-header">
+    <h4 class="modal-title">Request for Enhancement</h4>
+  </header>
+
+  <form [formGroup]="rfeForm" (ngSubmit)="saveFeedback()">
+    <div class="modal-body">
+      <p>
+        We appreciate your interest in recommending enhancements to the DRaaS Control System (DCS). We value your feedback. Please complete
+        the form below for enhancement consideration.
+      </p>
+      <p>
+        The DRaaS team reviews and evaluates each request periodically. If approved by the Centers for Medicare and Medicaid, we will add
+        the enhancement request to our backlog for the future program increment planning cycle.
+      </p>
+      <div class="form-group">
+        <label for="component">Component</label>
+        <select
+          formControlName="component"
+          class="form-control"
+          id="component"
+          [class.is-invalid]="submitted && rfe.component.errors"
+          (change)="update($event)"
+        >
+          <option *ngFor="let comp of comps" [value]="comp">
+            {{ comp }}
+          </option>
+          <option>Other</option>
+        </select>
+
+        <div *ngIf="submitted && rfe.component.errors" class="invalid-feedback">
+          <div *ngIf="rfe.component.errors.required">Component is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Describe your request</label>
+        <textarea
+          id="description"
+          rows="15"
+          formControlName="description"
+          [class.is-invalid]="submitted && rfe.description.errors"
+          class="form-control"
+        >
+        </textarea>
+        <div *ngIf="submitted && rfe.description.errors" class="invalid-feedback">
+          <div *ngIf="rfe.description.errors.required">Description is required</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="requestEnhancementModal.close()">Cancel</button>
+      <button type="submit" class="btn btn-danger" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>
+        <span>Send</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>
