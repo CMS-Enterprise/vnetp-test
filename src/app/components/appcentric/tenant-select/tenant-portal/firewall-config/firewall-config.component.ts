@@ -8,12 +8,20 @@ import { FirewallConfigResolvedData, FirewallConfigType } from './firewall-confi
   styleUrls: ['./firewall-config.component.scss'],
 })
 export class FirewallConfigComponent {
-  tabs = [
-    { name: 'Firewall Rules', route: ['rules'], requiresSelection: true },
-    { name: 'NAT Rules', route: ['nat'], requiresSelection: true },
-    { name: 'Network Objects', route: ['network-objects'], requiresSelection: true },
-    { name: 'Service Objects', route: ['service-objects'], requiresSelection: true },
-  ];
+  get tabs() {
+    const allTabs = [
+      { name: 'Firewall Rules', route: ['rules'], requiresSelection: true },
+      { name: 'NAT Rules', route: ['nat'], requiresSelection: true },
+      { name: 'Network Objects', route: ['network-objects'], requiresSelection: true },
+      { name: 'Service Objects', route: ['service-objects'], requiresSelection: true },
+    ];
+
+    if (this.firewallType === 'service-graph-firewall') {
+      return allTabs.filter(tab => tab.name !== 'NAT Rules');
+    }
+
+    return allTabs;
+  }
 
   hasSelection = false;
   public resolvedData: FirewallConfigResolvedData | null = null;

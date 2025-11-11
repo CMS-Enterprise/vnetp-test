@@ -31365,9 +31365,7 @@
               "Intravrf",
               "Intervrf",
               "External",
-              "ZoneBased",
-              "OneArmServiceGraph",
-              "V2ZoneBased"
+              "ZoneBased"
             ]
           },
           "tierId": {
