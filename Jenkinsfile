@@ -35,17 +35,17 @@ spec:
         cpu: 1000m
         memory: 1024Mi
 
-  - name: kaniko
-    image: artifactory.cloud.cms.gov/docker/kaniko-project/executor:v1.23.2-debug
+  - name: buildah
+    image: artifactory.cloud.cms.gov/docker/quay.io/buildah/stable:latest
     imagePullPolicy: Always
-    command: ['/busybox/cat']
+    command: ['cat']
     tty: true
     resources:
       limits:
         cpu: 1000m
     volumeMounts:
       - name: jenkins-docker-cfg
-        mountPath: /kaniko/.docker
+        mountPath: /var/run/.docker
         
   volumes:
   - name: jenkins-docker-cfg
@@ -103,12 +103,21 @@ spec:
     }
   
     // Push to Artifactory
-    stage('Kaniko') {
+    stage('Build and Push Image') {
       steps {
-        container('kaniko') {
+        container('buildah') {
             sh '''
-            cat /kaniko/.docker/config.json
-            /kaniko/executor --context $(pwd) --build-arg build-number=${BUILD_NUMBER} --dockerfile Dockerfile --destination artifactory.cloud.cms.gov/cds-docker-local/vnetp-ui:${GIT_COMMIT}
+            export REGISTRY_AUTH_FILE=/var/run/.docker/config.json
+            cat ${REGISTRY_AUTH_FILE}
+            buildah bud \
+              --storage-driver=vfs \
+              --build-arg build-number=${BUILD_NUMBER} \
+              -f Dockerfile \
+              -t artifactory.cloud.cms.gov/cds-docker-local/vnetp-ui:${GIT_COMMIT} \
+              .
+            buildah push \
+              --storage-driver=vfs \
+              artifactory.cloud.cms.gov/cds-docker-local/vnetp-ui:${GIT_COMMIT}
             '''
         }
       }
