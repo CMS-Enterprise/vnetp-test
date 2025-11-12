@@ -36,7 +36,7 @@ spec:
         memory: 1024Mi
 
   - name: kaniko
-    image: gcr.io/kaniko-project/executor:debug
+    image: artifactory.cloud.cms.gov/docker/kaniko-project/executor:v1.23.2-debug
     imagePullPolicy: Always
     command: ['/busybox/cat']
     tty: true
