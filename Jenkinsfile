@@ -36,7 +36,7 @@ spec:
         memory: 1024Mi
 
   - name: buildah
-    image: artifactory.cloud.cms.gov/docker/quay.io/buildah/stable:latest
+    image: quay.io/buildah/stable:v1.42.0
     imagePullPolicy: Always
     command: ['cat']
     tty: true
