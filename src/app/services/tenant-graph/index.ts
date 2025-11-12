@@ -1,6 +1,7 @@
 // Tenant Graph Services
 export { TenantGraphCoreService } from './tenant-graph-core.service';
 export { TenantGraphPathTraceService } from './tenant-graph-path-trace.service';
+export { TenantGraphQueryService } from './tenant-graph-query.service';
 export { TenantGraphHighlightService } from './tenant-graph-highlight.service';
 export { TenantGraphDataService } from './tenant-graph-data.service';
 export { TenantGraphLayoutService } from './tenant-graph-layout.service';
@@ -8,7 +9,7 @@ export { TenantGraphUIService } from './tenant-graph-ui.service';
 export { TenantGraphInteractionService } from './tenant-graph-interaction.service';
 
 // Re-export interfaces from their respective services
-export type { PathTraceNode, PathTraceHop, PathTraceData, PathTraceState } from './tenant-graph-path-trace.service';
+export type { PathTraceNode, PathTraceData, PathTraceState, PathInfo } from './tenant-graph-path-trace.service';
 
 export type { EdgeStyle, TenantEdgeStyleMap } from './tenant-graph-highlight.service';
 

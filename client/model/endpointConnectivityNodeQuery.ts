@@ -11,22 +11,22 @@
  */
 
 
-export interface DefaultRoutePath { 
+export interface EndpointConnectivityNodeQuery { 
     /**
-     * Source VRF node ID
+     * Source Node ID
      */
-    sourceVrfId: string;
+    sourceNodeId: string;
     /**
-     * External VRF providing the default route
+     * Destination Node ID
      */
-    externalVrf: string;
+    destinationNodeId: string;
     /**
-     * Path of node IDs from VRF to external VRF
+     * Tenant ID
      */
-    path: Array<string>;
+    tenantId: string;
     /**
-     * Whether this path is currently active
+     * Version of the tenant
      */
-    isActive: boolean;
+    tenantVersion: number;
 }
 

@@ -9,51 +9,58 @@
       <h2>Test Endpoint Connectivity</h2>
 
       <form [formGroup]="connectivityForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="sourceEndpointIp">Source IP</label>
-          <input type="text" id="sourceEndpointIp" formControlName="sourceEndpointIp" placeholder="e.g. 10.0.0.1" />
-          <div class="error" *ngIf="connectivityForm.get('sourceEndpointIp')?.invalid && connectivityForm.get('sourceEndpointIp')?.touched">
-            Please enter a valid IP address
+        <!-- Source IP and Port Row -->
+        <div class="form-row">
+          <div class="form-group form-group-ip">
+            <label for="sourceEndpointIp">Source IP</label>
+            <input type="text" id="sourceEndpointIp" formControlName="sourceEndpointIp" placeholder="e.g. 10.0.0.1" />
+            <div class="error" *ngIf="connectivityForm.get('sourceEndpointIp')?.invalid && connectivityForm.get('sourceEndpointIp')?.touched">
+              Please enter a valid IP address
+            </div>
+          </div>
+          <div class="form-group form-group-port">
+            <label for="sourceEndpointPort">Source Port (Optional)</label>
+            <input type="number" id="sourceEndpointPort" formControlName="sourceEndpointPort" placeholder="e.g. 80" />
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="sourceEndpointPort">Source Port (Optional)</label>
-          <input type="number" id="sourceEndpointPort" formControlName="sourceEndpointPort" placeholder="e.g. 80" />
-        </div>
-
-        <div class="form-group">
-          <label for="destinationEndpointIp">Destination IP</label>
-          <input type="text" id="destinationEndpointIp" formControlName="destinationEndpointIp" placeholder="e.g. 10.0.0.2" />
-          <div
-            class="error"
-            *ngIf="connectivityForm.get('destinationEndpointIp')?.invalid && connectivityForm.get('destinationEndpointIp')?.touched"
-          >
-            Please enter a valid IP address
+        <!-- Destination IP and Port Row -->
+        <div class="form-row">
+          <div class="form-group form-group-ip">
+            <label for="destinationEndpointIp">Destination IP</label>
+            <input type="text" id="destinationEndpointIp" formControlName="destinationEndpointIp" placeholder="e.g. 10.0.0.2" />
+            <div
+              class="error"
+              *ngIf="connectivityForm.get('destinationEndpointIp')?.invalid && connectivityForm.get('destinationEndpointIp')?.touched"
+            >
+              Please enter a valid IP address
+            </div>
+          </div>
+          <div class="form-group form-group-port">
+            <label for="destinationEndpointPort">Destination Port</label>
+            <input type="number" id="destinationEndpointPort" formControlName="destinationEndpointPort" placeholder="e.g. 443" />
+            <div
+              class="error"
+              *ngIf="connectivityForm.get('destinationEndpointPort')?.invalid && connectivityForm.get('destinationEndpointPort')?.touched"
+            >
+              Please enter a valid port number
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="destinationEndpointPort">Destination Port</label>
-          <input type="number" id="destinationEndpointPort" formControlName="destinationEndpointPort" placeholder="e.g. 443" />
-          <div
-            class="error"
-            *ngIf="connectivityForm.get('destinationEndpointPort')?.invalid && connectivityForm.get('destinationEndpointPort')?.touched"
-          >
-            Please enter a valid port number
+        <!-- Protocol Row -->
+        <div class="form-row">
+          <div class="form-group form-group-protocol">
+            <label for="ipProtocol">Protocol</label>
+            <select id="ipProtocol" formControlName="ipProtocol">
+              <option *ngFor="let protocol of protocolOptions" [value]="protocol">
+                {{ protocol.toUpperCase() }}
+              </option>
+            </select>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="ipProtocol">Protocol</label>
-          <select id="ipProtocol" formControlName="ipProtocol">
-            <option *ngFor="let protocol of protocolOptions" [value]="protocol">
-              {{ protocol.toUpperCase() }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-options">
+        <!-- <div class="form-options">
           <div class="checkbox-group">
             <input type="checkbox" id="bypassServiceGraph" formControlName="bypassServiceGraph" />
             <label for="bypassServiceGraph">Bypass Service Graph</label>
@@ -73,7 +80,7 @@
             <input type="checkbox" id="bidirectional" formControlName="bidirectional" />
             <label for="bidirectional">Test Bidirectional</label>
           </div>
-        </div>
+        </div> -->
 
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
@@ -84,175 +91,253 @@
       </form>
     </div>
 
-    <!-- Connectivity Results -->
-    <div class="connectivity-results" *ngIf="connectivityResult">
-      <h2>Connectivity Results</h2>
+    <!-- Result Summary -->
+    <div *ngIf="connectivityResult" class="result-summary">
+      <h2>Connectivity Test Result</h2>
 
-      <!-- Connection Status -->
-      <div class="connection-status" [ngClass]="getStatusClass()">
-        <div>
-          Connection: {{ getConnectionStatus() | uppercase }}
-          <span *ngIf="connectivityResult?.connectivityResult === 'denied-generated-config'"> (WITH SOLUTION)</span>
+      <!-- Overall Status -->
+      <div class="result-header">
+        <div class="status-badge" [ngClass]="{
+          'status-allowed': connectivityResult.controlPlaneAllowed === true,
+          'status-denied': connectivityResult.controlPlaneAllowed === false,
+          'status-unknown': connectivityResult.controlPlaneAllowed === undefined
+        }">
+          <span class="status-label">Control Plane:</span>
+          <span class="status-value">{{ getControlPlaneStatusText(connectivityResult.controlPlaneAllowed) }}</span>
         </div>
-        <div class="detail" *ngIf="getConnectionDetail()">{{ getConnectionDetail() }}</div>
-      </div>
 
-      <!-- Endpoints Information -->
-      <div class="endpoints-info">
-        <div class="source-endpoint">
-          <strong>Source:</strong> {{ connectivityResult.sourceEndpoint.ipAddresses[0].address }}
-          <span *ngIf="connectivityResult.sourceEndpoint.endpointGroup?.name">
-            ({{ connectivityResult.sourceEndpoint.endpointGroup.name }})
-          </span>
-        </div>
-        <div class="destination-endpoint">
-          <strong>Destination:</strong> {{ connectivityResult.destinationEndpoint.ipAddresses[0].address }}
-          <span *ngIf="connectivityResult.destinationEndpoint.endpointGroup?.name">
-            ({{ connectivityResult.destinationEndpoint.endpointGroup.name }})
-          </span>
+        <div *ngIf="connectivityResult.queryOutdated" class="warning-badge">
+          <span>⚠️ Query outdated. Tenant version changed. Please refresh the graph.</span>
         </div>
       </div>
 
-      <!-- Connection Path Visualization -->
-      <div class="path-visualization">
-        <h3>Connection Path</h3>
-
-        <!-- Source Path -->
-        <div class="path-section source-path" *ngIf="hasPathNodes('source')">
-          <h4>Source Path</h4>
-          <div class="path-nodes">
-            <div
-              class="path-node"
-              *ngFor="let node of connectivityResult.connectionTrace.sourcePath; let last = last"
-              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
-              [ngClass]="{ 'last-node': last }"
-            >
-              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                {{ node.name || node.nodeType }}
-              </div>
-              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                {{ node.nodeType }}
-              </div>
-              <div class="generated-badge" *ngIf="node.generated">Generated</div>
-            </div>
+      <!-- Control Path Card -->
+      <div *ngIf="connectivityResult.controlPath" class="path-card">
+        <div class="path-card-header" (click)="toggleControlPath()">
+          <div class="path-card-title">
+            <span class="expand-icon">{{ isControlPathExpanded ? '▼' : '▶' }}</span>
+            <span class="path-label">Control Path</span>
+            <span class="path-summary">
+              {{ connectivityResult.controlPath.hopCount }} hops, cost {{ connectivityResult.controlPath.totalCost }}
+              <span *ngIf="!connectivityResult.controlPath.isComplete" class="incomplete-badge">(Incomplete)</span>
+            </span>
           </div>
         </div>
 
-        <!-- Contract Path -->
-        <div class="path-section contract-path" *ngIf="hasPathNodes('contract')">
-          <h4>Contract Path</h4>
-          <div class="path-nodes">
-            <div
-              class="path-node"
-              *ngFor="let node of connectivityResult.connectionTrace.contractPath; let last = last"
-              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
-              [ngClass]="{ 'last-node': last }"
-            >
-              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                {{ node.name || node.nodeType }}
+        <div *ngIf="isControlPathExpanded" class="path-card-body">
+          <div class="hops-container">
+            <div *ngFor="let hop of connectivityResult.controlPath.pathTraceData.path; let i = index" class="hop-item" [ngClass]="{
+              'hop-allowed': isHopAllowed(hop) === true,
+              'hop-denied': isHopAllowed(hop) === false
+            }">
+              <div class="hop-header-collapsible" (click)="toggleHop('control', hop.hopIndex)">
+                <span class="hop-expand-icon">{{ isHopExpanded('control', hop.hopIndex) ? '▼' : '▶' }}</span>
+                <span class="hop-number">Hop {{ hop.hopIndex + 1 }}</span>
+                <span class="hop-name">{{ hop.nodeName }}</span>
+                <span class="hop-type">{{ hop.nodeType }}</span>
+                <span *ngIf="hop.cost > 0" class="hop-cost">Cost: {{ hop.cost }}</span>
               </div>
-              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                {{ node.nodeType }}
-              </div>
-              <div class="generated-badge" *ngIf="node.generated">Generated</div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Destination Path -->
-        <div class="path-section destination-path" *ngIf="hasPathNodes('destination')">
-          <h4>Destination Path</h4>
-          <div class="path-nodes">
-            <div
-              class="path-node"
-              *ngFor="let node of connectivityResult.connectionTrace.destinationPath; let last = last"
-              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
-              [ngClass]="{ 'last-node': last }"
-            >
-              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                {{ node.name || node.nodeType }}
-              </div>
-              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                {{ node.nodeType }}
-              </div>
-              <div class="generated-badge" *ngIf="node.generated">Generated</div>
-            </div>
-          </div>
-        </div>
+              <div *ngIf="isHopExpanded('control', hop.hopIndex)" class="hop-details">
+                <!-- Control Plane Metadata -->
+                <div *ngIf="hop.controlPlaneMetadata" class="metadata-section">
+                  <div class="metadata-item" [ngClass]="{
+                    'metadata-allowed': hop.controlPlaneMetadata.allowed,
+                    'metadata-denied': !hop.controlPlaneMetadata.allowed
+                  }">
+                    <div class="metadata-header">
+                      <span class="metadata-icon">{{ hop.controlPlaneMetadata.allowed ? '✓' : '✗' }}</span>
+                      <span class="metadata-status">{{ getMetadataStatusText(hop.controlPlaneMetadata) }}</span>
+                      <span class="metadata-evaluator">{{ hop.controlPlaneMetadata.evaluatorType }}</span>
+                    </div>
+                    <div class="metadata-details">
+                      <div class="metadata-detail-row">
+                        <span class="detail-label">Entity:</span>
+                        <span class="detail-value">{{ hop.controlPlaneMetadata.entityName }}</span>
+                      </div>
+                      <div class="metadata-detail-row">
+                        <span class="detail-label">Reason:</span>
+                        <span class="detail-value">{{ hop.controlPlaneMetadata.allowedReason }}</span>
+                      </div>
 
-        <!-- Full Path -->
-        <div class="path-section full-path" *ngIf="hasPathNodes('full')">
-          <h4>Complete Path</h4>
-          <div class="path-nodes">
-            <ng-container *ngFor="let node of connectivityResult.connectionTrace.fullPath; let last = last">
-              <div
-                class="path-node"
-                [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
-                [ngClass]="{ 'last-node': last }"
-              >
-                <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                  {{ node.name || node.nodeType }}
+
+                      <!-- Evaluation Details -->
+                      <div *ngIf="hop.controlPlaneMetadata.evaluationDetails" class="evaluation-details">
+                        <div class="collapsible-section-header" (click)="toggleEvalDetails('control', hop.hopIndex); $event.stopPropagation()">
+                          <span class="section-expand-icon">{{ isEvalDetailsExpanded('control', hop.hopIndex) ? '▼' : '▶' }}</span>
+                          <span class="evaluation-details-title">Evaluation Details</span>
+                        </div>
+                        <pre *ngIf="isEvalDetailsExpanded('control', hop.hopIndex)" class="json-display">{{ formatJson(hop.controlPlaneMetadata.evaluationDetails) }}</pre>
+                      </div>
+
+                      <!-- Generated Configuration -->
+                      <div *ngIf="hop.controlPlaneMetadata.generatedConfiguration" class="generated-config">
+                        <div class="collapsible-section-header" (click)="toggleGeneratedConfig('control', hop.hopIndex); $event.stopPropagation()">
+                          <span class="section-expand-icon">{{ isGeneratedConfigExpanded('control', hop.hopIndex) ? '▼' : '▶' }}</span>
+                          <span class="generated-config-title">Generated Configuration</span>
+                        </div>
+                        <pre *ngIf="isGeneratedConfigExpanded('control', hop.hopIndex)" class="json-display">{{ formatJson(hop.controlPlaneMetadata.generatedConfiguration) }}</pre>
+                      </div>
+
+                      <!-- Nested Policy Evaluation (Recursive) -->
+                      <div *ngIf="hop.controlPlaneMetadata.policyNodeEvaluation" class="nested-policy">
+                        <div class="nested-policy-title">Policy Evaluation Chain:</div>
+                        <ng-container *ngTemplateOutlet="policyEvaluationTemplate; context: { 
+                          $implicit: hop.controlPlaneMetadata.policyNodeEvaluation, 
+                          level: 0,
+                          pathType: 'control',
+                          hopIndex: hop.hopIndex,
+                          policyPath: '0'
+                        }"></ng-container>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
-                  {{ node.nodeType }}
+
+                <!-- Incoming/Outgoing Edges -->
+                <div class="edges-info">
+                  <div *ngIf="hop.incomingEdges.length > 0" class="edge-list">
+                    <span class="edge-label">Incoming Edges:</span>
+                    <span class="edge-count">{{ hop.incomingEdges.length }}</span>
+                  </div>
+                  <div *ngIf="hop.outgoingEdges.length > 0" class="edge-list">
+                    <span class="edge-label">Outgoing Edges:</span>
+                    <span class="edge-count">{{ hop.outgoingEdges.length }}</span>
+                  </div>
                 </div>
-                <div class="generated-badge" *ngIf="node.generated">Generated</div>
               </div>
-              <div class="path-arrow" *ngIf="!last">→</div>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-
-      <!-- Generated Configuration -->
-      <div class="generated-config" *ngIf="shouldShowGeneratedConfig()">
-        <h3>Generated Configuration</h3>
-
-        <div class="config-section" *ngIf="connectivityResult.generatedConfig.existingContract">
-          <div class="section-title">Using Existing Contract</div>
-        </div>
-
-        <div class="config-section" *ngIf="connectivityResult.generatedConfig.Subjects?.length">
-          <div class="section-title">Subjects</div>
-          <div class="config-item" *ngFor="let subject of connectivityResult.generatedConfig.Subjects">
-            <span class="item-name">{{ subject.name }}</span>
-          </div>
-        </div>
-
-        <div class="config-section" *ngIf="connectivityResult.generatedConfig.Filters?.length">
-          <div class="section-title">Filters</div>
-          <div class="config-item" *ngFor="let filter of connectivityResult.generatedConfig.Filters">
-            <span class="item-name">{{ filter.name }}</span>
-          </div>
-        </div>
-
-        <div class="config-section" *ngIf="connectivityResult.generatedConfig.FilterEntries?.length">
-          <div class="section-title">Filter Entries</div>
-          <div class="filter-entry" *ngFor="let entry of connectivityResult.generatedConfig.FilterEntries">
-            <div>Protocol: {{ entry.ipProtocol }}</div>
-            <div *ngIf="entry.destinationFromPort && entry.destinationToPort">
-              Destination Port:
-              {{
-                entry.destinationFromPort === entry.destinationToPort
-                  ? entry.destinationFromPort
-                  : entry.destinationFromPort + '-' + entry.destinationToPort
-              }}
             </div>
           </div>
         </div>
-
-        <div *ngIf="shouldShowGeneratedConfig()" class="mt-3">
-          <h5>Generated Configuration to Allow Traffic</h5>
-          <pre>{{ connectivityResult.generatedConfig | json }}</pre>
-          <button (click)="applyGeneratedConfig()" [disabled]="isLoading" class="btn btn-success m-2">Apply Generated Config</button>
-        </div>
       </div>
 
-      <!-- Error Message -->
-      <div class="error-message" *ngIf="error">
-        <div class="alert alert-danger">
-          {{ error }}
+      <!-- Data Path Card -->
+      <div *ngIf="connectivityResult.dataPath" class="path-card">
+        <div class="path-card-header" (click)="toggleDataPath()">
+          <div class="path-card-title">
+            <span class="expand-icon">{{ isDataPathExpanded ? '▼' : '▶' }}</span>
+            <span class="path-label">Data Path</span>
+            <span class="path-summary">
+              {{ connectivityResult.dataPath.hopCount }} hops, cost {{ connectivityResult.dataPath.totalCost }}
+              <span *ngIf="!connectivityResult.dataPath.isComplete" class="incomplete-badge">(Incomplete)</span>
+            </span>
+          </div>
         </div>
+
+        <div *ngIf="isDataPathExpanded" class="path-card-body">
+          <div class="hops-container">
+            <div *ngFor="let hop of connectivityResult.dataPath.pathTraceData.path; let i = index" class="hop-item" [ngClass]="{
+              'hop-allowed': isHopAllowed(hop) === true,
+              'hop-denied': isHopAllowed(hop) === false
+            }">
+              <div class="hop-header-collapsible" (click)="toggleHop('data', hop.hopIndex)">
+                <span class="hop-expand-icon">{{ isHopExpanded('data', hop.hopIndex) ? '▼' : '▶' }}</span>
+                <span class="hop-number">Hop {{ hop.hopIndex + 1 }}</span>
+                <span class="hop-name">{{ hop.nodeName }}</span>
+                <span class="hop-type">{{ hop.nodeType }}</span>
+                <span *ngIf="hop.cost > 0" class="hop-cost">Cost: {{ hop.cost }}</span>
+              </div>
+
+              <div *ngIf="isHopExpanded('data', hop.hopIndex)" class="hop-details">
+                <!-- Data Plane Metadata -->
+                <div *ngIf="hop.dataPlaneMetadata" class="metadata-section">
+                  <div class="metadata-item">
+                    <div class="metadata-header">
+                      <span class="metadata-label">Data Plane Metadata</span>
+                    </div>
+                    <div class="metadata-details">
+                      <pre class="json-display">{{ formatJson(hop.dataPlaneMetadata.metadata) }}</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Incoming/Outgoing Edges -->
+                <div class="edges-info">
+                  <div *ngIf="hop.incomingEdges.length > 0" class="edge-list">
+                    <span class="edge-label">Incoming Edges:</span>
+                    <span class="edge-count">{{ hop.incomingEdges.length }}</span>
+                  </div>
+                  <div *ngIf="hop.outgoingEdges.length > 0" class="edge-list">
+                    <span class="edge-label">Outgoing Edges:</span>
+                    <span class="edge-count">{{ hop.outgoingEdges.length }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recursive Template for Nested Policy Evaluations -->
+    <ng-template #policyEvaluationTemplate let-policy let-level="level" let-pathType="pathType" let-hopIndex="hopIndex" let-policyPath="policyPath">
+      <div class="policy-node" [style.margin-left.px]="level * 20">
+        <div class="policy-node-header" [ngClass]="{
+          'policy-allowed': policy.allowed,
+          'policy-denied': !policy.allowed
+        }">
+          <span class="policy-icon">{{ policy.allowed ? '✓' : '✗' }}</span>
+          <span class="policy-evaluator">{{ policy.evaluatorType }}</span>
+          <span class="policy-entity">{{ policy.entityName }}</span>
+        </div>
+        <div class="policy-node-reason">{{ policy.allowedReason }}</div>
+
+        <!-- Evaluation Details -->
+        <div *ngIf="policy.evaluationDetails" class="nested-policy-section">
+          <div class="collapsible-section-header" (click)="toggleNestedPolicyEvalDetails(pathType, hopIndex, policyPath); $event.stopPropagation()">
+            <span class="section-expand-icon">{{ isNestedPolicyEvalDetailsExpanded(pathType, hopIndex, policyPath) ? '▼' : '▶' }}</span>
+            <span class="evaluation-details-title">Evaluation Details</span>
+          </div>
+          <pre *ngIf="isNestedPolicyEvalDetailsExpanded(pathType, hopIndex, policyPath)" class="json-display">{{ formatJson(policy.evaluationDetails) }}</pre>
+        </div>
+
+        <!-- Generated Configuration -->
+        <div *ngIf="policy.generatedConfiguration" class="nested-policy-section">
+          <div class="collapsible-section-header" (click)="toggleNestedPolicyGeneratedConfig(pathType, hopIndex, policyPath); $event.stopPropagation()">
+            <span class="section-expand-icon">{{ isNestedPolicyGeneratedConfigExpanded(pathType, hopIndex, policyPath) ? '▼' : '▶' }}</span>
+            <span class="generated-config-title">Generated Configuration</span>
+          </div>
+          <pre *ngIf="isNestedPolicyGeneratedConfigExpanded(pathType, hopIndex, policyPath)" class="json-display">{{ formatJson(policy.generatedConfiguration) }}</pre>
+        </div>
+
+        <!-- Recursive nested policy -->
+        <div *ngIf="policy.policyNodeEvaluation">
+          <ng-container *ngTemplateOutlet="policyEvaluationTemplate; context: { 
+            $implicit: policy.policyNodeEvaluation, 
+            level: level + 1,
+            pathType: pathType,
+            hopIndex: hopIndex,
+            policyPath: policyPath + '-' + (level + 1)
+          }"></ng-container>
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Graph Visualization -->
+    <div class="graph-section">
+      <h2>Tenant Graph Visualization</h2>
+
+      <!-- Graph Loading State -->
+      <div *ngIf="isGraphLoading" class="graph-loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading tenant graph...</div>
+      </div>
+
+      <!-- Graph Error State -->
+      <div *ngIf="graphError && !isGraphLoading" class="graph-error">
+        <div class="error-icon">⚠️</div>
+        <div class="error-text">{{ graphError }}</div>
+      </div>
+
+      <!-- Graph Container -->
+      <div *ngIf="graph && !isGraphLoading && !graphError" id="endpointGraphContainer" class="graph-container">
+        <svg id="endpointGraphSvg" class="graph-svg"></svg>
+      </div>
+
+      <!-- No Graph State -->
+      <div *ngIf="!graph && !isGraphLoading && !graphError" class="graph-placeholder">
+        <div class="placeholder-icon">📊</div>
+        <div class="placeholder-text">Graph will load automatically</div>
       </div>
     </div>
   </div>

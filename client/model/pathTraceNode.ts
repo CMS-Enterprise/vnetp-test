@@ -9,13 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ConnectivityNode } from './connectivityNode';
 
 
-export interface ConnectionTrace { 
-    sourcePath: Array<ConnectivityNode>;
-    contractPath: Array<ConnectivityNode>;
-    destinationPath: Array<ConnectivityNode>;
-    fullPath: Array<ConnectivityNode>;
+export interface PathTraceNode { 
+    /**
+     * Unique identifier of the node
+     */
+    id: string;
+    /**
+     * Human-readable name of the node
+     */
+    name: string;
+    /**
+     * Type of the node
+     */
+    type: string;
 }
 

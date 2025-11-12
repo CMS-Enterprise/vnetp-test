@@ -226,24 +226,35 @@ export class TenantGraphCoreService {
     6: 'External VRF',
   };
 
-  private readonly NO_PATHTRACE_NODE_TYPES = ['TENANT'];
+  private readonly NO_PATHTRACE_NODE_TYPES = [
+    'TENANT',
+    'L3OUT',
+    'SERVICE_GRAPH',
+    'SERVICE_GRAPH_FIREWALL',
+    'EXTERNAL_FIREWALL',
+    'EXTERNAL_VRF_CONNECTION',
+    'SELECTOR',
+    'APPLICATION_PROFILE',
+  ];
 
   private readonly NODE_LEVELS = {
     TENANT: 1,
-    VRF: 2,
-    SERVICE_GRAPH: 3,
-    L3OUT: 3,
-    SERVICE_GRAPH_FIREWALL: 4,
-    EXTERNAL_FIREWALL: 4,
-    EXTERNAL_VRF_CONNECTION: 5,
-    EXTERNAL_VRF: 6,
     APPLICATION_PROFILE: 2,
+    VRF: 2,
     ENDPOINT_GROUP: 3,
     ENDPOINT_SECURITY_GROUP: 3,
+    L3OUT: 3,
+    SERVICE_GRAPH: 3,
     BRIDGE_DOMAIN: 4,
-    SUBNET: 5,
     CONTRACT: 4,
+    EXTERNAL_FIREWALL: 4,
+    SERVICE_GRAPH_FIREWALL: 4,
+    ENDPOINT: 5,
+    EXTERNAL_VRF_CONNECTION: 5,
     SUBJECT: 5,
+    SUBNET: 5,
+    ENDPOINT_IP_ADDRESS: 6,
+    EXTERNAL_VRF: 6,
     FILTER: 6,
     FILTER_ENTRY: 7,
   };
@@ -440,16 +451,22 @@ export class TenantGraphCoreService {
 
     // Step 10: Setup PathTrace if enabled
     if (mergedConfig.enablePathTrace) {
-      this.pathTraceService.setGraphData({
-        nodes: transformedData.nodes,
-        links: transformedData.links,
-      });
+      // Set tenant ID for API-based path calculations
+      const tenantId = config.graph?.tenantId;
+      const tenantVersion = config.graph?.tenantVersion;
+      if (tenantId && tenantVersion) {
+        this.pathTraceService.setTenantId(tenantId);
+        this.pathTraceService.setTenantVersion(tenantVersion);
+      }
 
       // Render PathTrace status box
       this.uiService.renderPathTraceStatus(
         svg,
         this.pathTraceService.getPathTraceState(),
         () => this.pathTraceService.togglePathOnlyView(),
+        () => this.pathTraceService.toggleControlPath(),
+        () => this.pathTraceService.toggleDataPath(),
+        () => this.pathTraceService.toggleHopIndex(),
         () => this.pathTraceService.clearPathTrace(),
       );
     }
@@ -470,6 +487,9 @@ export class TenantGraphCoreService {
           svg,
           state,
           () => this.pathTraceService.togglePathOnlyView(),
+          () => this.pathTraceService.toggleControlPath(),
+          () => this.pathTraceService.toggleDataPath(),
+          () => this.pathTraceService.toggleHopIndex(),
           () => this.pathTraceService.clearPathTrace(),
         );
       }

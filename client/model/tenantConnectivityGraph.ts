@@ -11,7 +11,6 @@
  */
 import { GraphIndexes } from './graphIndexes';
 import { GraphUtils } from './graphUtils';
-import { RoutingPaths } from './routingPaths';
 import { TenantConnectivityGraphEdges } from './tenantConnectivityGraphEdges';
 import { GraphMetadata } from './graphMetadata';
 import { TenantConnectivityGraphNodes } from './tenantConnectivityGraphNodes';
@@ -35,13 +34,13 @@ export interface TenantConnectivityGraph {
      */
     tenantId?: string;
     /**
+     * Version of the tenant this graph represents
+     */
+    tenantVersion?: number;
+    /**
      * Performance indexes for fast lookups
      */
     indexes: GraphIndexes;
-    /**
-     * Routing analysis results
-     */
-    routingPaths: RoutingPaths;
     /**
      * Graph metadata
      */

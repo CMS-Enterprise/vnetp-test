@@ -11,14 +11,10 @@
  */
 
 
-export interface SubjectToFilter { 
+export interface PathTraceDataPlaneMetadata { 
     /**
-     * Subject ID
+     * TODO: Data plane metadata for this hop
      */
-    subjectId: string;
-    /**
-     * Filter ID
-     */
-    filterId: string;
+    metadata: object;
 }
 

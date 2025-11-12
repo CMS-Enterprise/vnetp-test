@@ -11,6 +11,7 @@
  */
 import { Tenant } from './tenant';
 import { Tier } from './tier';
+import { Zone } from './zone';
 import { ServiceGraph } from './serviceGraph';
 
 
@@ -30,5 +31,7 @@ export interface ServiceGraphFirewall {
     vsysName: string;
     readonly tier?: Tier;
     tierId?: string;
+    readonly zone?: Zone;
+    zoneId?: string;
 }
 

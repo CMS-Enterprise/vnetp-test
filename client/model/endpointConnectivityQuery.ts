@@ -37,20 +37,16 @@ export interface EndpointConnectivityQuery {
      */
     ipProtocol: string;
     /**
-     * Does the user want to bypass the service graph?
-     */
-    bypassServiceGraph: boolean;
-    /**
      * Generate configuration to enable connectivity if not already possible.
      */
     generateConfig: boolean;
     /**
-     * Check for bi-directional connectivity.
-     */
-    bidirectional: boolean;
-    /**
      * Tenant ID
      */
     tenantId: string;
+    /**
+     * Version of the tenant
+     */
+    tenantVersion: number;
 }
 

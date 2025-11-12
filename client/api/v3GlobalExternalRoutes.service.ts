@@ -426,7 +426,7 @@ export class V3GlobalExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<InlineResponse200>(`${this.configuration.basePath}/v3/global/external-routes/environment/${encodeURIComponent(String(environmentId))}/vrf/${encodeURIComponent(String(vrf))}/sync`,
+        return this.httpClient.post<InlineResponse200>(`${this.configuration.basePath}/v3/global/external-routes/environments/${encodeURIComponent(String(environmentId))}/vrf/${encodeURIComponent(String(vrf))}/sync`,
             externalRouteSyncDto,
             {
                 responseType: <any>responseType,

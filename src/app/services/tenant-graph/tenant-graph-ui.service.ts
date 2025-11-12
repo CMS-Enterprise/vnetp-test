@@ -85,6 +85,9 @@ import { PathTraceState } from './tenant-graph-path-trace.service';
  *       svg,
  *       pathTraceState,
  *       () => this.togglePathOnly(),
+ *       () => this.toggleControlPath(),
+ *       () => this.toggleDataPath(),
+ *       () => this.toggleHopIndex(),
  *       () => this.clearPath()
  *     );
  *   }
@@ -412,7 +415,15 @@ export class TenantGraphUIService {
   /**
    * Render PathTrace status box
    */
-  public renderPathTraceStatus(svg: any, pathTraceState: PathTraceState, onTogglePathOnly: () => void, onClear: () => void): void {
+  public renderPathTraceStatus(
+    svg: any,
+    pathTraceState: PathTraceState,
+    onTogglePathOnly: () => void,
+    onToggleControlPath: () => void,
+    onToggleDataPath: () => void,
+    onToggleHopIndex: () => void,
+    onClear: () => void,
+  ): void {
     // Remove existing PathTrace status box
     svg.select('.pathtrace-status').remove();
 
@@ -423,11 +434,12 @@ export class TenantGraphUIService {
     const pathTraceBox = svg.append('g').attr('class', 'pathtrace-status').attr('transform', 'translate(20, 20)');
 
     // Calculate box dimensions
-    const boxWidth = 200;
+    const boxWidth = 240;
     const headerHeight = 25;
     const lineHeight = 18;
     const padding = 12;
     const buttonHeight = 24;
+    const checkboxHeight = 18;
 
     let contentLines = 1; // Title
     if (pathTraceState.selectedNodes.length >= 1) {
@@ -437,7 +449,34 @@ export class TenantGraphUIService {
       contentLines += 2;
     } // Target + Status
 
-    const boxHeight = headerHeight + contentLines * lineHeight + buttonHeight + padding * 2;
+    // Add extra line for loading or error state
+    if (pathTraceState.isCalculating || pathTraceState.calculationError) {
+      contentLines++;
+    }
+
+    // Add lines for path information if both paths exist
+    if (pathTraceState.controlPath && pathTraceState.dataPath) {
+      contentLines += 2; // Control and Data path info
+    }
+
+    // Add line for control plane status if present
+    if (pathTraceState.controlPath && pathTraceState.controlPlaneAllowed !== undefined) {
+      contentLines += 1; // Control plane allowed/denied status
+    }
+
+    // Add lines for checkboxes if paths exist
+    let checkboxSection = 0;
+    if (pathTraceState.controlPath || pathTraceState.dataPath) {
+      checkboxSection = checkboxHeight * 2 + padding;
+    }
+
+    // Add extra space for hop index toggle button if paths exist
+    let hopIndexButtonSection = 0;
+    if (pathTraceState.pathExists) {
+      hopIndexButtonSection = buttonHeight + padding / 2;
+    }
+
+    const boxHeight = headerHeight + contentLines * lineHeight + buttonHeight + padding * 2 + checkboxSection + hopIndexButtonSection;
 
     // Background
     pathTraceBox
@@ -486,14 +525,43 @@ export class TenantGraphUIService {
       currentY += lineHeight;
 
       // Status
-      let statusText = pathTraceState.pathExists ? `Path found (${pathTraceState.pathLength} hops)` : 'No path available';
+      let statusText = '';
+      let statusColor = '#6c757d';
 
-      // Add incomplete indicator
-      if (pathTraceState.pathTraceData && !pathTraceState.pathTraceData.isComplete) {
-        statusText = 'Incomplete path';
+      if (pathTraceState.isCalculating) {
+        statusText = 'Calculating path...';
+        statusColor = '#007bff';
+      } else if (pathTraceState.calculationError) {
+        statusText = 'Calculation failed';
+        statusColor = '#dc3545';
+      } else if (pathTraceState.pathExists) {
+        // Determine which paths were found
+        const hasControlPath = pathTraceState.controlPath && pathTraceState.controlPath.isComplete;
+        const hasDataPath = pathTraceState.dataPath && pathTraceState.dataPath.isComplete;
+
+        if (hasControlPath && hasDataPath) {
+          statusText = 'Control and Data paths found';
+          statusColor = '#28a745';
+        } else if (hasControlPath) {
+          statusText = 'Control path found';
+          statusColor = '#28a745';
+        } else if (hasDataPath) {
+          statusText = 'Data path found';
+          statusColor = '#28a745';
+        } else {
+          statusText = `Path found (${pathTraceState.pathLength} hops)`;
+          statusColor = '#28a745';
+        }
+
+        // Add incomplete indicator
+        if (pathTraceState.pathTraceData && !pathTraceState.pathTraceData.isComplete) {
+          statusText = 'Incomplete path';
+          statusColor = '#ffc107';
+        }
+      } else {
+        statusText = 'No path available';
+        statusColor = '#ffc107';
       }
-
-      const statusColor = pathTraceState.pathExists ? '#28a745' : '#ffc107';
 
       pathTraceBox
         .append('text')
@@ -503,6 +571,146 @@ export class TenantGraphUIService {
         .attr('fill', statusColor)
         .attr('font-weight', 'bold')
         .text(`Status: ${statusText}`);
+      currentY += lineHeight;
+
+      // Show error message if present
+      if (pathTraceState.calculationError) {
+        pathTraceBox
+          .append('text')
+          .attr('x', padding)
+          .attr('y', currentY)
+          .attr('font-size', 10)
+          .attr('fill', '#dc3545')
+          .text(this.truncateText(pathTraceState.calculationError, 25));
+        currentY += lineHeight;
+      }
+
+      // Show path information if both paths exist
+      if (pathTraceState.controlPath && pathTraceState.dataPath) {
+        pathTraceBox
+          .append('text')
+          .attr('x', padding)
+          .attr('y', currentY)
+          .attr('font-size', 10)
+          .attr('fill', '#6c757d')
+          .text(`Control: ${pathTraceState.controlPath.hopCount} hops, cost ${pathTraceState.controlPath.totalCost}`);
+        currentY += lineHeight;
+
+        pathTraceBox
+          .append('text')
+          .attr('x', padding)
+          .attr('y', currentY)
+          .attr('font-size', 10)
+          .attr('fill', '#6c757d')
+          .text(`Data: ${pathTraceState.dataPath.hopCount} hops, cost ${pathTraceState.dataPath.totalCost}`);
+        currentY += lineHeight;
+      }
+
+      // Show control plane allowed/denied status
+      if (pathTraceState.controlPath && pathTraceState.controlPlaneAllowed !== undefined) {
+        const cpAllowed = pathTraceState.controlPlaneAllowed;
+        const cpStatusText = cpAllowed ? 'Control Plane: Allowed' : 'Control Plane: Denied';
+        const cpStatusColor = cpAllowed ? '#28a745' : '#dc3545';
+
+        pathTraceBox
+          .append('text')
+          .attr('x', padding)
+          .attr('y', currentY)
+          .attr('font-size', 10)
+          .attr('fill', cpStatusColor)
+          .attr('font-weight', 'bold')
+          .text(cpStatusText);
+        currentY += lineHeight;
+      }
+    }
+
+    // Checkboxes for controlling path visibility
+    if (pathTraceState.controlPath || pathTraceState.dataPath) {
+      currentY += padding / 2;
+
+      // Control Path checkbox
+      if (pathTraceState.controlPath) {
+        this.renderCheckbox(
+          pathTraceBox,
+          padding,
+          currentY,
+          'Show Control Path',
+          pathTraceState.showControlPath ?? true,
+          onToggleControlPath,
+        );
+        currentY += checkboxHeight;
+      }
+
+      // Data Path checkbox
+      if (pathTraceState.dataPath) {
+        this.renderCheckbox(pathTraceBox, padding, currentY, 'Show Data Path', pathTraceState.showDataPath ?? true, onToggleDataPath);
+        currentY += checkboxHeight;
+      }
+    }
+
+    // Hop Index Toggle button (only if path exists)
+    if (pathTraceState.pathExists) {
+      currentY += padding / 2;
+
+      const hopIndexButton = pathTraceBox.append('g').attr('class', 'hop-index-button').style('cursor', 'pointer');
+
+      const hopIndexButtonWidth = boxWidth - padding * 2;
+      const hopIndexButtonX = padding;
+      const hopIndexButtonHeight = 20;
+
+      // Determine button label based on current mode
+      const hopMode = pathTraceState.hopIndexDisplayMode ?? 'control';
+      let hopModeLabel = '';
+      let hopModeColor = '#007bff';
+
+      if (hopMode === 'control') {
+        hopModeLabel = 'Hop Index: Control Path';
+        hopModeColor = '#28a745'; // Green for control
+      } else if (hopMode === 'data') {
+        hopModeLabel = 'Hop Index: Data Path';
+        hopModeColor = '#007bff'; // Blue for data
+      } else {
+        hopModeLabel = 'Hop Index: Hidden';
+        hopModeColor = '#6c757d'; // Gray for none
+      }
+
+      hopIndexButton
+        .append('rect')
+        .attr('x', hopIndexButtonX)
+        .attr('y', currentY)
+        .attr('width', hopIndexButtonWidth)
+        .attr('height', hopIndexButtonHeight)
+        .attr('fill', hopModeColor)
+        .attr('rx', 3)
+        .on('mouseover', function () {
+          const currentFill = d3.select(this).attr('fill');
+          // Darken on hover
+          if (currentFill === '#28a745') {
+            d3.select(this).attr('fill', '#218838');
+          } else if (currentFill === '#007bff') {
+            d3.select(this).attr('fill', '#0056b3');
+          } else {
+            d3.select(this).attr('fill', '#5a6268');
+          }
+        })
+        .on('mouseout', function () {
+          d3.select(this).attr('fill', hopModeColor);
+        });
+
+      hopIndexButton
+        .append('text')
+        .attr('x', hopIndexButtonX + hopIndexButtonWidth / 2)
+        .attr('y', currentY + 14)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 10)
+        .attr('fill', 'white')
+        .attr('font-weight', 'bold')
+        .text(hopModeLabel)
+        .style('pointer-events', 'none');
+
+      hopIndexButton.on('click', onToggleHopIndex);
+
+      currentY += hopIndexButtonHeight + padding / 2;
     }
 
     // Buttons
@@ -579,6 +787,63 @@ export class TenantGraphUIService {
       .style('pointer-events', 'none');
 
     clearButton.on('click', onClear);
+  }
+
+  /**
+   * Render a checkbox with label
+   */
+  private renderCheckbox(parent: any, x: number, y: number, label: string, checked: boolean, onClick: () => void): void {
+    const checkboxGroup = parent.append('g').attr('class', 'checkbox-group').style('cursor', 'pointer');
+
+    const checkboxSize = 12;
+
+    // Checkbox square
+    checkboxGroup
+      .append('rect')
+      .attr('x', x)
+      .attr('y', y - checkboxSize + 2)
+      .attr('width', checkboxSize)
+      .attr('height', checkboxSize)
+      .attr('fill', 'white')
+      .attr('stroke', '#007bff')
+      .attr('stroke-width', 1.5)
+      .attr('rx', 2);
+
+    // Checkmark if checked
+    if (checked) {
+      checkboxGroup
+        .append('text')
+        .attr('x', x + checkboxSize / 2)
+        .attr('y', y - 1)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 10)
+        .attr('fill', '#007bff')
+        .attr('font-weight', 'bold')
+        .text('✓')
+        .style('pointer-events', 'none');
+    }
+
+    // Label
+    checkboxGroup
+      .append('text')
+      .attr('x', x + checkboxSize + 6)
+      .attr('y', y)
+      .attr('font-size', 11)
+      .attr('fill', '#333')
+      .text(label)
+      .style('pointer-events', 'none');
+
+    checkboxGroup.on('click', onClick);
+  }
+
+  /**
+   * Truncate text to fit within a certain character limit
+   */
+  private truncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength - 3) + '...';
   }
 
   /**

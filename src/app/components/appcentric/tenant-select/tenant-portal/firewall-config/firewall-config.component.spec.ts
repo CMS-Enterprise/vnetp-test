@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirewallConfigComponent } from './firewall-config.component';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { Subject } from 'rxjs';
 
 describe('FirewallConfigComponent', () => {
@@ -15,6 +16,7 @@ describe('FirewallConfigComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [FirewallConfigComponent],
+      imports: [RouterTestingModule],
       providers: [{ provide: ActivatedRoute, useValue: mockRoute }],
     }).compileComponents();
 
@@ -61,5 +63,71 @@ describe('FirewallConfigComponent', () => {
     data$.next({});
     expect(component.firewallType).toBeUndefined();
     expect(component.firewallName).toBeUndefined();
+  });
+
+  describe('tabs getter', () => {
+    it('should return all 4 tabs including NAT Rules for external-firewall type', () => {
+      fixture.detectChanges();
+      data$.next({
+        firewall: {
+          firewall: { name: 'FW-1' },
+          firewallType: 'external-firewall',
+        },
+      });
+
+      expect(component.tabs.length).toBe(4);
+      expect(component.tabs.find(tab => tab.name === 'NAT Rules')).toBeDefined();
+      expect(component.tabs.find(tab => tab.name === 'Firewall Rules')).toBeDefined();
+      expect(component.tabs.find(tab => tab.name === 'Network Objects')).toBeDefined();
+      expect(component.tabs.find(tab => tab.name === 'Service Objects')).toBeDefined();
+    });
+
+    it('should return only 3 tabs without NAT Rules for service-graph-firewall type', () => {
+      fixture.detectChanges();
+      data$.next({
+        firewall: {
+          firewall: { name: 'SG-FW-1' },
+          firewallType: 'service-graph-firewall',
+        },
+      });
+
+      expect(component.tabs.length).toBe(3);
+      expect(component.tabs.find(tab => tab.name === 'NAT Rules')).toBeUndefined();
+      expect(component.tabs.find(tab => tab.name === 'Firewall Rules')).toBeDefined();
+      expect(component.tabs.find(tab => tab.name === 'Network Objects')).toBeDefined();
+      expect(component.tabs.find(tab => tab.name === 'Service Objects')).toBeDefined();
+    });
+
+    it('should return all 4 tabs when firewallType is undefined', () => {
+      fixture.detectChanges();
+      data$.next({});
+
+      expect(component.tabs.length).toBe(4);
+      expect(component.tabs.find(tab => tab.name === 'NAT Rules')).toBeDefined();
+    });
+
+    it('should dynamically update tabs when firewallType changes', () => {
+      fixture.detectChanges();
+
+      // Start with external-firewall - should have NAT Rules
+      data$.next({
+        firewall: {
+          firewall: { name: 'FW-1' },
+          firewallType: 'external-firewall',
+        },
+      });
+      expect(component.tabs.length).toBe(4);
+      expect(component.tabs.find(tab => tab.name === 'NAT Rules')).toBeDefined();
+
+      // Change to service-graph-firewall - should not have NAT Rules
+      data$.next({
+        firewall: {
+          firewall: { name: 'SG-FW-1' },
+          firewallType: 'service-graph-firewall',
+        },
+      });
+      expect(component.tabs.length).toBe(3);
+      expect(component.tabs.find(tab => tab.name === 'NAT Rules')).toBeUndefined();
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as d3 from 'd3';
 import { PathTraceState } from './tenant-graph-path-trace.service';
 
 /**
@@ -17,6 +18,7 @@ import { PathTraceState } from './tenant-graph-path-trace.service';
  * - **Path Node Highlighting**: Blue highlighting for nodes in the traced path
  * - **Incomplete Path Indicators**: Red highlighting for incomplete path endpoints
  * - **Edge Path Highlighting**: Orange highlighting for edges in the traced path
+ * - **Hop Index Labels**: Numerical hop count displayed on nodes (toggleable: control/data/none)
  *
  * ### 2. **Multi-state Visual Management**
  * - **Normal State**: All nodes and edges at full opacity
@@ -35,6 +37,7 @@ import { PathTraceState } from './tenant-graph-path-trace.service';
  * - **Color Preservation**: Maintains original colors for non-path edges
  * - **Special Edge Types**: Preserves special styling for inter-VRF connections
  * - **Dynamic Width Adjustment**: Adjusts edge width based on highlighting state
+ * - **Hop Index Display**: Shows numerical hop count on nodes (control/data path selectable)
  *
  * ## Visual State Types
  *
@@ -146,13 +149,45 @@ export class TenantGraphHighlightService {
     const highlightedNodeIds = new Set(highlightedPath.nodes);
     const highlightedEdgeIds = new Set(highlightedPath.edges);
 
+    // Create sets for control and data plane edges
+    // Include both the flat edges array AND edges from pathTraceData hops
+    const controlPathEdges = new Set(pathTraceState.controlPath?.edges || []);
+    if (pathTraceState.controlPath?.pathTraceData) {
+      pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
+        hop.incomingEdges.forEach(edge => controlPathEdges.add(edge));
+        hop.outgoingEdges.forEach(edge => controlPathEdges.add(edge));
+      });
+    }
+
+    const dataPathEdges = new Set(pathTraceState.dataPath?.edges || []);
+    if (pathTraceState.dataPath?.pathTraceData) {
+      pathTraceState.dataPath.pathTraceData.path.forEach(hop => {
+        hop.incomingEdges.forEach(edge => dataPathEdges.add(edge));
+        hop.outgoingEdges.forEach(edge => dataPathEdges.add(edge));
+      });
+    }
+
+    // Build control plane metadata map from pathTraceData
+    const controlPlaneMetadataMap = new Map<string, { allowed: boolean; allowedReason: string; policyAllowed?: boolean }>();
+    if (pathTraceState.controlPath?.pathTraceData) {
+      pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
+        if (hop.controlPlaneMetadata) {
+          controlPlaneMetadataMap.set(hop.nodeId, {
+            allowed: hop.controlPlaneMetadata.allowed,
+            allowedReason: hop.controlPlaneMetadata.allowedReason,
+            policyAllowed: hop.controlPlaneMetadata.policyAllowed,
+          });
+        }
+      });
+    }
+
     // Update node highlighting (circles)
     this.nodeSelection
       .selectAll('circle')
       .attr('stroke', (d: any) => {
         if (highlightedNodeIds.has(d.id)) {
           // Check if this is the last hop of an incomplete path
-          if (pathTraceState.pathTraceData?.lastHopNodeId === d.id && !pathTraceState.pathTraceData.isComplete) {
+          if (pathTraceState.pathTraceData && !pathTraceState.pathTraceData.isComplete) {
             return '#dc3545'; // Red for incomplete path last hop
           }
           // Highlight selected/path nodes
@@ -193,12 +228,34 @@ export class TenantGraphHighlightService {
         return 'block';
       });
 
+    // Render control plane metadata indicators
+    this.renderControlPlaneIndicators(controlPlaneMetadataMap, pathTraceState.showPathOnly);
+
+    // Render hop index labels on edges
+    this.renderHopIndexLabels(pathTraceState);
+
     // Update edge highlighting
     this.linkSelection
       .attr('stroke', (d: any) => {
         const edgeId = d.originalEdge?.id || `${d.source.id || d.source}-${d.target.id || d.target}`;
         if (highlightedEdgeIds.has(edgeId)) {
-          return '#ff6b35'; // Orange for path edges
+          // Determine edge color based on which path it belongs to
+          const isInControlPath = controlPathEdges.has(edgeId);
+          const isInDataPath = dataPathEdges.has(edgeId);
+
+          // If showing both paths, prefer control plane color
+          if (isInControlPath && (pathTraceState.showControlPath ?? true)) {
+            // Control plane: green for allowed, red for denied
+            if (pathTraceState.controlPlaneAllowed === true) {
+              return '#28a745'; // Green for allowed
+            } else if (pathTraceState.controlPlaneAllowed === false) {
+              return '#dc3545'; // Red for denied
+            }
+            return '#007bff'; // Blue if status unknown
+          } else if (isInDataPath && (pathTraceState.showDataPath ?? true)) {
+            return '#ff6b35'; // Orange for data plane
+          }
+          return '#ff6b35'; // Default orange for backward compatibility
         }
         // Keep original color for non-path edges
         if (d.type === 'INTERVRF_CONNECTION') {
@@ -216,6 +273,27 @@ export class TenantGraphHighlightService {
         const baseWidth = style.width * (this.currentGraphData.links.length > 0 ? 1.2 : 1); // Use configured width
         return highlightedEdgeIds.has(edgeId) ? baseWidth + 2 : baseWidth;
       })
+      .attr('stroke-dasharray', (d: any) => {
+        const edgeId = d.originalEdge?.id || `${d.source.id || d.source}-${d.target.id || d.target}`;
+        if (highlightedEdgeIds.has(edgeId)) {
+          const isInControlPath = controlPathEdges.has(edgeId);
+          const isInDataPath = dataPathEdges.has(edgeId);
+          const showControl = pathTraceState.showControlPath ?? true;
+          const showData = pathTraceState.showDataPath ?? true;
+
+          // Control plane: solid line, Data plane: dashed line
+          // When both visible and edge is in both, prefer control plane (solid)
+          if (isInControlPath && showControl) {
+            return null; // Solid line for control plane
+          } else if (isInDataPath && showData) {
+            return '5,5'; // Dashed line for data plane
+          }
+          return null; // Default solid
+        }
+        // Keep original dash array for non-path edges
+        const style = this.DEFAULT_EDGE_STYLES[d.type] || this.DEFAULT_EDGE_STYLES.VRF_TO_L3OUT;
+        return style.dashArray || null;
+      })
       .attr('stroke-opacity', (d: any) => {
         const edgeId = d.originalEdge?.id || `${d.source.id || d.source}-${d.target.id || d.target}`;
         if (pathTraceState.showPathOnly) {
@@ -232,6 +310,157 @@ export class TenantGraphHighlightService {
       });
   }
 
+  /**
+   * Render hop index labels on nodes
+   */
+  private renderHopIndexLabels(pathTraceState: PathTraceState): void {
+    if (!this.nodeSelection) {
+      return;
+    }
+
+    // Remove any existing hop index labels
+    this.nodeSelection.selectAll('.hop-index-label').remove();
+
+    // Check display mode
+    const displayMode = pathTraceState.hopIndexDisplayMode ?? 'control';
+    if (displayMode === 'none' || !pathTraceState.pathExists) {
+      return;
+    }
+
+    // Build a map of node IDs to hop indices based on display mode
+    const nodeHopIndexMap = new Map<string, number>();
+    let pathLabel = '';
+    let badgeColor = '#007bff';
+
+    if (displayMode === 'control' && pathTraceState.controlPath?.pathTraceData) {
+      pathTraceState.controlPath.pathTraceData.path.forEach(hop => {
+        nodeHopIndexMap.set(hop.nodeId, hop.hopIndex);
+      });
+      pathLabel = 'Control Path';
+      badgeColor = '#28a745'; // Green for control path
+    } else if (displayMode === 'data' && pathTraceState.dataPath?.pathTraceData) {
+      pathTraceState.dataPath.pathTraceData.path.forEach(hop => {
+        nodeHopIndexMap.set(hop.nodeId, hop.hopIndex);
+      });
+      pathLabel = 'Data Path';
+      badgeColor = '#007bff'; // Blue for data path
+    }
+
+    if (nodeHopIndexMap.size === 0) {
+      return;
+    }
+
+    // Render hop index labels on each node in the path
+    this.nodeSelection.each((d: any, i: number, nodes: any[]) => {
+      const hopIndex = nodeHopIndexMap.get(d.id);
+
+      if (hopIndex !== undefined) {
+        const nodeGroup = nodes[i];
+        const selection = d3.select(nodeGroup);
+
+        // Only show indicator if node is visible
+        const isVisible = pathTraceState.showPathOnly ? nodeHopIndexMap.has(d.id) : true;
+        if (!isVisible) {
+          return;
+        }
+
+        // Create hop index label group positioned at bottom right of node
+        const labelGroup = selection
+          .append('g')
+          .attr('class', 'hop-index-label')
+          .attr('transform', 'translate(15, 15)');
+
+        // Background circle for better visibility
+        labelGroup.append('circle').attr('r', 12).attr('fill', badgeColor).attr('stroke', '#fff').attr('stroke-width', 2);
+
+        // Hop index text (display 1-indexed)
+        labelGroup
+          .append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'central')
+          .attr('font-size', 11)
+          .attr('font-weight', 'bold')
+          .attr('fill', '#fff')
+          .attr('pointer-events', 'none')
+          .text(hopIndex + 1);
+
+        // Add title for tooltip
+        labelGroup.append('title').text(`${pathLabel} Hop: ${hopIndex + 1}`);
+      }
+    });
+  }
+
+  /**
+   * Render control plane metadata indicators on nodes
+   */
+  private renderControlPlaneIndicators(
+    controlPlaneMetadataMap: Map<string, { allowed: boolean; allowedReason: string; policyAllowed?: boolean }>,
+    showPathOnly: boolean = false,
+  ): void {
+    if (!this.nodeSelection) {
+      return;
+    }
+
+    // Remove any existing indicators
+    this.nodeSelection.selectAll('.control-plane-indicator').remove();
+
+    // Add indicators for nodes with control plane metadata
+    this.nodeSelection.each((d: any, i: number, nodes: any[]) => {
+      const metadata = controlPlaneMetadataMap.get(d.id);
+      if (!metadata) {
+        return;
+      }
+
+      const nodeGroup = nodes[i];
+      const selection = d3.select(nodeGroup);
+
+      // Only show indicator if node is visible
+      const isVisible = showPathOnly ? controlPlaneMetadataMap.has(d.id) : true;
+      if (!isVisible) {
+        return;
+      }
+
+      // Create indicator group
+      const indicator = selection
+        .append('g')
+        .attr('class', 'control-plane-indicator')
+        .attr('transform', 'translate(0, -25)'); // Position above the node
+
+      // Determine final allowed state: policyAllowed is the rolled-up result, use it directly if present
+      let finalAllowed = false;
+
+      if (metadata.policyAllowed !== undefined && metadata.policyAllowed !== null) {
+        finalAllowed = metadata.policyAllowed;
+      } else {
+        finalAllowed = metadata.allowed;
+      }
+
+      // Background circle for better visibility
+      indicator
+        .append('circle')
+        .attr('r', 10)
+        .attr('fill', finalAllowed ? '#28a745' : '#dc3545')
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 2);
+
+      // Icon (checkmark or X)
+      indicator
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'central')
+        .attr('font-size', 12)
+        .attr('font-weight', 'bold')
+        .attr('fill', '#fff')
+        .attr('pointer-events', 'none')
+        .text(finalAllowed ? '✓' : '✗');
+
+      // Add title for tooltip
+      const statusText = finalAllowed ? 'Allowed' : 'Denied';
+      const policyText = metadata.policyAllowed !== undefined ? `\nPolicy Level: ${metadata.policyAllowed ? 'Allowed' : 'Denied'}` : '';
+      indicator.append('title').text(`Control Plane: ${statusText}${policyText}\n${metadata.allowedReason}`);
+    });
+  }
+
   public resetHighlighting(): void {
     if (!this.nodeSelection || !this.linkSelection) {
       return;
@@ -242,6 +471,12 @@ export class TenantGraphHighlightService {
 
     // Reset node labels to normal appearance
     this.nodeSelection.selectAll('text').attr('opacity', 1).style('display', 'block');
+
+    // Remove control plane indicators
+    this.nodeSelection.selectAll('.control-plane-indicator').remove();
+
+    // Remove hop index labels
+    this.nodeSelection.selectAll('.hop-index-label').remove();
 
     // Reset edges to normal appearance
     this.linkSelection
