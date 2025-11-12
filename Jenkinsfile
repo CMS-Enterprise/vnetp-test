@@ -122,9 +122,22 @@ spec:
         }
         success {
                 script {
-                    slackSend(channel: 'cds-draas-jenkins')
+                    slackSend(
+                        channel: 'cds-draas-jenkins',
+                        message: "Build #${BUILD_NUMBER} succeeded on ${env.GIT_BRANCH} (${env.GIT_COMMIT.take(7)})",
+                        iconEmoji: ':white_check_mark:'
+                    )
                 }
             }
-    
+        failure {
+                script {
+                    slackSend(
+                        channel: 'cds-draas-jenkins',
+                        message: "Build #${BUILD_NUMBER} failed on ${env.GIT_BRANCH} (${env.GIT_COMMIT.take(7)})",
+                        color: 'danger',
+                        iconEmoji: ':x:'
+                    )
+                }
+            }
   }
 }
