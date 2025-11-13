@@ -8,10 +8,10 @@
       <div>
         <h4 class="mb-1">Tenant Infrastructure ({{ mode | uppercase }})</h4>
         <small class="text-muted" *ngIf="mode === 'edit'">
-          Viewing tenant: <strong>{{ tenantId }}</strong> <span class="badge badge-info">Read Only</span>
+          Viewing Tenant: <strong>{{ tenantId }}</strong> <span class="badge badge-info">Read Only</span>
         </small>
         <small class="text-muted" *ngIf="mode === 'create'">
-          Creating a new tenant configuration
+          Creating new Tenant
           <span *ngIf="hasUnsavedChanges" class="badge badge-warning ml-2">Unsaved Changes</span>
         </small>
       </div>

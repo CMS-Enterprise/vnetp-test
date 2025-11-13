@@ -244,11 +244,16 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   private parseValidationError(message: string): void {
     // Parse messages like "externalFirewalls.0.bgpAsn must be provided if bgpAsnAutoGenerate is not true"
     // Extract the path part before the first space
-    const pathMatch = message.match(/^([a-zA-Z0-9.\[\]]+)/);
-    if (pathMatch) {
-      const path = pathMatch[1];
+    const path = this.extractPathFromMessage(message);
+    if (path) {
       this.validationErrors.set(path, message);
     }
+  }
+
+  private extractPathFromMessage(message: string): string | null {
+    // Extract the path part before the first space from messages like "tenant.environmentId must be a UUID"
+    const pathMatch = message.match(/^([a-zA-Z0-9.\[\]]+)/);
+    return pathMatch ? pathMatch[1] : null;
   }
 
   getFieldError(path: string): string | null {
@@ -314,15 +319,41 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
           this.rightPanelView = 'response';
         },
         error: err => {
-          this.validation = {
-            success: false,
-            errors: [
-              {
-                path: '$',
-                message: err?.message || 'Request failed',
-              } as any,
-            ],
-          } as TenantInfrastructureValidationResponse;
+          console.error(err);
+          this.validationErrors.clear();
+
+          // Parse class-validator errors from API response
+          if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
+            err.error.detail.message.forEach((msg: string) => {
+              this.parseValidationError(msg);
+            });
+          }
+
+          // Create validation response with proper error objects
+          if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
+            this.validation = {
+              success: false,
+              errors: err.error.detail.message.map((msg: string) => ({
+                path: this.extractPathFromMessage(msg) || '$',
+                message: msg,
+              } as any)),
+            } as TenantInfrastructureValidationResponse;
+          } else {
+            // Fallback for non-validation errors
+            const errorMessage = err?.error?.detail?.message
+              ? (Array.isArray(err.error.detail.message) ? err.error.detail.message.join('; ') : err.error.detail.message)
+              : err?.message || 'Request failed';
+
+            this.validation = {
+              success: false,
+              errors: [
+                {
+                  path: '$',
+                  message: errorMessage,
+                } as any,
+              ],
+            } as TenantInfrastructureValidationResponse;
+          }
           this.showConfig();
         },
       });

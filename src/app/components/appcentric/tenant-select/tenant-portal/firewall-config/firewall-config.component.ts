@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FirewallConfigResolvedData, FirewallConfigType } from './firewall-config.resolver';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-firewall-config-container',
@@ -8,20 +9,7 @@ import { FirewallConfigResolvedData, FirewallConfigType } from './firewall-confi
   styleUrls: ['./firewall-config.component.scss'],
 })
 export class FirewallConfigComponent {
-  get tabs() {
-    const allTabs = [
-      { name: 'Firewall Rules', route: ['rules'], requiresSelection: true },
-      { name: 'NAT Rules', route: ['nat'], requiresSelection: true },
-      { name: 'Network Objects', route: ['network-objects'], requiresSelection: true },
-      { name: 'Service Objects', route: ['service-objects'], requiresSelection: true },
-    ];
-
-    if (this.firewallType === 'service-graph-firewall') {
-      return allTabs.filter(tab => tab.name !== 'NAT Rules');
-    }
-
-    return allTabs;
-  }
+  tabs: Tab[] = [];
 
   hasSelection = false;
   public resolvedData: FirewallConfigResolvedData | null = null;
@@ -33,6 +21,21 @@ export class FirewallConfigComponent {
       this.resolvedData = data?.firewall as FirewallConfigResolvedData;
       this.firewallName = this.resolvedData?.firewall?.name;
       this.firewallType = this.resolvedData?.firewallType;
+
+      console.log('resolvedData', this.resolvedData);
+
+      const allTabs = [
+        { name: 'Firewall Rules', route: ['rules'] },
+        { name: 'NAT Rules', route: ['nat'] },
+        { name: 'Network Objects', route: ['network-objects'] },
+        { name: 'Service Objects', route: ['service-objects'] },
+      ];
+      console.log('firewallType', this.firewallType);
+      if (this.firewallType === 'service-graph-firewall') {
+        this.tabs = allTabs.filter(tab => tab.name !== 'NAT Rules');
+      } else {
+        this.tabs = allTabs;
+      }
     });
   }
 }

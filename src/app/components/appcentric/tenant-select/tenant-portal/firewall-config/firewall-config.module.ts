@@ -14,6 +14,7 @@ const routes: Routes = [
   {
     path: ':firewallType/:firewallId',
     component: FirewallConfigComponent,
+    resolve: { firewall: FirewallConfigResolver },
     children: [
       {
         path: '',
