@@ -24957,6 +24957,47 @@
         ]
       }
     },
+    "/v2/workflows/{id}/update-status": {
+      "post": {
+        "operationId": "updateWorkflowStatusWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
     "/v2/workflows/bulk": {
       "post": {
         "operationId": "createManyWorkflow",
@@ -30092,18 +30133,19 @@
             "type": "string",
             "description": "The status of the workflow",
             "enum": [
-              "apply_failed",
+              "pending",
+              "planning",
               "plan_failed",
               "plan_incomplete",
-              "pending",
               "validating",
+              "completed_no_changes",
               "valid_awaiting_manual_approval",
               "invalid_applyable",
               "disapproved",
               "approved",
               "applying",
-              "completed",
-              "completed_no_changes"
+              "apply_failed",
+              "completed"
             ]
           },
           "finishedAt": {
@@ -30149,6 +30191,10 @@
                 "$ref": "#/components/schemas/WorkflowValidationResultDto"
               }
             ]
+          },
+          "currentJobId": {
+            "type": "number",
+            "description": "The current job ID"
           }
         },
         "required": [
@@ -35820,6 +35866,33 @@
       "ValidateWorkflowDto": {
         "type": "object",
         "properties": {}
+      },
+      "UpdateWorkflowDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the workflow",
+            "enum": [
+              "pending",
+              "planning",
+              "plan_failed",
+              "plan_incomplete",
+              "validating",
+              "completed_no_changes",
+              "valid_awaiting_manual_approval",
+              "invalid_applyable",
+              "disapproved",
+              "approved",
+              "applying",
+              "apply_failed",
+              "completed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "SelfServiceRawConfig": {
         "type": "object",

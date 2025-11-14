@@ -312,6 +312,7 @@ model/tierGroup.ts
 model/towerJobDto.ts
 model/truncatedTerraformResourceChange.ts
 model/updateGlobalBgpRangeDto.ts
+model/updateWorkflowDto.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts

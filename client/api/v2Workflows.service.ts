@@ -20,6 +20,7 @@ import { Observable }                                        from 'rxjs';
 import { CreateManyWorkflowDto } from '../model/models';
 import { CreateWorkflowDto } from '../model/models';
 import { GetManyWorkflowResponseDto } from '../model/models';
+import { UpdateWorkflowDto } from '../model/models';
 import { Workflow } from '../model/models';
 import { WorkflowValidationResultDto } from '../model/models';
 
@@ -96,6 +97,12 @@ export interface UpdateOneWorkflowRequestParams {
     /** UUID. */
     id: string;
     workflow: Workflow;
+}
+
+export interface UpdateWorkflowStatusWorkflowRequestParams {
+    /** UUID. */
+    id: string;
+    updateWorkflowDto: UpdateWorkflowDto;
 }
 
 export interface ValidateWorkflowWorkflowRequestParams {
@@ -714,6 +721,65 @@ export class V2WorkflowsService {
 
         return this.httpClient.put<Workflow>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}`,
             workflow,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateWorkflowStatusWorkflow(requestParameters: UpdateWorkflowStatusWorkflowRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Workflow>;
+    public updateWorkflowStatusWorkflow(requestParameters: UpdateWorkflowStatusWorkflowRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Workflow>>;
+    public updateWorkflowStatusWorkflow(requestParameters: UpdateWorkflowStatusWorkflowRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Workflow>>;
+    public updateWorkflowStatusWorkflow(requestParameters: UpdateWorkflowStatusWorkflowRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateWorkflowStatusWorkflow.');
+        }
+        const updateWorkflowDto = requestParameters.updateWorkflowDto;
+        if (updateWorkflowDto === null || updateWorkflowDto === undefined) {
+            throw new Error('Required parameter updateWorkflowDto was null or undefined when calling updateWorkflowStatusWorkflow.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<Workflow>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/update-status`,
+            updateWorkflowDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

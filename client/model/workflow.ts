@@ -52,20 +52,25 @@ export interface Workflow {
      * The validation result
      */
     validationResult: WorkflowValidationResultDto;
+    /**
+     * The current job ID
+     */
+    currentJobId?: number;
 }
 export enum WorkflowStatusEnum {
-    ApplyFailed = 'apply_failed',
+    Pending = 'pending',
+    Planning = 'planning',
     PlanFailed = 'plan_failed',
     PlanIncomplete = 'plan_incomplete',
-    Pending = 'pending',
     Validating = 'validating',
+    CompletedNoChanges = 'completed_no_changes',
     ValidAwaitingManualApproval = 'valid_awaiting_manual_approval',
     InvalidApplyable = 'invalid_applyable',
     Disapproved = 'disapproved',
     Approved = 'approved',
     Applying = 'applying',
-    Completed = 'completed',
-    CompletedNoChanges = 'completed_no_changes'
+    ApplyFailed = 'apply_failed',
+    Completed = 'completed'
 };
 export enum WorkflowTerraformModuleEnum {
     Overlay = 'overlay',

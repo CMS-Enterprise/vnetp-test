@@ -241,6 +241,7 @@ export * from './tierGroup';
 export * from './towerJobDto';
 export * from './truncatedTerraformResourceChange';
 export * from './updateGlobalBgpRangeDto';
+export * from './updateWorkflowDto';
 export * from './userDto';
 export * from './userPass';
 export * from './virtualServerImportCollectionDto';
