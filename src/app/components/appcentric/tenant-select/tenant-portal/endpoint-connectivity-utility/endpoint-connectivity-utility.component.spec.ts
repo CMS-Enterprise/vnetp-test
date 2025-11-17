@@ -359,4 +359,328 @@ describe('EndpointConnectivityUtilityComponent', () => {
       expect(mockPathTraceService.clearPathTrace).toHaveBeenCalled();
     });
   });
+
+  describe('renderGraph', () => {
+    it('should render graph with correct config when graph exists', () => {
+      jest.useFakeTimers();
+      component.graph = mockGraph;
+      component['renderGraph']();
+
+      jest.advanceTimersByTime(100);
+
+      expect(mockTenantGraphCore.renderGraph).toHaveBeenCalledWith({
+        graph: mockGraph,
+        containerSelector: '#endpointGraphContainer',
+        svgSelector: '#endpointGraphSvg',
+        showLegend: true,
+        enableOptimization: true,
+        enableContextMenu: false,
+        enablePathTrace: false,
+        defaultEdgeWidth: 1.2,
+      });
+      jest.useRealTimers();
+    });
+
+    it('should not render graph when graph is null', () => {
+      component.graph = null;
+      component['renderGraph']();
+      expect(mockTenantGraphCore.renderGraph).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('injectPathTraceResult', () => {
+    it('should inject path trace result when result has controlPath or dataPath', () => {
+      const result: PathResult = {
+        controlPlaneAllowed: true,
+        controlPath: {
+          pathInfo: { nodes: [], edges: [] },
+          pathTraceData: {} as any,
+          totalCost: 0,
+          hopCount: 0,
+          isComplete: true,
+          nodes: [],
+          edges: [],
+        },
+        graphTenantVersion: mockTenantVersion,
+        traversalScope: 'FULL',
+        vrfEnforced: false,
+        dataPath: null,
+      } as PathResult;
+
+      component['injectPathTraceResult'](result);
+
+      expect(mockPathTraceService.clearPathTrace).toHaveBeenCalled();
+      expect(mockPathTraceService.setExternalPathTraceResult).toHaveBeenCalledWith(result);
+    });
+
+    it('should inject path trace result when result has dataPath', () => {
+      const result: PathResult = {
+        controlPlaneAllowed: true,
+        controlPath: null,
+        graphTenantVersion: mockTenantVersion,
+        traversalScope: 'FULL',
+        vrfEnforced: false,
+        dataPath: {
+          pathInfo: { nodes: [], edges: [] },
+          pathTraceData: {} as any,
+          totalCost: 0,
+          hopCount: 0,
+          isComplete: true,
+          nodes: [],
+          edges: [],
+        },
+      } as PathResult;
+
+      component['injectPathTraceResult'](result);
+
+      expect(mockPathTraceService.clearPathTrace).toHaveBeenCalled();
+      expect(mockPathTraceService.setExternalPathTraceResult).toHaveBeenCalledWith(result);
+    });
+
+    it('should return early when result is null', () => {
+      component['injectPathTraceResult'](null as any);
+
+      expect(mockPathTraceService.clearPathTrace).not.toHaveBeenCalled();
+      expect(mockPathTraceService.setExternalPathTraceResult).not.toHaveBeenCalled();
+    });
+
+    it('should return early when result is undefined', () => {
+      component['injectPathTraceResult'](undefined as any);
+
+      expect(mockPathTraceService.clearPathTrace).not.toHaveBeenCalled();
+      expect(mockPathTraceService.setExternalPathTraceResult).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleControlPath', () => {
+    it('should toggle isControlPathExpanded from false to true', () => {
+      component.isControlPathExpanded = false;
+      component.toggleControlPath();
+      expect(component.isControlPathExpanded).toBe(true);
+    });
+
+    it('should toggle isControlPathExpanded from true to false', () => {
+      component.isControlPathExpanded = true;
+      component.toggleControlPath();
+      expect(component.isControlPathExpanded).toBe(false);
+    });
+  });
+
+  describe('toggleDataPath', () => {
+    it('should toggle isDataPathExpanded from false to true', () => {
+      component.isDataPathExpanded = false;
+      component.toggleDataPath();
+      expect(component.isDataPathExpanded).toBe(true);
+    });
+
+    it('should toggle isDataPathExpanded from true to false', () => {
+      component.isDataPathExpanded = true;
+      component.toggleDataPath();
+      expect(component.isDataPathExpanded).toBe(false);
+    });
+  });
+
+  describe('toggleHop', () => {
+    it('should toggle hop expansion from false to true', () => {
+      expect(component.isHopExpanded('control', 0)).toBe(false);
+      component.toggleHop('control', 0);
+      expect(component.isHopExpanded('control', 0)).toBe(true);
+    });
+
+    it('should toggle hop expansion from true to false', () => {
+      component.toggleHop('data', 1);
+      expect(component.isHopExpanded('data', 1)).toBe(true);
+      component.toggleHop('data', 1);
+      expect(component.isHopExpanded('data', 1)).toBe(false);
+    });
+  });
+
+  describe('isHopExpanded', () => {
+    it('should return false when hop is not expanded', () => {
+      expect(component.isHopExpanded('control', 0)).toBe(false);
+    });
+
+    it('should return true when hop is expanded', () => {
+      component.toggleHop('control', 0);
+      expect(component.isHopExpanded('control', 0)).toBe(true);
+    });
+  });
+
+  describe('toggleEvalDetails', () => {
+    it('should toggle evaluation details expansion from false to true', () => {
+      expect(component.isEvalDetailsExpanded('control', 0)).toBe(false);
+      component.toggleEvalDetails('control', 0);
+      expect(component.isEvalDetailsExpanded('control', 0)).toBe(true);
+    });
+
+    it('should toggle evaluation details expansion from true to false', () => {
+      component.toggleEvalDetails('data', 1);
+      expect(component.isEvalDetailsExpanded('data', 1)).toBe(true);
+      component.toggleEvalDetails('data', 1);
+      expect(component.isEvalDetailsExpanded('data', 1)).toBe(false);
+    });
+  });
+
+  describe('isEvalDetailsExpanded', () => {
+    it('should return false when evaluation details is not expanded', () => {
+      expect(component.isEvalDetailsExpanded('control', 0)).toBe(false);
+    });
+
+    it('should return true when evaluation details is expanded', () => {
+      component.toggleEvalDetails('control', 0);
+      expect(component.isEvalDetailsExpanded('control', 0)).toBe(true);
+    });
+  });
+
+  describe('toggleGeneratedConfig', () => {
+    it('should toggle generated config expansion from false to true', () => {
+      expect(component.isGeneratedConfigExpanded('control', 0)).toBe(false);
+      component.toggleGeneratedConfig('control', 0);
+      expect(component.isGeneratedConfigExpanded('control', 0)).toBe(true);
+    });
+
+    it('should toggle generated config expansion from true to false', () => {
+      component.toggleGeneratedConfig('data', 1);
+      expect(component.isGeneratedConfigExpanded('data', 1)).toBe(true);
+      component.toggleGeneratedConfig('data', 1);
+      expect(component.isGeneratedConfigExpanded('data', 1)).toBe(false);
+    });
+  });
+
+  describe('isGeneratedConfigExpanded', () => {
+    it('should return false when generated config is not expanded', () => {
+      expect(component.isGeneratedConfigExpanded('control', 0)).toBe(false);
+    });
+
+    it('should return true when generated config is expanded', () => {
+      component.toggleGeneratedConfig('control', 0);
+      expect(component.isGeneratedConfigExpanded('control', 0)).toBe(true);
+    });
+  });
+
+  describe('toggleNestedPolicyEvalDetails', () => {
+    it('should toggle nested policy evaluation details expansion', () => {
+      expect(component.isNestedPolicyEvalDetailsExpanded('control', 0, 'policy1')).toBe(false);
+      component.toggleNestedPolicyEvalDetails('control', 0, 'policy1');
+      expect(component.isNestedPolicyEvalDetailsExpanded('control', 0, 'policy1')).toBe(true);
+      component.toggleNestedPolicyEvalDetails('control', 0, 'policy1');
+      expect(component.isNestedPolicyEvalDetailsExpanded('control', 0, 'policy1')).toBe(false);
+    });
+  });
+
+  describe('isNestedPolicyEvalDetailsExpanded', () => {
+    it('should return false when nested policy evaluation details is not expanded', () => {
+      expect(component.isNestedPolicyEvalDetailsExpanded('control', 0, 'policy1')).toBe(false);
+    });
+
+    it('should return true when nested policy evaluation details is expanded', () => {
+      component.toggleNestedPolicyEvalDetails('control', 0, 'policy1');
+      expect(component.isNestedPolicyEvalDetailsExpanded('control', 0, 'policy1')).toBe(true);
+    });
+  });
+
+  describe('toggleNestedPolicyGeneratedConfig', () => {
+    it('should toggle nested policy generated config expansion', () => {
+      expect(component.isNestedPolicyGeneratedConfigExpanded('control', 0, 'policy1')).toBe(false);
+      component.toggleNestedPolicyGeneratedConfig('control', 0, 'policy1');
+      expect(component.isNestedPolicyGeneratedConfigExpanded('control', 0, 'policy1')).toBe(true);
+      component.toggleNestedPolicyGeneratedConfig('control', 0, 'policy1');
+      expect(component.isNestedPolicyGeneratedConfigExpanded('control', 0, 'policy1')).toBe(false);
+    });
+  });
+
+  describe('isNestedPolicyGeneratedConfigExpanded', () => {
+    it('should return false when nested policy generated config is not expanded', () => {
+      expect(component.isNestedPolicyGeneratedConfigExpanded('control', 0, 'policy1')).toBe(false);
+    });
+
+    it('should return true when nested policy generated config is expanded', () => {
+      component.toggleNestedPolicyGeneratedConfig('control', 0, 'policy1');
+      expect(component.isNestedPolicyGeneratedConfigExpanded('control', 0, 'policy1')).toBe(true);
+    });
+  });
+
+  describe('getControlPlaneStatusText', () => {
+    it('should return "✓ Allowed" when allowed is true', () => {
+      expect(component.getControlPlaneStatusText(true)).toBe('✓ Allowed');
+    });
+
+    it('should return "✗ Denied" when allowed is false', () => {
+      expect(component.getControlPlaneStatusText(false)).toBe('✗ Denied');
+    });
+
+    it('should return "Unknown" when allowed is undefined', () => {
+      expect(component.getControlPlaneStatusText(undefined)).toBe('Unknown');
+    });
+  });
+
+  describe('getMetadataStatusText', () => {
+    it('should return "Allowed" when metadata.allowed is true', () => {
+      const metadata = { allowed: true };
+      expect(component.getMetadataStatusText(metadata)).toBe('Allowed');
+    });
+
+    it('should return "Denied" when metadata.allowed is false', () => {
+      const metadata = { allowed: false };
+      expect(component.getMetadataStatusText(metadata)).toBe('Denied');
+    });
+
+    it('should return empty string when metadata is null', () => {
+      expect(component.getMetadataStatusText(null)).toBe('');
+    });
+
+    it('should return empty string when metadata is undefined', () => {
+      expect(component.getMetadataStatusText(undefined)).toBe('');
+    });
+  });
+
+  describe('formatJson', () => {
+    it('should format object as JSON string', () => {
+      const obj = { key: 'value', number: 123 };
+      const result = component.formatJson(obj);
+      expect(result).toBe(JSON.stringify(obj, null, 2));
+    });
+
+    it('should return empty string when obj is null', () => {
+      expect(component.formatJson(null)).toBe('');
+    });
+
+    it('should return empty string when obj is undefined', () => {
+      expect(component.formatJson(undefined)).toBe('');
+    });
+  });
+
+  describe('isHopAllowed', () => {
+    it('should return policyAllowed when present', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          policyAllowed: true,
+          allowed: false,
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(true);
+    });
+
+    it('should return allowed when policyAllowed is not present', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          allowed: false,
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(false);
+    });
+
+    it('should return undefined when controlPlaneMetadata is missing', () => {
+      const hop = {};
+      expect(component.isHopAllowed(hop)).toBeUndefined();
+    });
+
+    it('should return undefined when hop is null', () => {
+      expect(component.isHopAllowed(null)).toBeUndefined();
+    });
+
+    it('should return undefined when hop is undefined', () => {
+      expect(component.isHopAllowed(undefined)).toBeUndefined();
+    });
+  });
 });
