@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-// import { createTransport } from 'nodemailer'
 
 @Component({
   selector: 'app-navbar',
@@ -39,8 +38,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private datacenterContextService: DatacenterContextService,
     private tierContextService: TierContextService,
-    private formBuilder: UntypedFormBuilder,
-    private mailService: V1MailService,
   ) {}
 
   comps = ['Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'Firewall Rules', 'VLANs', 'Tiers', 'Subnets', 'NAT Rules'];
@@ -60,7 +57,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.buildForm();
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
@@ -106,83 +102,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  // adds generic fields for RFE/submit issue buttons
-  public addUserInfo(form: UntypedFormGroup, type: string): any {
-    form.value.timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
-    form.value.user = this.auth.currentUserValue.cn;
-    form.value.userEmail = this.auth.currentUserValue.mail;
-    form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
-    form.value.url = window.location.href;
-    form.value.requestType = type;
-
-    // For PROD - sends to Carl, Richard
-    // form.value.toEmail = type.includes('issue') ? 'dcs_problem_group@bcbssc.com' : 'dcs_request_enhancement_group@bcbssc.com';
-
-    // For DEV testing - only send to yourself
-    form.value.toEmail = 'pmccardle@presidio.com';
-
-    return form;
-  }
-
-  public async saveFeedback(type): Promise<any> {
-    this.submitted = true;
-    let form = type.includes('issue') ? this.issueForm : this.rfeForm;
-    if (form.invalid) {
-      return;
-    }
-    form = this.addUserInfo(form, type);
-    console.log('form', form);
-    const mailBody = form.value;
-    console.log('mailBody', mailBody);
-    // const jsonBody = JSON.parse(mailBody);
-    // console.log('jsonBody',jsonBody)
-    this.mailService.createOneMail({ body: mailBody }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
-    console.log('form', form);
-  }
-
-  private buildForm(): void {
-    // TODO test len on description instead, because default text counts
-    this.rfeForm = this.formBuilder.group({
-      description: [this.rfeFormText, Validators.required],
-      component: ['', Validators.required],
-    });
-
-    this.issueForm = this.formBuilder.group({
-      description: [this.issueFormText, Validators.required],
-      component: ['', Validators.required],
-    });
-    this.selected = '';
-    this.submitted = false;
-  }
-
   public openReportIssueModal(): void {
     this.ngx.getModal('reportIssueModal').open();
-    this.buildForm();
   }
 
   public openRequestEnhancementModal(): void {
     this.ngx.getModal('requestEnhancementModal').open();
-    this.buildForm();
-  }
-
-  public closeModal(): void {
-    this.ngx.close('requestEnhancementModal');
-    this.ngx.close('reportIssueModal');
-    this.buildForm();
-  }
-
-  update(e) {
-    this.selected = e.target.value;
-  }
-
-  get rfe() {
-    return this.rfeForm.controls;
-  }
-
-  get issue() {
-    return this.issueForm.controls;
   }
 }

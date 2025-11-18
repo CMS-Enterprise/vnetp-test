@@ -10,6 +10,8 @@ import { MockProvider } from 'src/test/mock-providers';
 import { HttpClientModule } from '@angular/common/http';
 import { V3GlobalMessagesService } from 'client';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReportIssueModalComponent } from './report-issue-modal/report-issue-modal.component';
+import { RequestEnhancementModalComponent } from './request-enhancement-modal/request-enhancement-modal.component';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -19,7 +21,13 @@ describe('NavbarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NavbarComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [
+        NavbarComponent,
+        MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
+        ReportIssueModalComponent,
+        RequestEnhancementModalComponent,
+      ],
       imports: [RouterTestingModule, HttpClientModule, FormsModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();

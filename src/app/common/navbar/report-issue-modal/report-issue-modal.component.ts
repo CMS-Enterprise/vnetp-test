@@ -5,11 +5,11 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-request-enhancement-modal',
-  templateUrl: './request-enhancement-modal.component.html',
+  selector: 'app-report-issue-modal',
+  templateUrl: './report-issue-modal.component.html',
 })
-export class RequestEnhancementModalComponent implements OnInit {
-  rfeForm: UntypedFormGroup;
+export class ReportIssueModalComponent implements OnInit {
+  public issueForm: UntypedFormGroup;
   submitted;
   selected;
   constructor(
@@ -18,22 +18,25 @@ export class RequestEnhancementModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private mailService: V1MailService,
   ) {}
-  comps = ['Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'Firewall Rules', 'VLANs', 'Tiers', 'Subnets', 'NAT Rules'];
-  // rfeFormText =
-  //     'What is it doing now? \nWhat do you want it to do? \nWhat are the benefits of doing this? \nHow will this be helpful to you?\n';
-  rfeFormText = [
-    'What is it doing now?',
-    'What do you want it to do?',
-    'What are the benefits of doing this?',
-    'How will this be helpful to you?',
+  comps = ['Firewall Rules', 'NAT Rules', 'Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'VLANs', 'Tiers', 'Subnets'];
+  // issueFormText =
+  //     ['What is the error? \nHas it worked before? \nWhen did it last work? \nWhat were you expecting it to do? \nWhat did it do instead?\n'];
+  issueFormText = [
+    'What is the error?',
+    'Has it worked before?',
+    'When did it last work?',
+    'What were you expecting it to do?',
+    'What did it do instead?',
   ];
-
   ngOnInit() {
     this.buildForm();
   }
+  get issue() {
+    return this.issueForm.controls;
+  }
+
   private buildForm(): void {
-    // TODO test len on description instead, because default text counts
-    this.rfeForm = this.formBuilder.group({
+    this.issueForm = this.formBuilder.group({
       description: ['', Validators.required],
       component: ['', Validators.required],
     });
@@ -43,7 +46,7 @@ export class RequestEnhancementModalComponent implements OnInit {
   }
 
   get rfe() {
-    return this.rfeForm.controls;
+    return this.issueForm.controls;
   }
 
   update(e) {
@@ -52,34 +55,30 @@ export class RequestEnhancementModalComponent implements OnInit {
 
   public async saveFeedback(): Promise<any> {
     this.submitted = true;
-    let form = this.rfeForm;
+    let form = this.issueForm;
     if (form.invalid) {
       return;
     }
     form = this.addUserInfo(form);
     const mailBody = form.value;
+    console.log('mailBody', mailBody);
     this.mailService.createOneMail({ body: mailBody }).subscribe(
       () => this.closeModal(),
       () => {},
     );
+    console.log('form', form);
   }
 
   public closeModal(): void {
-    this.ngx.close('requestEnhancementModal');
+    this.ngx.close('reportIssueModal');
     this.buildForm();
   }
-  // adds generic fields for RFE/submit issue buttons
   public addUserInfo(form: UntypedFormGroup): any {
     form.value.timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
     form.value.user = this.auth.currentUserValue.cn;
     form.value.userEmail = this.auth.currentUserValue.mail;
     form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
     form.value.url = window.location.href;
-
-    // For PROD - sends to Carl, Richard
-    // form.value.toEmail = type.includes('issue') ? 'dcs_problem_group@bcbssc.com' : 'dcs_request_enhancement_group@bcbssc.com';
-
-    // For DEV testing - only send to yourself
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;
