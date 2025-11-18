@@ -3,11 +3,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Datacenter, Tier, UserDto, V1MailService } from '../../../../client';
+import { Datacenter, Tier, UserDto } from '../../../../client';
 import { environment } from 'src/environments/environment';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
@@ -39,13 +39,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private datacenterContextService: DatacenterContextService,
     private tierContextService: TierContextService,
   ) {}
-
-  comps = ['Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'Firewall Rules', 'VLANs', 'Tiers', 'Subnets', 'NAT Rules'];
-  rfeFormText =
-    'What is it doing now? \nWhat do you want it to do? \nWhat are the benefits of doing this? \nHow will this be helpful to you?\n';
-  issueFormText =
-    'What is the error? \nHas it worked before? \nWhen did it last work? \nWhat were you expecting it to do? \nWhat did it do instead?\n';
-  selected = '';
 
   public openLogoutModal(): void {
     this.ngx.getModal('logoutModal').open();

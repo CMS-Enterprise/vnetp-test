@@ -8,7 +8,6 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { HttpClientModule } from '@angular/common/http';
-import { V3GlobalMessagesService } from 'client';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportIssueModalComponent } from './report-issue-modal/report-issue-modal.component';
 import { RequestEnhancementModalComponent } from './request-enhancement-modal/request-enhancement-modal.component';

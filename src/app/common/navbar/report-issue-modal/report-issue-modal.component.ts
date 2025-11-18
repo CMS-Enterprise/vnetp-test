@@ -10,8 +10,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ReportIssueModalComponent implements OnInit {
   public issueForm: UntypedFormGroup;
-  submitted;
-  selected;
+  submitted: boolean;
+  selected: string;
   constructor(
     private auth: AuthService,
     private ngx: NgxSmartModalService,
@@ -19,8 +19,6 @@ export class ReportIssueModalComponent implements OnInit {
     private mailService: V1MailService,
   ) {}
   comps = ['Firewall Rules', 'NAT Rules', 'Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'VLANs', 'Tiers', 'Subnets'];
-  // issueFormText =
-  //     ['What is the error? \nHas it worked before? \nWhen did it last work? \nWhat were you expecting it to do? \nWhat did it do instead?\n'];
   issueFormText = [
     'What is the error?',
     'Has it worked before?',
@@ -31,11 +29,8 @@ export class ReportIssueModalComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
   }
-  get issue() {
-    return this.issueForm.controls;
-  }
 
-  private buildForm(): void {
+  public buildForm(): void {
     this.issueForm = this.formBuilder.group({
       description: ['', Validators.required],
       component: ['', Validators.required],
@@ -53,7 +48,7 @@ export class ReportIssueModalComponent implements OnInit {
     this.selected = e.target.value;
   }
 
-  public async saveFeedback(): Promise<any> {
+  public saveFeedback(): void {
     this.submitted = true;
     let form = this.issueForm;
     if (form.invalid) {
@@ -61,19 +56,17 @@ export class ReportIssueModalComponent implements OnInit {
     }
     form = this.addUserInfo(form);
     const mailBody = form.value;
-    console.log('mailBody', mailBody);
     this.mailService.createOneMail({ body: mailBody }).subscribe(
       () => this.closeModal(),
       () => {},
     );
-    console.log('form', form);
   }
 
   public closeModal(): void {
     this.ngx.close('reportIssueModal');
     this.buildForm();
   }
-  public addUserInfo(form: UntypedFormGroup): any {
+  public addUserInfo(form: UntypedFormGroup): UntypedFormGroup {
     form.value.timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
     form.value.user = this.auth.currentUserValue.cn;
     form.value.userEmail = this.auth.currentUserValue.mail;
@@ -82,5 +75,9 @@ export class ReportIssueModalComponent implements OnInit {
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;
+  }
+
+  get issue() {
+    return this.issueForm.controls;
   }
 }

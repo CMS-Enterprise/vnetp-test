@@ -10,17 +10,15 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class RequestEnhancementModalComponent implements OnInit {
   rfeForm: UntypedFormGroup;
-  submitted;
-  selected;
+  submitted: boolean;
+  selected: string;
   constructor(
     private auth: AuthService,
     private ngx: NgxSmartModalService,
     private formBuilder: UntypedFormBuilder,
     private mailService: V1MailService,
   ) {}
-  comps = ['Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'Firewall Rules', 'VLANs', 'Tiers', 'Subnets', 'NAT Rules'];
-  // rfeFormText =
-  //     'What is it doing now? \nWhat do you want it to do? \nWhat are the benefits of doing this? \nHow will this be helpful to you?\n';
+  comps = ['Firewall Rules', 'NAT Rules', 'Network Objects', 'Service Objects', 'Load Balancer', 'Routing', 'VLANs', 'Tiers', 'Subnets'];
   rfeFormText = [
     'What is it doing now?',
     'What do you want it to do?',
@@ -31,8 +29,7 @@ export class RequestEnhancementModalComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
   }
-  private buildForm(): void {
-    // TODO test len on description instead, because default text counts
+  public buildForm(): void {
     this.rfeForm = this.formBuilder.group({
       description: ['', Validators.required],
       component: ['', Validators.required],
@@ -50,13 +47,14 @@ export class RequestEnhancementModalComponent implements OnInit {
     this.selected = e.target.value;
   }
 
-  public async saveFeedback(): Promise<any> {
+  public saveFeedback(): void {
     this.submitted = true;
     let form = this.rfeForm;
+    form = this.addUserInfo(form);
     if (form.invalid) {
       return;
     }
-    form = this.addUserInfo(form);
+    // form = this.addUserInfo(form);
     const mailBody = form.value;
     this.mailService.createOneMail({ body: mailBody }).subscribe(
       () => this.closeModal(),
@@ -68,6 +66,7 @@ export class RequestEnhancementModalComponent implements OnInit {
     this.ngx.close('requestEnhancementModal');
     this.buildForm();
   }
+
   // adds generic fields for RFE/submit issue buttons
   public addUserInfo(form: UntypedFormGroup): any {
     form.value.timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
@@ -75,11 +74,6 @@ export class RequestEnhancementModalComponent implements OnInit {
     form.value.userEmail = this.auth.currentUserValue.mail;
     form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
     form.value.url = window.location.href;
-
-    // For PROD - sends to Carl, Richard
-    // form.value.toEmail = type.includes('issue') ? 'dcs_problem_group@bcbssc.com' : 'dcs_request_enhancement_group@bcbssc.com';
-
-    // For DEV testing - only send to yourself
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;
