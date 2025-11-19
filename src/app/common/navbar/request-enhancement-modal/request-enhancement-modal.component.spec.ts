@@ -60,7 +60,7 @@ describe('RequestEnhancementModalComponent', () => {
     it('should call createOneMail after form is submitted if form status is valid', () => {
       component.rfeForm.controls.description.setValue('new description');
       component.rfeForm.controls.component.setValue('FW Rules');
-      const mockCreateOneMail = jest.spyOn(component['mailService'], 'createOneMail');
+      const mockCreateOneMail = jest.spyOn(component['mailService'], 'createOneEnhancementMail');
       component.saveFeedback();
       expect(mockCreateOneMail).toHaveBeenCalled();
     });

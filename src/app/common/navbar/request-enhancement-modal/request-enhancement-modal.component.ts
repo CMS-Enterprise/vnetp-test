@@ -56,7 +56,7 @@ export class RequestEnhancementModalComponent implements OnInit {
     }
     // form = this.addUserInfo(form);
     const mailBody = form.value;
-    this.mailService.createOneMail({ body: mailBody }).subscribe(
+    this.mailService.createOneEnhancementMail(mailBody).subscribe(
       () => this.closeModal(),
       () => {},
     );

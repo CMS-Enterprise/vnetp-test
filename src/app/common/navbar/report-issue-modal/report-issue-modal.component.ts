@@ -32,7 +32,11 @@ export class ReportIssueModalComponent implements OnInit {
 
   public buildForm(): void {
     this.issueForm = this.formBuilder.group({
-      description: ['', Validators.required],
+      error: ['', Validators.required],
+      hasItWorked: ['', Validators.required],
+      whenDidItWork: ['', Validators.required],
+      expectation: ['', Validators.required],
+      whatHappened: ['', Validators.required],
       component: ['', Validators.required],
     });
 
@@ -54,9 +58,10 @@ export class ReportIssueModalComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    form = this.addUserInfo(form);
+    // form = this.addUserInfo(form);
     const mailBody = form.value;
-    this.mailService.createOneMail({ body: mailBody }).subscribe(
+    console.log('form', form);
+    this.mailService.createOneEnhancementMail(mailBody).subscribe(
       () => this.closeModal(),
       () => {},
     );

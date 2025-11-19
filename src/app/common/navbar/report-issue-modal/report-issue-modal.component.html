@@ -34,17 +34,80 @@
       <div class="form-group">
         <!-- <label for="description">Describe your issue</label> -->
         <div>
-          <div *ngFor="let question of issueFormText">
-            {{ question }}
+          <div>
+            {{ issueFormText[0] }}
             <textarea
-              id="description"
+              id="error"
               rows="2"
-              formControlName="description"
-              [class.is-invalid]="submitted && issue.description.errors"
+              formControlName="error"
+              [class.is-invalid]="submitted && issue.error.errors"
               class="form-control"
               style="resize: none"
             >
             </textarea>
+            <div *ngIf="submitted && issue.error.errors" class="invalid-feedback">
+              <div *ngIf="issue.error.errors.required">Description is required</div>
+            </div>
+          </div>
+          <div>
+            {{ issueFormText[1] }}
+            <textarea
+              id="hasItWorked"
+              rows="2"
+              formControlName="hasItWorked"
+              [class.is-invalid]="submitted && issue.hasItWorked.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && issue.hasItWorked.errors" class="invalid-feedback">
+              <div *ngIf="issue.hasItWorked.errors.required">Description is required</div>
+            </div>
+          </div>
+          <div>
+            {{ issueFormText[2] }}
+            <textarea
+              id="whenDidItWork"
+              rows="2"
+              formControlName="whenDidItWork"
+              [class.is-invalid]="submitted && issue.whenDidItWork.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && issue.whenDidItWork.errors" class="invalid-feedback">
+              <div *ngIf="issue.whenDidItWork.errors.required">Description is required</div>
+            </div>
+          </div>
+          <div>
+            {{ issueFormText[3] }}
+            <textarea
+              id="expectation"
+              rows="2"
+              formControlName="expectation"
+              [class.is-invalid]="submitted && issue.expectation.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && issue.expectation.errors" class="invalid-feedback">
+              <div *ngIf="issue.expectation.errors.required">Description is required</div>
+            </div>
+          </div>
+          <div>
+            {{ issueFormText[4] }}
+            <textarea
+              id="whatHappened"
+              rows="2"
+              formControlName="whatHappened"
+              [class.is-invalid]="submitted && issue.whatHappened.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && issue.whatHappened.errors" class="invalid-feedback">
+              <div *ngIf="issue.whatHappened.errors.required">Description is required</div>
+            </div>
           </div>
         </div>
 
@@ -56,9 +119,6 @@
           class="form-control"
         >
         </textarea> -->
-        <div *ngIf="submitted && issue.description.errors" class="invalid-feedback">
-          <div *ngIf="issue.description.errors.required">Description is required</div>
-        </div>
       </div>
     </div>
 
