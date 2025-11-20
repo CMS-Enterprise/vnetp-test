@@ -6,8 +6,66 @@
         "operationId": "createOneIssueMail",
         "summary": "Create one Issue Mail",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "enum": [
+                  "Timestamp",
+                  "User",
+                  "UserEmail",
+                  "Description",
+                  "ReceiverEmail"
+                ],
+                "type": "string"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ]
+      }
+    },
+    "/v1/mail/issue/{mailId}": {
+      "put": {
+        "operationId": "updateOneIssueMail",
+        "summary": "Update one Issue Mail",
+        "parameters": [
+          {
+            "name": "mailId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "enum": [
+                  "Timestamp",
+                  "User",
+                  "UserEmail",
+                  "Description",
+                  "ReceiverEmail"
+                ],
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -21,8 +79,66 @@
         "operationId": "createOneEnhancementMail",
         "summary": "Create one Enhancement Mail",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "enum": [
+                  "Timestamp",
+                  "User",
+                  "UserEmail",
+                  "Description",
+                  "ReceiverEmail"
+                ],
+                "type": "string"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ]
+      }
+    },
+    "/v1/mail/enhancement/{mailId}": {
+      "put": {
+        "operationId": "updateOneEnhancementMail",
+        "summary": "Update One Enhancement Mail",
+        "parameters": [
+          {
+            "name": "mailId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "enum": [
+                  "Timestamp",
+                  "User",
+                  "UserEmail",
+                  "Description",
+                  "ReceiverEmail"
+                ],
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
             "description": ""
           }
         },

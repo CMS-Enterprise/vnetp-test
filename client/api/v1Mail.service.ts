@@ -22,6 +22,24 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface CreateOneEnhancementMailRequestParams {
+    body: string;
+}
+
+export interface CreateOneIssueMailRequestParams {
+    body: string;
+}
+
+export interface UpdateOneEnhancementMailRequestParams {
+    mailId: string;
+    body: string;
+}
+
+export interface UpdateOneIssueMailRequestParams {
+    mailId: string;
+    body: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -85,13 +103,18 @@ export class V1MailService {
 
     /**
      * Create one Enhancement Mail
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneEnhancementMail(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public createOneEnhancementMail(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public createOneEnhancementMail(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public createOneEnhancementMail(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createOneEnhancementMail.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -107,13 +130,22 @@ export class V1MailService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/mail/enhancement`,
-            null,
+            body,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -126,13 +158,18 @@ export class V1MailService {
 
     /**
      * Create one Issue Mail
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneIssueMail(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public createOneIssueMail(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public createOneIssueMail(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public createOneIssueMail(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createOneIssueMail.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -148,13 +185,140 @@ export class V1MailService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/mail/issue`,
-            null,
+            body,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update One Enhancement Mail
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateOneEnhancementMail(requestParameters: UpdateOneEnhancementMailRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public updateOneEnhancementMail(requestParameters: UpdateOneEnhancementMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public updateOneEnhancementMail(requestParameters: UpdateOneEnhancementMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public updateOneEnhancementMail(requestParameters: UpdateOneEnhancementMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const mailId = requestParameters.mailId;
+        if (mailId === null || mailId === undefined) {
+            throw new Error('Required parameter mailId was null or undefined when calling updateOneEnhancementMail.');
+        }
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateOneEnhancementMail.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/mail/enhancement/${encodeURIComponent(String(mailId))}`,
+            body,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update one Issue Mail
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateOneIssueMail(requestParameters: UpdateOneIssueMailRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public updateOneIssueMail(requestParameters: UpdateOneIssueMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public updateOneIssueMail(requestParameters: UpdateOneIssueMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public updateOneIssueMail(requestParameters: UpdateOneIssueMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const mailId = requestParameters.mailId;
+        if (mailId === null || mailId === undefined) {
+            throw new Error('Required parameter mailId was null or undefined when calling updateOneIssueMail.');
+        }
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateOneIssueMail.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/mail/issue/${encodeURIComponent(String(mailId))}`,
+            body,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

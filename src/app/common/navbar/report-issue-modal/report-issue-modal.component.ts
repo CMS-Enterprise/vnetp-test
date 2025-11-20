@@ -58,10 +58,11 @@ export class ReportIssueModalComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    // form = this.addUserInfo(form);
+    form = this.addUserInfo(form);
     const mailBody = form.value;
-    console.log('form', form);
-    this.mailService.createOneEnhancementMail(mailBody).subscribe(
+
+    console.log('mailBody', mailBody);
+    this.mailService.createOneIssueMail({ body: mailBody }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -75,8 +76,10 @@ export class ReportIssueModalComponent implements OnInit {
     form.value.timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
     form.value.user = this.auth.currentUserValue.cn;
     form.value.userEmail = this.auth.currentUserValue.mail;
-    form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
-    form.value.url = window.location.href;
+    form.value.status = 'Open';
+    form.value.mailType = 'Issue';
+    // form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
+    // form.value.url = window.location.href;
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;
