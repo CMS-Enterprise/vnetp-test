@@ -330,7 +330,6 @@ describe('EndpointConnectivityUtilityComponent', () => {
     it('should handle graph loading error', () => {
       const errorMsg = 'Graph load failed';
       (mockTenantService.buildTenantFullGraphTenant as jest.Mock).mockReturnValue(throwError(() => ({ message: errorMsg })));
-      
       // Create new component instance to trigger fresh ngOnInit
       const newFixture = TestBed.createComponent(EndpointConnectivityUtilityComponent);
       const newComponent = newFixture.componentInstance;

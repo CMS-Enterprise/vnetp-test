@@ -51,7 +51,7 @@
             <mat-accordion>
               <mat-expansion-panel *ngFor="let item of workflow.validationResult.auditLogResults">
                 <mat-expansion-panel-header>
-                  <mat-panel-title> {{ item.mergedAuditLog.entityType }}: {{ item.mergedAuditLog.entityName }} </mat-panel-title>
+                  <mat-panel-title> {{ item.mergedAuditLog.entityType }}: {{ item.mergedAuditLog.entityName }} ({{ item.mergedAuditLog.entityId }}) </mat-panel-title>
                   <mat-panel-description>
                     <span
                       >Status: <mat-chip [class]="'status-' + item.processingStatus">{{ item.processingStatus }}</mat-chip></span

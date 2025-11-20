@@ -146,7 +146,7 @@ export class TableComponent<T> implements AfterViewInit {
     ];
 
     // if tableId is a badList ID, we hide the search bar
-    if (badList.includes(this.uniqueTableId)) {
+    if (badList.includes(this.uniqueTableId) || this.config.hideSearchBar) {
       this.showSearchBar = false;
     }
 

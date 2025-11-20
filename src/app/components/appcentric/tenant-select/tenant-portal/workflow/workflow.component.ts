@@ -58,12 +58,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate') statusTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Workflows',
+    hideSearchBar: true,
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Status', property: 'status' },
+      { name: 'Status', template: () => this.statusTemplate },
       { name: 'Terraform Module', property: 'terraformModule' },
       { name: 'Approval Type', property: 'approvalType' },
       { name: 'Created At', property: 'createdAt' },
@@ -86,9 +88,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
           tenantId: this.tenantId,
           workflowType,
         },
-      }).subscribe(response => {
-        this.workflows.data.push(response);
-        this.checkAndStartRefresh();
+      }).subscribe(() => {
+        this.getWorkflows();
       });
     };
 
@@ -169,6 +170,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     const activeStatuses = [
+      WorkflowStatusEnum.Approved,
       WorkflowStatusEnum.Pending,
       WorkflowStatusEnum.Planning,
       WorkflowStatusEnum.Validating,
@@ -230,5 +232,29 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       // const { filteredResults } = params;
       this.getWorkflows();
     });
+  }
+
+  getStatusIcon(status: string): { icon: string[]; color: string } {
+    switch (status) {
+      case WorkflowStatusEnum.Completed:
+      case WorkflowStatusEnum.CompletedNoChanges:
+        return { icon: ['fas', 'check'], color: 'text-success' };
+      case WorkflowStatusEnum.Pending:
+      case WorkflowStatusEnum.Planning:
+      case WorkflowStatusEnum.Validating:
+      case WorkflowStatusEnum.Applying:
+        return { icon: ['fas', 'clock'], color: 'text-info' };
+      case WorkflowStatusEnum.PlanFailed:
+      case WorkflowStatusEnum.PlanIncomplete:
+      case WorkflowStatusEnum.ApplyFailed:
+        return { icon: ['fas', 'times'], color: 'text-danger' };
+      case WorkflowStatusEnum.ValidAwaitingManualApproval:
+      case WorkflowStatusEnum.InvalidApplyable:
+      case WorkflowStatusEnum.Disapproved:
+      case WorkflowStatusEnum.Approved:
+        return { icon: ['fas', 'exclamation-triangle'], color: 'text-warning' };
+      default:
+        return { icon: ['fas', 'info-circle'], color: 'text-muted' };
+    }
   }
 }
