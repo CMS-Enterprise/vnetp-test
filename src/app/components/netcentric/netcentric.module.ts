@@ -129,6 +129,12 @@ const routes: Routes = [
         data: { breadcrumb: 'WAN Form', title: 'Automation - WAN Form', mode: 'netcentric' },
         loadChildren: () => import('../network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
       },
+      {
+        path: 'bugs-enhancements',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: 'Bugs / Enhancement Requests', title: 'Automation - Bugs / Enhancements', mode: 'netcentric' },
+        loadChildren: () => import('../../components/bugs-enhancements/bugs-enhancements.module').then(m => m.BugsEnhancementsModule),
+      },
     ],
   },
 ];

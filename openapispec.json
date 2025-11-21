@@ -147,6 +147,20 @@
         ]
       }
     },
+    "/v1/mail": {
+      "get": {
+        "operationId": "getMailsMail",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ]
+      }
+    },
     "/v1/auth/token": {
       "post": {
         "operationId": "getTokenLdapAuth",
