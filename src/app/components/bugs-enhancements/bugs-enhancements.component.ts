@@ -15,27 +15,49 @@ import { Router } from '@angular/router';
 })
 export class BugsEnhancementsComponent implements OnInit {
   @ViewChild('mailBodyTemplate') mailBodyTemplate: TemplateRef<any>;
-  mails = { data: [] };
+  @ViewChild('mailUserTemplate') mailUserTemplate: TemplateRef<any>;
+  @ViewChild('mailComponentTemplate') mailComponentTemplate: TemplateRef<any>;
+
+  mails;
 
   private dataChanges: Subscription;
 
   public perPage = 10;
   public tableComponentDto = new TableComponentDto();
+  public isLoading = false;
 
   public config: TableConfig<any> = {
-    description: 'Audit Log',
+    description: 'Bugs/Enhancements',
     columns: [
       { name: 'Status', property: 'status' },
       { name: 'Mail Body', template: () => this.mailBodyTemplate },
+      { name: 'Requesting User', property: 'user' },
+      { name: 'Mail Type', property: 'component' },
       { name: 'Mail Type', property: 'mailType' },
+      { name: 'Timestamp', property: 'timestamp' },
     ],
   };
 
   constructor(private ngx: NgxSmartModalService, private mailService: V1MailService) {}
   public getMails(event?): void {
-    this.mailService.getMailsMail().subscribe(data => {
-      this.mails.data = data;
-    });
+    this.isLoading = true;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
+    } else {
+      this.tableComponentDto.perPage = this.perPage;
+    }
+    this.mailService.getMailsMail({ page: this.tableComponentDto.page, perPage: this.tableComponentDto.perPage }).subscribe(
+      data => {
+        this.mails = data;
+      },
+      () => {
+        this.mails = [];
+      },
+      () => {
+        this.isLoading = false;
+      },
+    );
   }
 
   ngOnInit() {

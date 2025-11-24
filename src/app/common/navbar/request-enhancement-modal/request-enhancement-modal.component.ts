@@ -31,8 +31,11 @@ export class RequestEnhancementModalComponent implements OnInit {
   }
   public buildForm(): void {
     this.rfeForm = this.formBuilder.group({
-      description: ['', Validators.required],
       component: ['', Validators.required],
+      whatIsItDoing: ['', Validators.required],
+      enhancement: ['', Validators.required],
+      benefits: ['', Validators.required],
+      helpful: ['', Validators.required],
     });
 
     this.selected = '';
@@ -50,13 +53,13 @@ export class RequestEnhancementModalComponent implements OnInit {
   public saveFeedback(): void {
     this.submitted = true;
     let form = this.rfeForm;
-    form = this.addUserInfo(form);
+
     if (form.invalid) {
       return;
     }
-    // form = this.addUserInfo(form);
+    form = this.addUserInfo(form);
     const mailBody = form.value;
-    this.mailService.createOneEnhancementMail(mailBody).subscribe(
+    this.mailService.createOneEnhancementMail({ body: mailBody }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -72,8 +75,10 @@ export class RequestEnhancementModalComponent implements OnInit {
     form.value.timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' EST';
     form.value.user = this.auth.currentUserValue.cn;
     form.value.userEmail = this.auth.currentUserValue.mail;
-    form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
-    form.value.url = window.location.href;
+    form.value.status = 'Open';
+    form.value.mailType = 'Enhancement';
+    // form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
+    // form.value.url = window.location.href;
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;

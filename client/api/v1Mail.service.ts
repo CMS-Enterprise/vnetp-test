@@ -30,6 +30,11 @@ export interface CreateOneIssueMailRequestParams {
     body: string;
 }
 
+export interface GetMailsMailRequestParams {
+    page: number;
+    perPage: number;
+}
+
 export interface UpdateOneEnhancementMailRequestParams {
     mailId: string;
     body: string;
@@ -212,13 +217,32 @@ export class V1MailService {
     }
 
     /**
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getMailsMail(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public getMailsMail(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public getMailsMail(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public getMailsMail(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public getMailsMail(requestParameters: GetMailsMailRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public getMailsMail(requestParameters: GetMailsMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public getMailsMail(requestParameters: GetMailsMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public getMailsMail(requestParameters: GetMailsMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const page = requestParameters.page;
+        if (page === null || page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getMailsMail.');
+        }
+        const perPage = requestParameters.perPage;
+        if (perPage === null || perPage === undefined) {
+            throw new Error('Required parameter perPage was null or undefined when calling getMailsMail.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -241,6 +265,7 @@ export class V1MailService {
 
         return this.httpClient.get<any>(`${this.configuration.basePath}/v1/mail`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

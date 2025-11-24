@@ -1,17 +1,27 @@
 <h1>Bugs Enhancements</h1>
-<ng-container>
-  <ng-container>
-    <app-table [config]="config" [data]="mails" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"> </app-table>
-  </ng-container>
+
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="mails" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"> </app-table>
 </ng-container>
 
 <ng-template #mailBodyTemplate let-mail="datum">
   <div>
-    <span> {{ mail | json }}</span>
+    <span> {{ mail.mailBody | json }}</span>
   </div>
 </ng-template>
-<!-- 
+
+<ng-template #mailUserTemplate let-mail="datum">
+  <div>
+    <span> {{ mail.mailBody?.user }}</span>
+  </div>
+</ng-template>
+
+<ng-template #mailComponentTemplate let-mail="datum">
+  <div>
+    <span> {{ mail.mailBody?.component }}</span>
+  </div>
+</ng-template>
 
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-</ng-template> -->
+</ng-template>

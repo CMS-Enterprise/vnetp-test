@@ -35,22 +35,68 @@
       </div>
 
       <div class="form-group">
+        <!-- <label for="description">Describe your enhancement</label> -->
         <div>
-          <div *ngFor="let question of rfeFormText">
-            {{ question }}
+          <div>
+            {{ rfeFormText[0] }}
             <textarea
-              id="description"
+              id="whatIsItDoing"
               rows="2"
-              formControlName="description"
-              [class.is-invalid]="submitted && rfe.description.errors"
+              formControlName="whatIsItDoing"
+              [class.is-invalid]="submitted && rfe.whatIsItDoing.errors"
               class="form-control"
               style="resize: none"
             >
             </textarea>
+            <div *ngIf="submitted && rfe.whatIsItDoing.errors" class="invalid-feedback">
+              <div *ngIf="rfe.whatIsItDoing.errors.required">Description is required</div>
+            </div>
           </div>
-        </div>
-        <div *ngIf="submitted && rfe.description.errors" class="invalid-feedback">
-          <div *ngIf="rfe.description.errors.required">Description is required</div>
+          <div>
+            {{ rfeFormText[1] }}
+            <textarea
+              id="enhancement"
+              rows="2"
+              formControlName="enhancement"
+              [class.is-invalid]="submitted && rfe.enhancement.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && rfe.enhancement.errors" class="invalid-feedback">
+              <div *ngIf="rfe.enhancement.errors.required">Description is required</div>
+            </div>
+          </div>
+          <div>
+            {{ rfeFormText[2] }}
+            <textarea
+              id="benefits"
+              rows="2"
+              formControlName="benefits"
+              [class.is-invalid]="submitted && rfe.benefits.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && rfe.benefits.errors" class="invalid-feedback">
+              <div *ngIf="rfe.benefits.errors.required">Description is required</div>
+            </div>
+          </div>
+          <div>
+            {{ rfeFormText[3] }}
+            <textarea
+              id="helpful"
+              rows="2"
+              formControlName="helpful"
+              [class.is-invalid]="submitted && rfe.helpful.errors"
+              class="form-control"
+              style="resize: none"
+            >
+            </textarea>
+            <div *ngIf="submitted && rfe.helpful.errors" class="invalid-feedback">
+              <div *ngIf="rfe.helpful.errors.required">Description is required</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
