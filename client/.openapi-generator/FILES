@@ -313,6 +313,7 @@ model/towerJobDto.ts
 model/truncatedTerraformResourceChange.ts
 model/updateGlobalBgpRangeDto.ts
 model/updateWorkflowDto.ts
+model/uploadWorkflowLogDto.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts
@@ -322,6 +323,7 @@ model/vrf.ts
 model/vrfConfigDto.ts
 model/workflow.ts
 model/workflowEvent.ts
+model/workflowExecutionLog.ts
 model/workflowValidationError.ts
 model/workflowValidationResultDto.ts
 model/zone.ts

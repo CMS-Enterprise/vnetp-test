@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CreateWorkflowDtoWorkflowTypeEnum, GetManyWorkflowResponseDto, V2WorkflowsService, Workflow, WorkflowStatusEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -23,6 +23,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   public perPage = 20;
   public CreateWorkflowDtoWorkflowTypeEnum = CreateWorkflowDtoWorkflowTypeEnum;
   public workflowViewModalSubscription: Subscription;
+  public showDropdown = false;
   private refreshInterval: any;
   private readonly REFRESH_INTERVAL_MS = 3000;
 
@@ -80,6 +81,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   createWorkflow(workflowType: CreateWorkflowDtoWorkflowTypeEnum) {
+    this.showDropdown = false;
     const modalDto = new YesNoModalDto('Create Workflow', `Are you sure you would like to create a ${workflowType} workflow?`);
 
     const onConfirm = () => {
@@ -98,6 +100,18 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.btn-group')) {
+      this.showDropdown = false;
+    }
   }
 
   getWorkflows(event?) {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { V2WorkflowsService, Workflow } from 'client';
+import { V2WorkflowsService, Workflow, WorkflowExecutionLog } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { WorkflowViewModalData } from './workflow-view-modal.data';
 
@@ -27,7 +27,7 @@ export class WorkflowViewModalComponent {
     this.workflowService
       .getOneWorkflow({
         id: this.workflowId,
-        relations: ['plan', 'events'],
+        relations: ['plan', 'events', 'executionLogs'],
       })
       .subscribe(workflow => {
         this.workflow = workflow;
@@ -65,6 +65,10 @@ export class WorkflowViewModalComponent {
 
   trackByEventId(index: number, event: any): string {
     return event.id;
+  }
+
+  trackByExecutionLogId(index: number, log: WorkflowExecutionLog): string {
+    return log.id;
   }
 
   toggleTerraformPlan(): void {

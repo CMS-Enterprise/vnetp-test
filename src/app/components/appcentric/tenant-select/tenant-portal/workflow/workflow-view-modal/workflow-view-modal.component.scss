@@ -168,3 +168,25 @@ pre {
   background-color: #007bff !important;
   color: #fff !important;
 }
+
+.execution-log-details {
+  p {
+    margin: 8px 0;
+    font-size: 14px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.execution-log-textarea {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  resize: vertical;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
