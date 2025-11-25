@@ -22,8 +22,11 @@ export interface CreateWorkflowDto {
     workflowType: CreateWorkflowDtoWorkflowTypeEnum;
 }
 export enum CreateWorkflowDtoWorkflowTypeEnum {
-    Overlay = 'overlay',
-    Underlay = 'underlay'
+    TenantOverlay = 'tenant_overlay',
+    TenantUnderlay = 'tenant_underlay',
+    TransitTenantOverlay = 'transit_tenant_overlay',
+    TransitTenantUnderlay = 'transit_tenant_underlay',
+    TenantFirewallUnderlay = 'tenant_firewall_underlay'
 };
 
 

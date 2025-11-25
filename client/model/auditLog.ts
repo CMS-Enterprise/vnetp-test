@@ -82,6 +82,8 @@ export enum AuditLogEntityTypeEnum {
     Subject = 'Subject',
     Vrf = 'Vrf',
     Selector = 'Selector',
+    ExternalFirewall = 'ExternalFirewall',
+    ServiceGraphFirewall = 'ServiceGraphFirewall',
     RouteControl = 'RouteControl',
     ExternalRoute = 'ExternalRoute',
     InternalRoute = 'InternalRoute',

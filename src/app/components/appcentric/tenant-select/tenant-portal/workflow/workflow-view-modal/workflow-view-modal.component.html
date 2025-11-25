@@ -188,6 +188,45 @@
         </ng-template>
       </mat-tab>
 
+      <mat-tab label="Execution Logs" *ngIf="workflow.executionLogs?.length > 0">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let log of workflow.executionLogs; trackBy: trackByExecutionLogId">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Terraform {{ log.executionType | titlecase }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span>Lines: {{ log.lineCount }}</span>
+                    <span class="ml-2">{{ log.startedAt | date : 'medium' }}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="execution-log-details mb-3">
+                  <p><strong>Execution Type:</strong> {{ log.executionType | titlecase }}</p>
+                  <p><strong>Started At:</strong> {{ log.startedAt | date : 'medium' }}</p>
+                  <p *ngIf="log.completedAt"><strong>Completed At:</strong> {{ log.completedAt | date : 'medium' }}</p>
+                  <p *ngIf="log.jobId"><strong>AAP Job ID:</strong> {{ log.jobId }}</p>
+                  <p><strong>Line Count:</strong> {{ log.lineCount }}</p>
+                </div>
+
+                <div class="execution-log-content">
+                  <label for="log-content-{{ log.id }}" class="form-label"><strong>Log Content:</strong></label>
+                  <textarea
+                    id="log-content-{{ log.id }}"
+                    class="form-control execution-log-textarea"
+                    readonly
+                    rows="20"
+                    [value]="log.logContent"
+                  ></textarea>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </ng-template>
+      </mat-tab>
+
       <mat-tab label="Terraform Plan">
         <ng-template matTabContent>
           <div class="pt-3">

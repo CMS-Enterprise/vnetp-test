@@ -22,6 +22,8 @@ export enum WorkflowValidationErrorTypeEnum {
     ModuleMissing = 'MODULE_MISSING',
     ModuleUnexpected = 'MODULE_UNEXPECTED',
     ModuleConfigMissing = 'MODULE_CONFIG_MISSING',
+    ConfigurationMissingValidationRules = 'CONFIGURATION_MISSING_VALIDATION_RULES',
+    ConfigurationMissingManagedEntities = 'CONFIGURATION_MISSING_MANAGED_ENTITIES',
     AuditLogRuleMissing = 'AUDIT_LOG_RULE_MISSING',
     ResourceMatchMissing = 'RESOURCE_MATCH_MISSING',
     ActionMismatch = 'ACTION_MISMATCH',

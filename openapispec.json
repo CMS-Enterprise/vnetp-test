@@ -24998,6 +24998,47 @@
         ]
       }
     },
+    "/v2/workflows/{id}/logs": {
+      "post": {
+        "operationId": "uploadWorkflowLogWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadWorkflowLogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The workflow execution log has been uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowExecutionLog"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
     "/v2/workflows/bulk": {
       "post": {
         "operationId": "createManyWorkflow",
@@ -29636,6 +29677,8 @@
               "Subject",
               "Vrf",
               "Selector",
+              "ExternalFirewall",
+              "ServiceGraphFirewall",
               "RouteControl",
               "ExternalRoute",
               "InternalRoute",
@@ -29786,6 +29829,66 @@
           "workflow"
         ]
       },
+      "WorkflowExecutionLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the workflow execution log"
+          },
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow that the execution log belongs to"
+          },
+          "executionType": {
+            "type": "string",
+            "description": "The type of execution (plan or apply)",
+            "enum": [
+              "plan",
+              "apply"
+            ]
+          },
+          "jobId": {
+            "type": "number",
+            "description": "The AAP job ID associated with this execution"
+          },
+          "logContent": {
+            "type": "string",
+            "description": "The log content from the execution"
+          },
+          "lineCount": {
+            "type": "number",
+            "description": "The number of lines in the log content"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The timestamp when the execution started"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The timestamp when the execution completed"
+          },
+          "workflow": {
+            "description": "The workflow that the execution log belongs to",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Workflow"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "workflowId",
+          "executionType",
+          "logContent",
+          "lineCount",
+          "startedAt",
+          "workflow"
+        ]
+      },
       "WorkflowValidationError": {
         "type": "object",
         "properties": {
@@ -29795,6 +29898,8 @@
               "MODULE_MISSING",
               "MODULE_UNEXPECTED",
               "MODULE_CONFIG_MISSING",
+              "CONFIGURATION_MISSING_VALIDATION_RULES",
+              "CONFIGURATION_MISSING_MANAGED_ENTITIES",
               "AUDIT_LOG_RULE_MISSING",
               "RESOURCE_MATCH_MISSING",
               "ACTION_MISMATCH",
@@ -29884,6 +29989,8 @@
               "Subject",
               "Vrf",
               "Selector",
+              "ExternalFirewall",
+              "ServiceGraphFirewall",
               "RouteControl",
               "ExternalRoute",
               "InternalRoute",
@@ -30058,6 +30165,13 @@
               "$ref": "#/components/schemas/WorkflowValidationError"
             }
           },
+          "globalWarnings": {
+            "description": "Global validation warnings (drift with read-only properties, etc.)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowValidationError"
+            }
+          },
           "auditLogResults": {
             "description": "Audit log validation results - includes ALL audit logs with their status",
             "type": "array",
@@ -30094,6 +30208,7 @@
           "terraformErrored",
           "terraformComplete",
           "globalErrors",
+          "globalWarnings",
           "auditLogResults",
           "unmatchedTerraformChanges",
           "invokedTerraformModules",
@@ -30158,15 +30273,17 @@
             "type": "string",
             "description": "The Terraform module that the workflow is for",
             "enum": [
-              "overlay",
-              "underlay"
+              "tenant_overlay",
+              "tenant_underlay",
+              "transit_tenant_overlay",
+              "transit_tenant_underlay",
+              "tenant_firewall_underlay"
             ]
           },
           "approvalType": {
             "type": "string",
             "enum": [
-              "manual",
-              "automated"
+              "manual"
             ]
           },
           "plan": {
@@ -30182,6 +30299,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WorkflowEvent"
+            }
+          },
+          "executionLogs": {
+            "description": "The execution logs for plan and apply operations",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowExecutionLog"
             }
           },
           "validationResult": {
@@ -30206,6 +30330,7 @@
           "approvalType",
           "plan",
           "events",
+          "executionLogs",
           "validationResult"
         ]
       },
@@ -35853,8 +35978,11 @@
             "type": "string",
             "description": "The type of the workflow",
             "enum": [
-              "overlay",
-              "underlay"
+              "tenant_overlay",
+              "tenant_underlay",
+              "transit_tenant_overlay",
+              "transit_tenant_underlay",
+              "tenant_firewall_underlay"
             ]
           }
         },
@@ -35892,6 +36020,42 @@
         },
         "required": [
           "status"
+        ]
+      },
+      "UploadWorkflowLogDto": {
+        "type": "object",
+        "properties": {
+          "executionType": {
+            "type": "string",
+            "description": "The type of execution (plan or apply)",
+            "enum": [
+              "plan",
+              "apply"
+            ]
+          },
+          "jobId": {
+            "type": "number",
+            "description": "The AAP job ID associated with this execution"
+          },
+          "logContent": {
+            "type": "string",
+            "description": "The log content from the execution"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The timestamp when the execution started"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The timestamp when the execution completed"
+          }
+        },
+        "required": [
+          "executionType",
+          "logContent",
+          "startedAt"
         ]
       },
       "SelfServiceRawConfig": {
