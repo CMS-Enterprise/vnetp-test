@@ -27,7 +27,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Global Validation Errors" *ngIf="workflow.validationResult?.globalErrors?.length > 0">
+      <mat-tab label="Global Validation Errors ({{ workflow.validationResult?.globalErrors?.length }})" *ngIf="workflow.validationResult?.globalErrors?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <mat-card *ngFor="let error of workflow.validationResult.globalErrors">
@@ -45,7 +45,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Audit Log Results" *ngIf="workflow.validationResult?.auditLogResults?.length > 0">
+      <mat-tab label="Audit Log Results ({{ workflow.validationResult?.auditLogResults?.length }})" *ngIf="workflow.validationResult?.auditLogResults?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <mat-accordion>
@@ -56,6 +56,9 @@
                     <span
                       >Status: <mat-chip [class]="'status-' + item.processingStatus">{{ item.processingStatus }}</mat-chip></span
                     >
+                    <span>
+                      Matched Terraform Resource Actions: {{ item.terraformResourceChanges?.length }}
+                    </span>
                     <span *ngIf="item.mergedAuditLog.expectedTerraformAction" class="ml-2"
                       >Expected Action: <mat-chip>{{ item.mergedAuditLog.expectedTerraformAction }}</mat-chip></span
                     >
@@ -119,7 +122,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Unmatched Terraform Changes" *ngIf="workflow.validationResult?.unmatchedTerraformChanges?.length > 0">
+      <mat-tab label="Unmatched Terraform Changes ({{ workflow.validationResult?.unmatchedTerraformChanges?.length }})" *ngIf="workflow.validationResult?.unmatchedTerraformChanges?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <div class="alert alert-warning mb-3">
@@ -167,7 +170,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Events" *ngIf="workflow.events?.length > 0">
+      <mat-tab label="Events ({{ workflow.events?.length }})" *ngIf="workflow.events?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <div class="timeline">
@@ -188,7 +191,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Execution Logs" *ngIf="workflow.executionLogs?.length > 0">
+      <mat-tab label="Execution Logs ({{ workflow.executionLogs?.length }})" *ngIf="workflow.executionLogs?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <mat-accordion>
