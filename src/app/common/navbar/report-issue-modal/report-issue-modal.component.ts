@@ -61,8 +61,7 @@ export class ReportIssueModalComponent implements OnInit {
     form = this.addUserInfo(form);
     const mailBody = form.value;
 
-    console.log('mailBody', mailBody);
-    this.mailService.createOneIssueMail({ body: mailBody }).subscribe(
+    this.mailService.createOneIssueMail({ mail: mailBody }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -78,8 +77,6 @@ export class ReportIssueModalComponent implements OnInit {
     form.value.userEmail = this.auth.currentUserValue.mail;
     form.value.status = 'Open';
     form.value.mailType = 'Issue';
-    // form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
-    // form.value.url = window.location.href;
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;

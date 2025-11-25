@@ -5,6 +5,8 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouterModule, Routes } from '@angular/router';
 import { BugsEnhancementsComponent } from './bugs-enhancements.component';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -14,7 +16,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), TableModule, FontAwesomeModule, NgxSmartModalModule],
+  imports: [
+    YesNoModalModule,
+    CommonModule,
+    RouterModule.forChild(routes),
+    TableModule,
+    FontAwesomeModule,
+    NgxSmartModalModule,
+    IconButtonModule,
+  ],
   declarations: [BugsEnhancementsComponent],
   exports: [BugsEnhancementsComponent],
 })

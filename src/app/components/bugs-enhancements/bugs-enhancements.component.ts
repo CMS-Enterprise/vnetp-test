@@ -1,30 +1,30 @@
 /* eslint-disable */
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Datacenter, EndpointGroup, V1MailService } from 'client';
+import { V1MailService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { forkJoin, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
-import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { TableComponentDto } from '../../models/other/table-component-dto';
-import { Router } from '@angular/router';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-bugs-enhancements',
   templateUrl: './bugs-enhancements.component.html',
+  //   styleUrls: ['./bugs-enhancements.component.scss']
 })
 export class BugsEnhancementsComponent implements OnInit {
   @ViewChild('mailBodyTemplate') mailBodyTemplate: TemplateRef<any>;
   @ViewChild('mailUserTemplate') mailUserTemplate: TemplateRef<any>;
   @ViewChild('mailComponentTemplate') mailComponentTemplate: TemplateRef<any>;
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   mails;
-
-  private dataChanges: Subscription;
-
   public perPage = 10;
   public tableComponentDto = new TableComponentDto();
   public isLoading = false;
+
+  public objectSearchColumns: SearchColumnConfig[] = [{ displayName: 'Status', propertyName: 'status' }];
 
   public config: TableConfig<any> = {
     description: 'Bugs/Enhancements',
@@ -35,10 +35,17 @@ export class BugsEnhancementsComponent implements OnInit {
       { name: 'Mail Type', property: 'component' },
       { name: 'Mail Type', property: 'mailType' },
       { name: 'Timestamp', property: 'timestamp' },
+      { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
 
-  constructor(private ngx: NgxSmartModalService, private mailService: V1MailService) {}
+  constructor(
+    private tableContextService: TableContextService,
+    private entityService: EntityService,
+    private ngx: NgxSmartModalService,
+    private mailService: V1MailService,
+  ) {}
   public getMails(event?): void {
     this.isLoading = true;
     if (event) {
@@ -66,5 +73,30 @@ export class BugsEnhancementsComponent implements OnInit {
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
     this.getMails(event);
+  }
+
+  public deleteMail(mail): void {
+    this.entityService.deleteEntity(mail, {
+      entityName: 'Mail',
+      delete$: this.mailService.deleteMailMail({ mailId: mail.id }),
+      softDelete$: this.mailService.deleteMailMail({ mailId: mail.id }),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getMails(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getMails(searchString);
+        } else {
+          this.getMails();
+        }
+      },
+    });
   }
 }

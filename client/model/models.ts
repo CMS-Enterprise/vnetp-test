@@ -132,6 +132,7 @@ export * from './loadBalancerRoute';
 export * from './loadBalancerSelfIp';
 export * from './loadBalancerVirtualServer';
 export * from './loadBalancerVlan';
+export * from './mail';
 export * from './message';
 export * from './natRule';
 export * from './natRuleGroup';

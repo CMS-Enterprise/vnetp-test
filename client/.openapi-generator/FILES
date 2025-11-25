@@ -190,6 +190,7 @@ model/loadBalancerRoute.ts
 model/loadBalancerSelfIp.ts
 model/loadBalancerVirtualServer.ts
 model/loadBalancerVlan.ts
+model/mail.ts
 model/message.ts
 model/models.ts
 model/natRule.ts

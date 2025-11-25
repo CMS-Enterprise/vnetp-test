@@ -59,7 +59,7 @@ export class RequestEnhancementModalComponent implements OnInit {
     }
     form = this.addUserInfo(form);
     const mailBody = form.value;
-    this.mailService.createOneEnhancementMail({ body: mailBody }).subscribe(
+    this.mailService.createOneEnhancementMail({ mail: mailBody }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -77,8 +77,6 @@ export class RequestEnhancementModalComponent implements OnInit {
     form.value.userEmail = this.auth.currentUserValue.mail;
     form.value.status = 'Open';
     form.value.mailType = 'Enhancement';
-    // form.value.description = form.value.description.replaceAll('\n', '<br />'); // formatting for email body
-    // form.value.url = window.location.href;
     form.value.toEmail = 'pmccardle@presidio.com';
 
     return form;

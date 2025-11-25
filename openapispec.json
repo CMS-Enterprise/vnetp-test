@@ -11,14 +11,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "enum": [
-                  "Timestamp",
-                  "User",
-                  "UserEmail",
-                  "Description",
-                  "ReceiverEmail"
-                ],
-                "type": "string"
+                "$ref": "#/components/schemas/Mail"
               }
             }
           }
@@ -52,14 +45,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "enum": [
-                  "Timestamp",
-                  "User",
-                  "UserEmail",
-                  "Description",
-                  "ReceiverEmail"
-                ],
-                "type": "string"
+                "$ref": "#/components/schemas/Mail"
               }
             }
           }
@@ -84,14 +70,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "enum": [
-                  "Timestamp",
-                  "User",
-                  "UserEmail",
-                  "Description",
-                  "ReceiverEmail"
-                ],
-                "type": "string"
+                "$ref": "#/components/schemas/Mail"
               }
             }
           }
@@ -125,14 +104,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "enum": [
-                  "Timestamp",
-                  "User",
-                  "UserEmail",
-                  "Description",
-                  "ReceiverEmail"
-                ],
-                "type": "string"
+                "$ref": "#/components/schemas/Mail"
               }
             }
           }
@@ -165,6 +137,29 @@
             "in": "query",
             "schema": {
               "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/mail"
+        ]
+      }
+    },
+    "/v1/mail/{mailId}": {
+      "delete": {
+        "operationId": "deleteMailMail",
+        "parameters": [
+          {
+            "name": "mailId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -21880,6 +21875,55 @@
   ],
   "components": {
     "schemas": {
+      "Mail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mailType": {
+            "type": "string",
+            "enum": [
+              "Enhancement",
+              "Issue"
+            ]
+          },
+          "mailBody": {
+            "type": "object",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "Open",
+              "InReview",
+              "Closed"
+            ]
+          },
+          "user": {
+            "type": "string",
+            "nullable": true
+          },
+          "component": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "mailType",
+          "mailBody",
+          "status",
+          "user",
+          "component",
+          "timestamp"
+        ]
+      },
       "UserPass": {
         "type": "object",
         "properties": {

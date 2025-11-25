@@ -17,17 +17,22 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { Mail } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 export interface CreateOneEnhancementMailRequestParams {
-    body: string;
+    mail: Mail;
 }
 
 export interface CreateOneIssueMailRequestParams {
-    body: string;
+    mail: Mail;
+}
+
+export interface DeleteMailMailRequestParams {
+    mailId: string;
 }
 
 export interface GetMailsMailRequestParams {
@@ -37,12 +42,12 @@ export interface GetMailsMailRequestParams {
 
 export interface UpdateOneEnhancementMailRequestParams {
     mailId: string;
-    body: string;
+    mail: Mail;
 }
 
 export interface UpdateOneIssueMailRequestParams {
     mailId: string;
-    body: string;
+    mail: Mail;
 }
 
 
@@ -116,9 +121,9 @@ export class V1MailService {
     public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
     public createOneEnhancementMail(requestParameters: CreateOneEnhancementMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const body = requestParameters.body;
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling createOneEnhancementMail.');
+        const mail = requestParameters.mail;
+        if (mail === null || mail === undefined) {
+            throw new Error('Required parameter mail was null or undefined when calling createOneEnhancementMail.');
         }
 
         let headers = this.defaultHeaders;
@@ -150,7 +155,7 @@ export class V1MailService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/mail/enhancement`,
-            body,
+            mail,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -171,9 +176,9 @@ export class V1MailService {
     public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
     public createOneIssueMail(requestParameters: CreateOneIssueMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const body = requestParameters.body;
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling createOneIssueMail.');
+        const mail = requestParameters.mail;
+        if (mail === null || mail === undefined) {
+            throw new Error('Required parameter mail was null or undefined when calling createOneIssueMail.');
         }
 
         let headers = this.defaultHeaders;
@@ -205,7 +210,51 @@ export class V1MailService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/mail/issue`,
-            body,
+            mail,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteMailMail(requestParameters: DeleteMailMailRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deleteMailMail(requestParameters: DeleteMailMailRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deleteMailMail(requestParameters: DeleteMailMailRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deleteMailMail(requestParameters: DeleteMailMailRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const mailId = requestParameters.mailId;
+        if (mailId === null || mailId === undefined) {
+            throw new Error('Required parameter mailId was null or undefined when calling deleteMailMail.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/mail/${encodeURIComponent(String(mailId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -289,9 +338,9 @@ export class V1MailService {
         if (mailId === null || mailId === undefined) {
             throw new Error('Required parameter mailId was null or undefined when calling updateOneEnhancementMail.');
         }
-        const body = requestParameters.body;
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling updateOneEnhancementMail.');
+        const mail = requestParameters.mail;
+        if (mail === null || mail === undefined) {
+            throw new Error('Required parameter mail was null or undefined when calling updateOneEnhancementMail.');
         }
 
         let headers = this.defaultHeaders;
@@ -323,7 +372,7 @@ export class V1MailService {
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/mail/enhancement/${encodeURIComponent(String(mailId))}`,
-            body,
+            mail,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -348,9 +397,9 @@ export class V1MailService {
         if (mailId === null || mailId === undefined) {
             throw new Error('Required parameter mailId was null or undefined when calling updateOneIssueMail.');
         }
-        const body = requestParameters.body;
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling updateOneIssueMail.');
+        const mail = requestParameters.mail;
+        if (mail === null || mail === undefined) {
+            throw new Error('Required parameter mail was null or undefined when calling updateOneIssueMail.');
         }
 
         let headers = this.defaultHeaders;
@@ -382,7 +431,7 @@ export class V1MailService {
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/mail/issue/${encodeURIComponent(String(mailId))}`,
-            body,
+            mail,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
