@@ -1,0 +1,295 @@
+.workflows-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-header {
+  background: #f5f7fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+
+  .eyebrow {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    margin: 0;
+    color: #5c6c7f;
+  }
+
+  h1 {
+    margin: 0.25rem 0 0.5rem;
+  }
+
+  .lead {
+    margin: 0;
+    color: #4a5568;
+  }
+}
+
+.task-switcher {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  button {
+    border: 1px solid #cfd8e3;
+    background: white;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    &.active {
+      background: #005ea2;
+      color: white;
+      border-color: #005ea2;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.task-panel {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.loading-state,
+.error-state {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.loading-state {
+  background: #f5f7fa;
+  color: #4b5563;
+}
+
+.error-state {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.tenant-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 1rem;
+  overflow: hidden;
+  background: #fbfdff;
+}
+
+.tenant-summary {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  gap: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background: #f0f4f8;
+  }
+}
+
+.tenant-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.tenant-env {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.tenant-metrics {
+  display: flex;
+  gap: 1.5rem;
+
+  .label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  .value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2933;
+  }
+}
+
+.chevron {
+  width: 12px;
+  height: 12px;
+  border: solid #64748b;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+
+  &.expanded {
+    transform: rotate(-135deg);
+  }
+}
+
+.tenant-details {
+  padding: 0 1rem 1rem;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+
+    th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: #6b7280;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.4rem;
+    }
+
+    td {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+    }
+  }
+}
+
+.workflow-name {
+  font-weight: 600;
+  display: block;
+}
+
+.workflow-description {
+  display: block;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.status-chip {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #374151;
+
+  &.pending {
+    background: #fff2cc;
+    color: #9d6b00;
+  }
+
+  &.running {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  &.completed {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+}
+
+.empty-state {
+  padding: 1rem;
+  border: 1px dashed #94a3b8;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.tenant-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.actions-cell {
+  text-align: right;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1f2933;
+
+    span {
+      margin-bottom: 0.35rem;
+    }
+
+    input,
+    select {
+      border: 1px solid #cbd5f5;
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    small {
+      margin-top: 0.35rem;
+      color: #b91c1c;
+      font-weight: 500;
+    }
+  }
+}
+
+.description-field {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: #1f2933;
+  gap: 0.35rem;
+
+  textarea {
+    border: 1px solid #cbd5f5;
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+.form-actions {
+  margin-top: 1rem;
+}
+
+.success-message {
+  margin-top: 0.75rem;
+  color: #047857;
+  font-weight: 600;
+}
+
