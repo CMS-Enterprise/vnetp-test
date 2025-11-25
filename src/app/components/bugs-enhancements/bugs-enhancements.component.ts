@@ -32,7 +32,7 @@ export class BugsEnhancementsComponent implements OnInit {
       { name: 'Status', property: 'status' },
       { name: 'Mail Body', template: () => this.mailBodyTemplate },
       { name: 'Requesting User', property: 'user' },
-      { name: 'Mail Type', property: 'component' },
+      { name: 'Component', property: 'component' },
       { name: 'Mail Type', property: 'mailType' },
       { name: 'Timestamp', property: 'timestamp' },
       { name: '', template: () => this.actionsTemplate },
@@ -76,6 +76,7 @@ export class BugsEnhancementsComponent implements OnInit {
   }
 
   public deleteMail(mail): void {
+    mail.name = mail.timestamp;
     this.entityService.deleteEntity(mail, {
       entityName: 'Mail',
       delete$: this.mailService.deleteMailMail({ mailId: mail.id }),

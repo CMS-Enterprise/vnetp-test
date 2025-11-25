@@ -13,8 +13,12 @@ export class EntityService {
   public deleteEntity(entity: Entity, config: DeleteEntityConfig): Subscription {
     const { deletedAt, name } = entity;
     const { entityName, delete$, softDelete$, onSuccess } = config;
-
-    const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
+    let deleteDescription: string;
+    if (deletedAt === undefined) {
+      deleteDescription = 'Delete';
+    } else {
+      deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
+    }
 
     const onConfirm = () => {
       if (deletedAt) {
