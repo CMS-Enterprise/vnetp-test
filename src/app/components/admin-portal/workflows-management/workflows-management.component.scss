@@ -268,6 +268,74 @@
   }
 }
 
+.launch-mode-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .mode-pill {
+    flex: 1 1 240px;
+    border: 1px solid #d7e3f4;
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    text-align: left;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .title {
+      display: block;
+      font-weight: 600;
+      color: #0f1f38;
+    }
+
+    .subtitle {
+      display: block;
+      font-size: 0.85rem;
+      color: #526481;
+      margin-top: 0.15rem;
+    }
+
+    &:hover {
+      border-color: #8fb3df;
+      box-shadow: 0 2px 6px rgba(15, 31, 56, 0.08);
+    }
+
+    &.active {
+      border-color: #005ea2;
+      background: linear-gradient(115deg, #f0f6ff, #dfefff);
+      box-shadow: 0 4px 12px rgba(0, 94, 162, 0.18);
+
+      .title {
+        color: #003c6c;
+      }
+    }
+  }
+}
+
+.group-details-card {
+  background: #f5f7fa;
+  border: 1px solid #d7e3f4;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .group-description {
+    margin-bottom: 0.5rem;
+  }
+
+  .group-subtitle {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+}
+
 .description-field {
   display: flex;
   flex-direction: column;

@@ -103,6 +103,31 @@
     <h2>Launch a Workflow</h2>
     <p class="lead">Create a workflow using the live API. Requests will appear in the tenant tables above.</p>
     <form [formGroup]="launchForm" (ngSubmit)="onLaunchWorkflow()" novalidate>
+      <div class="launch-mode-toggle" role="radiogroup" aria-label="Launch mode">
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="!isGroupLaunchMode()"
+          class="mode-pill"
+          [class.active]="!isGroupLaunchMode()"
+          (click)="setLaunchMode('module')"
+        >
+          <span class="title">Individual Module</span>
+          <span class="subtitle">Run a single Terraform module</span>
+        </button>
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="isGroupLaunchMode()"
+          class="mode-pill"
+          [class.active]="isGroupLaunchMode()"
+          (click)="setLaunchMode('group')"
+        >
+          <span class="title">Group Launch</span>
+          <span class="subtitle">Trigger multiple modules together</span>
+        </button>
+      </div>
+
       <div class="form-grid">
         <label>
           <span>Tenant</span>
@@ -115,14 +140,31 @@
           <small *ngIf="launchForm.get('tenantId').touched && launchForm.get('tenantId').invalid">Required.</small>
         </label>
 
-        <label>
-          <span>Workflow Type</span>
-          <select formControlName="workflowType">
-            <option value="" disabled>Select a type</option>
-            <option *ngFor="let type of workflowTypeOptions" [value]="type">{{ type }}</option>
+        <label *ngIf="!isGroupLaunchMode()">
+          <span>Module</span>
+          <select formControlName="moduleType">
+            <option value="" disabled>Select a module</option>
+            <option *ngFor="let type of workflowTypeOptions" [value]="type">{{ formatLabel(type) }}</option>
           </select>
-          <small *ngIf="launchForm.get('workflowType').touched && launchForm.get('workflowType').invalid">Required.</small>
+          <small *ngIf="launchForm.get('moduleType').touched && launchForm.get('moduleType').invalid">Required.</small>
         </label>
+
+        <label *ngIf="isGroupLaunchMode()">
+          <span>Group</span>
+          <select formControlName="groupType">
+            <option *ngFor="let option of groupLaunchOptions" [value]="option.id">
+              {{ option.label }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div *ngIf="isGroupLaunchMode()" class="group-details-card">
+        <p class="group-description">{{ selectedGroupOption?.description }}</p>
+        <p class="group-subtitle">Modules that will be launched:</p>
+        <ul>
+          <li *ngFor="let module of selectedGroupOption?.modules">{{ formatLabel(module) }}</li>
+        </ul>
       </div>
 
       <div class="form-actions">

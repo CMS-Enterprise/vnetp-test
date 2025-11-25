@@ -41,6 +41,15 @@ interface WorkflowTableData {
   pageCount: number;
 }
 
+type LaunchMode = 'module' | 'group';
+
+interface GroupLaunchOption {
+  id: string;
+  label: string;
+  description: string;
+  modules: CreateWorkflowDtoWorkflowTypeEnum[];
+}
+
 @Component({
   selector: 'app-workflows-management',
   templateUrl: './workflows-management.component.html',
@@ -65,6 +74,18 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     WorkflowStatusEnum.InvalidApplyable,
   ]);
   readonly defaultItemsPerPage = 20;
+  readonly groupLaunchOptions: GroupLaunchOption[] = [
+    {
+      id: 'logicalTenantChanges',
+      label: 'Logical Tenant Changes Group',
+      description: 'Runs the underlay modules required to roll out logical tenant changes across tenant, firewall, and transit tiers.',
+      modules: [
+        CreateWorkflowDtoWorkflowTypeEnum.TenantUnderlay,
+        CreateWorkflowDtoWorkflowTypeEnum.TenantFirewallUnderlay,
+        CreateWorkflowDtoWorkflowTypeEnum.TransitTenantUnderlay,
+      ],
+    },
+  ];
 
   tenantOptions: TenantLite[] = [];
   tenantTableState: Record<string, TenantTableState> = {};
@@ -88,10 +109,19 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     private tenantsService: V2AppCentricTenantsService,
     private cdRef: ChangeDetectorRef,
   ) {
+    const defaultModuleType = this.workflowTypeOptions[0] ?? '';
+    const defaultGroup = this.groupLaunchOptions[0]?.id ?? '';
     this.launchForm = this.fb.group({
+      launchMode: ['module', Validators.required],
       tenantId: ['', Validators.required],
-      workflowType: ['', Validators.required],
+      moduleType: [defaultModuleType, Validators.required],
+      groupType: [defaultGroup],
     });
+
+    this.updateLaunchModeValidators('module');
+    this.launchForm
+      .get('launchMode')
+      ?.valueChanges.subscribe(mode => this.updateLaunchModeValidators(mode as LaunchMode));
   }
 
   ngOnInit(): void {
@@ -202,17 +232,21 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       this.launchForm.markAllAsTouched();
       return;
     }
-    const { tenantId, workflowType } = this.launchForm.value;
+    const tenantId = this.launchForm.get('tenantId')?.value;
+    const launchMode = (this.launchForm.get('launchMode')?.value as LaunchMode) ?? 'module';
+    const moduleType = this.launchForm.get('moduleType')?.value as CreateWorkflowDtoWorkflowTypeEnum;
+    const groupType = this.launchForm.get('groupType')?.value;
+    const groupOption = this.groupLaunchOptions.find(option => option.id === groupType);
+
     this.launchSuccessMessage = '';
     this.launchErrorMessage = '';
     this.isLaunching = true;
-    this.workflowsService
-      .createOneWorkflow({
-        createWorkflowDto: {
-          tenantId,
-          workflowType,
-        },
-      })
+    const request$ =
+      launchMode === 'group'
+        ? this.launchWorkflowGroup(tenantId, groupType)
+        : this.launchIndividualWorkflow(tenantId, moduleType);
+
+    request$
       .pipe(
         finalize(() => {
           this.isLaunching = false;
@@ -220,8 +254,12 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: () => {
-          this.launchSuccessMessage = 'Workflow launch requested.';
+          this.launchSuccessMessage =
+            launchMode === 'group'
+              ? `${groupOption?.label ?? 'Workflow group'} launched (${groupOption?.modules.length ?? 0} workflows).`
+              : `${this.formatLabel(moduleType)} workflow launched.`;
           this.loadData();
+          this.resetLaunchFormAfterSubmit(launchMode, tenantId);
         },
         error: () => {
           this.launchErrorMessage = 'Unable to launch workflow. Please try again.';
@@ -313,6 +351,23 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       ...this.approveTableConfig,
       description: `approve-workflows-${tenantId}`,
     };
+  }
+
+  isGroupLaunchMode(): boolean {
+    return (this.launchForm.get('launchMode')?.value as LaunchMode) === 'group';
+  }
+
+  get selectedGroupOption(): GroupLaunchOption | undefined {
+    const selectedId = this.launchForm.get('groupType')?.value;
+    return this.groupLaunchOptions.find(option => option.id === selectedId);
+  }
+
+  setLaunchMode(mode: LaunchMode): void {
+    const control = this.launchForm.get('launchMode');
+    if (control?.value === mode) {
+      return;
+    }
+    control?.setValue(mode);
   }
 
   private loadData(): void {
@@ -444,6 +499,61 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       return this.getPendingApprovals(tenant);
     }
     return tenant.workflows;
+  }
+
+  private updateLaunchModeValidators(mode: LaunchMode): void {
+    const moduleCtrl = this.launchForm.get('moduleType');
+    const groupCtrl = this.launchForm.get('groupType');
+    if (mode === 'module') {
+      moduleCtrl?.setValidators([Validators.required]);
+      groupCtrl?.clearValidators();
+    } else {
+      groupCtrl?.setValidators([Validators.required]);
+      moduleCtrl?.clearValidators();
+    }
+    moduleCtrl?.updateValueAndValidity({ emitEvent: false });
+    groupCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private launchIndividualWorkflow(tenantId: string, workflowType: CreateWorkflowDtoWorkflowTypeEnum) {
+    return this.workflowsService.createOneWorkflow({
+      createWorkflowDto: {
+        tenantId,
+        workflowType,
+      },
+    });
+  }
+
+  private launchWorkflowGroup(tenantId: string, groupId: string) {
+    const option = this.groupLaunchOptions.find(opt => opt.id === groupId);
+    const modules = option?.modules ?? [];
+    if (!modules.length) {
+      const fallbackType =
+        this.workflowTypeOptions[0] ?? CreateWorkflowDtoWorkflowTypeEnum.TenantUnderlay;
+      return this.launchIndividualWorkflow(tenantId, fallbackType);
+    }
+    return forkJoin(
+      modules.map(workflowType =>
+        this.workflowsService.createOneWorkflow({
+          createWorkflowDto: {
+            tenantId,
+            workflowType,
+          },
+        }),
+      ),
+    );
+  }
+
+  private resetLaunchFormAfterSubmit(mode: LaunchMode, tenantId: string): void {
+    const defaultModuleType = this.workflowTypeOptions[0] ?? '';
+    const defaultGroup = this.groupLaunchOptions[0]?.id ?? '';
+    this.launchForm.reset({
+      launchMode: mode,
+      tenantId,
+      moduleType: defaultModuleType,
+      groupType: defaultGroup,
+    });
+    this.updateLaunchModeValidators(mode);
   }
 }
 
