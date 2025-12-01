@@ -13,7 +13,7 @@
 
 <ng-template #mailBodyTemplate let-mail="datum">
   <div>
-    <span> {{ mail.mailBody | json }}</span>
+    <span style="color: blue; cursor: pointer" (click)="openDetailedModal(mail)"><a>Click Here</a></span>
   </div>
 </ng-template>
 
@@ -40,3 +40,4 @@
 </ng-template>
 
 <app-yes-no-modal></app-yes-no-modal>
+<app-bugs-enhancements-view-modal [mail]="selectedMail"></app-bugs-enhancements-view-modal>

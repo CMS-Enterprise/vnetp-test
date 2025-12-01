@@ -20,6 +20,7 @@ export class BugsEnhancementsComponent implements OnInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   mails;
+  selectedMail;
   public perPage = 10;
   public tableComponentDto = new TableComponentDto();
   public isLoading = false;
@@ -99,5 +100,31 @@ export class BugsEnhancementsComponent implements OnInit {
         }
       },
     });
+  }
+
+  public openDetailedModal(mail: any): void {
+    const properties = Object.keys(mail.mailBody);
+    let newProperties = [];
+    properties.map(property => {
+      newProperties.push(
+        property.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+          return str.toUpperCase();
+        }),
+      );
+      console.log('newProperties', newProperties);
+    });
+    const newMailObject = {};
+    newProperties.map(newProp => {
+      newMailObject[newProp] = Object.values(mail.mailBody).map(value => {
+        return value;
+      });
+    });
+    console.log('newMailObject', newMailObject);
+    // console.log('newProperties',newProperties)
+    // for (String w : "camelValue".split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
+    //     System.out.println(w);
+    // }
+    this.selectedMail = { data: [mail], page: 1, pageCount: 1, count: 1, total: 1 };
+    this.ngx.getModal('bugsEnhancementsViewModal').open();
   }
 }

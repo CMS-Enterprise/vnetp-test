@@ -1,0 +1,73 @@
+<ngx-smart-modal #bugsEnhancementsViewModal identifier="bugsEnhancementsViewModal" [dismissable]="true" customClass="large-modal">
+  <header class="modal-header">
+    <h4 class="modal-title">{{ mail?.id }}</h4>
+  </header>
+
+  <main *ngIf="mail && mail.data" class="modal-body">
+    <app-table [config]="config" [data]="mail"></app-table>
+    <table class="table table-striped table-sm table-bordered" *ngFor="let mail of mail.data">
+      <span *ngFor="let property of mail.mailBody | keyvalue">
+        <thead>
+          <th>
+            <p>{{ property.key }}</p>
+          </th>
+        </thead>
+        <tr>
+          <td>
+            <p>{{ property.value }}</p>
+          </td>
+        </tr>
+      </span>
+    </table>
+  </main>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="bugsEnhancementsViewModal.close()">Close</button>
+  </footer>
+</ngx-smart-modal>
+
+<ng-template #propertiesTemplate2 let-mail="datum">
+  <span *ngFor="let property of mail.mailBody | keyvalue">
+    <thead>
+      <th>
+        <p>{{ property.key }}</p>
+      </th>
+    </thead>
+    <tr>
+      <!-- <th>
+        <p>{{property.key}}</p>
+       </th> -->
+      <!-- <td>
+        <p>{{property.key}}</p>
+      </td> -->
+      <td>
+        <p>{{ property.value }}</p>
+      </td>
+    </tr>
+  </span>
+</ng-template>
+
+<ng-template #propertiesTemplate let-mail="datum">
+  <div *ngIf="mail">
+    <table class="table table-striped table-sm table-bordered">
+      <thead>
+        <tr>
+          <th scope="col" *ngFor="let prop of changedPropsConfig.columns">{{ prop.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let property of mail | keyvalue">
+          <td>
+            <p>{{ property?.mailBody?.helpful }}</p>
+          </td>
+          <td>
+            <p style="overflow-wrap: anywhere">{{ property.toEmail }}</p>
+          </td>
+          <td>
+            <p style="overflow-wrap: anywhere">{{ property?.userEmail }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

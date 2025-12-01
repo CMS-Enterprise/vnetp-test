@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BugsEnhancementsComponent } from './bugs-enhancements.component';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { BugsEnhancementsViewModalComponent } from './bugs-enhancements-view-modal/bugs-enhancements-view-modal.component';
 
 const routes: Routes = [
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     IconButtonModule,
   ],
-  declarations: [BugsEnhancementsComponent],
+  declarations: [BugsEnhancementsComponent, BugsEnhancementsViewModalComponent],
   exports: [BugsEnhancementsComponent],
 })
 export class BugsEnhancementsModule {}
