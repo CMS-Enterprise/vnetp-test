@@ -227,6 +227,7 @@ export * from './syncEndpointGroup';
 export * from './syncEndpointSecurityGroup';
 export * from './syncTenant';
 export * from './tenant';
+export * from './tenantCatalogItem';
 export * from './tenantConfigDto';
 export * from './tenantConnectivityGraph';
 export * from './tenantConnectivityGraphEdges';

@@ -1,26 +1,32 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  AdminService,
   CreateWorkflowDtoWorkflowTypeEnum,
   Tenant,
+  TenantCatalogItem,
   V2AppCentricTenantsService,
   V2WorkflowsService,
   Workflow,
   WorkflowStatusEnum,
 } from 'client';
-import { forkJoin } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { forkJoin, from, of, Observable, Subscription } from 'rxjs';
+import { concatMap, finalize, map, switchMap, toArray } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TenantStateService } from 'src/app/services/tenant-state.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { WorkflowViewModalData } from '../../appcentric/tenant-select/tenant-portal/workflow/workflow-view-modal/workflow-view-modal.data';
 
 interface TenantWorkflowSummary {
   tenantId: string;
   tenantName: string;
+  accountName: string;
+  accountDisplayName: string;
   environment?: string;
   workflows: Workflow[];
 }
 
-type TenantLite = Pick<Tenant, 'id' | 'name' | 'alias' | 'description' | 'environmentId'>;
 type TenantTableMode = 'view' | 'approve';
 
 interface TablePagerState {
@@ -50,16 +56,35 @@ interface GroupLaunchOption {
   modules: CreateWorkflowDtoWorkflowTypeEnum[];
 }
 
+interface TenantAccountSummary {
+  accountName: string;
+  accountDisplayName: string;
+  tenants: TenantWorkflowSummary[];
+}
+
+interface TenantSelectOption {
+  accountName: string;
+  accountDisplayName: string;
+  tenantId: string;
+  tenantName: string;
+}
+
+type WorkflowWithAccountContext = Workflow & {
+  __accountName: string;
+  __accountDisplayName: string;
+};
+
 @Component({
   selector: 'app-workflows-management',
   templateUrl: './workflows-management.component.html',
   styleUrls: ['./workflows-management.component.scss'],
 })
-export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
+export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('workflowStatusTemplate') workflowStatusTemplate: TemplateRef<any>;
   @ViewChild('approveActionsTemplate') approveActionsTemplate: TemplateRef<any>;
+  @ViewChild('workflowActionsTemplate') workflowActionsTemplate: TemplateRef<any>;
   activeTask: 'view' | 'approve' | 'launch' = 'view';
-  tenantWorkflows: TenantWorkflowSummary[] = [];
+  tenantAccounts: TenantAccountSummary[] = [];
   launchForm: FormGroup;
   launchSuccessMessage = '';
   launchErrorMessage = '';
@@ -74,7 +99,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     WorkflowStatusEnum.InvalidApplyable,
   ]);
   readonly defaultItemsPerPage = 20;
-  readonly groupLaunchOptions: GroupLaunchOption[] = [
+  groupLaunchOptions: GroupLaunchOption[] = [
     {
       id: 'logicalTenantChanges',
       label: 'Logical Tenant Changes Group',
@@ -87,7 +112,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  tenantOptions: TenantLite[] = [];
+  tenantOptions: TenantSelectOption[] = [];
   tenantTableState: Record<string, TenantTableState> = {};
 
   private expandedTenants: Record<'view' | 'approve', Set<string>> = {
@@ -95,8 +120,9 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     approve: new Set<string>(),
   };
 
-  private tenantLookup = new Map<string, TenantLite>();
   private approvingWorkflows = new Set<string>();
+  private workflowViewModalSubscription?: Subscription;
+  private modalPreviousTenant: string | null = null;
 
   private readonly workflowsPerPage = 200;
   private readonly tenantFilter = ['tenantVersion||eq||2'];
@@ -108,6 +134,9 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     private workflowsService: V2WorkflowsService,
     private tenantsService: V2AppCentricTenantsService,
     private cdRef: ChangeDetectorRef,
+    private adminService: AdminService,
+    private tenantStateService: TenantStateService,
+    private ngxSmartModal: NgxSmartModalService,
   ) {
     const defaultModuleType = this.workflowTypeOptions[0] ?? '';
     const defaultGroup = this.groupLaunchOptions[0]?.id ?? '';
@@ -132,6 +161,10 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     this.initializeTableConfigs();
   }
 
+  ngOnDestroy(): void {
+    this.workflowViewModalSubscription?.unsubscribe();
+  }
+
   setTask(task: 'view' | 'approve' | 'launch'): void {
     this.activeTask = task;
   }
@@ -150,7 +183,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
   }
 
   get tenantsWithPendingApprovals(): TenantWorkflowSummary[] {
-    return this.tenantWorkflows.filter(tenant => this.getPendingApprovals(tenant).length > 0);
+    return this.allTenantSummaries.filter(tenant => this.getPendingApprovals(tenant).length > 0);
   }
 
   get totalPendingApprovals(): number {
@@ -158,6 +191,15 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       (total, tenant) => total + this.getPendingApprovals(tenant).length,
       0,
     );
+  }
+
+  get accountsWithPendingApprovals(): TenantAccountSummary[] {
+    return this.tenantAccounts
+      .map(account => ({
+        ...account,
+        tenants: account.tenants.filter(tenant => this.getPendingApprovals(tenant).length > 0),
+      }))
+      .filter(account => account.tenants.length > 0);
   }
 
   getPendingApprovals(tenant: TenantWorkflowSummary): Workflow[] {
@@ -183,13 +225,18 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     return { total, running, completed };
   }
 
-  approveWorkflow(_tenantId: string, workflowId: string): void {
+  approveWorkflow(tenantId: string, workflowId: string): void {
     if (!workflowId || this.approvingWorkflows.has(workflowId)) {
       return;
     }
+    const tenant = this.findTenantSummary(tenantId);
+    if (!tenant) {
+      return;
+    }
     this.approvingWorkflows.add(workflowId);
-    this.workflowsService
-      .approveWorkflowWorkflow({ id: workflowId })
+    this.runInTenantContext(tenant.accountName, () =>
+      this.workflowsService.approveWorkflowWorkflow({ id: workflowId }),
+    )
       .pipe(
         finalize(() => {
           this.approvingWorkflows.delete(workflowId);
@@ -202,7 +249,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
   }
 
   approveAllForTenant(tenantId: string): void {
-    const tenant = this.tenantWorkflows.find(tw => tw.tenantId === tenantId);
+    const tenant = this.findTenantSummary(tenantId);
     if (!tenant) {
       return;
     }
@@ -211,7 +258,10 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       return;
     }
     pending.forEach(wf => this.approvingWorkflows.add(wf.id));
-    forkJoin(pending.map(workflow => this.workflowsService.approveWorkflowWorkflow({ id: workflow.id })))
+    this.runInTenantContext(
+      tenant.accountName,
+      () => forkJoin(pending.map(workflow => this.workflowsService.approveWorkflowWorkflow({ id: workflow.id }))),
+    )
       .pipe(
         finalize(() => {
           pending.forEach(wf => this.approvingWorkflows.delete(wf.id));
@@ -227,6 +277,24 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     return this.approvingWorkflows.has(workflowId);
   }
 
+  openWorkflowDetails(workflow: Workflow): void {
+    if (!workflow?.id) {
+      return;
+    }
+    const context = this.getWorkflowAccountContext(workflow);
+    if (!context?.accountName) {
+      return;
+    }
+    this.modalPreviousTenant = this.tenantStateService.getTenant();
+    this.tenantStateService.setTenant(context.accountName);
+    this.subscribeToWorkflowViewModal();
+    const data: WorkflowViewModalData = {
+      workflowId: workflow.id,
+    };
+    this.ngxSmartModal.setModalData(data, 'workflowViewModal');
+    this.ngxSmartModal.getModal('workflowViewModal').open();
+  }
+
   onLaunchWorkflow(): void {
     if (this.launchForm.invalid || this.isLaunching) {
       this.launchForm.markAllAsTouched();
@@ -237,14 +305,19 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     const moduleType = this.launchForm.get('moduleType')?.value as CreateWorkflowDtoWorkflowTypeEnum;
     const groupType = this.launchForm.get('groupType')?.value;
     const groupOption = this.groupLaunchOptions.find(option => option.id === groupType);
+    const tenantOption = this.tenantOptions.find(option => option.tenantId === tenantId);
+    if (!tenantOption) {
+      this.launchErrorMessage = 'Please select a tenant.';
+      return;
+    }
 
     this.launchSuccessMessage = '';
     this.launchErrorMessage = '';
     this.isLaunching = true;
     const request$ =
       launchMode === 'group'
-        ? this.launchWorkflowGroup(tenantId, groupType)
-        : this.launchIndividualWorkflow(tenantId, moduleType);
+        ? this.launchWorkflowGroup(tenantOption.accountName, tenantId, groupType)
+        : this.launchIndividualWorkflow(tenantOption.accountName, tenantId, moduleType);
 
     request$
       .pipe(
@@ -269,6 +342,10 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
 
   trackByTenant(_index: number, tenant: TenantWorkflowSummary): string {
     return tenant.tenantId;
+  }
+
+  trackByAccount(_index: number, account: TenantAccountSummary): string {
+    return account.accountName;
   }
 
   trackByWorkflow(_index: number, workflow: Workflow): string {
@@ -370,37 +447,40 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     control?.setValue(mode);
   }
 
+  private get allTenantSummaries(): TenantWorkflowSummary[] {
+    return this.tenantAccounts.flatMap(account => account.tenants);
+  }
+
+  private findTenantSummary(tenantId: string): TenantWorkflowSummary | undefined {
+    return this.allTenantSummaries.find(tenant => tenant.tenantId === tenantId);
+  }
+
   private loadData(): void {
     this.isLoading = true;
     this.loadingError = null;
-    forkJoin({
-      workflows: this.workflowsService.getManyWorkflow({
-        perPage: this.workflowsPerPage,
-        page: 1,
-        sort: ['createdAt,DESC'],
-        fields: ['id', 'name', 'status', 'tenantId', 'terraformModule', 'approvalType', 'createdAt', 'finishedAt'],
-      }),
-      tenants: this.tenantsService.getManyTenant({
-        perPage: 200,
-        page: 1,
-        filter: this.tenantFilter,
-        fields: ['id', 'name', 'alias', 'description', 'environmentId'],
-      }),
-    })
+    this.adminService
+      .getTenantCatalogAdmin()
       .pipe(
+        switchMap(catalog => {
+          if (!catalog || catalog.length === 0) {
+            return of([]);
+          }
+          return from(catalog).pipe(concatMap(item => this.loadAccountData(item)), toArray());
+        }),
         finalize(() => {
           this.isLoading = false;
         }),
       )
       .subscribe({
-        next: ({ workflows, tenants }) => {
-          this.buildTenantLookup(tenants.data);
-          this.tenantWorkflows = this.buildTenantWorkflows(workflows.data);
+        next: accounts => {
+          this.tenantAccounts = accounts;
+          this.tenantOptions = this.buildTenantSelectOptions(accounts);
           this.ensureLaunchFormTenant();
         },
         error: () => {
           this.loadingError = 'Unable to load workflow data. Please refresh.';
-          this.tenantWorkflows = [];
+          this.tenantAccounts = [];
+          this.tenantOptions = [];
         },
       });
   }
@@ -408,48 +488,8 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
   private ensureLaunchFormTenant(): void {
     const currentTenantId = this.launchForm.get('tenantId')?.value;
     if (!currentTenantId && this.tenantOptions.length) {
-      this.launchForm.patchValue({ tenantId: this.tenantOptions[0].id });
+      this.launchForm.patchValue({ tenantId: this.tenantOptions[0].tenantId });
     }
-  }
-
-  private buildTenantLookup(tenants: TenantLite[]): void {
-    this.tenantLookup.clear();
-    tenants?.forEach(tenant => {
-      this.tenantLookup.set(tenant.id, tenant);
-    });
-    this.tenantOptions = (tenants || []).slice().sort((a, b) => {
-      const aName = a.alias || a.name || a.id;
-      const bName = b.alias || b.name || b.id;
-      return aName.localeCompare(bName);
-    });
-  }
-
-  private buildTenantWorkflows(workflows: Workflow[]): TenantWorkflowSummary[] {
-    const summaries = new Map<string, TenantWorkflowSummary>();
-    workflows?.forEach(workflow => {
-      const existing = summaries.get(workflow.tenantId);
-      if (existing) {
-        existing.workflows.push(workflow);
-      } else {
-        summaries.set(workflow.tenantId, {
-          tenantId: workflow.tenantId,
-          tenantName: this.getTenantName(workflow.tenantId),
-          environment: this.getTenantEnvironment(workflow.tenantId),
-          workflows: [workflow],
-        });
-      }
-    });
-    return Array.from(summaries.values()).sort((a, b) => a.tenantName.localeCompare(b.tenantName));
-  }
-
-  private getTenantName(tenantId: string): string {
-    const tenant = this.tenantLookup.get(tenantId);
-    return tenant?.alias || tenant?.name || tenantId;
-  }
-
-  private getTenantEnvironment(tenantId: string): string {
-    const tenant = this.tenantLookup.get(tenantId);
-    return tenant?.environmentId || 'Unspecified';
   }
 
   private initializeTableConfigs(): void {
@@ -464,6 +504,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
         { name: 'Approval Type', value: wf => this.formatLabel(wf.approvalType) },
         { name: 'Created', value: wf => this.formatDate(wf.createdAt) },
         { name: 'Finished', value: wf => this.formatDate(wf.finishedAt) },
+        { name: 'Details', template: () => this.workflowActionsTemplate },
       ],
     };
 
@@ -515,32 +556,42 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
     groupCtrl?.updateValueAndValidity({ emitEvent: false });
   }
 
-  private launchIndividualWorkflow(tenantId: string, workflowType: CreateWorkflowDtoWorkflowTypeEnum) {
-    return this.workflowsService.createOneWorkflow({
-      createWorkflowDto: {
-        tenantId,
-        workflowType,
-      },
-    });
+  private launchIndividualWorkflow(
+    accountName: string,
+    tenantId: string,
+    workflowType: CreateWorkflowDtoWorkflowTypeEnum,
+  ): Observable<any> {
+    return this.runInTenantContext(accountName, () =>
+      this.workflowsService.createOneWorkflow({
+        createWorkflowDto: {
+          tenantId,
+          workflowType,
+        },
+      }),
+    );
   }
 
-  private launchWorkflowGroup(tenantId: string, groupId: string) {
+  private launchWorkflowGroup(accountName: string, tenantId: string, groupId: string): Observable<any> {
     const option = this.groupLaunchOptions.find(opt => opt.id === groupId);
     const modules = option?.modules ?? [];
     if (!modules.length) {
       const fallbackType =
         this.workflowTypeOptions[0] ?? CreateWorkflowDtoWorkflowTypeEnum.TenantUnderlay;
-      return this.launchIndividualWorkflow(tenantId, fallbackType);
+      return this.launchIndividualWorkflow(accountName, tenantId, fallbackType);
     }
-    return forkJoin(
-      modules.map(workflowType =>
-        this.workflowsService.createOneWorkflow({
-          createWorkflowDto: {
-            tenantId,
-            workflowType,
-          },
-        }),
-      ),
+    return this.runInTenantContext(
+      accountName,
+      () =>
+        forkJoin(
+          modules.map(workflowType =>
+            this.workflowsService.createOneWorkflow({
+              createWorkflowDto: {
+                tenantId,
+                workflowType,
+              },
+            }),
+          ),
+        ),
     );
   }
 
@@ -554,6 +605,148 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit {
       groupType: defaultGroup,
     });
     this.updateLaunchModeValidators(mode);
+  }
+
+  private loadAccountData(catalogItem: TenantCatalogItem): Observable<TenantAccountSummary> {
+    const accountName = catalogItem.tenant;
+    const accountDisplayName = catalogItem.tenantFullName || this.formatLabel(accountName);
+    return this.runInTenantContext(accountName, () =>
+      forkJoin({
+        tenants: this.tenantsService.getManyTenant({
+          perPage: 200,
+          page: 1,
+          filter: this.tenantFilter,
+          fields: ['id', 'name', 'alias', 'description', 'environmentId'],
+        }),
+        workflows: this.workflowsService.getManyWorkflow({
+          perPage: this.workflowsPerPage,
+          page: 1,
+          sort: ['createdAt,DESC'],
+          fields: ['id', 'name', 'status', 'tenantId', 'terraformModule', 'approvalType', 'createdAt', 'finishedAt'],
+        }),
+      }),
+    ).pipe(
+      map(({ tenants, workflows }) => ({
+        accountName,
+        accountDisplayName,
+        tenants: this.buildTenantWorkflowsForAccount(accountName, accountDisplayName, tenants?.data ?? [], workflows?.data ?? []),
+      })),
+    );
+  }
+
+  private buildTenantWorkflowsForAccount(
+    accountName: string,
+    accountDisplayName: string,
+    tenants: Tenant[],
+    workflows: Workflow[],
+  ): TenantWorkflowSummary[] {
+    const tenantMap = new Map<string, Tenant>();
+    tenants?.forEach(tenant => tenantMap.set(tenant.id, tenant));
+
+    const summaries = new Map<string, TenantWorkflowSummary>();
+    workflows?.forEach(workflow => {
+      const workflowWithContext = this.withAccountContext(workflow, accountName, accountDisplayName);
+      const tenantInfo = tenantMap.get(workflow.tenantId);
+      const tenantName = tenantInfo?.alias || tenantInfo?.name || workflow.tenantId;
+      const environment = tenantInfo?.environmentId || 'Unspecified';
+
+      let summary = summaries.get(workflow.tenantId);
+      if (!summary) {
+        summary = {
+          tenantId: workflow.tenantId,
+          tenantName,
+          accountName,
+          accountDisplayName,
+          environment,
+          workflows: [],
+        };
+        summaries.set(workflow.tenantId, summary);
+      }
+      summary.workflows.push(workflowWithContext);
+    });
+
+    tenantMap.forEach((tenantInfo, tenantId) => {
+      if (!summaries.has(tenantId)) {
+        summaries.set(tenantId, {
+          tenantId,
+          tenantName: tenantInfo?.alias || tenantInfo?.name || tenantId,
+          accountName,
+          accountDisplayName,
+          environment: tenantInfo?.environmentId || 'Unspecified',
+          workflows: [],
+        });
+      }
+    });
+
+    return Array.from(summaries.values()).sort((a, b) => a.tenantName.localeCompare(b.tenantName));
+  }
+
+  private buildTenantSelectOptions(accounts: TenantAccountSummary[]): TenantSelectOption[] {
+    const options: TenantSelectOption[] = [];
+    accounts.forEach(account => {
+      account.tenants.forEach(tenant => {
+        options.push({
+          accountName: account.accountName,
+          accountDisplayName: account.accountDisplayName,
+          tenantId: tenant.tenantId,
+          tenantName: tenant.tenantName,
+        });
+      });
+    });
+    return options.sort((a, b) => {
+      const aLabel = `${a.accountDisplayName}-${a.tenantName}`;
+      const bLabel = `${b.accountDisplayName}-${b.tenantName}`;
+      return aLabel.localeCompare(bLabel);
+    });
+  }
+
+  private runInTenantContext<T>(tenantName: string, work: () => Observable<T>): Observable<T> {
+    this.tenantStateService.setTenant(tenantName);
+    return work().pipe(
+      finalize(() => {
+        this.tenantStateService.clearTenant();
+      }),
+    );
+  }
+
+  private withAccountContext(
+    workflow: Workflow,
+    accountName: string,
+    accountDisplayName: string,
+  ): WorkflowWithAccountContext {
+    return {
+      ...workflow,
+      __accountName: accountName,
+      __accountDisplayName: accountDisplayName,
+    };
+  }
+
+  private getWorkflowAccountContext(workflow: Workflow): { accountName?: string; accountDisplayName?: string } | null {
+    const context = workflow as WorkflowWithAccountContext;
+    if (!context.__accountName) {
+      return null;
+    }
+    return {
+      accountName: context.__accountName,
+      accountDisplayName: context.__accountDisplayName,
+    };
+  }
+
+  private subscribeToWorkflowViewModal(): void {
+    this.workflowViewModalSubscription?.unsubscribe();
+    const modal = this.ngxSmartModal.getModal('workflowViewModal');
+    this.workflowViewModalSubscription = modal.onCloseFinished.subscribe(() => {
+      this.ngxSmartModal.resetModalData('workflowViewModal');
+      this.workflowViewModalSubscription?.unsubscribe();
+      this.workflowViewModalSubscription = undefined;
+      if (this.modalPreviousTenant) {
+        this.tenantStateService.setTenant(this.modalPreviousTenant);
+      } else {
+        this.tenantStateService.clearTenant();
+      }
+      this.modalPreviousTenant = null;
+      this.loadData();
+    });
   }
 }
 

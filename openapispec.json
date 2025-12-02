@@ -15110,6 +15110,31 @@
         ]
       }
     },
+    "/admin/tenant-catalog": {
+      "get": {
+        "operationId": "getTenantCatalogAdmin",
+        "summary": "Get tenant catalog.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TenantCatalogItem"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/v1/audit-log": {
       "get": {
         "operationId": "getAuditLogAuditLog",
@@ -28263,6 +28288,14 @@
           "externalFirewallId": {
             "type": "string"
           },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
           "tenantId": {
             "type": "string"
           },
@@ -29679,6 +29712,7 @@
               "Selector",
               "ExternalFirewall",
               "ServiceGraphFirewall",
+              "ServiceGraph",
               "RouteControl",
               "ExternalRoute",
               "InternalRoute",
@@ -29991,6 +30025,7 @@
               "Selector",
               "ExternalFirewall",
               "ServiceGraphFirewall",
+              "ServiceGraph",
               "RouteControl",
               "ExternalRoute",
               "InternalRoute",
@@ -33831,6 +33866,43 @@
           "finished",
           "status",
           "failed"
+        ]
+      },
+      "TenantCatalogItem": {
+        "type": "object",
+        "properties": {
+          "tenant": {
+            "type": "string",
+            "description": "Tenant name"
+          },
+          "tenantDatabase": {
+            "type": "string",
+            "description": "Tenant database"
+          },
+          "tenantQueryParameter": {
+            "type": "string",
+            "description": "Tenant query parameter"
+          },
+          "tenantFullName": {
+            "type": "string",
+            "description": "Tenant full name"
+          },
+          "ansible": {
+            "type": "object",
+            "description": "Ansible service config"
+          },
+          "actifio": {
+            "type": "object",
+            "description": "Actifio service config"
+          }
+        },
+        "required": [
+          "tenant",
+          "tenantDatabase",
+          "tenantQueryParameter",
+          "tenantFullName",
+          "ansible",
+          "actifio"
         ]
       },
       "GraphIndexes": {

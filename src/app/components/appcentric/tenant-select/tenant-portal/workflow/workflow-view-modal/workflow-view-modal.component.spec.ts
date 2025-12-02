@@ -72,7 +72,7 @@ describe('WorkflowViewModalComponent', () => {
       component.workflowId = workflowId;
       component.getWorkflow();
 
-      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events'] });
+      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events', 'executionLogs'] });
       expect(component.workflow).toEqual(workflow as Workflow);
       expect(component.planJson).toBe(JSON.stringify(planObject, null, 2));
     });
@@ -88,7 +88,7 @@ describe('WorkflowViewModalComponent', () => {
       component.workflowId = workflowId;
       component.getWorkflow();
 
-      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events'] });
+      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events', 'executionLogs'] });
       expect(component.workflow).toEqual(workflow as Workflow);
       expect(component.planJson).toBe('previous'); // unchanged because code sets only when present
     });

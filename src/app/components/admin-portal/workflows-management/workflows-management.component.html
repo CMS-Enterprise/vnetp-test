@@ -21,42 +21,50 @@
   <!-- View All Workflows -->
   <section *ngIf="activeTask === 'view' && !isLoading" class="task-panel">
     <h2>Workflows by Tenant</h2>
-    <p *ngIf="tenantWorkflows.length === 0" class="empty-state">No workflows found.</p>
-    <div *ngFor="let tenant of tenantWorkflows; trackBy: trackByTenant" class="tenant-card">
-      <button type="button" class="tenant-summary" (click)="toggleTenant('view', tenant.tenantId)">
-        <div>
-          <p class="tenant-name">{{ tenant.tenantName }}</p>
-          <p class="tenant-env">{{ tenant.environment }}</p>
-        </div>
-        <div class="tenant-metrics">
-          <div>
-            <span class="label">Total</span>
-            <span class="value">{{ getWorkflowTotals(tenant).total }}</span>
-          </div>
-          <div>
-            <span class="label">Running</span>
-            <span class="value">{{ getWorkflowTotals(tenant).running }}</span>
-          </div>
-          <div>
-            <span class="label">Completed</span>
-            <span class="value">{{ getWorkflowTotals(tenant).completed }}</span>
-          </div>
-        </div>
-        <span class="chevron" [class.expanded]="isTenantExpanded('view', tenant.tenantId)"></span>
-      </button>
+    <p *ngIf="tenantAccounts.length === 0" class="empty-state">No workflows found.</p>
+    <ng-container *ngFor="let account of tenantAccounts; trackBy: trackByAccount">
+      <h3 class="tenant-account-title">{{ account.accountDisplayName }}</h3>
+      <ng-container *ngIf="account.tenants?.length > 0; else emptyAccount">
+        <div *ngFor="let tenant of account.tenants; trackBy: trackByTenant" class="tenant-card">
+          <button type="button" class="tenant-summary" (click)="toggleTenant('view', tenant.tenantId)">
+            <div>
+              <p class="tenant-name">{{ tenant.tenantName }}</p>
+              <p class="tenant-env">{{ tenant.environment }}</p>
+            </div>
+            <div class="tenant-metrics">
+              <div>
+                <span class="label">Total</span>
+                <span class="value">{{ getWorkflowTotals(tenant).total }}</span>
+              </div>
+              <div>
+                <span class="label">Running</span>
+                <span class="value">{{ getWorkflowTotals(tenant).running }}</span>
+              </div>
+              <div>
+                <span class="label">Completed</span>
+                <span class="value">{{ getWorkflowTotals(tenant).completed }}</span>
+              </div>
+            </div>
+            <span class="chevron" [class.expanded]="isTenantExpanded('view', tenant.tenantId)"></span>
+          </button>
 
-      <div *ngIf="isTenantExpanded('view', tenant.tenantId)" class="tenant-details">
-        <ng-container *ngIf="viewTableConfig">
-          <app-table
-            [config]="getViewTableConfig(tenant.tenantId)"
-            [data]="getTenantTableData(tenant, 'view')"
-            [itemsPerPage]="getTenantTableState(tenant.tenantId, 'view').perPage"
-            (tableEvent)="onTenantTableEvent(tenant.tenantId, 'view', $event)"
-            [searchColumns]="[]"
-          ></app-table>
-        </ng-container>
-      </div>
-    </div>
+          <div *ngIf="isTenantExpanded('view', tenant.tenantId)" class="tenant-details">
+            <ng-container *ngIf="viewTableConfig">
+              <app-table
+                [config]="getViewTableConfig(tenant.tenantId)"
+                [data]="getTenantTableData(tenant, 'view')"
+                [itemsPerPage]="getTenantTableState(tenant.tenantId, 'view').perPage"
+                (tableEvent)="onTenantTableEvent(tenant.tenantId, 'view', $event)"
+                [searchColumns]="[]"
+              ></app-table>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #emptyAccount>
+      <p class="empty-state">No tenants found for this tenant account.</p>
+    </ng-template>
   </section>
 
   <!-- Approve Workflows -->
@@ -64,38 +72,41 @@
     <h2>Pending Approvals</h2>
     <p *ngIf="totalPendingApprovals === 0" class="empty-state">No workflows are waiting for approval.</p>
 
-    <div *ngFor="let tenant of tenantsWithPendingApprovals; trackBy: trackByTenant" class="tenant-card">
-      <button type="button" class="tenant-summary" (click)="toggleTenant('approve', tenant.tenantId)">
-        <div>
-          <p class="tenant-name">{{ tenant.tenantName }}</p>
-          <p class="tenant-env">{{ tenant.environment }}</p>
-        </div>
-        <div class="tenant-metrics">
+    <ng-container *ngFor="let account of accountsWithPendingApprovals; trackBy: trackByAccount">
+      <h3 class="tenant-account-title">{{ account.accountDisplayName }}</h3>
+      <div *ngFor="let tenant of account.tenants; trackBy: trackByTenant" class="tenant-card">
+        <button type="button" class="tenant-summary" (click)="toggleTenant('approve', tenant.tenantId)">
           <div>
-            <span class="label">Pending</span>
-            <span class="value">{{ getPendingApprovals(tenant).length }}</span>
+            <p class="tenant-name">{{ tenant.tenantName }}</p>
+            <p class="tenant-env">{{ tenant.environment }}</p>
           </div>
-        </div>
-        <span class="chevron" [class.expanded]="isTenantExpanded('approve', tenant.tenantId)"></span>
-      </button>
+          <div class="tenant-metrics">
+            <div>
+              <span class="label">Pending</span>
+              <span class="value">{{ getPendingApprovals(tenant).length }}</span>
+            </div>
+          </div>
+          <span class="chevron" [class.expanded]="isTenantExpanded('approve', tenant.tenantId)"></span>
+        </button>
 
-      <div *ngIf="isTenantExpanded('approve', tenant.tenantId)" class="tenant-details">
-        <div class="tenant-actions">
-          <button type="button" class="btn btn-primary btn-sm" (click)="approveAllForTenant(tenant.tenantId)">
-            Approve All
-          </button>
+        <div *ngIf="isTenantExpanded('approve', tenant.tenantId)" class="tenant-details">
+          <div class="tenant-actions">
+            <button type="button" class="btn btn-primary btn-sm" (click)="approveAllForTenant(tenant.tenantId)">
+              Approve All
+            </button>
+          </div>
+          <ng-container *ngIf="approveTableConfig">
+            <app-table
+              [config]="getApproveTableConfig(tenant.tenantId)"
+              [data]="getTenantTableData(tenant, 'approve')"
+              [itemsPerPage]="getTenantTableState(tenant.tenantId, 'approve').perPage"
+              (tableEvent)="onTenantTableEvent(tenant.tenantId, 'approve', $event)"
+              [searchColumns]="[]"
+            ></app-table>
+          </ng-container>
         </div>
-        <ng-container *ngIf="approveTableConfig">
-          <app-table
-            [config]="getApproveTableConfig(tenant.tenantId)"
-            [data]="getTenantTableData(tenant, 'approve')"
-            [itemsPerPage]="getTenantTableState(tenant.tenantId, 'approve').perPage"
-            (tableEvent)="onTenantTableEvent(tenant.tenantId, 'approve', $event)"
-            [searchColumns]="[]"
-          ></app-table>
-        </ng-container>
       </div>
-    </div>
+    </ng-container>
   </section>
 
   <!-- Launch Workflow -->
@@ -133,8 +144,8 @@
           <span>Tenant</span>
           <select formControlName="tenantId">
             <option value="" disabled>Select a tenant</option>
-            <option *ngFor="let tenant of tenantOptions" [value]="tenant.id">
-              {{ tenant.alias || tenant.name || tenant.id }}
+            <option *ngFor="let option of tenantOptions" [value]="option.tenantId">
+              {{ option.tenantName }} · {{ option.accountDisplayName }}
             </option>
           </select>
           <small *ngIf="launchForm.get('tenantId').touched && launchForm.get('tenantId').invalid">Required.</small>
@@ -199,6 +210,7 @@
 
 <ng-template #approveActionsTemplate let-datum="datum">
   <div class="actions-cell">
+    <button type="button" class="btn btn-link btn-sm" (click)="openWorkflowDetails(datum)">View</button>
     <button
       type="button"
       class="btn btn-outline-success btn-sm"
@@ -210,4 +222,12 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #workflowActionsTemplate let-datum="datum">
+  <div class="actions-cell">
+    <button type="button" class="btn btn-link btn-sm" (click)="openWorkflowDetails(datum)">View</button>
+  </div>
+</ng-template>
+
+<app-workflow-view-modal></app-workflow-view-modal>
 

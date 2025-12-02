@@ -77,6 +77,7 @@ export enum MergedAuditLogEntityTypeEnum {
     Selector = 'Selector',
     ExternalFirewall = 'ExternalFirewall',
     ServiceGraphFirewall = 'ServiceGraphFirewall',
+    ServiceGraph = 'ServiceGraph',
     RouteControl = 'RouteControl',
     ExternalRoute = 'ExternalRoute',
     InternalRoute = 'InternalRoute',

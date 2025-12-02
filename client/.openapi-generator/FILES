@@ -1,6 +1,7 @@
 .gitignore
 README.md
 api.module.ts
+api/admin.service.ts
 api/api.ts
 api/utilities.service.ts
 api/v1AuditLog.service.ts
@@ -298,6 +299,7 @@ model/syncEndpointGroup.ts
 model/syncEndpointSecurityGroup.ts
 model/syncTenant.ts
 model/tenant.ts
+model/tenantCatalogItem.ts
 model/tenantConfigDto.ts
 model/tenantConnectivityGraph.ts
 model/tenantConnectivityGraphEdges.ts
