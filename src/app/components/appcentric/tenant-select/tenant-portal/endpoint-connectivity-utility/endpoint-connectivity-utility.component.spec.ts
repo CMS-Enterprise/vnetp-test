@@ -123,7 +123,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
       expect(control?.valid).toBeTruthy();
     });
 
-    it('sourceEndpointIp should be required and match IP pattern', () => {
+    it('sourceEndpointIp should be required and accept IPv4 and IPv6 addresses', () => {
       const control = component.connectivityForm.get('sourceEndpointIp');
       control?.setValue('');
       expect(control?.valid).toBeFalsy();
@@ -131,15 +131,27 @@ describe('EndpointConnectivityUtilityComponent', () => {
       expect(control?.valid).toBeFalsy();
       control?.setValue('1.2.3.4');
       expect(control?.valid).toBeTruthy();
+      control?.setValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334');
+      expect(control?.valid).toBeTruthy();
+      control?.setValue('2001:db8:85a3::8a2e:370:7334');
+      expect(control?.valid).toBeTruthy();
+      control?.setValue('::1');
+      expect(control?.valid).toBeTruthy();
     });
 
-    it('destinationEndpointIp should be required and match IP pattern', () => {
+    it('destinationEndpointIp should be required and accept IPv4 and IPv6 addresses', () => {
       const control = component.connectivityForm.get('destinationEndpointIp');
       control?.setValue('');
       expect(control?.valid).toBeFalsy();
       control?.setValue('invalid-ip');
       expect(control?.valid).toBeFalsy();
       control?.setValue('1.2.3.4');
+      expect(control?.valid).toBeTruthy();
+      control?.setValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334');
+      expect(control?.valid).toBeTruthy();
+      control?.setValue('2001:db8:85a3::8a2e:370:7334');
+      expect(control?.valid).toBeTruthy();
+      control?.setValue('::1');
       expect(control?.valid).toBeTruthy();
     });
 
@@ -330,7 +342,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
     it('should handle graph loading error', () => {
       const errorMsg = 'Graph load failed';
       (mockTenantService.buildTenantFullGraphTenant as jest.Mock).mockReturnValue(throwError(() => ({ message: errorMsg })));
-      
+
       // Create new component instance to trigger fresh ngOnInit
       const newFixture = TestBed.createComponent(EndpointConnectivityUtilityComponent);
       const newComponent = newFixture.componentInstance;
@@ -681,6 +693,78 @@ describe('EndpointConnectivityUtilityComponent', () => {
 
     it('should return undefined when hop is undefined', () => {
       expect(component.isHopAllowed(undefined)).toBeUndefined();
+    });
+
+    it('should return false when top-level allowed is true but nested policy evaluation has failed', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          allowed: true,
+          policyNodeEvaluation: {
+            allowed: true,
+            policyNodeEvaluation: {
+              allowed: false,
+              policyAllowed: false,
+              allowedReason: 'No Firewall Rules allowed traffic.',
+            },
+          },
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(false);
+    });
+
+    it('should return false when nested policy evaluation has policyAllowed: false', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          allowed: true,
+          policyNodeEvaluation: {
+            allowed: true,
+            policyAllowed: false,
+          },
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(false);
+    });
+
+    it('should return false when nested policy evaluation has allowed: false', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          allowed: true,
+          policyNodeEvaluation: {
+            allowed: false,
+            allowedReason: 'No Firewall Rules allowed traffic.',
+          },
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(false);
+    });
+
+    it('should return true when nested policy evaluations all pass', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          allowed: true,
+          policyNodeEvaluation: {
+            allowed: true,
+            policyNodeEvaluation: {
+              allowed: true,
+            },
+          },
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(true);
+    });
+
+    it('should prioritize policyAllowed over nested checks when explicitly set', () => {
+      const hop = {
+        controlPlaneMetadata: {
+          allowed: true,
+          policyAllowed: true,
+          policyNodeEvaluation: {
+            allowed: false,
+            policyAllowed: false,
+          },
+        },
+      };
+      expect(component.isHopAllowed(hop)).toBe(true);
     });
   });
 });
