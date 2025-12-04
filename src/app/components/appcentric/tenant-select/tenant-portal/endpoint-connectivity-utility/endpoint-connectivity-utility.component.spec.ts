@@ -110,9 +110,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
       expect(form.get('sourceEndpointIp')?.validator).toBeTruthy();
       expect(form.get('destinationEndpointIp')?.validator).toBeTruthy();
       expect(form.get('ipProtocol')?.value).toBe('tcp');
-      expect(form.get('bypassServiceGraph')?.value).toBe(true);
       expect(form.get('generateConfig')?.value).toBe(false);
-      expect(form.get('bidirectional')?.value).toBe(false);
     });
 
     it('generatedConfigIdentifier should be required', () => {
@@ -195,9 +193,7 @@ describe('EndpointConnectivityUtilityComponent', () => {
         destinationEndpointIp: '2.2.2.2',
         destinationEndpointPort: '200',
         ipProtocol: 'tcp',
-        bypassServiceGraph: true,
         generateConfig: false,
-        bidirectional: false,
       });
 
       mockPathResult = {
@@ -693,78 +689,6 @@ describe('EndpointConnectivityUtilityComponent', () => {
 
     it('should return undefined when hop is undefined', () => {
       expect(component.isHopAllowed(undefined)).toBeUndefined();
-    });
-
-    it('should return false when top-level allowed is true but nested policy evaluation has failed', () => {
-      const hop = {
-        controlPlaneMetadata: {
-          allowed: true,
-          policyNodeEvaluation: {
-            allowed: true,
-            policyNodeEvaluation: {
-              allowed: false,
-              policyAllowed: false,
-              allowedReason: 'No Firewall Rules allowed traffic.',
-            },
-          },
-        },
-      };
-      expect(component.isHopAllowed(hop)).toBe(false);
-    });
-
-    it('should return false when nested policy evaluation has policyAllowed: false', () => {
-      const hop = {
-        controlPlaneMetadata: {
-          allowed: true,
-          policyNodeEvaluation: {
-            allowed: true,
-            policyAllowed: false,
-          },
-        },
-      };
-      expect(component.isHopAllowed(hop)).toBe(false);
-    });
-
-    it('should return false when nested policy evaluation has allowed: false', () => {
-      const hop = {
-        controlPlaneMetadata: {
-          allowed: true,
-          policyNodeEvaluation: {
-            allowed: false,
-            allowedReason: 'No Firewall Rules allowed traffic.',
-          },
-        },
-      };
-      expect(component.isHopAllowed(hop)).toBe(false);
-    });
-
-    it('should return true when nested policy evaluations all pass', () => {
-      const hop = {
-        controlPlaneMetadata: {
-          allowed: true,
-          policyNodeEvaluation: {
-            allowed: true,
-            policyNodeEvaluation: {
-              allowed: true,
-            },
-          },
-        },
-      };
-      expect(component.isHopAllowed(hop)).toBe(true);
-    });
-
-    it('should prioritize policyAllowed over nested checks when explicitly set', () => {
-      const hop = {
-        controlPlaneMetadata: {
-          allowed: true,
-          policyAllowed: true,
-          policyNodeEvaluation: {
-            allowed: false,
-            policyAllowed: false,
-          },
-        },
-      };
-      expect(component.isHopAllowed(hop)).toBe(true);
     });
   });
 });

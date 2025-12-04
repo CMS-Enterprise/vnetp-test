@@ -211,9 +211,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
     this.connectivityForm.reset({
       generatedConfigIdentifier: 'connectivity-test-' + Date.now(),
       ipProtocol: 'tcp',
-      bypassServiceGraph: true,
       generateConfig: false,
-      bidirectional: false,
     });
     this.connectivityResult = null;
     this.error = null;
