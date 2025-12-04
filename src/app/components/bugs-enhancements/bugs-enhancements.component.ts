@@ -7,6 +7,7 @@ import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bugs-enhancements',
@@ -21,6 +22,7 @@ export class BugsEnhancementsComponent implements OnInit {
 
   mails;
   selectedMail;
+  private bugsEnhancementsModalSubscription: Subscription;
   public perPage = 10;
   public tableComponentDto = new TableComponentDto();
   public isLoading = false;
@@ -38,6 +40,7 @@ export class BugsEnhancementsComponent implements OnInit {
       { name: 'Timestamp', property: 'timestamp' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideSearchBar: true,
     hideAdvancedSearch: true,
   };
 
@@ -90,11 +93,7 @@ export class BugsEnhancementsComponent implements OnInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults && !searchString) {
-          this.tableComponentDto.searchColumn = params.searchColumn;
-          this.tableComponentDto.searchText = params.searchText;
           this.getMails(this.tableComponentDto);
-        } else if (filteredResults && searchString) {
-          this.getMails(searchString);
         } else {
           this.getMails();
         }
@@ -103,28 +102,47 @@ export class BugsEnhancementsComponent implements OnInit {
   }
 
   public openDetailedModal(mail: any): void {
-    const properties = Object.keys(mail.mailBody);
-    let newProperties = [];
-    properties.map(property => {
-      newProperties.push(
-        property.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
-          return str.toUpperCase();
-        }),
-      );
-      console.log('newProperties', newProperties);
-    });
-    const newMailObject = {};
-    newProperties.map(newProp => {
-      newMailObject[newProp] = Object.values(mail.mailBody).map(value => {
-        return value;
-      });
-    });
-    console.log('newMailObject', newMailObject);
+    // const properties = Object.keys(mail.mailBody);
+    // let newProperties = [];
+    // properties.map(property => {
+    //   newProperties.push(
+    //     property.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+    //       return str.toUpperCase();
+    //     }),
+    //   );
+    //   console.log('newProperties', newProperties);
+    // });
+    // const newMailObject = {};
+    // newProperties.map(newProp => {
+    //   newMailObject[newProp] = Object.values(mail.mailBody).map(value => {
+    //     return value;
+    //   });
+    // });
+    // console.log('newMailObject', newMailObject);
     // console.log('newProperties',newProperties)
     // for (String w : "camelValue".split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
     //     System.out.println(w);
     // }
+    this.subscribeToBugsEnhancementsModal();
     this.selectedMail = { data: [mail], page: 1, pageCount: 1, count: 1, total: 1 };
     this.ngx.getModal('bugsEnhancementsViewModal').open();
+  }
+
+  subscribeToBugsEnhancementsModal() {
+    this.bugsEnhancementsModalSubscription = this.ngx.getModal('bugsEnhancementsViewModal').onCloseFinished.subscribe(() => {
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults, searchString } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults && !searchString) {
+        this.getMails(this.tableComponentDto);
+      } else {
+        this.getMails();
+      }
+      this.ngx.resetModalData('bugsEnhancementsViewModal');
+      this.bugsEnhancementsModalSubscription.unsubscribe();
+    });
   }
 }
