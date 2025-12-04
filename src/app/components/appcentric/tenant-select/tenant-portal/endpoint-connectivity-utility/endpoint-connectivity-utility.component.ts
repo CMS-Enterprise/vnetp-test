@@ -16,6 +16,7 @@ import {
   TenantGraphPathTraceService,
   TenantGraphRenderConfig,
 } from 'src/app/services/tenant-graph';
+import { IpAddressIpValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-endpoint-connectivity-utility',
@@ -88,14 +89,12 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
 
     this.connectivityForm = this.fb.group({
       generatedConfigIdentifier: ['connectivity-test-' + Date.now(), Validators.required],
-      sourceEndpointIp: ['', [Validators.required, Validators.pattern('^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$')]],
+      sourceEndpointIp: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       sourceEndpointPort: [null],
-      destinationEndpointIp: ['', [Validators.required, Validators.pattern('^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$')]],
+      destinationEndpointIp: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       destinationEndpointPort: ['', [Validators.pattern('^\\d+$')]],
       ipProtocol: ['tcp', Validators.required],
-      bypassServiceGraph: [true],
       generateConfig: [false],
-      bidirectional: [false],
     });
   }
 
@@ -212,9 +211,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit, OnDestroy {
     this.connectivityForm.reset({
       generatedConfigIdentifier: 'connectivity-test-' + Date.now(),
       ipProtocol: 'tcp',
-      bypassServiceGraph: true,
       generateConfig: false,
-      bidirectional: false,
     });
     this.connectivityResult = null;
     this.error = null;
