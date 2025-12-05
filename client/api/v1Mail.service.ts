@@ -38,6 +38,7 @@ export interface DeleteMailMailRequestParams {
 export interface GetMailsMailRequestParams {
     page: number;
     perPage: number;
+    tenant?: string;
 }
 
 export interface UpdateOneEnhancementMailRequestParams {
@@ -282,6 +283,7 @@ export class V1MailService {
         if (perPage === null || perPage === undefined) {
             throw new Error('Required parameter perPage was null or undefined when calling getMailsMail.');
         }
+        const tenant = requestParameters.tenant;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (page !== undefined && page !== null) {
@@ -291,6 +293,10 @@ export class V1MailService {
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (tenant !== undefined && tenant !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>tenant, 'tenant');
         }
 
         let headers = this.defaultHeaders;
