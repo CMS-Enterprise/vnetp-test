@@ -29781,6 +29781,378 @@
         "type": "object",
         "properties": {}
       },
+      "TerraformResource": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The address of the Terraform resource"
+          },
+          "mode": {
+            "type": "string",
+            "description": "The mode of the Terraform resource",
+            "enum": [
+              "managed",
+              "data"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The Terraform resource type, e.g., \"aci_application_epg\""
+          },
+          "name": {
+            "type": "string",
+            "description": "The Terraform resource name, e.g., \"epgs\""
+          },
+          "index": {
+            "type": "object",
+            "description": "The resource key if in a collection, e.g., \"epg1\""
+          },
+          "provider_name": {
+            "type": "string",
+            "description": "The provider name for the Terraform resource"
+          },
+          "schema_version": {
+            "type": "number",
+            "description": "The schema version of the Terraform resource"
+          },
+          "values": {
+            "type": "object",
+            "description": "Represents the planned state attributes"
+          },
+          "sensitive_values": {
+            "type": "object",
+            "description": "Sensitive values of the Terraform resource"
+          }
+        },
+        "required": [
+          "address",
+          "mode",
+          "type",
+          "name",
+          "provider_name",
+          "schema_version"
+        ]
+      },
+      "TerraformChildModule": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "description": "Resources in the Terraform root module",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerraformResource"
+            }
+          },
+          "variables": {
+            "type": "object",
+            "description": "Variables in the Terraform root module"
+          },
+          "child_modules": {
+            "description": "Child modules in the Terraform root module",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerraformChildModule"
+            }
+          },
+          "address": {
+            "type": "string",
+            "description": "The address of the Terraform child module"
+          }
+        },
+        "required": [
+          "address"
+        ]
+      },
+      "TerraformRootModule": {
+        "type": "object",
+        "properties": {
+          "resources": {
+            "description": "Resources in the Terraform root module",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerraformResource"
+            }
+          },
+          "variables": {
+            "type": "object",
+            "description": "Variables in the Terraform root module"
+          },
+          "child_modules": {
+            "description": "Child modules in the Terraform root module",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerraformChildModule"
+            }
+          }
+        }
+      },
+      "TerraformPlannedValues": {
+        "type": "object",
+        "properties": {
+          "root_module": {
+            "description": "The root module of the Terraform plan",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformRootModule"
+              }
+            ]
+          }
+        },
+        "required": [
+          "root_module"
+        ]
+      },
+      "TerraformState": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "description": "The values in the Terraform state",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformPlannedValues"
+              }
+            ]
+          },
+          "terraform_version": {
+            "type": "string",
+            "description": "The Terraform version used to generate the state"
+          }
+        },
+        "required": [
+          "values",
+          "terraform_version"
+        ]
+      },
+      "TerraformResourceChange": {
+        "type": "object",
+        "properties": {
+          "actions": {
+            "type": "array",
+            "description": "Actions to be performed on the resource",
+            "items": {
+              "type": "string",
+              "enum": [
+                "no-op",
+                "create",
+                "read",
+                "update",
+                "delete",
+                "replace",
+                "unknown"
+              ]
+            }
+          },
+          "before": {
+            "type": "object",
+            "description": "State before plan",
+            "nullable": true
+          },
+          "after": {
+            "type": "object",
+            "description": "State after plan (if resource still exists)",
+            "nullable": true
+          },
+          "after_unknown": {
+            "type": "object",
+            "description": "Values not known until apply"
+          },
+          "before_sensitive": {
+            "type": "object",
+            "description": "Sensitive values before plan"
+          },
+          "after_sensitive": {
+            "type": "object",
+            "description": "Sensitive values after plan"
+          },
+          "replace_paths": {
+            "type": "array",
+            "description": "Array of arrays representing paths into the object value which resulted in the action being \"replace\". Omitted if the action is not replace.",
+            "items": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "actions",
+          "before",
+          "after"
+        ]
+      },
+      "TerraformResourceImporting": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The import ID of the object being imported"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "TerraformResourceAction": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The full absolute address of the resource instance this change applies to"
+          },
+          "previous_address": {
+            "type": "string",
+            "description": "The full absolute address of this resource instance as it was known after the previous Terraform run. Included only if the address has changed, e.g. by handling a \"moved\" block in the configuration."
+          },
+          "module_address": {
+            "type": "string",
+            "description": "The module address of the Terraform resource"
+          },
+          "mode": {
+            "type": "string",
+            "description": "The mode of the Terraform resource",
+            "enum": [
+              "managed",
+              "data"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The Terraform resource type"
+          },
+          "name": {
+            "type": "string",
+            "description": "The Terraform resource name in HCL"
+          },
+          "index": {
+            "type": "string",
+            "description": "Resource key if part of a collection (e.g., from count or for_each)"
+          },
+          "provider_name": {
+            "type": "string",
+            "description": "The provider name for the Terraform resource"
+          },
+          "change": {
+            "description": "The change to be applied to the resource",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformResourceChange"
+              }
+            ]
+          },
+          "action_reason": {
+            "type": "string",
+            "description": "Reason for the action, e.g., \"delete_because_each_key\""
+          },
+          "importing": {
+            "description": "Present only when the object is being imported as part of this change",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformResourceImporting"
+              }
+            ]
+          }
+        },
+        "required": [
+          "address",
+          "mode",
+          "type",
+          "name",
+          "change"
+        ]
+      },
+      "TerraformShowPlan": {
+        "type": "object",
+        "properties": {
+          "format_version": {
+            "type": "string",
+            "description": "The format version of the Terraform plan"
+          },
+          "prior_state": {
+            "description": "The state representation before applying the plan",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformState"
+              }
+            ]
+          },
+          "terraform_version": {
+            "type": "string",
+            "description": "The Terraform version used to generate the plan"
+          },
+          "variables": {
+            "type": "object",
+            "description": "Variables used in the Terraform plan"
+          },
+          "planned_values": {
+            "description": "The planned values in the Terraform plan",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformPlannedValues"
+              }
+            ]
+          },
+          "proposed_unknown": {
+            "description": "Representation of the attributes, including any potentially-unknown attributes. Each value is replaced with \"true\" or \"false\" depending on whether it is known in the proposed plan.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformPlannedValues"
+              }
+            ]
+          },
+          "resource_changes": {
+            "description": "Resource changes in the Terraform plan",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerraformResourceAction"
+            }
+          },
+          "resource_drift": {
+            "description": "Resource drift detected in the Terraform plan. Uses the same object structure as resource_changes.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerraformResourceAction"
+            }
+          },
+          "configuration": {
+            "type": "object",
+            "description": "Configuration used in the Terraform plan"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp when the Terraform plan was generated"
+          },
+          "applyable": {
+            "type": "boolean",
+            "description": "Whether the Terraform plan is applyable"
+          },
+          "complete": {
+            "type": "boolean",
+            "description": "Whether the Terraform plan is complete"
+          },
+          "errored": {
+            "type": "boolean",
+            "description": "Whether the Terraform plan has errors"
+          }
+        },
+        "required": [
+          "format_version",
+          "terraform_version",
+          "planned_values",
+          "resource_changes",
+          "applyable",
+          "complete",
+          "errored"
+        ]
+      },
       "TerraformPlan": {
         "type": "object",
         "properties": {
@@ -29801,8 +30173,12 @@
             ]
           },
           "planJson": {
-            "type": "object",
-            "description": "The Terraform plan as JSON"
+            "description": "The Terraform plan as JSON",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformShowPlan"
+              }
+            ]
           },
           "workflow": {
             "description": "The workflow that the Terraform plan belongs to",

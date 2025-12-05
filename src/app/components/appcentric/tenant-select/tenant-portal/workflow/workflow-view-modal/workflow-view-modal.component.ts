@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { V2WorkflowsService, Workflow, WorkflowExecutionLog } from 'client';
+import { V2WorkflowsService, Workflow, WorkflowExecutionLog, TerraformShowPlan, TerraformResourceAction } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { WorkflowViewModalData } from './workflow-view-modal.data';
 
@@ -11,9 +11,9 @@ import { WorkflowViewModalData } from './workflow-view-modal.data';
 export class WorkflowViewModalComponent {
   public workflow: Workflow;
   public workflowId: string;
-  public planJson: string;
+  public terraformPlan: TerraformShowPlan | null = null;
+  public planJson: string | null = null;
   public displayedColumns: string[] = ['actions', 'address', 'type', 'name', 'diff'];
-  public showTerraformPlan = false;
 
   constructor(private readonly workflowService: V2WorkflowsService, private readonly ngxSmartModal: NgxSmartModalService) {}
 
@@ -32,8 +32,8 @@ export class WorkflowViewModalComponent {
       .subscribe(workflow => {
         this.workflow = workflow;
         if (this.workflow.plan?.planJson) {
-          const planObject = this.workflow.plan.planJson;
-          this.planJson = JSON.stringify(planObject, null, 2);
+          this.terraformPlan = this.workflow.plan.planJson;
+          this.planJson = JSON.stringify(this.terraformPlan, null, 2);
         }
       });
   }
@@ -59,8 +59,8 @@ export class WorkflowViewModalComponent {
   reset() {
     this.workflow = null;
     this.workflowId = null;
+    this.terraformPlan = null;
     this.planJson = null;
-    this.showTerraformPlan = false;
   }
 
   trackByEventId(index: number, event: any): string {
@@ -71,7 +71,43 @@ export class WorkflowViewModalComponent {
     return log.id;
   }
 
-  toggleTerraformPlan(): void {
-    this.showTerraformPlan = !this.showTerraformPlan;
+  downloadPlanJson(): void {
+    if (!this.planJson) {
+      return;
+    }
+    const blob = new Blob([this.planJson], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `terraform-plan-${this.workflowId}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  hasFormatVersionMismatch(): boolean {
+    if (!this.terraformPlan?.prior_state) {
+      return false;
+    }
+    const priorFormatVersion = (this.terraformPlan.prior_state as any).format_version;
+    if (!priorFormatVersion) {
+      return false;
+    }
+    return this.terraformPlan.format_version !== priorFormatVersion;
+  }
+
+  hasTerraformVersionMismatch(): boolean {
+    if (!this.terraformPlan?.prior_state) {
+      return false;
+    }
+    return this.terraformPlan.terraform_version !== this.terraformPlan.prior_state.terraform_version;
+  }
+
+  getPriorFormatVersion(): string | null {
+    if (!this.terraformPlan?.prior_state) {
+      return null;
+    }
+    return (this.terraformPlan.prior_state as any).format_version || null;
   }
 }

@@ -230,14 +230,96 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Terraform Plan">
+      <mat-tab label="Terraform Plan" *ngIf="workflow.plan?.planJson">
         <ng-template matTabContent>
           <div class="pt-3">
-            <button type="button" class="btn btn-outline-primary mb-3" (click)="toggleTerraformPlan()">
-              {{ showTerraformPlan ? 'Hide Plan' : 'Show Plan' }}
-            </button>
-            <div *ngIf="showTerraformPlan">
-              <pre><code [innerHTML]="planJson"></code></pre>
+            <div *ngIf="terraformPlan">
+              <!-- Plan Summary -->
+              <mat-card class="mb-3">
+                <mat-card-header>
+                  <mat-card-title>Summary</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p class="mb-2"><strong>Format Version:</strong> {{ terraformPlan.format_version }}</p>
+                      <p class="mb-2">
+                        <strong>Terraform Version:</strong> {{ terraformPlan.terraform_version }}
+                        <span
+                          *ngIf="terraformPlan.prior_state"
+                          class="prior-state-value"
+                          [class.text-muted]="!hasTerraformVersionMismatch()"
+                          [class.text-danger]="hasTerraformVersionMismatch()"
+                        >
+                          (Prior Version:{{ terraformPlan.prior_state.terraform_version }})
+                        </span>
+                      </p>
+                      <p class="mb-2" *ngIf="terraformPlan.timestamp"><strong>Plan Timestamp:</strong> {{ terraformPlan.timestamp | date : 'medium' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group mb-3">
+                        <label class="form-label"><strong>Applyable</strong></label>
+                        <div class="form-control-plaintext">
+                          <span
+                            class="badge"
+                            [class.badge-success]="terraformPlan.applyable"
+                            [class.badge-secondary]="!terraformPlan.applyable"
+                          >
+                            {{ terraformPlan.applyable ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label class="form-label"><strong>Complete</strong></label>
+                        <div class="form-control-plaintext">
+                          <span
+                            class="badge"
+                            [class.badge-success]="terraformPlan.complete"
+                            [class.badge-secondary]="!terraformPlan.complete"
+                          >
+                            {{ terraformPlan.complete ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label class="form-label"><strong>Errored</strong></label>
+                        <div class="form-control-plaintext">
+                          <span
+                            class="badge"
+                            [class.badge-danger]="terraformPlan.errored"
+                            [class.badge-success]="!terraformPlan.errored"
+                          >
+                            {{ terraformPlan.errored ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <!-- JSON Viewer and Download Button -->
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h5 class="mb-1">Plan Details</h5>
+                  <small class="text-muted">
+                    <a href="https://developer.hashicorp.com/terraform/internals/json-format" target="_blank" rel="noopener noreferrer">
+                      Terraform JSON Format Reference
+                    </a>
+                  </small>
+                </div>
+                <button type="button" class="btn btn-outline-primary" (click)="downloadPlanJson()">
+                  <fa-icon [icon]="['fas', 'download']" class="mr-2"></fa-icon>
+                  Download JSON
+                </button>
+              </div>
+              <div class="json-viewer-container">
+                <ngx-json-viewer [json]="terraformPlan" [expanded]="false"></ngx-json-viewer>
+              </div>
+            </div>
+
+            <div *ngIf="!terraformPlan" class="alert alert-warning">
+              <strong>No Plan Available:</strong> Terraform plan data is not available for this workflow.
             </div>
           </div>
         </ng-template>

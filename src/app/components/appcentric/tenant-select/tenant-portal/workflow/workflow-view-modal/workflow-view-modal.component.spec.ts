@@ -42,7 +42,6 @@ describe('WorkflowViewModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(component.showTerraformPlan).toBe(false);
     expect(component.displayedColumns).toEqual(['actions', 'address', 'type', 'name', 'diff']);
   });
 
@@ -131,14 +130,12 @@ describe('WorkflowViewModalComponent', () => {
       component.workflow = { id: workflowId } as Workflow;
       component.workflowId = workflowId;
       component.planJson = '{}';
-      component.showTerraformPlan = true;
 
       component.reset();
 
       expect(component.workflow).toBeNull();
       expect(component.workflowId).toBeNull();
       expect(component.planJson).toBeNull();
-      expect(component.showTerraformPlan).toBe(false);
     });
   });
 
@@ -146,16 +143,6 @@ describe('WorkflowViewModalComponent', () => {
     it('should return the event id', () => {
       const event = { id: 'evt-1', other: 'x' };
       expect(component.trackByEventId(0, event)).toBe('evt-1');
-    });
-  });
-
-  describe('toggleTerraformPlan', () => {
-    it('should toggle the boolean flag', () => {
-      expect(component.showTerraformPlan).toBe(false);
-      component.toggleTerraformPlan();
-      expect(component.showTerraformPlan).toBe(true);
-      component.toggleTerraformPlan();
-      expect(component.showTerraformPlan).toBe(false);
     });
   });
 });

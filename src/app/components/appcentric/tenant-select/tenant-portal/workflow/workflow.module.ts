@@ -18,6 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { WorkflowViewModalComponent } from './workflow-view-modal/workflow-view-modal.component';
 
 const routes: Routes = [
@@ -49,6 +50,7 @@ const routes: Routes = [
     MatTableModule,
     MatIconModule,
     MatButtonModule,
+    NgxJsonViewerModule,
   ],
   exports: [WorkflowComponent, WorkflowViewModalComponent],
 })

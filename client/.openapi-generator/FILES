@@ -308,7 +308,16 @@ model/tenantInfrastructureConfigDto.ts
 model/tenantInfrastructureResponse.ts
 model/tenantInfrastructureValidationError.ts
 model/tenantInfrastructureValidationResponse.ts
+model/terraformChildModule.ts
 model/terraformPlan.ts
+model/terraformPlannedValues.ts
+model/terraformResource.ts
+model/terraformResourceAction.ts
+model/terraformResourceChange.ts
+model/terraformResourceImporting.ts
+model/terraformRootModule.ts
+model/terraformShowPlan.ts
+model/terraformState.ts
 model/tier.ts
 model/tierGroup.ts
 model/towerJobDto.ts

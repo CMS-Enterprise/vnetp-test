@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { Workflow } from './workflow';
+import { TerraformShowPlan } from './terraformShowPlan';
 
 
 export interface TerraformPlan { 
@@ -28,7 +29,7 @@ export interface TerraformPlan {
     /**
      * The Terraform plan as JSON
      */
-    planJson: object;
+    planJson: TerraformShowPlan;
     /**
      * The workflow that the Terraform plan belongs to
      */
