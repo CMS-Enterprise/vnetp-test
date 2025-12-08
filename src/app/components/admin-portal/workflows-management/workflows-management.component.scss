@@ -223,6 +223,11 @@
     background: #e0e7ff;
     color: #3730a3;
   }
+
+  &.failed {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
 }
 
 .empty-state {
@@ -367,4 +372,3 @@
   color: #047857;
   font-weight: 600;
 }
-

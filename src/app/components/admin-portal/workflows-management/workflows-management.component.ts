@@ -47,6 +47,13 @@ interface WorkflowTableData {
   pageCount: number;
 }
 
+interface WorkflowTotals {
+  total: number;
+  running: number;
+  completed: number;
+  failed: number;
+}
+
 type LaunchMode = 'module' | 'group';
 
 interface GroupLaunchOption {
@@ -98,6 +105,16 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     WorkflowStatusEnum.ValidAwaitingManualApproval,
     WorkflowStatusEnum.InvalidApplyable,
   ]);
+  readonly runningStatuses = new Set<WorkflowStatusEnum>([
+    WorkflowStatusEnum.Pending,
+    WorkflowStatusEnum.Planning,
+    WorkflowStatusEnum.PlanIncomplete,
+    WorkflowStatusEnum.Validating,
+    WorkflowStatusEnum.Applying,
+    WorkflowStatusEnum.Approved,
+  ]);
+  readonly completedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.Completed, WorkflowStatusEnum.CompletedNoChanges]);
+  readonly failedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.PlanFailed, WorkflowStatusEnum.ApplyFailed]);
   readonly defaultItemsPerPage = 20;
   groupLaunchOptions: GroupLaunchOption[] = [
     {
@@ -148,9 +165,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     });
 
     this.updateLaunchModeValidators('module');
-    this.launchForm
-      .get('launchMode')
-      ?.valueChanges.subscribe(mode => this.updateLaunchModeValidators(mode as LaunchMode));
+    this.launchForm.get('launchMode')?.valueChanges.subscribe(mode => this.updateLaunchModeValidators(mode as LaunchMode));
   }
 
   ngOnInit(): void {
@@ -187,10 +202,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
   }
 
   get totalPendingApprovals(): number {
-    return this.tenantsWithPendingApprovals.reduce(
-      (total, tenant) => total + this.getPendingApprovals(tenant).length,
-      0,
-    );
+    return this.tenantsWithPendingApprovals.reduce((total, tenant) => total + this.getPendingApprovals(tenant).length, 0);
   }
 
   get accountsWithPendingApprovals(): TenantAccountSummary[] {
@@ -206,23 +218,36 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     return tenant.workflows.filter(workflow => this.approvalRequiredStatuses.has(workflow.status as WorkflowStatusEnum));
   }
 
-  getWorkflowTotals(tenant: TenantWorkflowSummary): { total: number; running: number; completed: number } {
-    const total = tenant.workflows.length;
-    const runningStatuses = new Set<WorkflowStatusEnum>([
-      WorkflowStatusEnum.Pending,
-      WorkflowStatusEnum.Planning,
-      WorkflowStatusEnum.Validating,
-      WorkflowStatusEnum.Applying,
-      WorkflowStatusEnum.Approved,
-    ]);
-    const completedStatuses = new Set<WorkflowStatusEnum>([
-      WorkflowStatusEnum.Completed,
-      WorkflowStatusEnum.CompletedNoChanges,
-      WorkflowStatusEnum.ApplyFailed,
-    ]);
-    const running = tenant.workflows.filter(workflow => runningStatuses.has(workflow.status as WorkflowStatusEnum)).length;
-    const completed = tenant.workflows.filter(workflow => completedStatuses.has(workflow.status as WorkflowStatusEnum)).length;
-    return { total, running, completed };
+  getWorkflowTotals(tenant: TenantWorkflowSummary): WorkflowTotals {
+    const totals: WorkflowTotals = {
+      total: tenant.workflows.length,
+      running: 0,
+      completed: 0,
+      failed: 0,
+    };
+
+    tenant.workflows.forEach(workflow => {
+      const status = (workflow.status as WorkflowStatusEnum) ?? null;
+      if (!status) {
+        return;
+      }
+      if (this.approvalRequiredStatuses.has(status)) {
+        return;
+      }
+      if (this.failedStatuses.has(status)) {
+        totals.failed += 1;
+        return;
+      }
+      if (this.completedStatuses.has(status)) {
+        totals.completed += 1;
+        return;
+      }
+      if (this.runningStatuses.has(status)) {
+        totals.running += 1;
+      }
+    });
+
+    return totals;
   }
 
   approveWorkflow(tenantId: string, workflowId: string): void {
@@ -234,9 +259,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
       return;
     }
     this.approvingWorkflows.add(workflowId);
-    this.runInTenantContext(tenant.accountName, () =>
-      this.workflowsService.approveWorkflowWorkflow({ id: workflowId }),
-    )
+    this.runInTenantContext(tenant.accountName, () => this.workflowsService.approveWorkflowWorkflow({ id: workflowId }))
       .pipe(
         finalize(() => {
           this.approvingWorkflows.delete(workflowId);
@@ -258,9 +281,8 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
       return;
     }
     pending.forEach(wf => this.approvingWorkflows.add(wf.id));
-    this.runInTenantContext(
-      tenant.accountName,
-      () => forkJoin(pending.map(workflow => this.workflowsService.approveWorkflowWorkflow({ id: workflow.id }))),
+    this.runInTenantContext(tenant.accountName, () =>
+      forkJoin(pending.map(workflow => this.workflowsService.approveWorkflowWorkflow({ id: workflow.id }))),
     )
       .pipe(
         finalize(() => {
@@ -465,7 +487,10 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
           if (!catalog || catalog.length === 0) {
             return of([]);
           }
-          return from(catalog).pipe(concatMap(item => this.loadAccountData(item)), toArray());
+          return from(catalog).pipe(
+            concatMap(item => this.loadAccountData(item)),
+            toArray(),
+          );
         }),
         finalize(() => {
           this.isLoading = false;
@@ -575,23 +600,20 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     const option = this.groupLaunchOptions.find(opt => opt.id === groupId);
     const modules = option?.modules ?? [];
     if (!modules.length) {
-      const fallbackType =
-        this.workflowTypeOptions[0] ?? CreateWorkflowDtoWorkflowTypeEnum.TenantUnderlay;
+      const fallbackType = this.workflowTypeOptions[0] ?? CreateWorkflowDtoWorkflowTypeEnum.TenantUnderlay;
       return this.launchIndividualWorkflow(accountName, tenantId, fallbackType);
     }
-    return this.runInTenantContext(
-      accountName,
-      () =>
-        forkJoin(
-          modules.map(workflowType =>
-            this.workflowsService.createOneWorkflow({
-              createWorkflowDto: {
-                tenantId,
-                workflowType,
-              },
-            }),
-          ),
+    return this.runInTenantContext(accountName, () =>
+      forkJoin(
+        modules.map(workflowType =>
+          this.workflowsService.createOneWorkflow({
+            createWorkflowDto: {
+              tenantId,
+              workflowType,
+            },
+          }),
         ),
+      ),
     );
   }
 
@@ -709,11 +731,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     );
   }
 
-  private withAccountContext(
-    workflow: Workflow,
-    accountName: string,
-    accountDisplayName: string,
-  ): WorkflowWithAccountContext {
+  private withAccountContext(workflow: Workflow, accountName: string, accountDisplayName: string): WorkflowWithAccountContext {
     return {
       ...workflow,
       __accountName: accountName,
@@ -749,4 +767,3 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     });
   }
 }
-

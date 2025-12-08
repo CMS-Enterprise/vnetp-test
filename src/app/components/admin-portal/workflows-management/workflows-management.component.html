@@ -31,18 +31,22 @@
               <p class="tenant-name">{{ tenant.tenantName }}</p>
               <p class="tenant-env">{{ tenant.environment }}</p>
             </div>
-            <div class="tenant-metrics">
+            <div class="tenant-metrics" *ngIf="getWorkflowTotals(tenant) as totals">
               <div>
                 <span class="label">Total</span>
-                <span class="value">{{ getWorkflowTotals(tenant).total }}</span>
+                <span class="value">{{ totals.total }}</span>
               </div>
               <div>
                 <span class="label">Running</span>
-                <span class="value">{{ getWorkflowTotals(tenant).running }}</span>
+                <span class="value">{{ totals.running }}</span>
               </div>
               <div>
                 <span class="label">Completed</span>
-                <span class="value">{{ getWorkflowTotals(tenant).completed }}</span>
+                <span class="value">{{ totals.completed }}</span>
+              </div>
+              <div>
+                <span class="label">Failed</span>
+                <span class="value">{{ totals.failed }}</span>
               </div>
             </div>
             <span class="chevron" [class.expanded]="isTenantExpanded('view', tenant.tenantId)"></span>
@@ -91,9 +95,7 @@
 
         <div *ngIf="isTenantExpanded('approve', tenant.tenantId)" class="tenant-details">
           <div class="tenant-actions">
-            <button type="button" class="btn btn-primary btn-sm" (click)="approveAllForTenant(tenant.tenantId)">
-              Approve All
-            </button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="approveAllForTenant(tenant.tenantId)">Approve All</button>
           </div>
           <ng-container *ngIf="approveTableConfig">
             <app-table
@@ -199,10 +201,9 @@
   <span
     class="status-chip"
     [class.pending]="approvalRequiredStatuses.has(datum.status)"
-    [class.running]="
-      !approvalRequiredStatuses.has(datum.status) && datum.status !== 'completed' && datum.status !== 'completed_no_changes'
-    "
-    [class.completed]="datum.status === 'completed' || datum.status === 'completed_no_changes'"
+    [class.failed]="failedStatuses.has(datum.status)"
+    [class.completed]="completedStatuses.has(datum.status)"
+    [class.running]="!approvalRequiredStatuses.has(datum.status) && !failedStatuses.has(datum.status) && runningStatuses.has(datum.status)"
   >
     {{ formatStatus(datum.status) }}
   </span>
@@ -230,4 +231,3 @@
 </ng-template>
 
 <app-workflow-view-modal></app-workflow-view-modal>
-
