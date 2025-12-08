@@ -105,13 +105,22 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     WorkflowStatusEnum.ValidAwaitingManualApproval,
     WorkflowStatusEnum.InvalidApplyable,
   ]);
+  readonly pendingStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.Pending, WorkflowStatusEnum.Approved]);
   readonly runningStatuses = new Set<WorkflowStatusEnum>([
     WorkflowStatusEnum.Planning,
     WorkflowStatusEnum.Validating,
     WorkflowStatusEnum.Applying,
   ]);
-  readonly completedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.Completed, WorkflowStatusEnum.CompletedNoChanges]);
-  readonly failedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.PlanFailed, WorkflowStatusEnum.ApplyFailed]);
+  readonly completedStatuses = new Set<WorkflowStatusEnum>([
+    WorkflowStatusEnum.Completed,
+    WorkflowStatusEnum.CompletedNoChanges,
+    WorkflowStatusEnum.Disapproved,
+  ]);
+  readonly failedStatuses = new Set<WorkflowStatusEnum>([
+    WorkflowStatusEnum.PlanFailed,
+    WorkflowStatusEnum.ApplyFailed,
+    WorkflowStatusEnum.PlanIncomplete,
+  ]);
   readonly defaultItemsPerPage = 20;
   groupLaunchOptions: GroupLaunchOption[] = [
     {
@@ -229,6 +238,9 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
         return;
       }
       if (this.approvalRequiredStatuses.has(status)) {
+        return;
+      }
+      if (this.pendingStatuses.has(status)) {
         return;
       }
       if (this.failedStatuses.has(status)) {
