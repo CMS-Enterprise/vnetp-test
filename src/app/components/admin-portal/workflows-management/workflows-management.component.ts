@@ -106,12 +106,9 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     WorkflowStatusEnum.InvalidApplyable,
   ]);
   readonly runningStatuses = new Set<WorkflowStatusEnum>([
-    WorkflowStatusEnum.Pending,
     WorkflowStatusEnum.Planning,
-    WorkflowStatusEnum.PlanIncomplete,
     WorkflowStatusEnum.Validating,
     WorkflowStatusEnum.Applying,
-    WorkflowStatusEnum.Approved,
   ]);
   readonly completedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.Completed, WorkflowStatusEnum.CompletedNoChanges]);
   readonly failedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.PlanFailed, WorkflowStatusEnum.ApplyFailed]);
