@@ -49,6 +49,7 @@ interface WorkflowTableData {
 
 interface WorkflowTotals {
   total: number;
+  pending: number;
   running: number;
   completed: number;
   failed: number;
@@ -227,6 +228,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
   getWorkflowTotals(tenant: TenantWorkflowSummary): WorkflowTotals {
     const totals: WorkflowTotals = {
       total: tenant.workflows.length,
+      pending: 0,
       running: 0,
       completed: 0,
       failed: 0,
@@ -241,6 +243,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
         return;
       }
       if (this.pendingStatuses.has(status)) {
+        totals.pending += 1;
         return;
       }
       if (this.failedStatuses.has(status)) {

@@ -37,6 +37,10 @@
                 <span class="value">{{ totals.total }}</span>
               </div>
               <div>
+                <span class="label">Pending</span>
+                <span class="value">{{ totals.pending }}</span>
+              </div>
+              <div>
                 <span class="label">Running</span>
                 <span class="value">{{ totals.running }}</span>
               </div>
@@ -200,7 +204,8 @@
 <ng-template #workflowStatusTemplate let-datum="datum">
   <span
     class="status-chip"
-    [class.pending]="approvalRequiredStatuses.has(datum.status) || pendingStatuses.has(datum.status)"
+    [class.pending]="approvalRequiredStatuses.has(datum.status)"
+    [class.queued]="pendingStatuses.has(datum.status)"
     [class.failed]="failedStatuses.has(datum.status)"
     [class.completed]="completedStatuses.has(datum.status)"
     [class.running]="!approvalRequiredStatuses.has(datum.status) && !failedStatuses.has(datum.status) && runningStatuses.has(datum.status)"
