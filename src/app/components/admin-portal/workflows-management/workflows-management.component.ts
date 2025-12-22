@@ -49,6 +49,7 @@ interface WorkflowTableData {
 
 interface WorkflowTotals {
   total: number;
+  pending: number;
   running: number;
   completed: number;
   failed: number;
@@ -105,16 +106,22 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     WorkflowStatusEnum.ValidAwaitingManualApproval,
     WorkflowStatusEnum.InvalidApplyable,
   ]);
+  readonly pendingStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.Pending, WorkflowStatusEnum.Approved]);
   readonly runningStatuses = new Set<WorkflowStatusEnum>([
-    WorkflowStatusEnum.Pending,
     WorkflowStatusEnum.Planning,
-    WorkflowStatusEnum.PlanIncomplete,
     WorkflowStatusEnum.Validating,
     WorkflowStatusEnum.Applying,
-    WorkflowStatusEnum.Approved,
   ]);
-  readonly completedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.Completed, WorkflowStatusEnum.CompletedNoChanges]);
-  readonly failedStatuses = new Set<WorkflowStatusEnum>([WorkflowStatusEnum.PlanFailed, WorkflowStatusEnum.ApplyFailed]);
+  readonly completedStatuses = new Set<WorkflowStatusEnum>([
+    WorkflowStatusEnum.Completed,
+    WorkflowStatusEnum.CompletedNoChanges,
+    WorkflowStatusEnum.Disapproved,
+  ]);
+  readonly failedStatuses = new Set<WorkflowStatusEnum>([
+    WorkflowStatusEnum.PlanFailed,
+    WorkflowStatusEnum.ApplyFailed,
+    WorkflowStatusEnum.PlanIncomplete,
+  ]);
   readonly defaultItemsPerPage = 20;
   groupLaunchOptions: GroupLaunchOption[] = [
     {
@@ -221,6 +228,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
   getWorkflowTotals(tenant: TenantWorkflowSummary): WorkflowTotals {
     const totals: WorkflowTotals = {
       total: tenant.workflows.length,
+      pending: 0,
       running: 0,
       completed: 0,
       failed: 0,
@@ -232,6 +240,10 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
         return;
       }
       if (this.approvalRequiredStatuses.has(status)) {
+        return;
+      }
+      if (this.pendingStatuses.has(status)) {
+        totals.pending += 1;
         return;
       }
       if (this.failedStatuses.has(status)) {

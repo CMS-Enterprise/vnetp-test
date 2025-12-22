@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { V2WorkflowsService, Workflow, WorkflowExecutionLog, TerraformShowPlan, TerraformResourceAction } from 'client';
+import { V2WorkflowsService, Workflow, WorkflowExecutionLog, TerraformShowPlan, WorkflowStatusEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { WorkflowViewModalData } from './workflow-view-modal.data';
 
@@ -52,7 +52,7 @@ export class WorkflowViewModalComponent {
 
   applyWorkflow() {
     this.workflowService.applyWorkflowWorkflow({ id: this.workflowId }).subscribe(() => {
-      this.getWorkflow();
+      this.workflow.status = WorkflowStatusEnum.Applying;
     });
   }
 
