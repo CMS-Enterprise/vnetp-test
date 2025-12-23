@@ -52,7 +52,7 @@ export class WorkflowViewModalComponent {
 
   applyWorkflow() {
     this.workflowService.applyWorkflowWorkflow({ id: this.workflowId }).subscribe(() => {
-      this.workflow.status = WorkflowStatusEnum.Applying;
+      this.getWorkflow();
     });
   }
 
