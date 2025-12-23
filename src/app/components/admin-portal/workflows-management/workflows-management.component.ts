@@ -4,7 +4,7 @@ import {
   AdminService,
   CreateWorkflowDtoWorkflowTypeEnum,
   Tenant,
-  TenantCatalogItem,
+  TenantCatalogItemDto,
   V2AppCentricTenantsService,
   V2WorkflowsService,
   Workflow,
@@ -641,7 +641,7 @@ export class WorkflowsManagementComponent implements OnInit, AfterViewInit, OnDe
     this.updateLaunchModeValidators(mode);
   }
 
-  private loadAccountData(catalogItem: TenantCatalogItem): Observable<TenantAccountSummary> {
+  private loadAccountData(catalogItem: TenantCatalogItemDto): Observable<TenantAccountSummary> {
     const accountName = catalogItem.tenant;
     const accountDisplayName = catalogItem.tenantFullName || this.formatLabel(accountName);
     return this.runInTenantContext(accountName, () =>

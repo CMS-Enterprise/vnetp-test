@@ -6,7 +6,7 @@ import {
   AdminService,
   CreateWorkflowDtoWorkflowTypeEnum,
   Tenant,
-  TenantCatalogItem,
+  TenantCatalogItemDto,
   V2AppCentricTenantsService,
   V2WorkflowsService,
   Workflow,
@@ -72,9 +72,9 @@ describe('WorkflowsManagementComponent', () => {
     getModal: jest.fn(() => workflowModalInstance),
   };
 
-  const catalogMock: TenantCatalogItem[] = [
-    { tenant: 'acct-one', tenantFullName: 'Account One' } as TenantCatalogItem,
-    { tenant: 'acct-two', tenantFullName: 'Account Two' } as TenantCatalogItem,
+  const catalogMock: TenantCatalogItemDto[] = [
+    { tenant: 'acct-one', tenantFullName: 'Account One' } as TenantCatalogItemDto,
+    { tenant: 'acct-two', tenantFullName: 'Account Two' } as TenantCatalogItemDto,
   ];
 
   const createTenant = (id: string, alias: string, environmentId: string): Tenant =>
@@ -291,7 +291,7 @@ describe('WorkflowsManagementComponent', () => {
     createComponent();
     const tenant = requireTenant('tenant-1');
     const totals = component.getWorkflowTotals(tenant);
-    expect(totals).toEqual({ total: 1, running: 0, completed: 0 });
+    expect(totals).toEqual({ total: 1, pending: 0, running: 0, completed: 0, failed: 0 });
   });
 
   it('should ignore approval when tenant is missing', () => {
