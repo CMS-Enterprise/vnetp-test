@@ -11,15 +11,11 @@
  */
 
 
-export interface TenantCatalogItem { 
+export interface TenantCatalogItemDto { 
     /**
      * Tenant name
      */
     tenant: string;
-    /**
-     * Tenant database
-     */
-    tenantDatabase: string;
     /**
      * Tenant query parameter
      */
@@ -28,13 +24,5 @@ export interface TenantCatalogItem {
      * Tenant full name
      */
     tenantFullName: string;
-    /**
-     * Ansible service config
-     */
-    ansible: object;
-    /**
-     * Actifio service config
-     */
-    actifio: object;
 }
 

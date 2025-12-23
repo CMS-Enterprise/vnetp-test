@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { TenantCatalogItem } from '../model/models';
+import { TenantCatalogItemDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -89,9 +89,9 @@ export class AdminService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTenantCatalogAdmin(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<TenantCatalogItem>>;
-    public getTenantCatalogAdmin(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<TenantCatalogItem>>>;
-    public getTenantCatalogAdmin(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<TenantCatalogItem>>>;
+    public getTenantCatalogAdmin(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<TenantCatalogItemDto>>;
+    public getTenantCatalogAdmin(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<TenantCatalogItemDto>>>;
+    public getTenantCatalogAdmin(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<TenantCatalogItemDto>>>;
     public getTenantCatalogAdmin(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -114,7 +114,7 @@ export class AdminService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<TenantCatalogItem>>(`${this.configuration.basePath}/admin/tenant-catalog`,
+        return this.httpClient.get<Array<TenantCatalogItemDto>>(`${this.configuration.basePath}/admin/tenant-catalog`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
