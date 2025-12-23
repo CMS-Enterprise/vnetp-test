@@ -28,6 +28,7 @@ jest.mock('../../../services/tenant-graph/tenant-graph-core.service', () => ({
 import {
   V2AdminTenantOrchestratorService,
   V3GlobalEnvironmentsService,
+  V3GlobalBgpRangesService,
   TenantInfrastructureConfigDto,
   TenantInfrastructureValidationResponse,
   TenantConnectivityGraph,
@@ -44,6 +45,7 @@ describe('TenantInfrastructureComponent', () => {
   let mockOrchestrator: jest.Mocked<V2AdminTenantOrchestratorService>;
   let mockTenantGraphCore: jest.Mocked<TenantGraphCoreService>;
   let mockGlobalEnvironmentService: jest.Mocked<V3GlobalEnvironmentsService>;
+  let mockBgpRangesService: jest.Mocked<V3GlobalBgpRangesService>;
   let mockClipboard: jest.Mocked<Clipboard>;
   let mockNgxService: jest.Mocked<NgxSmartModalService>;
   let mockRouter: jest.Mocked<Router>;
@@ -130,6 +132,10 @@ describe('TenantInfrastructureComponent', () => {
       getManyEnvironments: jest.fn(),
     } as any;
 
+    mockBgpRangesService = {
+      listRangesByEnvironmentGlobalBgpAsn: jest.fn().mockReturnValue(of([])),
+    } as any;
+
     mockClipboard = {
       copy: jest.fn(),
     } as any;
@@ -164,6 +170,7 @@ describe('TenantInfrastructureComponent', () => {
         { provide: V2AdminTenantOrchestratorService, useValue: mockOrchestrator },
         { provide: TenantGraphCoreService, useValue: mockTenantGraphCore },
         { provide: V3GlobalEnvironmentsService, useValue: mockGlobalEnvironmentService },
+        { provide: V3GlobalBgpRangesService, useValue: mockBgpRangesService },
         { provide: Clipboard, useValue: mockClipboard },
         { provide: NgxSmartModalService, useValue: mockNgxService },
         { provide: Router, useValue: mockRouter },
@@ -341,7 +348,7 @@ describe('TenantInfrastructureComponent', () => {
       tick();
 
       expect(component.config).toEqual({
-        tenant: { name: '', environmentId: '', alias: '', description: '' },
+        tenant: { name: '', environmentId: '', bgpRangeId: '', alias: '', description: '' },
         externalFirewalls: [],
         vrfs: [],
       });

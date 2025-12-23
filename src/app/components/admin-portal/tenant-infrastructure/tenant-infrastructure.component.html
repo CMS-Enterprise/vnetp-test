@@ -93,7 +93,7 @@
             [ngClass]="{ 'is-invalid': hasFieldError('tenant.environmentId') }"
             [disabled]="mode === 'edit'"
             [(ngModel)]="config.tenant.environmentId"
-            (ngModelChange)="onConfigMutated()"
+            (ngModelChange)="onEnvironmentChange()"
             [items]="environments"
             bindLabel="name"
             bindValue="id"
@@ -104,6 +104,27 @@
           <div *ngIf="hasFieldError('tenant.environmentId')" class="invalid-feedback d-block">
             {{ getFieldError('tenant.environmentId') }}
           </div>
+        </div>
+        <div class="form-group">
+          <label>BGP ASN Range <span class="text-danger">*</span></label>
+          <ng-select
+            [ngClass]="{ 'is-invalid': hasFieldError('tenant.bgpRangeId') }"
+            [disabled]="mode === 'edit' || !config.tenant.environmentId"
+            [(ngModel)]="config.tenant.bgpRangeId"
+            (ngModelChange)="onConfigMutated()"
+            [items]="bgpRanges"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Select a BGP ASN range..."
+            [clearable]="false"
+          >
+          </ng-select>
+          <div *ngIf="hasFieldError('tenant.bgpRangeId')" class="invalid-feedback d-block">
+            {{ getFieldError('tenant.bgpRangeId') }}
+          </div>
+          <small class="form-text text-muted" *ngIf="!config.tenant.environmentId">
+            Please select an environment first to load available BGP ASN ranges.
+          </small>
         </div>
         <div class="form-group">
           <label>Alias</label>

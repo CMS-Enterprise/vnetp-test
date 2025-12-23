@@ -7,6 +7,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { V3GlobalBgpRangesService, GlobalBgpAsnRange } from 'client';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
   selector: 'app-global-bgp-asn-ranges',
@@ -22,9 +23,16 @@ export class GlobalBgpAsnRangesComponent implements OnInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Environment', value: (r: GlobalBgpAsnRange & any) => r.environment?.name || r.environmentId },
-      { name: 'Start', property: 'start' },
-      { name: 'End', property: 'end' },
-      { name: 'Type', property: 'type' },
+      { name: 'Start (ASPlain)', property: 'start' },
+      { name: 'Start (ASdot)', value: (r: GlobalBgpAsnRange) => {
+        const startNum = typeof r.start === 'string' ? parseInt(r.start, 10) : r.start;
+        return AsnUtil.asPlainToAsdot(startNum);
+      }},
+      { name: 'End (ASPlain)', property: 'end' },
+      { name: 'End (ASdot)', value: (r: GlobalBgpAsnRange) => {
+        const endNum = typeof r.end === 'string' ? parseInt(r.end, 10) : r.end;
+        return AsnUtil.asPlainToAsdot(endNum);
+      }},
       { name: 'Description', property: 'description' },
       { name: 'Allocated ASNs', value: (r: GlobalBgpAsnRange & any) => r.allocatedCount ?? 0 },
       { name: 'Free ASNs', value: (r: GlobalBgpAsnRange & any) => r.freeCount ?? 0 },

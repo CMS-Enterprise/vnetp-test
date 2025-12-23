@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VrfModalHelpText } from 'src/app/helptext/help-text-networking';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
   selector: 'app-vrf-modal',
@@ -43,5 +44,17 @@ export class VrfModalComponent {
   public reset(): void {
     this.currentVrf = null;
     this.ngx.resetModalData('vrfModal');
+  }
+
+  formatBgpAsn(bgpAsn: number | string | null | undefined): string {
+    if (!bgpAsn && bgpAsn !== 0) {
+      return 'Not set';
+    }
+    const asnNum = typeof bgpAsn === 'string' ? parseInt(bgpAsn, 10) : bgpAsn;
+    if (isNaN(asnNum)) {
+      return String(bgpAsn);
+    }
+    const asdot = AsnUtil.asPlainToAsdot(asnNum);
+    return `${asnNum}/${asdot}`;
   }
 }

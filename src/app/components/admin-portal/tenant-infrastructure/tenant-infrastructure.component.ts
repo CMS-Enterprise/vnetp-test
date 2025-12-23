@@ -11,6 +11,8 @@ import {
   TenantInfrastructureResponse,
   V3GlobalEnvironmentsService,
   Environment,
+  V3GlobalBgpRangesService,
+  GlobalBgpAsnRange,
 } from 'client';
 import * as yaml from 'js-yaml';
 import { Subject, debounceTime } from 'rxjs';
@@ -41,6 +43,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   private sub?: Subscription;
 
   environments: Environment[] = [];
+  bgpRanges: GlobalBgpAsnRange[] = [];
   displayConfig = '';
   parseError: string | null = null;
   parsedConfig: TenantInfrastructureConfigDto | null = null;
@@ -72,6 +75,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     private tenantGraphCore: TenantGraphCoreService,
     private clipboard: Clipboard,
     private globalEnvironmentService: V3GlobalEnvironmentsService,
+    private bgpRangesService: V3GlobalBgpRangesService,
     private ngx: NgxSmartModalService,
   ) {}
 
@@ -92,6 +96,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
         tenant: {
           name: 'tenant1',
           environmentId: '',
+          bgpRangeId: '',
           alias: 'Tenant 1',
           description: '',
         },
@@ -271,6 +276,34 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     });
   }
 
+  onEnvironmentChange(): void {
+    this.onConfigMutated();
+    const environmentId = this.config.tenant.environmentId;
+    if (environmentId) {
+      this.loadBgpRanges(environmentId);
+    } else {
+      this.bgpRanges = [];
+      this.config.tenant.bgpRangeId = '';
+    }
+  }
+
+  loadBgpRanges(environmentId: string): void {
+    this.bgpRangesService.listRangesByEnvironmentGlobalBgpAsn({ environmentId }).subscribe({
+      next: ranges => {
+        this.bgpRanges = ranges || [];
+        if (this.bgpRanges.length === 0) {
+          this.config.tenant.bgpRangeId = '';
+        } else if (!this.bgpRanges.find(r => r.id === this.config.tenant.bgpRangeId)) {
+          this.config.tenant.bgpRangeId = '';
+        }
+      },
+      error: () => {
+        this.bgpRanges = [];
+        this.config.tenant.bgpRangeId = '';
+      },
+    });
+  }
+
   getGraph(): void {
     if (this.isSubmitting) {
       return;
@@ -383,13 +416,16 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
       .subscribe({
         next: config => {
           this.config = config as TenantInfrastructureConfigDto;
+          if (this.config.tenant.environmentId) {
+            this.loadBgpRanges(this.config.tenant.environmentId);
+          }
           this.updateRawFromConfig();
           this.rightPanelView = 'graph';
           this.generateGraphInternal();
         },
         error: () => {
           this.config = {
-            tenant: { name: '', environmentId: '', alias: '', description: '' },
+            tenant: { name: '', environmentId: '', bgpRangeId: '', alias: '', description: '' },
             externalFirewalls: [],
             vrfs: [],
           } as TenantInfrastructureConfigDto;

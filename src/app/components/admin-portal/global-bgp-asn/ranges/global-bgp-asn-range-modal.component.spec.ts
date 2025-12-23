@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { GlobalBgpAsnRangeModalComponent } from './global-bgp-asn-range-modal.component';
-import { V3GlobalEnvironmentsService, V3GlobalBgpRangesService, CreateGlobalBgpRangeDtoTypeEnum } from 'client';
+import { V3GlobalEnvironmentsService, V3GlobalBgpRangesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -92,77 +92,86 @@ describe('GlobalBgpAsnRangeModalComponent', () => {
     expect(component.editingRange?.id).toBe('id1');
     expect(component.form.get('name')?.disabled).toBe(true);
     expect(component.form.get('environmentId')?.disabled).toBe(true);
-    expect(component.form.get('type')?.disabled).toBe(true);
     expect(mockNgx.resetModalData).toHaveBeenCalledWith('globalBgpAsnRangeModal');
   });
 
   it('start->end autofill suggests +100 when Create mode and end pristine', () => {
     fixture.detectChanges();
     component.mode = ModalMode.Create;
-    component.form.get('end')?.markAsPristine();
-    component.form.get('start')?.setValue(70000);
-    expect(component.form.get('end')?.value).toBe(70100);
+    component.displayFormat = 'asplain';
+    component.form.get('endAsPlain')?.markAsPristine();
+    component.form.get('startAsPlain')?.setValue(70000);
+    expect(component.form.get('endAsPlain')?.value).toBe(70100);
   });
 
   it('start->end autofill does not override when end dirty, or in Edit mode, or NaN', () => {
     fixture.detectChanges();
+    component.displayFormat = 'asplain';
     // Dirty end
     component.mode = ModalMode.Create;
-    component.form.get('end')?.markAsDirty();
-    component.form.get('start')?.setValue(71000);
-    expect(component.form.get('end')?.value).not.toBe(71100);
+    component.form.get('endAsPlain')?.markAsDirty();
+    component.form.get('startAsPlain')?.setValue(71000);
+    expect(component.form.get('endAsPlain')?.value).not.toBe(71100);
 
     // Edit mode
     component.mode = ModalMode.Edit;
-    component.form.get('end')?.markAsPristine();
-    component.form.get('start')?.setValue(72000);
-    expect(component.form.get('end')?.value).not.toBe(72100);
+    component.form.get('endAsPlain')?.markAsPristine();
+    component.form.get('startAsPlain')?.setValue(72000);
+    expect(component.form.get('endAsPlain')?.value).not.toBe(72100);
 
     // NaN
     component.mode = ModalMode.Create;
-    component.form.get('end')?.markAsPristine();
-    component.form.get('start')?.setValue('bad');
-    expect(component.form.get('end')?.value).not.toBeNaN();
+    component.form.get('endAsPlain')?.markAsPristine();
+    component.form.get('startAsPlain')?.setValue('bad');
+    expect(component.form.get('endAsPlain')?.value).not.toBeNaN();
   });
 
-  it('save invalid marks all as touched and returns', () => {
+  it('save invalid marks active format controls as touched and returns', () => {
     fixture.detectChanges();
-    const spy = jest.spyOn(component.form, 'markAllAsTouched');
+    component.displayFormat = 'asplain';
+    const startSpy = jest.spyOn(component.form.get('startAsPlain')!, 'markAsTouched');
+    const endSpy = jest.spyOn(component.form.get('endAsPlain')!, 'markAsTouched');
+    const nameSpy = jest.spyOn(component.form.get('name')!, 'markAsTouched');
+    const envSpy = jest.spyOn(component.form.get('environmentId')!, 'markAsTouched');
     // Leave required empty
     component.save();
-    expect(spy).toHaveBeenCalled();
+    expect(startSpy).toHaveBeenCalled();
+    expect(endSpy).toHaveBeenCalled();
+    expect(nameSpy).toHaveBeenCalled();
+    expect(envSpy).toHaveBeenCalled();
     expect(mockBgp.createGlobalBgpAsn).not.toHaveBeenCalled();
   });
 
   it('save enforces start <= end', () => {
     fixture.detectChanges();
+    component.displayFormat = 'asplain';
     component.form.patchValue({
       name: 'R',
       environmentId: 'e1',
-      type: CreateGlobalBgpRangeDtoTypeEnum.Internal,
-      start: 90000,
-      end: 80000,
+      startAsPlain: 90000,
+      endAsPlain: 80000,
     });
     component.save();
-    expect(component.end?.errors?.minRange).toBe(true);
+    const endCtrl = component.form.get('endAsPlain');
+    expect(endCtrl?.errors?.minRange).toBe(true);
     expect(mockBgp.createGlobalBgpAsn).not.toHaveBeenCalled();
   });
 
   it('save Create mode calls create service and closes', () => {
     fixture.detectChanges();
     component.mode = ModalMode.Create;
+    component.displayFormat = 'asplain';
     component.form.patchValue({
       name: 'Range',
       environmentId: 'e1',
-      type: CreateGlobalBgpRangeDtoTypeEnum.Internal,
-      start: 80000,
-      end: 80050,
+      startAsPlain: 80000,
+      endAsPlain: 80050,
       description: 'desc',
     });
     const closeSpy = jest.spyOn(component, 'close');
     component.save();
     expect(mockBgp.createGlobalBgpAsn).toHaveBeenCalledWith({
-      createGlobalBgpRangeDto: expect.objectContaining({ name: 'Range', environmentId: 'e1', start: 80000, end: 80050, type: 'internal' }),
+      createGlobalBgpRangeDto: expect.objectContaining({ name: 'Range', environmentId: 'e1', start: '80000', end: '80050' }),
     });
     expect(closeSpy).toHaveBeenCalled();
   });
@@ -170,20 +179,20 @@ describe('GlobalBgpAsnRangeModalComponent', () => {
   it('save Update mode with id calls update service and closes', () => {
     fixture.detectChanges();
     component.mode = ModalMode.Edit;
+    component.displayFormat = 'asplain';
     (component as any).editingRange = { id: 'rid' } as any;
     component.form.patchValue({
       name: 'RangeX',
       environmentId: 'e2',
-      type: CreateGlobalBgpRangeDtoTypeEnum.Internal,
-      start: 81000,
-      end: 81050,
+      startAsPlain: 81000,
+      endAsPlain: 81050,
       description: 'new',
     });
     const closeSpy = jest.spyOn(component, 'close');
     component.save();
     expect(mockBgp.updateGlobalBgpAsn).toHaveBeenCalledWith({
       id: 'rid',
-      updateGlobalBgpRangeDto: expect.objectContaining({ start: 81000, end: 81050, description: 'new' }),
+      updateGlobalBgpRangeDto: expect.objectContaining({ start: '81000', end: '81050', description: 'new' }),
     });
     expect(closeSpy).toHaveBeenCalled();
   });
@@ -191,9 +200,10 @@ describe('GlobalBgpAsnRangeModalComponent', () => {
   it('save Update mode without id simply closes', () => {
     fixture.detectChanges();
     component.mode = ModalMode.Edit;
+    component.displayFormat = 'asplain';
     (component as any).editingRange = null;
     const closeSpy = jest.spyOn(component, 'close');
-    component.form.patchValue({ name: 'R', environmentId: 'e1', start: 82000, end: 82010, type: CreateGlobalBgpRangeDtoTypeEnum.Internal });
+    component.form.patchValue({ name: 'R', environmentId: 'e1', startAsPlain: 82000, endAsPlain: 82010 });
     component.save();
     expect(mockBgp.updateGlobalBgpAsn).not.toHaveBeenCalled();
     expect(closeSpy).toHaveBeenCalled();
