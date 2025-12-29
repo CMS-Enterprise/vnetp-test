@@ -299,7 +299,7 @@ model/syncEndpointGroup.ts
 model/syncEndpointSecurityGroup.ts
 model/syncTenant.ts
 model/tenant.ts
-model/tenantCatalogItem.ts
+model/tenantCatalogItemDto.ts
 model/tenantConfigDto.ts
 model/tenantConnectivityGraph.ts
 model/tenantConnectivityGraphEdges.ts
