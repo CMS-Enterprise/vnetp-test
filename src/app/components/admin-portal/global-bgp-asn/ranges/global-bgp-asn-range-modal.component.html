@@ -40,7 +40,7 @@
           [checked]="displayFormat === 'asdot'"
           (change)="displayFormat = 'asdot'; onFormatChange()"
         />
-        <label class="form-check-label" for="formatAsdot">ASdot</label>
+        <label class="form-check-label" for="formatAsdot">ASdot+</label>
       </div>
     </div>
 
@@ -52,8 +52,6 @@
         class="form-control"
         formControlName="startAsPlain"
         placeholder="e.g. 65536"
-        min="65536"
-        max="4294967294"
       />
       <input
         *ngIf="displayFormat === 'asdot'"
@@ -65,14 +63,14 @@
       <div class="text-danger small" *ngIf="displayFormat === 'asplain' && startAsPlainCtrl?.touched && startAsPlainCtrl?.invalid">
         <div *ngIf="startAsPlainCtrl.errors?.required">Start ASN is required.</div>
         <div *ngIf="startAsPlainCtrl.errors?.invalidFormat">Start ASN must be a valid number.</div>
-        <div *ngIf="startAsPlainCtrl.errors?.min">Start ASN must be ≥ 65536.</div>
-        <div *ngIf="startAsPlainCtrl.errors?.max">Start ASN exceeds allowed private 4-byte range.</div>
+        <div *ngIf="startAsPlainCtrl.errors?.min">Start ASN must be >= 65536.</div>
+        <div *ngIf="startAsPlainCtrl.errors?.max">Start ASN must be <= 4294967294.</div>
       </div>
       <div class="text-danger small" *ngIf="displayFormat === 'asdot' && startAsDotCtrl?.touched && startAsDotCtrl?.invalid">
         <div *ngIf="startAsDotCtrl.errors?.required">Start ASN is required.</div>
         <div *ngIf="startAsDotCtrl.errors?.invalidFormat">Start ASN must be in ASdot format (e.g. 1.0).</div>
-        <div *ngIf="startAsDotCtrl.errors?.min">Start ASN must be ≥ 65536.</div>
-        <div *ngIf="startAsDotCtrl.errors?.max">Start ASN exceeds allowed private 4-byte range.</div>
+        <div *ngIf="startAsDotCtrl.errors?.min">Start ASN must be >= 1.0</div>
+        <div *ngIf="startAsDotCtrl.errors?.max">Start ASN must be <= 65535.65535.</div>
       </div>
     </div>
 
@@ -84,8 +82,6 @@
         class="form-control"
         formControlName="endAsPlain"
         placeholder="e.g. 65636"
-        min="65536"
-        max="4294967294"
       />
       <input
         *ngIf="displayFormat === 'asdot'"
@@ -97,16 +93,16 @@
       <div class="text-danger small" *ngIf="displayFormat === 'asplain' && endAsPlainCtrl?.touched && endAsPlainCtrl?.invalid">
         <div *ngIf="endAsPlainCtrl.errors?.required">End ASN is required.</div>
         <div *ngIf="endAsPlainCtrl.errors?.invalidFormat">End ASN must be a valid number.</div>
-        <div *ngIf="endAsPlainCtrl.errors?.min">End ASN must be ≥ 65536.</div>
+        <div *ngIf="endAsPlainCtrl.errors?.min">End ASN must be >= 65536.</div>
         <div *ngIf="endAsPlainCtrl.errors?.minRange">End ASN must be ≥ Start ASN.</div>
-        <div *ngIf="endAsPlainCtrl.errors?.max">End ASN exceeds allowed private 4-byte range.</div>
+        <div *ngIf="endAsPlainCtrl.errors?.max">End ASN must be <= 4294967294.</div>
       </div>
       <div class="text-danger small" *ngIf="displayFormat === 'asdot' && endAsDotCtrl?.touched && endAsDotCtrl?.invalid">
         <div *ngIf="endAsDotCtrl.errors?.required">End ASN is required.</div>
         <div *ngIf="endAsDotCtrl.errors?.invalidFormat">End ASN must be in ASdot format (e.g. 1.100).</div>
-        <div *ngIf="endAsDotCtrl.errors?.min">End ASN must be ≥ 65536.</div>
+        <div *ngIf="endAsDotCtrl.errors?.min">End ASN must be >= 1.0</div>
         <div *ngIf="endAsDotCtrl.errors?.minRange">End ASN must be ≥ Start ASN.</div>
-        <div *ngIf="endAsDotCtrl.errors?.max">End ASN exceeds allowed private 4-byte range.</div>
+        <div *ngIf="endAsDotCtrl.errors?.max">End ASN must be <= 65535.65535.</div>
       </div>
     </div>
 

@@ -24,12 +24,12 @@ export class GlobalBgpAsnRangesComponent implements OnInit {
       { name: 'Name', property: 'name' },
       { name: 'Environment', value: (r: GlobalBgpAsnRange & any) => r.environment?.name || r.environmentId },
       { name: 'Start (ASPlain)', property: 'start' },
-      { name: 'Start (ASdot)', value: (r: GlobalBgpAsnRange) => {
+      { name: 'Start (ASdot+)', value: (r: GlobalBgpAsnRange) => {
         const startNum = typeof r.start === 'string' ? parseInt(r.start, 10) : r.start;
         return AsnUtil.asPlainToAsdot(startNum);
       }},
       { name: 'End (ASPlain)', property: 'end' },
-      { name: 'End (ASdot)', value: (r: GlobalBgpAsnRange) => {
+      { name: 'End (ASdot+)', value: (r: GlobalBgpAsnRange) => {
         const endNum = typeof r.end === 'string' ? parseInt(r.end, 10) : r.end;
         return AsnUtil.asPlainToAsdot(endNum);
       }},

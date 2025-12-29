@@ -9,7 +9,6 @@ import {
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription } from 'rxjs';
 import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
@@ -22,7 +21,6 @@ export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
   mode: ModalMode = ModalMode.Create;
   editingRange: GlobalBgpAsnRange | null = null;
   displayFormat: 'asplain' | 'asdot' = 'asplain';
-  private startAutoSub?: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -39,7 +37,6 @@ export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.startAutoSub?.unsubscribe();
   }
 
   getData(): void {
@@ -84,7 +81,6 @@ export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
     this.mode = ModalMode.Create;
     this.displayFormat = 'asplain';
     this.updateValidators();
-    this.setupStartEndAutoFill();
   }
 
   private updateValidators(): void {
@@ -111,52 +107,6 @@ export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
     endAsDotCtrl?.updateValueAndValidity({ emitEvent: false });
   }
 
-  private setupStartEndAutoFill(): void {
-    this.startAutoSub?.unsubscribe();
-    const startAsPlainCtrl = this.form.get('startAsPlain');
-    const endAsPlainCtrl = this.form.get('endAsPlain');
-    const startAsDotCtrl = this.form.get('startAsDot');
-    const endAsDotCtrl = this.form.get('endAsDot');
-
-    if (!startAsPlainCtrl || !endAsPlainCtrl || !startAsDotCtrl || !endAsDotCtrl) {
-      return;
-    }
-
-    const startCtrl = this.displayFormat === 'asplain' ? startAsPlainCtrl : startAsDotCtrl;
-    const endCtrl = this.displayFormat === 'asplain' ? endAsPlainCtrl : endAsDotCtrl;
-
-    this.startAutoSub = startCtrl.valueChanges.subscribe((startVal: number | string) => {
-      if (this.mode !== ModalMode.Create) {
-        return;
-      }
-      if (endCtrl.dirty) {
-        return;
-      }
-      if (startVal === null || startVal === undefined || startVal === '') {
-        return;
-      }
-
-      let startAsPlain: number;
-      if (this.displayFormat === 'asplain') {
-        startAsPlain = Number(startVal);
-        if (isNaN(startAsPlain)) {
-          return;
-        }
-      } else {
-        const parsed = AsnUtil.parseAsnInput(startVal as string);
-        if (parsed === null) {
-          return;
-        }
-        startAsPlain = parsed;
-      }
-
-      const MAX_PRIVATE_4B = 4294967294;
-      const suggested = Math.min(startAsPlain + 100, MAX_PRIVATE_4B);
-
-      endAsPlainCtrl.setValue(suggested, { emitEvent: false, onlySelf: true });
-      endAsDotCtrl.setValue(AsnUtil.asPlainToAsdot(suggested), { emitEvent: false, onlySelf: true });
-    });
-  }
 
   get startAsPlainCtrl() {
     return this.form.get('startAsPlain');
@@ -210,7 +160,6 @@ export class GlobalBgpAsnRangeModalComponent implements OnInit, OnDestroy {
       }
     }
     this.updateValidators();
-    this.setupStartEndAutoFill();
   }
 
   save(): void {

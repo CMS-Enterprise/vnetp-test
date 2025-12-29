@@ -55,14 +55,6 @@ describe('GlobalBgpAsnRangeModalComponent', () => {
     expect(component.environments).toEqual([{ id: 'e1', name: 'Env 1' }]);
   });
 
-  it('ngOnDestroy unsubscribes from start autofill', () => {
-    fixture.detectChanges();
-    const sub = { unsubscribe: jest.fn() } as any;
-    (component as any).startAutoSub = sub;
-    component.ngOnDestroy();
-    expect(sub.unsubscribe).toHaveBeenCalled();
-  });
-
   it('getData in Create mode resets form and clears modal data', () => {
     fixture.detectChanges();
     mockNgx.getModalData.mockReturnValueOnce({});
@@ -95,44 +87,13 @@ describe('GlobalBgpAsnRangeModalComponent', () => {
     expect(mockNgx.resetModalData).toHaveBeenCalledWith('globalBgpAsnRangeModal');
   });
 
-  it('start->end autofill suggests +100 when Create mode and end pristine', () => {
-    fixture.detectChanges();
-    component.mode = ModalMode.Create;
-    component.displayFormat = 'asplain';
-    component.form.get('endAsPlain')?.markAsPristine();
-    component.form.get('startAsPlain')?.setValue(70000);
-    expect(component.form.get('endAsPlain')?.value).toBe(70100);
-  });
-
-  it('start->end autofill does not override when end dirty, or in Edit mode, or NaN', () => {
-    fixture.detectChanges();
-    component.displayFormat = 'asplain';
-    // Dirty end
-    component.mode = ModalMode.Create;
-    component.form.get('endAsPlain')?.markAsDirty();
-    component.form.get('startAsPlain')?.setValue(71000);
-    expect(component.form.get('endAsPlain')?.value).not.toBe(71100);
-
-    // Edit mode
-    component.mode = ModalMode.Edit;
-    component.form.get('endAsPlain')?.markAsPristine();
-    component.form.get('startAsPlain')?.setValue(72000);
-    expect(component.form.get('endAsPlain')?.value).not.toBe(72100);
-
-    // NaN
-    component.mode = ModalMode.Create;
-    component.form.get('endAsPlain')?.markAsPristine();
-    component.form.get('startAsPlain')?.setValue('bad');
-    expect(component.form.get('endAsPlain')?.value).not.toBeNaN();
-  });
-
   it('save invalid marks active format controls as touched and returns', () => {
     fixture.detectChanges();
     component.displayFormat = 'asplain';
-    const startSpy = jest.spyOn(component.form.get('startAsPlain')!, 'markAsTouched');
-    const endSpy = jest.spyOn(component.form.get('endAsPlain')!, 'markAsTouched');
-    const nameSpy = jest.spyOn(component.form.get('name')!, 'markAsTouched');
-    const envSpy = jest.spyOn(component.form.get('environmentId')!, 'markAsTouched');
+    const startSpy = jest.spyOn(component.form.get('startAsPlain'), 'markAsTouched');
+    const endSpy = jest.spyOn(component.form.get('endAsPlain'), 'markAsTouched');
+    const nameSpy = jest.spyOn(component.form.get('name'), 'markAsTouched');
+    const envSpy = jest.spyOn(component.form.get('environmentId'), 'markAsTouched');
     // Leave required empty
     component.save();
     expect(startSpy).toHaveBeenCalled();

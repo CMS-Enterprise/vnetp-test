@@ -65,7 +65,7 @@ export class VrfComponent implements OnInit {
       { name: 'Policy Control Enforced', property: 'policyControlEnforced' },
       { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
       { name: 'Max External Routes', property: 'maxExternalRoutes' },
-      { name: 'BGP ASN (ASplain/ASdot)', value: (vrf: any) => this.formatBgpAsn(vrf.bgpAsn) },
+      { name: 'BGP ASN (ASplain/ASdot+)', value: (vrf: any) => this.formatBgpAsn(vrf.bgpAsn) },
       { name: '', template: () => this.actionsTemplate },
     ],
   };

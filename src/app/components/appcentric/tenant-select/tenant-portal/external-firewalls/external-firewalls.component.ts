@@ -40,7 +40,7 @@ export class ExternalFirewallsComponent implements OnInit {
       { name: 'Name', property: 'name' },
       { name: 'Firewall Device Type', property: 'firewallDeviceType' },
       { name: 'VSYS Name', property: 'vsysName' },
-      { name: 'BGP ASN (ASplain/ASdot)', value: (fw: any) => this.formatBgpAsn(fw.bgpAsn) },
+      { name: 'BGP ASN (ASplain/ASdot+)', value: (fw: any) => this.formatBgpAsn(fw.bgpAsn) },
       { name: 'Routing Cost', property: 'routingCost' },
       { name: 'Unique Zone Per External VRF Connection', property: 'uniqueZonePerExternalVrfConnection' },
       { name: '', template: () => this.actionsTemplate },
