@@ -263,9 +263,7 @@
       </span>
     </div>
 
-    <!-- TODO: Re-enable Refresh Hitcount for TENANTV2 mode - needs datacenter-independent implementation -->
     <button
-      *ngIf="applicationMode !== ApplicationMode.TENANTV2"
       (click)="refreshHitcount()"
       class="refresh-button"
       [ngClass]="{ 'green-button': isRecentlyRefreshed() }"

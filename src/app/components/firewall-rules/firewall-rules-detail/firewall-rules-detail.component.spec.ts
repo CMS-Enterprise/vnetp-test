@@ -777,11 +777,6 @@ describe('FirewallRulesDetailComponent', () => {
         expect(component.applicationMode).toBe(ApplicationMode.TENANTV2);
       });
 
-      it('refreshHitcount should have TODO comment indicating TENANTV2 limitation', () => {
-        const methodString = component.refreshHitcount.toString();
-        expect(methodString).toContain('TODO');
-      });
-
       it('importFirewallRulesConfig should have TODO comment indicating TENANTV2 limitation', () => {
         const methodString = component.importFirewallRulesConfig.toString();
         expect(methodString).toContain('TODO');
