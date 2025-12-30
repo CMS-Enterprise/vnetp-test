@@ -207,10 +207,84 @@ describe('AsnUtil', () => {
       expect(result).toEqual({ required: true });
     });
 
-    it('should accept zero as a value (for required check)', () => {
+    it('should not accept zero as a value (for required check)', () => {
       control.setValue(0);
       const result = validator(control);
-      expect(result).toEqual({ min: true });
+      expect(result).toEqual({ required: true });
+    });
+  });
+
+  describe('formatBgpAsn', () => {
+    it('should return "Not set" for null', () => {
+      expect(AsnUtil.formatBgpAsn(null)).toBe('Not set');
+    });
+
+    it('should return "Not set" for undefined', () => {
+      expect(AsnUtil.formatBgpAsn(undefined)).toBe('Not set');
+    });
+
+    it('should return "Not set" for empty string', () => {
+      expect(AsnUtil.formatBgpAsn('')).toBe('Not set');
+    });
+
+    it('should format valid ASPlain number', () => {
+      expect(AsnUtil.formatBgpAsn(65536)).toBe('65536/1.0');
+    });
+
+    it('should format valid ASPlain number as string', () => {
+      expect(AsnUtil.formatBgpAsn('65536')).toBe('65536/1.0');
+    });
+
+    it('should format minimum valid ASN', () => {
+      expect(AsnUtil.formatBgpAsn(65536)).toBe('65536/1.0');
+    });
+
+    it('should format maximum valid ASN', () => {
+      expect(AsnUtil.formatBgpAsn(4294967294)).toBe('4294967294/65535.65534');
+    });
+
+    it('should format ASPlain with conversion to ASdot', () => {
+      expect(AsnUtil.formatBgpAsn(65636)).toBe('65636/1.100');
+    });
+
+    it('should format large ASPlain number', () => {
+      expect(AsnUtil.formatBgpAsn(4200000000)).toBe('4200000000/64086.59904');
+    });
+
+    it('should format another large ASPlain number', () => {
+      expect(AsnUtil.formatBgpAsn(16417714)).toBe('16417714/250.33714');
+    });
+
+    it('should handle zero as input (returns "0/0.0")', () => {
+      expect(AsnUtil.formatBgpAsn(0)).toBe('0/0.0');
+    });
+
+    it('should handle zero as string input', () => {
+      expect(AsnUtil.formatBgpAsn('0')).toBe('0/0.0');
+    });
+
+    it('should return original string if parsing fails (invalid number)', () => {
+      expect(AsnUtil.formatBgpAsn('invalid')).toBe('invalid');
+    });
+
+    it('should return original string if parsing fails (non-numeric)', () => {
+      expect(AsnUtil.formatBgpAsn('abc123def')).toBe('abc123def');
+    });
+
+    it('should handle string with whitespace that parses to valid number', () => {
+      expect(AsnUtil.formatBgpAsn('  65536  ')).toBe('65536/1.0');
+    });
+
+    it('should handle string with only whitespace (returns "Not set")', () => {
+      expect(AsnUtil.formatBgpAsn('   ')).toBe('Not set');
+    });
+
+    it('should format number in middle of valid range', () => {
+      expect(AsnUtil.formatBgpAsn(100000)).toBe('100000/1.34464');
+    });
+
+    it('should format very large number correctly', () => {
+      expect(AsnUtil.formatBgpAsn(2147483647)).toBe('2147483647/32767.65535');
     });
   });
 });

@@ -21,6 +21,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { trigger, style, transition, animate } from '@angular/animations';
 import { TenantGraphCoreService } from '../../../services/tenant-graph/tenant-graph-core.service';
+import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
   selector: 'app-tenant-infrastructure',
@@ -67,6 +68,8 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   debounceTimeMs = 2000;
   copyButtonText = 'Copy to Clipboard';
   copyButtonState: 'idle' | 'success' | 'error' = 'idle';
+  bgpAsnDisplayValues: Map<string, string> = new Map(); // key: 'firewall_0' or 'vrf_0', value: display string
+  AsnUtil = AsnUtil; // Expose for template access
 
   constructor(
     private route: ActivatedRoute,
@@ -419,6 +422,8 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
           if (this.config.tenant.environmentId) {
             this.loadBgpRanges(this.config.tenant.environmentId);
           }
+          // Initialize BGP ASN display values from loaded config
+          this.initializeBgpAsnDisplayValues();
           this.updateRawFromConfig();
           this.rightPanelView = 'graph';
           this.generateGraphInternal();
@@ -762,5 +767,64 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
 
   trackByIdx(_i: number): any {
     return _i;
+  }
+
+  private initializeBgpAsnDisplayValues(): void {
+    this.bgpAsnDisplayValues.clear();
+    // Initialize firewall BGP ASN display values
+    this.config.externalFirewalls?.forEach((fw, idx) => {
+      if (fw.bgpAsn !== null && fw.bgpAsn !== undefined && fw.bgpAsn !== '') {
+        // bgpAsn comes from API as string, use it directly as display value
+        this.bgpAsnDisplayValues.set(`firewall_${idx}`, String(fw.bgpAsn));
+      }
+    });
+    // Initialize VRF BGP ASN display values
+    this.config.vrfs?.forEach((vrf, idx) => {
+      if (vrf.bgpAsn !== null && vrf.bgpAsn !== undefined && vrf.bgpAsn !== '') {
+        // bgpAsn comes from API as string, use it directly as display value
+        this.bgpAsnDisplayValues.set(`vrf_${idx}`, String(vrf.bgpAsn));
+      }
+    });
+  }
+
+  // BGP ASN input handlers (component-specific logic)
+  onBgpAsnInput(firewallIdx: number, value: string): void {
+    const key = `firewall_${firewallIdx}`;
+    this.bgpAsnDisplayValues.set(key, value);
+    const asPlain = AsnUtil.convertBgpAsnToAsPlain(value);
+    this.config.externalFirewalls[firewallIdx].bgpAsn = asPlain !== null ? asPlain.toString() : undefined;
+    this.onConfigMutated();
+  }
+
+  onVrfBgpAsnInput(vrfIdx: number, value: string): void {
+    const key = `vrf_${vrfIdx}`;
+    this.bgpAsnDisplayValues.set(key, value);
+    const asPlain = AsnUtil.convertBgpAsnToAsPlain(value);
+    this.config.vrfs[vrfIdx].bgpAsn = asPlain !== null ? asPlain.toString() : undefined;
+    this.onConfigMutated();
+  }
+
+  getBgpAsnDisplayValue(firewallIdx: number | null, vrfIdx: number | null): string {
+    if (firewallIdx !== null) {
+      const key = `firewall_${firewallIdx}`;
+      if (this.bgpAsnDisplayValues.has(key)) {
+        return this.bgpAsnDisplayValues.get(key) || '';
+      }
+      const value = this.config.externalFirewalls[firewallIdx]?.bgpAsn;
+      if (value !== null && value !== undefined) {
+        return String(value);
+      }
+    }
+    if (vrfIdx !== null) {
+      const key = `vrf_${vrfIdx}`;
+      if (this.bgpAsnDisplayValues.has(key)) {
+        return this.bgpAsnDisplayValues.get(key) || '';
+      }
+      const value = this.config.vrfs[vrfIdx]?.bgpAsn;
+      if (value !== null && value !== undefined) {
+        return String(value);
+      }
+    }
+    return '';
   }
 }

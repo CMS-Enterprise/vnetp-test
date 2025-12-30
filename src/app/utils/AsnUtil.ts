@@ -45,7 +45,7 @@ export default class AsnUtil {
 
   static asnValidator(): ValidatorFn {
     return (control: AbstractControl) => {
-      if (!control.value && control.value !== 0) {
+      if (!control.value) {
         return { required: true };
       }
 
@@ -143,6 +143,120 @@ export default class AsnUtil {
 
       return null;
     };
+  }
+
+  static formatBgpAsn(bgpAsn: number | string | null | undefined): string {
+    if (!bgpAsn && bgpAsn !== 0) {
+      return 'Not set';
+    }
+    let asnNum: number;
+    if (typeof bgpAsn === 'string') {
+      const trimmed = bgpAsn.trim();
+      if (trimmed === '') {
+        return 'Not set';
+      }
+      asnNum = parseInt(trimmed, 10);
+      if (isNaN(asnNum)) {
+        return String(bgpAsn);
+      }
+    } else {
+      asnNum = bgpAsn;
+    }
+    const asdot = this.asPlainToAsdot(asnNum);
+    return `${asnNum}/${asdot}`;
+  }
+
+  static detectBgpAsnFormat(value: string | number | null | undefined): 'asplain' | 'asdot' | null {
+    if (!value && value !== 0) {
+      return null;
+    }
+    const str = String(value);
+    return str.includes('.') ? 'asdot' : 'asplain';
+  }
+
+  static getBgpAsnDisplayInfo(value: string | number | null | undefined): { format: string; converted: string; asPlain: number | null } {
+    if (!value && value !== 0) {
+      return { format: '', converted: '', asPlain: null };
+    }
+    const detectedFormat = this.detectBgpAsnFormat(value);
+    if (!detectedFormat) {
+      return { format: '', converted: '', asPlain: null };
+    }
+
+    let asPlain: number | null = null;
+    if (detectedFormat === 'asplain') {
+      asPlain = typeof value === 'string' ? parseInt(value.trim(), 10) : value;
+      if (isNaN(asPlain)) {
+        return { format: '', converted: '', asPlain: null };
+      }
+      const asdot = this.asPlainToAsdot(asPlain);
+      return { format: 'ASplain', converted: asdot || '', asPlain };
+    } else {
+      asPlain = this.asdotToAsPlain(String(value).trim());
+      return { format: 'ASdot+', converted: asPlain !== null ? String(asPlain) : '', asPlain };
+    }
+  }
+
+  static validateBgpAsnInput(value: string | number | null | undefined): { valid: boolean; error?: string } {
+    if (!value && value !== 0) {
+      return { valid: false, error: 'BGP ASN is required' };
+    }
+    const detectedFormat = this.detectBgpAsnFormat(value);
+    if (!detectedFormat) {
+      return { valid: false, error: 'Invalid format' };
+    }
+
+    if (detectedFormat === 'asplain') {
+      const num = typeof value === 'string' ? parseInt(value.trim(), 10) : value;
+      if (isNaN(num)) {
+        return { valid: false, error: 'Invalid number' };
+      }
+      const control = { value: num } as any;
+      const result = this.asPlainValidator()(control);
+      if (result) {
+        if (result.required) {
+          return { valid: false, error: 'BGP ASN is required' };
+        }
+        if (result.min) {
+          return { valid: false, error: 'BGP ASN must be >= 65536' };
+        }
+        if (result.max) {
+          return { valid: false, error: 'BGP ASN must be <= 4294967294' };
+        }
+        if (result.invalidFormat) {
+          return { valid: false, error: 'Invalid format' };
+        }
+      }
+      return { valid: true };
+    } else {
+      const control = { value: String(value).trim() } as any;
+      const result = this.asdotValidator()(control);
+      if (result) {
+        if (result.required) {
+          return { valid: false, error: 'BGP ASN is required' };
+        }
+        if (result.invalidFormat) {
+          return { valid: false, error: 'Invalid ASdot+ format (e.g. 1.0)' };
+        }
+        if (result.min) {
+          return { valid: false, error: 'BGP ASN must be >= 1.0' };
+        }
+        if (result.max) {
+          return { valid: false, error: 'BGP ASN must be <= 65535.65535' };
+        }
+      }
+      return { valid: true };
+    }
+  }
+
+  static convertBgpAsnToAsPlain(value: string | number | null | undefined): number | null {
+    if (typeof value === 'string') {
+      return this.parseAsnInput(value);
+    }
+    if (typeof value === 'number') {
+      return value;
+    }
+    return null;
   }
 }
 

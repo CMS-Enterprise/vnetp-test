@@ -19,6 +19,7 @@ export class VrfModalComponent {
   public currentVrf: Vrf | null = null;
 
   public helpText: VrfModalHelpText;
+  public AsnUtil = AsnUtil;
 
   constructor(private ngx: NgxSmartModalService, helpText: VrfModalHelpText) {
     this.helpText = helpText;
@@ -46,15 +47,4 @@ export class VrfModalComponent {
     this.ngx.resetModalData('vrfModal');
   }
 
-  formatBgpAsn(bgpAsn: number | string | null | undefined): string {
-    if (!bgpAsn && bgpAsn !== 0) {
-      return 'Not set';
-    }
-    const asnNum = typeof bgpAsn === 'string' ? parseInt(bgpAsn, 10) : bgpAsn;
-    if (isNaN(asnNum)) {
-      return String(bgpAsn);
-    }
-    const asdot = AsnUtil.asPlainToAsdot(asnNum);
-    return `${asnNum}/${asdot}`;
-  }
 }

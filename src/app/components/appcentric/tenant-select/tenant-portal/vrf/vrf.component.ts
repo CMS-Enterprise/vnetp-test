@@ -65,22 +65,11 @@ export class VrfComponent implements OnInit {
       { name: 'Policy Control Enforced', property: 'policyControlEnforced' },
       { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
       { name: 'Max External Routes', property: 'maxExternalRoutes' },
-      { name: 'BGP ASN (ASplain/ASdot+)', value: (vrf: any) => this.formatBgpAsn(vrf.bgpAsn) },
+      { name: 'BGP ASN (ASplain/ASdot+)', value: (vrf: any) => AsnUtil.formatBgpAsn(vrf.bgpAsn) },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
 
-  formatBgpAsn(bgpAsn: number | string | null | undefined): string {
-    if (!bgpAsn && bgpAsn !== 0) {
-      return 'Not set';
-    }
-    const asnNum = typeof bgpAsn === 'string' ? parseInt(bgpAsn, 10) : bgpAsn;
-    if (isNaN(asnNum)) {
-      return String(bgpAsn);
-    }
-    const asdot = AsnUtil.asPlainToAsdot(asnNum);
-    return `${asnNum}/${asdot}`;
-  }
 
   constructor(
     private vrfService: V2AppCentricVrfsService,

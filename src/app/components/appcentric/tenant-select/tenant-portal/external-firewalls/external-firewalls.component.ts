@@ -40,7 +40,7 @@ export class ExternalFirewallsComponent implements OnInit {
       { name: 'Name', property: 'name' },
       { name: 'Firewall Device Type', property: 'firewallDeviceType' },
       { name: 'VSYS Name', property: 'vsysName' },
-      { name: 'BGP ASN (ASplain/ASdot+)', value: (fw: any) => this.formatBgpAsn(fw.bgpAsn) },
+      { name: 'BGP ASN (ASplain/ASdot+)', value: (fw: any) => AsnUtil.formatBgpAsn(fw.bgpAsn) },
       { name: 'Routing Cost', property: 'routingCost' },
       { name: 'Unique Zone Per External VRF Connection', property: 'uniqueZonePerExternalVrfConnection' },
       { name: '', template: () => this.actionsTemplate },
@@ -142,15 +142,4 @@ export class ExternalFirewallsComponent implements OnInit {
     );
   }
 
-  formatBgpAsn(bgpAsn: number | string | null | undefined): string {
-    if (!bgpAsn && bgpAsn !== 0) {
-      return 'Not set';
-    }
-    const asnNum = typeof bgpAsn === 'string' ? parseInt(bgpAsn, 10) : bgpAsn;
-    if (isNaN(asnNum)) {
-      return String(bgpAsn);
-    }
-    const asdot = AsnUtil.asPlainToAsdot(asnNum);
-    return `${asnNum}/${asdot}`;
-  }
 }
