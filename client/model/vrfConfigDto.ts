@@ -19,7 +19,7 @@ export interface VrfConfigDto {
     /**
      * BGP ASN for this VRF. Required if bgpAsnAutoGenerate is not true.
      */
-    bgpAsn?: number;
+    bgpAsn?: string;
     /**
      * Auto-generate BGP ASN for this VRF. Required if bgpAsn is not provided.
      */

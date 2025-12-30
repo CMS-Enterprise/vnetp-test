@@ -14,7 +14,7 @@
 export interface GlobalBgpAsnAllocation { 
     id: string;
     environmentId: string;
-    asn: number;
+    asn: string;
     role: GlobalBgpAsnAllocationRoleEnum;
     organizationId: string;
     tenantId?: string;

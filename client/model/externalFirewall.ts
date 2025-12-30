@@ -31,7 +31,7 @@ export interface ExternalFirewall {
     readonly l3outs?: L3Out;
     readonly tenant?: Tenant;
     tenantId?: string;
-    bgpAsn?: number;
+    bgpAsn?: string;
     routingCost?: number;
     readonly tier?: Tier;
     tierId?: string;

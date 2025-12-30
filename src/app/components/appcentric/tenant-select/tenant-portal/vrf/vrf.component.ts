@@ -25,6 +25,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouteDataUtil } from '../../../../../utils/route-data.util';
 import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
+import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
   selector: 'app-vrf',
@@ -64,10 +65,11 @@ export class VrfComponent implements OnInit {
       { name: 'Policy Control Enforced', property: 'policyControlEnforced' },
       { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
       { name: 'Max External Routes', property: 'maxExternalRoutes' },
-      { name: 'BGP ASN', property: 'bgpAsn' },
+      { name: 'BGP ASN (ASplain/ASdot+)', value: (vrf: any) => AsnUtil.formatBgpAsn(vrf.bgpAsn) },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
+
 
   constructor(
     private vrfService: V2AppCentricVrfsService,
