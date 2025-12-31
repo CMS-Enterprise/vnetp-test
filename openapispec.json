@@ -15088,7 +15088,43 @@
             }
           }
         },
-        "tags": ["v3/global/bgp-ranges"]
+        "tags": [
+          "v3/global/bgp-ranges"
+        ]
+      }
+    },
+    "/v3/global/bgp-ranges/environment/{environmentId}": {
+      "get": {
+        "operationId": "listRangesByEnvironmentGlobalBgpAsn",
+        "summary": "List BGP ranges by environment",
+        "parameters": [
+          {
+            "name": "environmentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GlobalBgpAsnRange"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/bgp-ranges"
+        ]
       }
     },
     "/v3/global/bgp-ranges/{id}": {
@@ -26077,7 +26113,7 @@
             "type": "number"
           },
           "bgpAsn": {
-            "type": "number"
+            "type": "string"
           },
           "displayOrder": {
             "type": "number"
@@ -26666,7 +26702,7 @@
             "type": "string"
           },
           "bgpAsn": {
-            "type": "number"
+            "type": "string"
           },
           "routingCost": {
             "type": "number",
@@ -29359,6 +29395,10 @@
             "type": "string",
             "readOnly": true
           },
+          "bgpRangeId": {
+            "type": "string",
+            "readOnly": true
+          },
           "routeControlVersion": {
             "type": "number",
             "readOnly": true,
@@ -29424,7 +29464,12 @@
             "maxLength": 500
           }
         },
-        "required": ["datacenter", "allowServiceGraphBypass", "environmentId"]
+        "required": [
+          "datacenter",
+          "allowServiceGraphBypass",
+          "environmentId",
+          "bgpRangeId"
+        ]
       },
       "EndpointGroup": {
         "type": "object",
@@ -32510,9 +32555,9 @@
         "type": "object",
         "properties": {
           "bgpAsn": {
-            "type": "number",
+            "type": "string",
             "description": "BGP ASN used for this connection",
-            "example": 65001
+            "example": "65001"
           },
           "propagateExternalRoutes": {
             "type": "boolean",
@@ -32659,6 +32704,9 @@
           "environmentId": {
             "type": "string"
           },
+          "bgpRangeId": {
+            "type": "string"
+          },
           "alias": {
             "type": "string"
           },
@@ -32672,7 +32720,11 @@
             "type": "boolean"
           }
         },
-        "required": ["name", "environmentId"]
+        "required": [
+          "name",
+          "environmentId",
+          "bgpRangeId"
+        ]
       },
       "ExternalVrfConnectionConfigDto": {
         "type": "object",
@@ -32739,7 +32791,7 @@
             "example": "vsys1"
           },
           "bgpAsn": {
-            "type": "number",
+            "type": "string",
             "description": "BGP ASN for this firewall. Required if bgpAsnAutoGenerate is not true."
           },
           "bgpAsnAutoGenerate": {
@@ -32819,7 +32871,7 @@
             "type": "number"
           },
           "bgpAsn": {
-            "type": "number",
+            "type": "string",
             "description": "BGP ASN for this VRF. Required if bgpAsnAutoGenerate is not true."
           },
           "bgpAsnAutoGenerate": {
@@ -32982,7 +33034,9 @@
             "type": "string"
           },
           "asn": {
-            "type": "number"
+            "type": "string",
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "role": {
             "type": "string",
@@ -33110,16 +33164,14 @@
             ]
           },
           "start": {
-            "type": "number",
-            "minimum": 65536
+            "type": "string",
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "end": {
-            "type": "number",
-            "minimum": 65536
-          },
-          "type": {
             "type": "string",
-            "enum": ["internal", "external", "any"]
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "allocations": {
             "readOnly": true,
@@ -33129,7 +33181,15 @@
             }
           }
         },
-        "required": ["id", "name", "environmentId", "environment", "start", "end", "type", "allocations"]
+        "required": [
+          "id",
+          "name",
+          "environmentId",
+          "environment",
+          "start",
+          "end",
+          "allocations"
+        ]
       },
       "Environment": {
         "type": "object",
@@ -33201,23 +33261,26 @@
           "environmentId": {
             "type": "string"
           },
-          "type": {
-            "type": "string",
-            "enum": ["internal", "external", "any"]
-          },
           "start": {
-            "type": "number",
-            "minimum": 65536
+            "type": "string",
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "end": {
-            "type": "number",
-            "minimum": 65536
+            "type": "string",
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "description": {
             "type": "string"
           }
         },
-        "required": ["name", "environmentId", "type", "start", "end"]
+        "required": [
+          "name",
+          "environmentId",
+          "start",
+          "end"
+        ]
       },
       "UpdateGlobalBgpRangeDto": {
         "type": "object",
@@ -33226,12 +33289,14 @@
             "type": "string"
           },
           "start": {
-            "type": "number",
-            "minimum": 65536
+            "type": "string",
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "end": {
-            "type": "number",
-            "minimum": 65536
+            "type": "string",
+            "minimum": 65536,
+            "maximum": 4294967295
           },
           "description": {
             "type": "string"

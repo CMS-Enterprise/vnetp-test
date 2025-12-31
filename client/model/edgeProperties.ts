@@ -16,7 +16,7 @@ export interface EdgeProperties {
     /**
      * BGP ASN used for this connection
      */
-    bgpAsn?: number;
+    bgpAsn?: string;
     /**
      * Whether this edge propagates external routes
      */

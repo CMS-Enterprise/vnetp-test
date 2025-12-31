@@ -14,16 +14,8 @@
 export interface CreateGlobalBgpRangeDto { 
     name: string;
     environmentId: string;
-    type: CreateGlobalBgpRangeDtoTypeEnum;
-    start: number;
-    end: number;
+    start: string;
+    end: string;
     description?: string;
 }
-export enum CreateGlobalBgpRangeDtoTypeEnum {
-    Internal = 'internal',
-    External = 'external',
-    Any = 'any'
-};
-
-
 

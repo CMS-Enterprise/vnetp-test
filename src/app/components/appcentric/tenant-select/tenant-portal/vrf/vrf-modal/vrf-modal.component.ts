@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VrfModalHelpText } from 'src/app/helptext/help-text-networking';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
   selector: 'app-vrf-modal',
@@ -18,6 +19,7 @@ export class VrfModalComponent {
   public currentVrf: Vrf | null = null;
 
   public helpText: VrfModalHelpText;
+  public AsnUtil = AsnUtil;
 
   constructor(private ngx: NgxSmartModalService, helpText: VrfModalHelpText) {
     this.helpText = helpText;
@@ -44,4 +46,5 @@ export class VrfModalComponent {
     this.currentVrf = null;
     this.ngx.resetModalData('vrfModal');
   }
+
 }

@@ -75,7 +75,7 @@
       <!-- Tenant Form -->
       <div *ngIf="activeTab === 'tenant'">
         <div class="form-group">
-          <label>Name</label>
+          <label>Name <span class="text-danger">*</span></label>
           <input
             class="form-control"
             [class.is-invalid]="hasFieldError('tenant.name')"
@@ -88,12 +88,12 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Environment</label>
+          <label>Environment <span class="text-danger">*</span></label>
           <ng-select
             [ngClass]="{ 'is-invalid': hasFieldError('tenant.environmentId') }"
             [disabled]="mode === 'edit'"
             [(ngModel)]="config.tenant.environmentId"
-            (ngModelChange)="onConfigMutated()"
+            (ngModelChange)="onEnvironmentChange()"
             [items]="environments"
             bindLabel="name"
             bindValue="id"
@@ -104,6 +104,27 @@
           <div *ngIf="hasFieldError('tenant.environmentId')" class="invalid-feedback d-block">
             {{ getFieldError('tenant.environmentId') }}
           </div>
+        </div>
+        <div class="form-group">
+          <label>BGP ASN Range <span class="text-danger">*</span></label>
+          <ng-select
+            [ngClass]="{ 'is-invalid': hasFieldError('tenant.bgpRangeId') }"
+            [disabled]="mode === 'edit' || !config.tenant.environmentId"
+            [(ngModel)]="config.tenant.bgpRangeId"
+            (ngModelChange)="onConfigMutated()"
+            [items]="bgpRanges"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Select a BGP ASN range..."
+            [clearable]="false"
+          >
+          </ng-select>
+          <div *ngIf="hasFieldError('tenant.bgpRangeId')" class="invalid-feedback d-block">
+            {{ getFieldError('tenant.bgpRangeId') }}
+          </div>
+          <small class="form-text text-muted" *ngIf="!config.tenant.environmentId">
+            Please select an environment first to load available BGP ASN ranges.
+          </small>
         </div>
         <div class="form-group">
           <label>Alias</label>
@@ -152,7 +173,7 @@
               <h6 class="card-title">Firewall Details</h6>
               <div class="form-row">
                 <div class="form-group col-6">
-                  <label>Name</label>
+                  <label>Name <span class="text-danger">*</span></label>
                   <input
                     class="form-control"
                     [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.name')"
@@ -184,7 +205,7 @@
                   </div>
                 </div>
                 <div class="form-group col-6">
-                  <label>VSYS/Context Name</label>
+                  <label>VSYS/Context Name <span class="text-danger">*</span></label>
                   <input
                     class="form-control"
                     [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.vsysName')"
@@ -227,17 +248,23 @@
                   </div>
                 </div>
                 <div class="form-group col-4" *ngIf="!config.externalFirewalls[selectedFirewallIdx].bgpAsnAutoGenerate">
-                  <label>BGP ASN</label>
+                  <label>BGP ASN <span class="text-danger">*</span></label>
                   <input
-                    type="number"
+                    type="text"
                     class="form-control form-control-sm"
                     [class.is-invalid]="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')"
-                    [(ngModel)]="config.externalFirewalls[selectedFirewallIdx].bgpAsn"
-                    (ngModelChange)="onConfigMutated()"
-                    min="1"
-                    max="4294967294"
-                    placeholder="e.g. 65001"
+                    [value]="getBgpAsnDisplayValue(selectedFirewallIdx, null)"
+                    (input)="onBgpAsnInput(selectedFirewallIdx, $any($event.target).value)"
+                    placeholder="e.g. 65536 or 1.0"
                   />
+                  <small class="form-text text-muted" *ngIf="getBgpAsnDisplayValue(selectedFirewallIdx, null)">
+                    <span *ngIf="AsnUtil.detectBgpAsnFormat(getBgpAsnDisplayValue(selectedFirewallIdx, null)) === 'asplain'">
+                      (ASplain) → ASdot+: {{ AsnUtil.getBgpAsnDisplayInfo(getBgpAsnDisplayValue(selectedFirewallIdx, null)).converted }}
+                    </span>
+                    <span *ngIf="AsnUtil.detectBgpAsnFormat(getBgpAsnDisplayValue(selectedFirewallIdx, null)) === 'asdot'">
+                      (ASdot+) → ASplain: {{ AsnUtil.getBgpAsnDisplayInfo(getBgpAsnDisplayValue(selectedFirewallIdx, null)).converted }}
+                    </span>
+                  </small>
                   <div *ngIf="hasFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn')" class="invalid-feedback d-block">
                     {{ getFieldError('externalFirewalls.' + selectedFirewallIdx + '.bgpAsn') }}
                   </div>
@@ -258,7 +285,7 @@
                 <div class="border rounded p-2 mb-2" [class.border-danger]="hasExternalVrfConnectionErrors(selectedFirewallIdx, j)">
                   <div class="form-row">
                     <div class="form-group col-6">
-                      <label>Name</label>
+                      <label>Name <span class="text-danger">*</span></label>
                       <input
                         class="form-control"
                         [class.is-invalid]="
@@ -275,7 +302,7 @@
                       </div>
                     </div>
                     <div class="form-group col-6">
-                      <label>External VRF</label>
+                      <label>External VRF <span class="text-danger">*</span></label>
                       <ng-select
                         [ngClass]="{
                           'is-invalid': hasFieldError(
@@ -412,7 +439,7 @@
               <h6 class="card-title">VRF Details</h6>
               <div class="form-row">
                 <div class="form-group col-4">
-                  <label>Name</label>
+                  <label>Name <span class="text-danger">*</span></label>
                   <input
                     class="form-control"
                     [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.name')"
@@ -456,17 +483,23 @@
                   </div>
                 </div>
                 <div class="form-group col-4" *ngIf="!config.vrfs[selectedVrfIdx].bgpAsnAutoGenerate">
-                  <label>BGP ASN</label>
+                  <label>BGP ASN <span class="text-danger">*</span></label>
                   <input
-                    type="number"
+                    type="text"
                     class="form-control form-control-sm"
                     [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')"
-                    [(ngModel)]="config.vrfs[selectedVrfIdx].bgpAsn"
-                    (ngModelChange)="onConfigMutated()"
-                    min="1"
-                    max="4294967294"
-                    placeholder="e.g. 65001"
+                    [value]="getBgpAsnDisplayValue(null, selectedVrfIdx)"
+                    (input)="onVrfBgpAsnInput(selectedVrfIdx, $any($event.target).value)"
+                    placeholder="e.g. 65536 or 1.0"
                   />
+                  <small class="form-text text-muted" *ngIf="getBgpAsnDisplayValue(null, selectedVrfIdx)">
+                    <span *ngIf="AsnUtil.detectBgpAsnFormat(getBgpAsnDisplayValue(null, selectedVrfIdx)) === 'asplain'">
+                      (ASplain) → ASdot+: {{ AsnUtil.getBgpAsnDisplayInfo(getBgpAsnDisplayValue(null, selectedVrfIdx)).converted }}
+                    </span>
+                    <span *ngIf="AsnUtil.detectBgpAsnFormat(getBgpAsnDisplayValue(null, selectedVrfIdx)) === 'asdot'">
+                      (ASdot+) → ASplain: {{ AsnUtil.getBgpAsnDisplayInfo(getBgpAsnDisplayValue(null, selectedVrfIdx)).converted }}
+                    </span>
+                  </small>
                   <div *ngIf="hasFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn')" class="invalid-feedback d-block">
                     {{ getFieldError('vrfs.' + selectedVrfIdx + '.bgpAsn') }}
                   </div>
@@ -483,7 +516,7 @@
                 <div class="border rounded p-2 mb-2" [class.border-danger]="hasServiceGraphErrors(selectedVrfIdx, j)">
                   <div class="form-row">
                     <div class="form-group col-6">
-                      <label>Name</label>
+                      <label>Name <span class="text-danger">*</span></label>
                       <input
                         class="form-control"
                         [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.name')"
@@ -500,7 +533,7 @@
                     </div>
 
                     <div class="form-group col-6">
-                      <label>Firewall Name</label>
+                      <label>Firewall Name <span class="text-danger">*</span></label>
                       <input
                         class="form-control"
                         [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.serviceGraphs.' + j + '.serviceGraphFirewall.name')"
@@ -524,11 +557,10 @@
                         (ngModelChange)="onConfigMutated()"
                       >
                         <option>PaloAlto</option>
-                        <option>CiscoAsa</option>
                       </select>
                     </div>
                     <div class="form-group col-6">
-                      <label>VSYS/Context Name</label>
+                      <label>VSYS/Context Name <span class="text-danger">*</span></label>
                       <input
                         class="form-control"
                         [class.is-invalid]="
@@ -564,7 +596,7 @@
                 <div class="border rounded p-2 mb-2" [class.border-danger]="hasL3OutErrors(selectedVrfIdx, j)">
                   <div class="form-row">
                     <div class="form-group col-3">
-                      <label>Name</label>
+                      <label>Name <span class="text-danger">*</span></label>
                       <input
                         class="form-control"
                         [class.is-invalid]="hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.name')"
@@ -603,7 +635,7 @@
                       </div>
                     </div>
                     <div class="form-group" [ngClass]="l3.l3outType === 'intervrf' ? 'col-3' : 'col-6'">
-                      <label>Firewall</label>
+                      <label>Firewall <span class="text-danger">*</span></label>
                       <ng-select
                         [ngClass]="{
                           'is-invalid': hasFieldError('vrfs.' + selectedVrfIdx + '.l3outs.' + j + '.externalFirewall')

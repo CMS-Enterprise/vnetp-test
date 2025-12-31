@@ -19,16 +19,8 @@ export interface GlobalBgpAsnRange {
     description?: string;
     environmentId: string;
     readonly environment: Environment;
-    start: number;
-    end: number;
-    type: GlobalBgpAsnRangeTypeEnum;
+    start: string;
+    end: string;
     readonly allocations: Array<GlobalBgpAsnAllocation>;
 }
-export enum GlobalBgpAsnRangeTypeEnum {
-    Internal = 'internal',
-    External = 'external',
-    Any = 'any'
-};
-
-
 
