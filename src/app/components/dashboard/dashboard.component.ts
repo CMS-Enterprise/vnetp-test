@@ -59,6 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   datacenters: number;
   tiers: number;
+  tierIds: string[] = [];
   vmwareVirtualMachines: number;
   loadBalancerVirtualServers: number;
   networkObjectCount: number;
@@ -128,17 +129,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // only fetch the dashboard entities that the user has the correct permissions to view
   private loadDashboard(roles?: string[]): void {
     this.getDatacenters();
-    this.getTiers();
-    if (roles && roles.includes('admin')) {
-      this.getFWRules();
-      this.getNatRules();
-      this.getNetworkObjects();
-      this.getNetworkObjectGroups();
-      this.getServiceObjects();
-      this.getServiceObjectGroups();
-      this.getSubnets();
-      this.getVlans();
-    }
+    this.getTiers(() => {
+      if (roles && roles.includes('admin')) {
+        this.getFWRules();
+        this.getNatRules();
+        this.getNetworkObjects();
+        this.getNetworkObjectGroups();
+        this.getServiceObjects();
+        this.getServiceObjectGroups();
+        this.getSubnets();
+        this.getVlans();
+      }
+    });
   }
 
   private getDatacenters(): void {
@@ -157,42 +159,51 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getTiers(): void {
-    this.tierService.getManyTier({ page: 1, perPage: 1 }).subscribe(data => {
+  private getTiers(callback?: () => void): void {
+    this.tierService.getManyTier({ page: 1, perPage: 1000, filter: ['tenantVersion||ne||2'] }).subscribe(data => {
       const paged: any = data;
       this.tiers = paged.total;
+      this.tierIds = paged.data.map((tier: any) => tier.id).filter((id: string) => id);
+      if (callback) {
+        callback();
+      }
     });
   }
 
   private getFWRules(): void {
-    this.firewallRuleService.getManyFirewallRule({ page: 1, perPage: 1 }).subscribe(data => {
+    this.firewallRuleService.getManyFirewallRule({ page: 1, perPage: 1, filter: ['tenantVersion||ne||2'
+    ]}).subscribe(data => {
       this.firewallRuleCount = data.total;
     });
   }
 
   private getNatRules(): void {
-    this.natRuleService.getManyNatRule({ page: 1, perPage: 1 }).subscribe(data => {
+    this.natRuleService.getManyNatRule({ page: 1, perPage: 1, filter: ['tenantVersion||ne||2'] }).subscribe(data => {
       this.natRuleCount = data.total;
     });
   }
 
   private getSubnets(): void {
-    this.subnetService.getManySubnet({ page: 1, perPage: 1 }).subscribe(data => {
+    const filter = this.tierIds.length > 0 ? [`tierId||in||${this.tierIds.join(',')}`] : undefined;
+    this.subnetService.getManySubnet({ page: 1, perPage: 1, filter }).subscribe(data => {
       this.subnetCount = data.total;
     });
   }
 
   private getVlans(): void {
-    this.vlanService.getManyVlan({ page: 1, perPage: 1 }).subscribe(data => {
+    const filter = this.tierIds.length > 0 ? [`tierId||in||${this.tierIds.join(',')}`] : undefined;
+    this.vlanService.getManyVlan({ page: 1, perPage: 1, filter }).subscribe(data => {
       this.vlanCount = data.total;
     });
   }
 
   private getNetworkObjects(): void {
+    const filter = this.tierIds.length > 0 ? [`tierId||in||${this.tierIds.join(',')}`] : undefined;
     this.networkObjectService
       .getManyNetworkObject({
         page: 1,
         perPage: 1,
+        filter,
       })
       .subscribe(data => {
         this.networkObjectCount = data.total;
@@ -200,10 +211,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getNetworkObjectGroups(): void {
+    const filter = this.tierIds.length > 0 ? [`tierId||in||${this.tierIds.join(',')}`] : undefined;
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
         page: 1,
         perPage: 1,
+        filter,
       })
       .subscribe(data => {
         this.networkObjectGroupCount = data.total;
@@ -211,10 +224,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getServiceObjects(): void {
+    const filter = this.tierIds.length > 0 ? [`tierId||in||${this.tierIds.join(',')}`] : undefined;
     this.serviceObjectService
       .getManyServiceObject({
         page: 1,
         perPage: 1,
+        filter,
       })
       .subscribe(data => {
         this.serviceObjectCount = data.total;
@@ -222,10 +237,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getServiceObjectGroups(): void {
+    const filter = this.tierIds.length > 0 ? [`tierId||in||${this.tierIds.join(',')}`] : undefined;
     this.serviceObjectGroupService
       .getManyServiceObjectGroup({
         page: 1,
         perPage: 1,
+        filter,
       })
       .subscribe(data => {
         this.serviceObjectGroupCount = data.total;
