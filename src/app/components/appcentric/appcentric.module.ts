@@ -55,16 +55,6 @@ const routes: Routes = [
         },
         loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
-      {
-        path: ':tenantId/l3-out-management',
-        canActivate: [AuthGuard],
-        data: {
-          breadcrumb: 'L3 Out Management',
-          title: 'L3 Out Management',
-        },
-        loadChildren: () =>
-          import('./tenant-select/tenant-portal/l3-outs/l3-out-management/l3-out-management.module').then(m => m.L3OutManagementModule),
-      },
     ],
   },
 ];
