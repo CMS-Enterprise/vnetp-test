@@ -55,18 +55,10 @@
 
     <!-- TODO: Re-enable Move/Clone for TENANTV2 mode - needs routing/navigation updates -->
     <app-icon-button
-      *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased' && applicationMode !== ApplicationMode.TENANTV2"
+      *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
       icon="clone"
       label="Move/Clone Firewall Rule"
       (handleClick)="openFirewallRuleOperationModal(firewallRule)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased' && applicationMode === ApplicationMode.TENANTV2"
-      icon="clone"
-      label="Move/Clone Firewall Rule (Disabled in TenantV2)"
-      [disabled]="true"
-      type="default"
     ></app-icon-button>
 
     <app-icon-button
@@ -263,9 +255,7 @@
       </span>
     </div>
 
-    <!-- TODO: Re-enable Refresh Hitcount for TENANTV2 mode - needs datacenter-independent implementation -->
     <button
-      *ngIf="applicationMode !== ApplicationMode.TENANTV2"
       (click)="refreshHitcount()"
       class="refresh-button"
       [ngClass]="{ 'green-button': isRecentlyRefreshed() }"

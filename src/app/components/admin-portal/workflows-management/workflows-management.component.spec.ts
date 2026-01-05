@@ -109,10 +109,7 @@ describe('WorkflowsManagementComponent', () => {
     } as unknown as Workflow);
 
   const tenantResponses: Record<string, any> = {
-    'acct-one': createTenantResponse([
-      createTenant('tenant-1', 'Tenant One', 'Prod'),
-      createTenant('tenant-2', 'Tenant Two', 'Stage'),
-    ]),
+    'acct-one': createTenantResponse([createTenant('tenant-1', 'Tenant One', 'Prod'), createTenant('tenant-2', 'Tenant Two', 'Stage')]),
     'acct-two': createTenantResponse([createTenant('tenant-3', 'Tenant Three', 'Prod')]),
   };
 
@@ -202,10 +199,7 @@ describe('WorkflowsManagementComponent', () => {
     fixture.detectChanges();
   };
 
-  const getTenant = (id: string) =>
-    component['tenantAccounts']
-      .flatMap(account => account.tenants)
-      .find(tenant => tenant.tenantId === id);
+  const getTenant = (id: string) => component['tenantAccounts'].flatMap(account => account.tenants).find(tenant => tenant.tenantId === id);
 
   const requireTenant = (id: string) => {
     const tenant = getTenant(id);
@@ -414,9 +408,7 @@ describe('WorkflowsManagementComponent', () => {
   it('should fall back to single module when group has no modules', () => {
     createComponent();
     jest.spyOn(component as any, 'loadData').mockImplementation(() => {});
-    component['groupLaunchOptions'] = [
-      { id: 'custom-group', label: 'Custom', description: 'x', modules: [] },
-    ];
+    component['groupLaunchOptions'] = [{ id: 'custom-group', label: 'Custom', description: 'x', modules: [] }];
     const tenantOption = component.tenantOptions[0];
     component.launchForm.patchValue({
       launchMode: 'group',
@@ -587,12 +579,14 @@ describe('WorkflowsManagementComponent', () => {
 
   it('should run work inside tenant context helper', done => {
     createComponent();
-    (component as any).runInTenantContext('acct-one', () => of('value')).subscribe(result => {
-      expect(result).toBe('value');
-      expect(tenantStateServiceMock.setTenant).toHaveBeenCalledWith('acct-one');
-      expect(tenantStateServiceMock.clearTenant).toHaveBeenCalled();
-      done();
-    });
+    (component as any)
+      .runInTenantContext('acct-one', () => of('value'))
+      .subscribe(result => {
+        expect(result).toBe('value');
+        expect(tenantStateServiceMock.setTenant).toHaveBeenCalledWith('acct-one');
+        expect(tenantStateServiceMock.clearTenant).toHaveBeenCalled();
+        done();
+      });
   });
 
   it('should load account data using tenant context', done => {
@@ -729,4 +723,3 @@ describe('WorkflowsManagementComponent', () => {
     expect(summaries[0].environment).toBe('Unspecified');
   });
 });
-

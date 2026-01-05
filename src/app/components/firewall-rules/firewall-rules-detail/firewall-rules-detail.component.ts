@@ -985,16 +985,12 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   refreshHitcount(): void {
-    // TODO: Re-enable for TENANTV2 mode - implement datacenter-independent hitcount refresh
-    // Currently disabled in template for TENANTV2 mode (see template line ~266)
-    // Issue: depends on datacenterService.currentDatacenterValue.id which is not available in TENANTV2 mode
     this.isRefreshingRuntimeData = true;
     this.hitcountService
       .createRuntimeDataJobHitcount({
         hitcountJobCreateDto: {
           type: HitcountJobCreateDtoTypeEnum.FirewallRule,
           groupId: this.FirewallRuleGroup.id,
-          datacenterId: this.datacenterService.currentDatacenterValue.id,
         },
       })
       .subscribe(
