@@ -1,6 +1,7 @@
 .gitignore
 README.md
 api.module.ts
+api/admin.service.ts
 api/api.ts
 api/utilities.service.ts
 api/v1AuditLog.service.ts
@@ -298,6 +299,7 @@ model/syncEndpointGroup.ts
 model/syncEndpointSecurityGroup.ts
 model/syncTenant.ts
 model/tenant.ts
+model/tenantCatalogItemDto.ts
 model/tenantConfigDto.ts
 model/tenantConnectivityGraph.ts
 model/tenantConnectivityGraphEdges.ts
@@ -306,13 +308,23 @@ model/tenantInfrastructureConfigDto.ts
 model/tenantInfrastructureResponse.ts
 model/tenantInfrastructureValidationError.ts
 model/tenantInfrastructureValidationResponse.ts
+model/terraformChildModule.ts
 model/terraformPlan.ts
+model/terraformPlannedValues.ts
+model/terraformResource.ts
+model/terraformResourceAction.ts
+model/terraformResourceChange.ts
+model/terraformResourceImporting.ts
+model/terraformRootModule.ts
+model/terraformShowPlan.ts
+model/terraformState.ts
 model/tier.ts
 model/tierGroup.ts
 model/towerJobDto.ts
 model/truncatedTerraformResourceChange.ts
 model/updateGlobalBgpRangeDto.ts
 model/updateWorkflowDto.ts
+model/uploadWorkflowLogDto.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts
@@ -322,6 +334,7 @@ model/vrf.ts
 model/vrfConfigDto.ts
 model/workflow.ts
 model/workflowEvent.ts
+model/workflowExecutionLog.ts
 model/workflowValidationError.ts
 model/workflowValidationResultDto.ts
 model/zone.ts

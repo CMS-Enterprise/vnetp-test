@@ -17,6 +17,8 @@ import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select
 import { AppIdMaintenanceModule } from './app-id-maintenance/app-id-maintenance.module';
 import { AppIdMaintenanceComponent } from './app-id-maintenance/app-id-maintenance.component';
 import { EnvironmentManagementComponent } from './environment-management/environment-management.component';
+import { WorkflowsManagementComponent } from './workflows-management/workflows-management.component';
+import { WorkflowsManagementModule } from './workflows-management/workflows-management.module';
 
 const routes: Routes = [
   {
@@ -107,6 +109,16 @@ const routes: Routes = [
         },
         loadChildren: () => import('./environment-management/environment-management.module').then(m => m.EnvironmentManagementModule),
       },
+      {
+        path: 'workflows',
+        component: WorkflowsManagementComponent,
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Workflows',
+          title: 'Workflows',
+        },
+        loadChildren: () => import('./workflows-management/workflows-management.module').then(m => m.WorkflowsManagementModule),
+      },
     ],
   },
 ];
@@ -124,6 +136,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     BreadcrumbsModule,
     AppIdMaintenanceModule,
+    WorkflowsManagementModule,
   ],
 })
 export class AdminPortalModule {}

@@ -43,6 +43,7 @@
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "netmask": "^2.0.2",
+    "ngx-json-viewer": "^3.2.1",
     "ngx-pagination": "^6.0.3",
     "ngx-papaparse": "^5.1.0",
     "ngx-smart-modal": "^14.0.3",

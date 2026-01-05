@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CreateWorkflowDtoWorkflowTypeEnum, GetManyWorkflowResponseDto, V2WorkflowsService, Workflow, WorkflowStatusEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -23,6 +23,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   public perPage = 20;
   public CreateWorkflowDtoWorkflowTypeEnum = CreateWorkflowDtoWorkflowTypeEnum;
   public workflowViewModalSubscription: Subscription;
+  public showDropdown = false;
   private refreshInterval: any;
   private readonly REFRESH_INTERVAL_MS = 3000;
 
@@ -58,12 +59,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate') statusTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Workflows',
+    hideSearchBar: true,
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Status', property: 'status' },
+      { name: 'Status', template: () => this.statusTemplate },
       { name: 'Terraform Module', property: 'terraformModule' },
       { name: 'Approval Type', property: 'approvalType' },
       { name: 'Created At', property: 'createdAt' },
@@ -78,6 +81,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   createWorkflow(workflowType: CreateWorkflowDtoWorkflowTypeEnum) {
+    this.showDropdown = false;
     const modalDto = new YesNoModalDto('Create Workflow', `Are you sure you would like to create a ${workflowType} workflow?`);
 
     const onConfirm = () => {
@@ -86,9 +90,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
           tenantId: this.tenantId,
           workflowType,
         },
-      }).subscribe(response => {
-        this.workflows.data.push(response);
-        this.checkAndStartRefresh();
+      }).subscribe(() => {
+        this.getWorkflows();
       });
     };
 
@@ -97,6 +100,18 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.btn-group')) {
+      this.showDropdown = false;
+    }
   }
 
   getWorkflows(event?) {
@@ -169,6 +184,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     const activeStatuses = [
+      WorkflowStatusEnum.Approved,
       WorkflowStatusEnum.Pending,
       WorkflowStatusEnum.Planning,
       WorkflowStatusEnum.Validating,
@@ -230,5 +246,29 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       // const { filteredResults } = params;
       this.getWorkflows();
     });
+  }
+
+  getStatusIcon(status: string): { icon: string[]; color: string } {
+    switch (status) {
+      case WorkflowStatusEnum.Completed:
+      case WorkflowStatusEnum.CompletedNoChanges:
+        return { icon: ['fas', 'check'], color: 'text-success' };
+      case WorkflowStatusEnum.Pending:
+      case WorkflowStatusEnum.Planning:
+      case WorkflowStatusEnum.Validating:
+      case WorkflowStatusEnum.Applying:
+        return { icon: ['fas', 'clock'], color: 'text-info' };
+      case WorkflowStatusEnum.PlanFailed:
+      case WorkflowStatusEnum.PlanIncomplete:
+      case WorkflowStatusEnum.ApplyFailed:
+        return { icon: ['fas', 'times'], color: 'text-danger' };
+      case WorkflowStatusEnum.ValidAwaitingManualApproval:
+      case WorkflowStatusEnum.InvalidApplyable:
+      case WorkflowStatusEnum.Disapproved:
+      case WorkflowStatusEnum.Approved:
+        return { icon: ['fas', 'exclamation-triangle'], color: 'text-warning' };
+      default:
+        return { icon: ['fas', 'info-circle'], color: 'text-muted' };
+    }
   }
 }

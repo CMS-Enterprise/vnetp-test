@@ -40,6 +40,10 @@ export interface WorkflowValidationResultDto {
      */
     globalErrors: Array<WorkflowValidationError>;
     /**
+     * Global validation warnings (drift with read-only properties, etc.)
+     */
+    globalWarnings: Array<WorkflowValidationError>;
+    /**
      * Audit log validation results - includes ALL audit logs with their status
      */
     auditLogResults: Array<AuditLogValidationResult>;

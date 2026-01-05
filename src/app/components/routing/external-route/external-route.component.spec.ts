@@ -308,4 +308,102 @@ describe('ExternalRouteComponent', () => {
     component.onAvailableRoutesSearch();
     expect(component.availableRoutesDataSource.filter).toBe('xyz');
   });
+
+  describe('IP search helpers', () => {
+    it('matchesRouteFilter returns true for empty term and delegates to text for non-ip', () => {
+      const spyText = jest.spyOn<any, any>(component as any, 'routeMatchesText').mockReturnValue(true);
+      expect((component as any).matchesRouteFilter({ network: '10.0.0.0/24' }, '')).toBe(true);
+      expect((component as any).matchesRouteFilter({ network: '10.0.0.0/24' }, 'vrf_a')).toBe(true);
+      expect(spyText).toHaveBeenCalled();
+    });
+
+    it('matchesRouteFilter uses routeMatchesIp when query is ip', () => {
+      const spyIp = jest.spyOn<any, any>(component as any, 'routeMatchesIp').mockReturnValue(true);
+      const route = { network: '10.0.0.0/24' };
+      expect((component as any).matchesRouteFilter(route, '10.0.0.5')).toBe(true);
+      expect(spyIp).toHaveBeenCalledWith(route, '10.0.0.5');
+    });
+
+    it('routeMatchesIp checks both local and global networks', () => {
+      const route = { network: '10.0.0.0/24', globalExternalRoute: { network: '192.168.1.0/24' } };
+      const spyMatch = jest.spyOn<any, any>(component as any, 'ipMatchesNetwork');
+      (component as any).routeMatchesIp(route, '192.168.1.50');
+      expect(spyMatch).toHaveBeenCalledWith('192.168.1.50', '10.0.0.0/24');
+      expect(spyMatch).toHaveBeenCalledWith('192.168.1.50', '192.168.1.0/24');
+      spyMatch.mockRestore();
+      expect((component as any).routeMatchesIp(route, '192.168.1.50')).toBe(true);
+      expect((component as any).routeMatchesIp(route, '10.0.0.10')).toBe(true);
+      expect((component as any).routeMatchesIp(route, '172.16.0.1')).toBe(false);
+    });
+
+    it('routeMatchesText searches across available fields', () => {
+      const route = {
+        network: '10.0.0.0/24',
+        externalVrf: 'VRF_A',
+        protocol: 'BGP',
+        tag: 100,
+        metric: 200,
+        globalExternalRoute: { network: '192.168.1.0/24', externalVrf: 'VRF_B' },
+      };
+      expect((component as any).routeMatchesText(route, 'vrf_a')).toBe(true);
+      expect((component as any).routeMatchesText(route, '192.168.1.0/24')).toBe(true);
+      expect((component as any).routeMatchesText(route, 'bgp')).toBe(true);
+      expect((component as any).routeMatchesText(route, 'nope')).toBe(false);
+    });
+
+    it('isIpQuery detects ipv4 and ipv6', () => {
+      expect((component as any).isIpQuery('10.0.0.1')).toBe(true);
+      expect((component as any).isIpQuery('2001:db8::1')).toBe(true);
+      expect((component as any).isIpQuery('not-an-ip')).toBe(false);
+    });
+
+    it('ipMatchesNetwork returns false for missing or version mismatch', () => {
+      expect((component as any).ipMatchesNetwork('10.0.0.1', undefined)).toBe(false);
+      expect((component as any).ipMatchesNetwork('10.0.0.1', '2001:db8::/32')).toBe(false);
+    });
+
+    it('ipMatchesNetwork validates ipv4 subnets', () => {
+      expect((component as any).ipMatchesNetwork('192.168.1.5', '192.168.1.0/24')).toBe(true);
+      expect((component as any).ipMatchesNetwork('192.168.2.5', '192.168.1.0/24')).toBe(false);
+    });
+
+    it('ipMatchesNetwork validates ipv6 subnets', () => {
+      expect((component as any).ipMatchesNetwork('2001:db8::1', '2001:db8::/32')).toBe(true);
+      expect((component as any).ipMatchesNetwork('2001:dead::1', '2001:db8::/32')).toBe(false);
+    });
+
+    it('parseCidr parses valid cidr and rejects invalid', () => {
+      const parsed = (component as any).parseCidr('10.0.0.0/16');
+      expect(parsed).toMatchObject({ version: 4, prefix: 16 });
+      expect(parsed.bytes.slice(0, 2)).toEqual([10, 0]);
+
+      expect((component as any).parseCidr('10.0.0.0')).toBeNull();
+      expect((component as any).parseCidr('10.0.0.0/99')).toBeNull();
+      expect((component as any).parseCidr('bad/24')).toBeNull();
+    });
+
+    it('parseIp handles ipv4, ipv6 and invalid', () => {
+      expect((component as any).parseIp('192.168.1.1')).toEqual({ version: 4, bytes: [192, 168, 1, 1] });
+      const ipv6 = (component as any).parseIp('2001:db8::1');
+      expect(ipv6.version).toBe(6);
+      expect(ipv6.bytes.length).toBe(16);
+      expect((component as any).parseIp('not-ip')).toBeNull();
+    });
+
+    it('parseIpv6ToBytes supports compressed notation and rejects invalid', () => {
+      const bytes = (component as any).parseIpv6ToBytes('2001:db8::1');
+      expect(bytes?.length).toBe(16);
+      expect(bytes?.slice(0, 2)).toEqual([0x20, 0x01]);
+      expect((component as any).parseIpv6ToBytes('2001:db8::g1')).toBeNull();
+      expect((component as any).parseIpv6ToBytes('::1::1')).toBeNull();
+    });
+
+    it('isIpInSubnet checks byte prefixes correctly', () => {
+      const ip = [192, 168, 1, 5];
+      const subnet = [192, 168, 1, 0];
+      expect((component as any).isIpInSubnet(ip, subnet, 24)).toBe(true);
+      expect((component as any).isIpInSubnet(ip, subnet, 25)).toBe(true);
+      expect((component as any).isIpInSubnet([192, 168, 2, 5], subnet, 24)).toBe(false);
+    });
+  });
 });

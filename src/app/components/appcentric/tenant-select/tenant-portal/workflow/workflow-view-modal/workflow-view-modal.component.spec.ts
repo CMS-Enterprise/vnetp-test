@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { V2WorkflowsService, Workflow } from 'client';
+import { V2WorkflowsService, Workflow, WorkflowStatusEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { WorkflowViewModalComponent } from './workflow-view-modal.component';
 
@@ -42,7 +42,6 @@ describe('WorkflowViewModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(component.showTerraformPlan).toBe(false);
     expect(component.displayedColumns).toEqual(['actions', 'address', 'type', 'name', 'diff']);
   });
 
@@ -72,7 +71,7 @@ describe('WorkflowViewModalComponent', () => {
       component.workflowId = workflowId;
       component.getWorkflow();
 
-      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events'] });
+      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events', 'executionLogs'] });
       expect(component.workflow).toEqual(workflow as Workflow);
       expect(component.planJson).toBe(JSON.stringify(planObject, null, 2));
     });
@@ -88,7 +87,7 @@ describe('WorkflowViewModalComponent', () => {
       component.workflowId = workflowId;
       component.getWorkflow();
 
-      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events'] });
+      expect(workflowsServiceMock.getOneWorkflow).toHaveBeenCalledWith({ id: workflowId, relations: ['plan', 'events', 'executionLogs'] });
       expect(component.workflow).toEqual(workflow as Workflow);
       expect(component.planJson).toBe('previous'); // unchanged because code sets only when present
     });
@@ -115,15 +114,16 @@ describe('WorkflowViewModalComponent', () => {
       expect(refreshSpy).toHaveBeenCalled();
     });
 
-    it('applyWorkflow should call service then refresh workflow', () => {
-      const refreshSpy = jest.spyOn(component, 'getWorkflow');
+    it('applyWorkflow should call service and set status to Applying', fakeAsync(() => {
       component.workflowId = workflowId;
+      component.workflow = { status: WorkflowStatusEnum.Approved } as any;
+      (workflowsServiceMock.getOneWorkflow as jest.Mock).mockReturnValue(of({ status: WorkflowStatusEnum.Applying } as Workflow));
 
       component.applyWorkflow();
 
       expect(workflowsServiceMock.applyWorkflowWorkflow).toHaveBeenCalledWith({ id: workflowId });
-      expect(refreshSpy).toHaveBeenCalled();
-    });
+      expect(component.workflow.status).toBe(WorkflowStatusEnum.Applying);
+    }));
   });
 
   describe('reset', () => {
@@ -131,14 +131,12 @@ describe('WorkflowViewModalComponent', () => {
       component.workflow = { id: workflowId } as Workflow;
       component.workflowId = workflowId;
       component.planJson = '{}';
-      component.showTerraformPlan = true;
 
       component.reset();
 
       expect(component.workflow).toBeNull();
       expect(component.workflowId).toBeNull();
       expect(component.planJson).toBeNull();
-      expect(component.showTerraformPlan).toBe(false);
     });
   });
 
@@ -146,16 +144,6 @@ describe('WorkflowViewModalComponent', () => {
     it('should return the event id', () => {
       const event = { id: 'evt-1', other: 'x' };
       expect(component.trackByEventId(0, event)).toBe('evt-1');
-    });
-  });
-
-  describe('toggleTerraformPlan', () => {
-    it('should toggle the boolean flag', () => {
-      expect(component.showTerraformPlan).toBe(false);
-      component.toggleTerraformPlan();
-      expect(component.showTerraformPlan).toBe(true);
-      component.toggleTerraformPlan();
-      expect(component.showTerraformPlan).toBe(false);
     });
   });
 });

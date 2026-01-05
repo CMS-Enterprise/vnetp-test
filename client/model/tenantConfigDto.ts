@@ -14,6 +14,7 @@
 export interface TenantConfigDto { 
     name: string;
     environmentId: string;
+    bgpRangeId: string;
     alias?: string;
     description?: string;
     multiVrf?: boolean;

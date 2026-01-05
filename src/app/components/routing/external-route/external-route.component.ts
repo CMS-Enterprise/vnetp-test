@@ -6,6 +6,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { isIP } from 'validator';
 import {
   ExternalRoute,
   V3GlobalExternalRoutesService,
@@ -61,6 +62,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    this.setFilterPredicates();
     this.getConnectionChildren().subscribe(connection => {
       this.externalVrfConnection = connection;
       this.getAllRoutes();
@@ -232,5 +234,137 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   public onAvailableRoutesSearch(): void {
     this.availableRoutesDataSource.filter = this.availableRoutesSearchQuery.trim().toLowerCase();
+  }
+
+  private setFilterPredicates(): void {
+    this.assignedRoutesDataSource.filterPredicate = (data, filter) => this.matchesRouteFilter(data, filter);
+    this.availableRoutesDataSource.filterPredicate = (data, filter) => this.matchesRouteFilter(data as any, filter);
+  }
+
+  private matchesRouteFilter(route: any, filter: string): boolean {
+    const term = (filter || '').trim().toLowerCase();
+    if (!term) {
+      return true;
+    }
+
+    if (this.isIpQuery(term)) {
+      return this.routeMatchesIp(route, term);
+    }
+
+    return this.routeMatchesText(route, term);
+  }
+
+  private routeMatchesIp(route: any, ipQuery: string): boolean {
+    const networks: Array<string | undefined> = [route?.network, route?.globalExternalRoute?.network];
+    return networks.some(net => this.ipMatchesNetwork(ipQuery, net));
+  }
+
+  private routeMatchesText(route: any, term: string): boolean {
+    const haystack = [
+      route?.network,
+      route?.externalVrf,
+      route?.protocol,
+      route?.tag,
+      route?.metric,
+      route?.globalExternalRoute?.network,
+      route?.globalExternalRoute?.externalVrf,
+    ]
+      .filter(Boolean)
+      .map(value => String(value).toLowerCase())
+      .join(' ');
+
+    return haystack.includes(term);
+  }
+
+  private isIpQuery(value: string): boolean {
+    return isIP(value, 4) || isIP(value, 6);
+  }
+
+  private ipMatchesNetwork(ip: string, network?: string): boolean {
+    if (!network) {
+      return false;
+    }
+    const subnet = this.parseCidr(network);
+    const ipParsed = this.parseIp(ip);
+    if (!subnet || !ipParsed || subnet.version !== ipParsed.version) {
+      return false;
+    }
+    return this.isIpInSubnet(ipParsed.bytes, subnet.bytes, subnet.prefix);
+  }
+
+  private parseCidr(value: string): { version: 4 | 6; bytes: number[]; prefix: number } | null {
+    const [addr, prefixRaw] = value.trim().split('/');
+    const prefix = Number(prefixRaw);
+    if (!addr || Number.isNaN(prefix)) {
+      return null;
+    }
+    const parsed = this.parseIp(addr);
+    if (!parsed) {
+      return null;
+    }
+    const maxPrefix = parsed.version === 4 ? 32 : 128;
+    if (prefix < 0 || prefix > maxPrefix) {
+      return null;
+    }
+    return { version: parsed.version, bytes: parsed.bytes, prefix };
+  }
+
+  private parseIp(value: string): { version: 4 | 6; bytes: number[] } | null {
+    if (isIP(value, 4)) {
+      return { version: 4, bytes: value.split('.').map(octet => Number(octet)) };
+    }
+    if (isIP(value, 6)) {
+      const bytes = this.parseIpv6ToBytes(value);
+      return bytes ? { version: 6, bytes } : null;
+    }
+    return null;
+  }
+
+  private parseIpv6ToBytes(value: string): number[] | null {
+    /* eslint-disable no-bitwise */
+    const parts = value.split('::');
+    if (parts.length > 2) {
+      return null;
+    }
+
+    const left = parts[0] ? parts[0].split(':').filter(Boolean) : [];
+    const right = parts[1] ? parts[1].split(':').filter(Boolean) : [];
+    const missing = 8 - (left.length + right.length);
+    if (missing < 0) {
+      return null;
+    }
+
+    const hextets = [...left, ...Array(missing).fill('0'), ...right].map(part => parseInt(part || '0', 16));
+
+    if (hextets.length !== 8 || hextets.some(n => Number.isNaN(n) || n < 0 || n > 0xffff)) {
+      return null;
+    }
+
+    const bytes: number[] = [];
+    hextets.forEach(n => {
+      bytes.push((n >> 8) & 0xff, n & 0xff);
+    });
+    return bytes;
+    /* eslint-enable no-bitwise */
+  }
+
+  private isIpInSubnet(ipBytes: number[], subnetBytes: number[], prefix: number): boolean {
+    /* eslint-disable no-bitwise */
+    const fullBytes = Math.floor(prefix / 8);
+    const remainingBits = prefix % 8;
+
+    for (let i = 0; i < fullBytes; i += 1) {
+      if (ipBytes[i] !== subnetBytes[i]) {
+        return false;
+      }
+    }
+
+    if (remainingBits === 0) {
+      return true;
+    }
+
+    const mask = 0xff << (8 - remainingBits);
+    return (ipBytes[fullBytes] & mask) === (subnetBytes[fullBytes] & mask);
+    /* eslint-enable no-bitwise */
   }
 }

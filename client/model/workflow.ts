@@ -12,6 +12,7 @@
 import { TerraformPlan } from './terraformPlan';
 import { WorkflowValidationResultDto } from './workflowValidationResultDto';
 import { WorkflowEvent } from './workflowEvent';
+import { WorkflowExecutionLog } from './workflowExecutionLog';
 
 
 export interface Workflow { 
@@ -49,6 +50,10 @@ export interface Workflow {
      */
     events: Array<WorkflowEvent>;
     /**
+     * The execution logs for plan and apply operations
+     */
+    executionLogs: Array<WorkflowExecutionLog>;
+    /**
      * The validation result
      */
     validationResult: WorkflowValidationResultDto;
@@ -73,12 +78,14 @@ export enum WorkflowStatusEnum {
     Completed = 'completed'
 };
 export enum WorkflowTerraformModuleEnum {
-    Overlay = 'overlay',
-    Underlay = 'underlay'
+    TenantOverlay = 'tenant_overlay',
+    TenantUnderlay = 'tenant_underlay',
+    TransitTenantOverlay = 'transit_tenant_overlay',
+    TransitTenantUnderlay = 'transit_tenant_underlay',
+    TenantFirewallUnderlay = 'tenant_firewall_underlay'
 };
 export enum WorkflowApprovalTypeEnum {
-    Manual = 'manual',
-    Automated = 'automated'
+    Manual = 'manual'
 };
 
 

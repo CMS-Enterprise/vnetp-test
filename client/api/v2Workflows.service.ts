@@ -21,7 +21,9 @@ import { CreateManyWorkflowDto } from '../model/models';
 import { CreateWorkflowDto } from '../model/models';
 import { GetManyWorkflowResponseDto } from '../model/models';
 import { UpdateWorkflowDto } from '../model/models';
+import { UploadWorkflowLogDto } from '../model/models';
 import { Workflow } from '../model/models';
+import { WorkflowExecutionLog } from '../model/models';
 import { WorkflowValidationResultDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -103,6 +105,12 @@ export interface UpdateWorkflowStatusWorkflowRequestParams {
     /** UUID. */
     id: string;
     updateWorkflowDto: UpdateWorkflowDto;
+}
+
+export interface UploadWorkflowLogWorkflowRequestParams {
+    /** UUID. */
+    id: string;
+    uploadWorkflowLogDto: UploadWorkflowLogDto;
 }
 
 export interface ValidateWorkflowWorkflowRequestParams {
@@ -780,6 +788,65 @@ export class V2WorkflowsService {
 
         return this.httpClient.post<Workflow>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/update-status`,
             updateWorkflowDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public uploadWorkflowLogWorkflow(requestParameters: UploadWorkflowLogWorkflowRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowExecutionLog>;
+    public uploadWorkflowLogWorkflow(requestParameters: UploadWorkflowLogWorkflowRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowExecutionLog>>;
+    public uploadWorkflowLogWorkflow(requestParameters: UploadWorkflowLogWorkflowRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowExecutionLog>>;
+    public uploadWorkflowLogWorkflow(requestParameters: UploadWorkflowLogWorkflowRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling uploadWorkflowLogWorkflow.');
+        }
+        const uploadWorkflowLogDto = requestParameters.uploadWorkflowLogDto;
+        if (uploadWorkflowLogDto === null || uploadWorkflowLogDto === undefined) {
+            throw new Error('Required parameter uploadWorkflowLogDto was null or undefined when calling uploadWorkflowLogWorkflow.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<WorkflowExecutionLog>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/logs`,
+            uploadWorkflowLogDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

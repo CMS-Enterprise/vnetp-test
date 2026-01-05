@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Tenant } from './tenant';
 import { ExternalFirewall } from './externalFirewall';
 import { ExternalRoute } from './externalRoute';
 import { Zone } from './zone';
@@ -36,6 +37,7 @@ export interface ExternalVrfConnection {
     readonly externalRoutes?: Array<ExternalRoute>;
     readonly externalFirewall?: ExternalFirewall;
     externalFirewallId: string;
+    readonly tenant?: Tenant;
     tenantId: string;
     readonly zone?: Zone;
     zoneId?: string;

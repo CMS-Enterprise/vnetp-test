@@ -63,6 +63,7 @@ export interface Tenant {
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
     readonly environmentId: string;
+    readonly bgpRangeId: string;
     readonly routeControlVersion?: number;
     readonly routeControlStatus?: TenantRouteControlStatusEnum;
     readonly externalFirewalls?: Array<ExternalFirewall>;

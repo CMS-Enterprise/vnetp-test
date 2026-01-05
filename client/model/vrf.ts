@@ -41,7 +41,7 @@ export interface Vrf {
     readonly bridgeDomains?: Array<BridgeDomain>;
     readonly tenantVersion?: number;
     maxExternalRoutes?: number;
-    bgpAsn?: number;
+    bgpAsn?: string;
     displayOrder?: number;
 }
 

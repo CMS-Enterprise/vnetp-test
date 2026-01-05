@@ -8,6 +8,7 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { RouteDataUtil } from '../../../../../utils/route-data.util';
 import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
+import AsnUtil from 'src/app/utils/AsnUtil';
 
 @Component({
   selector: 'app-external-firewalls',
@@ -39,7 +40,7 @@ export class ExternalFirewallsComponent implements OnInit {
       { name: 'Name', property: 'name' },
       { name: 'Firewall Device Type', property: 'firewallDeviceType' },
       { name: 'VSYS Name', property: 'vsysName' },
-      { name: 'BGP ASN', property: 'bgpAsn' },
+      { name: 'BGP ASN (ASplain/ASdot+)', value: (fw: any) => AsnUtil.formatBgpAsn(fw.bgpAsn) },
       { name: 'Routing Cost', property: 'routingCost' },
       { name: 'Unique Zone Per External VRF Connection', property: 'uniqueZonePerExternalVrfConnection' },
       { name: '', template: () => this.actionsTemplate },
@@ -140,4 +141,5 @@ export class ExternalFirewallsComponent implements OnInit {
       },
     );
   }
+
 }

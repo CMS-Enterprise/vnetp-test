@@ -27,7 +27,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Global Validation Errors" *ngIf="workflow.validationResult?.globalErrors?.length > 0">
+      <mat-tab label="Global Validation Errors ({{ workflow.validationResult?.globalErrors?.length }})" *ngIf="workflow.validationResult?.globalErrors?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <mat-card *ngFor="let error of workflow.validationResult.globalErrors">
@@ -45,17 +45,20 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Audit Log Results" *ngIf="workflow.validationResult?.auditLogResults?.length > 0">
+      <mat-tab label="Audit Log Results ({{ workflow.validationResult?.auditLogResults?.length }})" *ngIf="workflow.validationResult?.auditLogResults?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <mat-accordion>
               <mat-expansion-panel *ngFor="let item of workflow.validationResult.auditLogResults">
                 <mat-expansion-panel-header>
-                  <mat-panel-title> {{ item.mergedAuditLog.entityType }}: {{ item.mergedAuditLog.entityName }} </mat-panel-title>
+                  <mat-panel-title> {{ item.mergedAuditLog.entityType }}: {{ item.mergedAuditLog.entityName }} ({{ item.mergedAuditLog.entityId }}) </mat-panel-title>
                   <mat-panel-description>
                     <span
                       >Status: <mat-chip [class]="'status-' + item.processingStatus">{{ item.processingStatus }}</mat-chip></span
                     >
+                    <span>
+                      Matched Terraform Resource Actions: {{ item.terraformResourceChanges?.length }}
+                    </span>
                     <span *ngIf="item.mergedAuditLog.expectedTerraformAction" class="ml-2"
                       >Expected Action: <mat-chip>{{ item.mergedAuditLog.expectedTerraformAction }}</mat-chip></span
                     >
@@ -119,7 +122,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Unmatched Terraform Changes" *ngIf="workflow.validationResult?.unmatchedTerraformChanges?.length > 0">
+      <mat-tab label="Unmatched Terraform Changes ({{ workflow.validationResult?.unmatchedTerraformChanges?.length }})" *ngIf="workflow.validationResult?.unmatchedTerraformChanges?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <div class="alert alert-warning mb-3">
@@ -167,7 +170,7 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Events" *ngIf="workflow.events?.length > 0">
+      <mat-tab label="Events ({{ workflow.events?.length }})" *ngIf="workflow.events?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
             <div class="timeline">
@@ -188,14 +191,135 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Terraform Plan">
+      <mat-tab label="Execution Logs ({{ workflow.executionLogs?.length }})" *ngIf="workflow.executionLogs?.length > 0">
         <ng-template matTabContent>
           <div class="pt-3">
-            <button type="button" class="btn btn-outline-primary mb-3" (click)="toggleTerraformPlan()">
-              {{ showTerraformPlan ? 'Hide Plan' : 'Show Plan' }}
-            </button>
-            <div *ngIf="showTerraformPlan">
-              <pre><code [innerHTML]="planJson"></code></pre>
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let log of workflow.executionLogs; trackBy: trackByExecutionLogId">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Terraform {{ log.executionType | titlecase }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span>Lines: {{ log.lineCount }}</span>
+                    <span class="ml-2">{{ log.startedAt | date : 'medium' }}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="execution-log-details mb-3">
+                  <p><strong>Execution Type:</strong> {{ log.executionType | titlecase }}</p>
+                  <p><strong>Started At:</strong> {{ log.startedAt | date : 'medium' }}</p>
+                  <p *ngIf="log.completedAt"><strong>Completed At:</strong> {{ log.completedAt | date : 'medium' }}</p>
+                  <p *ngIf="log.jobId"><strong>AAP Job ID:</strong> {{ log.jobId }}</p>
+                  <p><strong>Line Count:</strong> {{ log.lineCount }}</p>
+                </div>
+
+                <div class="execution-log-content">
+                  <label for="log-content-{{ log.id }}" class="form-label"><strong>Log Content:</strong></label>
+                  <textarea
+                    id="log-content-{{ log.id }}"
+                    class="form-control execution-log-textarea"
+                    readonly
+                    rows="20"
+                    [value]="log.logContent"
+                  ></textarea>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Terraform Plan" *ngIf="workflow.plan?.planJson">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <div *ngIf="terraformPlan">
+              <!-- Plan Summary -->
+              <mat-card class="mb-3">
+                <mat-card-header>
+                  <mat-card-title>Summary</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p class="mb-2"><strong>Format Version:</strong> {{ terraformPlan.format_version }}</p>
+                      <p class="mb-2">
+                        <strong>Terraform Version:</strong> {{ terraformPlan.terraform_version }}
+                        <span
+                          *ngIf="terraformPlan.prior_state"
+                          class="prior-state-value"
+                          [class.text-muted]="!hasTerraformVersionMismatch()"
+                          [class.text-danger]="hasTerraformVersionMismatch()"
+                        >
+                          (Prior Version:{{ terraformPlan.prior_state.terraform_version }})
+                        </span>
+                      </p>
+                      <p class="mb-2" *ngIf="terraformPlan.timestamp"><strong>Plan Timestamp:</strong> {{ terraformPlan.timestamp | date : 'medium' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group mb-3">
+                        <label class="form-label"><strong>Applyable</strong></label>
+                        <div class="form-control-plaintext">
+                          <span
+                            class="badge"
+                            [class.badge-success]="terraformPlan.applyable"
+                            [class.badge-secondary]="!terraformPlan.applyable"
+                          >
+                            {{ terraformPlan.applyable ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label class="form-label"><strong>Complete</strong></label>
+                        <div class="form-control-plaintext">
+                          <span
+                            class="badge"
+                            [class.badge-success]="terraformPlan.complete"
+                            [class.badge-secondary]="!terraformPlan.complete"
+                          >
+                            {{ terraformPlan.complete ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="form-group mb-3">
+                        <label class="form-label"><strong>Errored</strong></label>
+                        <div class="form-control-plaintext">
+                          <span
+                            class="badge"
+                            [class.badge-danger]="terraformPlan.errored"
+                            [class.badge-success]="!terraformPlan.errored"
+                          >
+                            {{ terraformPlan.errored ? 'Yes' : 'No' }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <!-- JSON Viewer and Download Button -->
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h5 class="mb-1">Plan Details</h5>
+                  <small class="text-muted">
+                    <a href="https://developer.hashicorp.com/terraform/internals/json-format" target="_blank" rel="noopener noreferrer">
+                      Terraform JSON Format Reference
+                    </a>
+                  </small>
+                </div>
+                <button type="button" class="btn btn-outline-primary" (click)="downloadPlanJson()">
+                  <fa-icon [icon]="['fas', 'download']" class="mr-2"></fa-icon>
+                  Download JSON
+                </button>
+              </div>
+              <div class="json-viewer-container">
+                <ngx-json-viewer [json]="terraformPlan" [expanded]="false"></ngx-json-viewer>
+              </div>
+            </div>
+
+            <div *ngIf="!terraformPlan" class="alert alert-warning">
+              <strong>No Plan Available:</strong> Terraform plan data is not available for this workflow.
             </div>
           </div>
         </ng-template>

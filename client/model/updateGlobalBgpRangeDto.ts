@@ -13,8 +13,8 @@
 
 export interface UpdateGlobalBgpRangeDto { 
     name?: string;
-    start?: number;
-    end?: number;
+    start?: string;
+    end?: string;
     description?: string;
 }
 
