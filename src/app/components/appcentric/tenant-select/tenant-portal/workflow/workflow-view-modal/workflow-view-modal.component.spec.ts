@@ -1,5 +1,5 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { V2WorkflowsService, Workflow, WorkflowStatusEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -114,15 +114,16 @@ describe('WorkflowViewModalComponent', () => {
       expect(refreshSpy).toHaveBeenCalled();
     });
 
-    it('applyWorkflow should call service and set status to Applying', () => {
+    it('applyWorkflow should call service and set status to Applying', fakeAsync(() => {
       component.workflowId = workflowId;
       component.workflow = { status: WorkflowStatusEnum.Approved } as any;
+      (workflowsServiceMock.getOneWorkflow as jest.Mock).mockReturnValue(of({ status: WorkflowStatusEnum.Applying } as Workflow));
 
       component.applyWorkflow();
 
       expect(workflowsServiceMock.applyWorkflowWorkflow).toHaveBeenCalledWith({ id: workflowId });
       expect(component.workflow.status).toBe(WorkflowStatusEnum.Applying);
-    });
+    }));
   });
 
   describe('reset', () => {
