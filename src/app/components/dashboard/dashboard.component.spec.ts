@@ -31,7 +31,7 @@ describe('DashboardComponent', () => {
     };
 
     const tierService = {
-      getManyTier: jest.fn(() => of({ total: 1 })),
+      getManyTier: jest.fn(() => of({ total: 1, data: [{ id: 'tier1' }, { id: 'tier2' }] })),
     };
 
     const loadBalancerService = {
@@ -86,6 +86,6 @@ describe('DashboardComponent', () => {
     component.ngOnInit();
 
     expect(datacenterService.getManyDatacenter).toHaveBeenCalledWith({ page: 1, perPage: 1, filter: ['tenantVersion||eq||1'] });
-    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, perPage: 1000, filter: ['tenantVersion||ne||2'] });
   });
 });
