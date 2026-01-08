@@ -167,13 +167,12 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     });
 
     this.ipProtocolSubscription = ipProtocol.valueChanges.subscribe(ipProtocolValue => {
-      // When ipProtocol is Tcp or Udp, source and destination from/to ports must be set.
-      if (ipProtocolValue === 'tcp' || ipProtocolValue === 'udp') {
         sourceFromPort.enable();
         sourceToPort.enable();
         destinationFromPort.enable();
         destinationToPort.enable();
-
+      if (ipProtocolValue === 'tcp' || ipProtocolValue === 'udp') {
+        // When ipProtocol is Tcp or Udp, source and destination from/to ports must be set.
         sourceFromPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
         sourceToPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
         destinationFromPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
@@ -188,12 +187,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
           stateful.setValidators(null);
         }
       } else {
-        sourceFromPort.disable();
-        sourceToPort.disable();
-        destinationFromPort.disable();
-        destinationToPort.disable();
-        stateful.disable();
-
         sourceFromPort.setValidators(null);
         sourceToPort.setValidators(null);
         destinationFromPort.setValidators(null);
