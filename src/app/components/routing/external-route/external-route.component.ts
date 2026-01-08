@@ -195,7 +195,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     let filteredRoutes = this.allGlobalRoutes.filter(route => !assignedRouteIds.has(route.id));
 
     if (this.selectedVrf) {
-      filteredRoutes = filteredRoutes.filter(route => route.externalVrf === this.selectedVrf);
+      filteredRoutes = filteredRoutes.filter(route => route.externalVrf.name === this.selectedVrf);
     } else {
       // If no VRF is selected, the table should be empty to force a selection.
       filteredRoutes = [];

@@ -29,7 +29,12 @@ export interface CreateOneEnvironmentRequestParams {
 }
 
 export interface GetOneEnvironmentRequestParams {
+    /** UUID. */
     id: string;
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
 export interface GetOneEnvironmentSummaryRequestParams {
@@ -241,7 +246,7 @@ export class V3GlobalEnvironmentsService {
     }
 
     /**
-     * Get one Environment
+     * Get one environment
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -253,6 +258,22 @@ export class V3GlobalEnvironmentsService {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getOneEnvironment.');
+        }
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -277,6 +298,7 @@ export class V3GlobalEnvironmentsService {
 
         return this.httpClient.get<Environment>(`${this.configuration.basePath}/v3/global/environments/${encodeURIComponent(String(id))}`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

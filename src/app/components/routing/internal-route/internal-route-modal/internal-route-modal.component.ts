@@ -11,7 +11,7 @@ import {
   V2AppCentricAppCentricSubnetsService,
   InternalRoute,
   V2RoutingInternalRoutesService,
-  V2AppCentricVrfsService,
+  V3GlobalEnvironmentsService,
 } from '../../../../../../client';
 import { InternalRouteModalDto } from '../../../../models/network-scope-forms/internal-route-modal.dto';
 import { ApplicationMode } from '../../../../models/other/application-mode-enum';
@@ -54,7 +54,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
     private route: ActivatedRoute,
-    private vrfService: V2AppCentricVrfsService,
+    private environmentService: V3GlobalEnvironmentsService,
   ) {}
 
   ngOnInit(): void {
@@ -94,43 +94,18 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const firewallExternalVrfs = this.externalVrfConnection.externalFirewall.externalVrfConnections.map(
-      connection => connection.externalVrf,
-    );
+    // const firewallExternalVrfs = this.externalVrfConnection.externalFirewall.externalVrfConnections.map(
+    //   connection => connection.externalVrf,
+    // );
 
-    this.vrfOptions = Object.values(ExternalVrfConnectionExternalVrfEnum)
-      .filter(enumValue => firewallExternalVrfs.includes(enumValue))
-      .map(enumValue => ({
-        value: enumValue,
-        label: this.getVrfDisplayLabel(enumValue),
-      }));
-  }
-
-  /**
-   * Convert enum values to user-friendly display labels
-   */
-  private getVrfDisplayLabel(enumValue: ExternalVrfConnectionExternalVrfEnum): string {
-    const labelMappings: Record<ExternalVrfConnectionExternalVrfEnum, string> = {
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvInet]: 'cms-entsrv-inet',
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvLdapdns]: 'cms-entsrv-ldapdns',
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvMgmt]: 'cms-entsrv-mgmt',
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvMon]: 'cms-entsrv-mon',
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvPres]: 'cms-entsrv-pres',
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvSec]: 'cms-entsrv-sec',
-      [ExternalVrfConnectionExternalVrfEnum.CmsEntsrvVpn]: 'cms-entsrv-vpn',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetAppdev]: 'cmsnet_appdev (Development)',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetAppprod]: 'cmsnet_appprod (Production)',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetDatadev]: 'cmsnet_datadev (Data Development)',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetDataprod]: 'cmsnet_dataprod (Data Production)',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetEdcVpn]: 'cmsnet_edc_vpn',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetEdcmgmt]: 'cmsnet_edcmgmt',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetPresdev]: 'cmsnet_presdev (Presentation Development)',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetPresprod]: 'cmsnet_presprod (Presentation Production)',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetSec]: 'cmsnet_sec',
-      [ExternalVrfConnectionExternalVrfEnum.CmsnetTransport]: 'cmsnet_transport',
-    };
-
-    return labelMappings[enumValue] || enumValue;
+    this.environmentService
+      .getOneEnvironment({ id: this.externalVrfConnection.tenant.environmentId, relations: ['externalVrfs'] })
+      .subscribe(environment => {
+        this.vrfOptions = environment.externalVrfs.map(vrf => ({
+          value: vrf.name,
+          label: vrf.name,
+        }));
+      });
   }
 
   get f() {

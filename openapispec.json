@@ -17819,7 +17819,7 @@
         "tags": ["v2/app-centric/service-graph-firewalls"]
       }
     },
-    "/v2/routing/external-vrfs/environment/{environmentId}": {
+    "/v3/global/external-vrfs/environment/{environmentId}": {
       "get": {
         "operationId": "getExternalVrfsByEnvironmentIdExternalVrf",
         "summary": "Get external VRFs by environment ID",
@@ -17849,10 +17849,10 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       }
     },
-    "/v2/routing/external-vrfs": {
+    "/v3/global/external-vrfs": {
       "post": {
         "operationId": "createOneExternalVrf",
         "summary": "Create one ExternalVrf",
@@ -17879,7 +17879,7 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       },
       "get": {
         "operationId": "getManyExternalVrf",
@@ -18031,10 +18031,10 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       }
     },
-    "/v2/routing/external-vrfs/bulk": {
+    "/v3/global/external-vrfs/bulk": {
       "post": {
         "operationId": "createManyExternalVrf",
         "summary": "Create many ExternalVrf",
@@ -18074,10 +18074,10 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       }
     },
-    "/v2/routing/external-vrfs/{id}": {
+    "/v3/global/external-vrfs/{id}": {
       "get": {
         "operationId": "getOneExternalVrf",
         "summary": "Get one ExternalVrf",
@@ -18128,7 +18128,7 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       },
       "put": {
         "operationId": "updateOneExternalVrf",
@@ -18166,7 +18166,7 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       },
       "delete": {
         "operationId": "deleteOneExternalVrf",
@@ -18194,7 +18194,7 @@
             }
           }
         },
-        "tags": ["v2/routing/external-vrfs"]
+        "tags": ["v3/global/external-vrfs"]
       }
     },
     "/v2/app-centric/subjects/{subjectId}/filters/{filterId}": {
@@ -22184,14 +22184,39 @@
       },
       "get": {
         "operationId": "getOneEnvironment",
-        "summary": "Get one Environment",
+        "summary": "Get one environment",
         "parameters": [
           {
             "name": "id",
             "required": true,
             "in": "path",
+            "description": "UUID.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -33151,6 +33176,9 @@
             "type": "string"
           },
           "externalVrfId": {
+            "type": "string"
+          },
+          "externalVrf": {
             "$ref": "#/components/schemas/ExternalVrf"
           },
           "lastSeen": {
@@ -33197,6 +33225,7 @@
         "required": [
           "network",
           "externalVrfId",
+          "externalVrf",
           "lastSeen",
           "expired",
           "uptime",

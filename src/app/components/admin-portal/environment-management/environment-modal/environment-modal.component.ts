@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Environment, EnvironmentExternalVrfsEnum, V3GlobalEnvironmentsService } from 'client';
+import { Environment, ExternalVrf, V3GlobalEnvironmentsService, V3GlobalExternalVrfsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -17,34 +17,29 @@ export class EnvironmentModalComponent implements OnInit {
   isLoading = false;
 
   // Available VRF options from the enum
-  vrfOptions = [
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvInet, label: EnvironmentExternalVrfsEnum.CmsEntsrvInet },
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvLdapdns, label: EnvironmentExternalVrfsEnum.CmsEntsrvLdapdns },
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvMgmt, label: EnvironmentExternalVrfsEnum.CmsEntsrvMgmt },
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvMon, label: EnvironmentExternalVrfsEnum.CmsEntsrvMon },
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvPres, label: EnvironmentExternalVrfsEnum.CmsEntsrvPres },
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvSec, label: EnvironmentExternalVrfsEnum.CmsEntsrvSec },
-    { value: EnvironmentExternalVrfsEnum.CmsEntsrvVpn, label: EnvironmentExternalVrfsEnum.CmsEntsrvVpn },
-    { value: EnvironmentExternalVrfsEnum.CmsnetAppdev, label: EnvironmentExternalVrfsEnum.CmsnetAppdev },
-    { value: EnvironmentExternalVrfsEnum.CmsnetAppprod, label: EnvironmentExternalVrfsEnum.CmsnetAppprod },
-    { value: EnvironmentExternalVrfsEnum.CmsnetDatadev, label: EnvironmentExternalVrfsEnum.CmsnetDatadev },
-    { value: EnvironmentExternalVrfsEnum.CmsnetDataprod, label: EnvironmentExternalVrfsEnum.CmsnetDataprod },
-    { value: EnvironmentExternalVrfsEnum.CmsnetEdcVpn, label: EnvironmentExternalVrfsEnum.CmsnetEdcVpn },
-    { value: EnvironmentExternalVrfsEnum.CmsnetEdcmgmt, label: EnvironmentExternalVrfsEnum.CmsnetEdcmgmt },
-    { value: EnvironmentExternalVrfsEnum.CmsnetPresdev, label: EnvironmentExternalVrfsEnum.CmsnetPresdev },
-    { value: EnvironmentExternalVrfsEnum.CmsnetPresprod, label: EnvironmentExternalVrfsEnum.CmsnetPresprod },
-    { value: EnvironmentExternalVrfsEnum.CmsnetSec, label: EnvironmentExternalVrfsEnum.CmsnetSec },
-    { value: EnvironmentExternalVrfsEnum.CmsnetTransport, label: EnvironmentExternalVrfsEnum.CmsnetTransport },
-  ];
+  vrfOptions: { value: string; label: string }[] = [];
 
   constructor(
     private environmentService: V3GlobalEnvironmentsService,
+    private externalVrfService: V3GlobalExternalVrfsService,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
+  }
+
+  getVrfOptions(usedVrfs: string[]): void {
+    this.externalVrfService.getManyExternalVrf({ limit: 1000 }).subscribe(vrfs => {
+      if ((vrfs as unknown as ExternalVrf[]).length > 0) {
+        this.vrfOptions = (vrfs as unknown as ExternalVrf[]).map(vrf => ({
+          value: vrf.id,
+          label: vrf.name,
+        }));
+        this.vrfOptions = this.vrfOptions.filter(vrf => !usedVrfs.includes(vrf.label));
+      }
+    });
   }
 
   getData(): void {
@@ -64,13 +59,15 @@ export class EnvironmentModalComponent implements OnInit {
 
   private loadEnvironment(id: string): void {
     this.isLoading = true;
-    this.environmentService.getOneEnvironment({ id }).subscribe({
+    this.environmentService.getOneEnvironment({ id, relations: ['externalVrfs'] }).subscribe({
       next: environment => {
+        const externalVrfsNames = environment.externalVrfs.map(vrf => vrf.name);
         this.form.patchValue({
           name: environment.name,
           description: environment.description,
-          externalVrfs: environment.externalVrfs || [],
+          externalVrfs: externalVrfsNames || [],
         });
+        this.getVrfOptions(externalVrfsNames);
         this.form.enable();
 
         // Disable name field when editing (name should not be editable)
@@ -147,10 +144,11 @@ export class EnvironmentModalComponent implements OnInit {
     }
 
     const { name, description, externalVrfs } = this.form.getRawValue(); // Use getRawValue to include disabled fields
+    const externalVrfsIds = externalVrfs.map(vrf => ({ id: vrf }));
     const environment = {
       name,
       description,
-      externalVrfs,
+      externalVrfs: externalVrfsIds,
       lastRouteSyncAt: new Date().toISOString(),
     };
 

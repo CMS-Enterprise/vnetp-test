@@ -113,7 +113,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
             externalVrfConnections: [
               {
                 name: 'ext-conn1',
-                externalVrf: 'cmsnet_transport',
+                externalVrf: '',
                 injectDefaultRouteFromExternalVrf: false,
                 allowAllRoutesFromExternalVrf: false,
                 advertiseHostBasedRoutesToExternalVrf: false,
@@ -174,6 +174,13 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     if (this.hasUnsavedChanges && this.mode === 'create') {
       $event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
     }
+  }
+
+  getExternalVrfOptions(environmentId: string): void {
+    this.globalEnvironmentService.getOneEnvironment({ id: environmentId, relations: ['externalVrfs'] }).subscribe(environment => {
+      this.externalVrfOptions = environment.externalVrfs.map(vrf => vrf.name);
+      console.log(this.externalVrfOptions);
+    });
   }
 
   goBack(): void {
@@ -282,6 +289,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
     this.onConfigMutated();
     const environmentId = this.config.tenant.environmentId;
     if (environmentId) {
+      this.getExternalVrfOptions(environmentId);
       this.loadBgpRanges(environmentId);
     } else {
       this.bgpRanges = [];
@@ -368,15 +376,20 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
           if (err?.error?.detail?.message && Array.isArray(err.error.detail.message)) {
             this.validation = {
               success: false,
-              errors: err.error.detail.message.map((msg: string) => ({
-                path: this.extractPathFromMessage(msg) || '$',
-                message: msg,
-              } as any)),
+              errors: err.error.detail.message.map(
+                (msg: string) =>
+                  ({
+                    path: this.extractPathFromMessage(msg) || '$',
+                    message: msg,
+                  } as any),
+              ),
             } as TenantInfrastructureValidationResponse;
           } else {
             // Fallback for non-validation errors
             const errorMessage = err?.error?.detail?.message
-              ? (Array.isArray(err.error.detail.message) ? err.error.detail.message.join('; ') : err.error.detail.message)
+              ? Array.isArray(err.error.detail.message)
+                ? err.error.detail.message.join('; ')
+                : err.error.detail.message
               : err?.message || 'Request failed';
 
             this.validation = {

@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/admin.service.ts
@@ -59,12 +58,12 @@ api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
 api/v2RoutingExternalRoutes.service.ts
 api/v2RoutingExternalVrfConnections.service.ts
-api/v2RoutingExternalVrfs.service.ts
 api/v2RoutingInternalRoutes.service.ts
 api/v2Workflows.service.ts
 api/v3GlobalBgpRanges.service.ts
 api/v3GlobalEnvironments.service.ts
 api/v3GlobalExternalRoutes.service.ts
+api/v3GlobalExternalVrfs.service.ts
 api/v3GlobalMessages.service.ts
 api/v3GlobalRouteControlRequest.service.ts
 configuration.ts

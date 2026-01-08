@@ -17,7 +17,8 @@ import { GlobalBgpAsnAllocation } from './globalBgpAsnAllocation';
 export interface GlobalExternalRoute { 
     readonly id?: string;
     network: string;
-    externalVrfId: ExternalVrf;
+    externalVrfId: string;
+    externalVrf: ExternalVrf;
     lastSeen: string;
     expired: boolean;
     uptime: string;

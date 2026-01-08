@@ -85,7 +85,7 @@ export interface UpdateOneExternalVrfRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V2RoutingExternalVrfsService {
+export class V3GlobalExternalVrfsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -186,7 +186,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<ExternalVrf>>(`${this.configuration.basePath}/v2/routing/external-vrfs/bulk`,
+        return this.httpClient.post<Array<ExternalVrf>>(`${this.configuration.basePath}/v3/global/external-vrfs/bulk`,
             createManyExternalVrfDto,
             {
                 responseType: <any>responseType,
@@ -242,7 +242,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs`,
+        return this.httpClient.post<ExternalVrf>(`${this.configuration.basePath}/v3/global/external-vrfs`,
             externalVrf,
             {
                 responseType: <any>responseType,
@@ -289,7 +289,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalVrf>(`${this.configuration.basePath}/v3/global/external-vrfs/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -335,7 +335,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<ExternalVrf>>(`${this.configuration.basePath}/v2/routing/external-vrfs/environment/${encodeURIComponent(String(environmentId))}`,
+        return this.httpClient.get<Array<ExternalVrf>>(`${this.configuration.basePath}/v3/global/external-vrfs/environment/${encodeURIComponent(String(environmentId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -441,7 +441,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyExternalVrfResponseDto>(`${this.configuration.basePath}/v2/routing/external-vrfs`,
+        return this.httpClient.get<GetManyExternalVrfResponseDto>(`${this.configuration.basePath}/v3/global/external-vrfs`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -504,7 +504,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalVrf>(`${this.configuration.basePath}/v3/global/external-vrfs/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -564,7 +564,7 @@ export class V2RoutingExternalVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<ExternalVrf>(`${this.configuration.basePath}/v3/global/external-vrfs/${encodeURIComponent(String(id))}`,
             externalVrf,
             {
                 responseType: <any>responseType,
