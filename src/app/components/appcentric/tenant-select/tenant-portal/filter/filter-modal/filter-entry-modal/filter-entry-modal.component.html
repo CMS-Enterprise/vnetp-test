@@ -116,9 +116,9 @@
         </div>
       </div>
 
-      <hr />
+      <hr *ngIf="f.ipProtocol.value === 'tcp' || f.ipProtocol.value === 'udp'" />
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="f.ipProtocol.value === 'tcp' || f.ipProtocol.value === 'udp'">
         <div class="form-group col-md-6">
           <label for="sourceFromPort">Source From Port</label>
           <input
@@ -153,7 +153,7 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="f.ipProtocol.value === 'tcp' || f.ipProtocol.value === 'udp'">
         <div class="form-group col-md-6">
           <label for="destinationFromPort">Destination From Port</label>
           <input
