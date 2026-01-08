@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 api.module.ts
 api/admin.service.ts
@@ -58,6 +59,7 @@ api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
 api/v2RoutingExternalRoutes.service.ts
 api/v2RoutingExternalVrfConnections.service.ts
+api/v2RoutingExternalVrfs.service.ts
 api/v2RoutingInternalRoutes.service.ts
 api/v2Workflows.service.ts
 api/v3GlobalBgpRanges.service.ts
@@ -88,6 +90,7 @@ model/createManyEndpointSecurityGroupDto.ts
 model/createManyExternalFirewallDto.ts
 model/createManyExternalRouteDto.ts
 model/createManyExternalVrfConnectionDto.ts
+model/createManyExternalVrfDto.ts
 model/createManyFilterDto.ts
 model/createManyFilterEntryDto.ts
 model/createManyFirewallRuleDto.ts
@@ -141,6 +144,7 @@ model/environmentSummary.ts
 model/externalFirewall.ts
 model/externalRoute.ts
 model/externalRouteSyncDto.ts
+model/externalVrf.ts
 model/externalVrfConnection.ts
 model/externalVrfConnectionConfigDto.ts
 model/f5ConfigJobCreateDto.ts
@@ -178,6 +182,7 @@ model/getManyEndpointSecurityGroupResponseDto.ts
 model/getManyExternalFirewallResponseDto.ts
 model/getManyExternalRouteResponseDto.ts
 model/getManyExternalVrfConnectionResponseDto.ts
+model/getManyExternalVrfResponseDto.ts
 model/getManyFilterEntryResponseDto.ts
 model/getManyFilterResponseDto.ts
 model/getManyFirewallRuleGroupResponseDto.ts

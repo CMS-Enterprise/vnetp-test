@@ -6,7 +6,6 @@ import {
   V2AdminTenantOrchestratorService,
   TenantInfrastructureConfigDto,
   TenantInfrastructureValidationResponse,
-  ExternalVrfConnectionExternalVrfEnum,
   TenantConnectivityGraph,
   TenantInfrastructureResponse,
   V3GlobalEnvironmentsService,
@@ -58,7 +57,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
   activeTab: 'tenant' | 'firewalls' | 'vrfs' = 'tenant';
   selectedFirewallIdx = 0;
   selectedVrfIdx = 0;
-  externalVrfOptions = Object.values(ExternalVrfConnectionExternalVrfEnum);
+  externalVrfOptions: string[] = [];
   previewFormat: 'json' | 'yaml' = 'json';
   rightPanelView: 'config' | 'graph' | 'response' = 'config';
   private graphUpdateSubject = new Subject<void>();

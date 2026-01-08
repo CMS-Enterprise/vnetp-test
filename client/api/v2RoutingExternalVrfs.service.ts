@@ -17,33 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyL3OutDto } from '../model/models';
-import { GetManyL3OutResponseDto } from '../model/models';
-import { L3Out } from '../model/models';
+import { CreateManyExternalVrfDto } from '../model/models';
+import { ExternalVrf } from '../model/models';
+import { GetManyExternalVrfResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateManyL3OutRequestParams {
-    createManyL3OutDto: CreateManyL3OutDto;
+export interface CreateManyExternalVrfRequestParams {
+    createManyExternalVrfDto: CreateManyExternalVrfDto;
 }
 
-export interface CreateOneL3OutRequestParams {
-    l3Out: L3Out;
+export interface CreateOneExternalVrfRequestParams {
+    externalVrf: ExternalVrf;
 }
 
-export interface DeleteOneL3OutRequestParams {
+export interface DeleteOneExternalVrfRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneL3OutRequestParams {
-    /** UUID. */
-    id: string;
+export interface GetExternalVrfsByEnvironmentIdExternalVrfRequestParams {
+    /** Environment ID */
+    environmentId: string;
 }
 
-export interface GetManyL3OutRequestParams {
+export interface GetManyExternalVrfRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -66,7 +66,7 @@ export interface GetManyL3OutRequestParams {
     s?: string;
 }
 
-export interface GetOneL3OutRequestParams {
+export interface GetOneExternalVrfRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -75,32 +75,17 @@ export interface GetOneL3OutRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneL3OutRequestParams {
+export interface UpdateOneExternalVrfRequestParams {
     /** UUID. */
     id: string;
-}
-
-export interface RestoreOneL3OutRequestParams {
-    /** UUID. */
-    id: string;
-}
-
-export interface SoftDeleteOneL3OutRequestParams {
-    /** UUID. */
-    id: string;
-}
-
-export interface UpdateOneL3OutRequestParams {
-    /** UUID. */
-    id: string;
-    l3Out: L3Out;
+    externalVrf: ExternalVrf;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V2AppCentricL3outsService {
+export class V2RoutingExternalVrfsService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -158,18 +143,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Create many L3Out
+     * Create many ExternalVrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<L3Out>>;
-    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<L3Out>>>;
-    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<L3Out>>>;
-    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyL3OutDto = requestParameters.createManyL3OutDto;
-        if (createManyL3OutDto === null || createManyL3OutDto === undefined) {
-            throw new Error('Required parameter createManyL3OutDto was null or undefined when calling createManyL3Out.');
+    public createManyExternalVrf(requestParameters: CreateManyExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalVrf>>;
+    public createManyExternalVrf(requestParameters: CreateManyExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalVrf>>>;
+    public createManyExternalVrf(requestParameters: CreateManyExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalVrf>>>;
+    public createManyExternalVrf(requestParameters: CreateManyExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyExternalVrfDto = requestParameters.createManyExternalVrfDto;
+        if (createManyExternalVrfDto === null || createManyExternalVrfDto === undefined) {
+            throw new Error('Required parameter createManyExternalVrfDto was null or undefined when calling createManyExternalVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -201,8 +186,8 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<L3Out>>(`${this.configuration.basePath}/v2/app-centric/l3outs/bulk`,
-            createManyL3OutDto,
+        return this.httpClient.post<Array<ExternalVrf>>(`${this.configuration.basePath}/v2/routing/external-vrfs/bulk`,
+            createManyExternalVrfDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -214,18 +199,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Create one L3Out
+     * Create one ExternalVrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const l3Out = requestParameters.l3Out;
-        if (l3Out === null || l3Out === undefined) {
-            throw new Error('Required parameter l3Out was null or undefined when calling createOneL3Out.');
+    public createOneExternalVrf(requestParameters: CreateOneExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrf>;
+    public createOneExternalVrf(requestParameters: CreateOneExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrf>>;
+    public createOneExternalVrf(requestParameters: CreateOneExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrf>>;
+    public createOneExternalVrf(requestParameters: CreateOneExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalVrf = requestParameters.externalVrf;
+        if (externalVrf === null || externalVrf === undefined) {
+            throw new Error('Required parameter externalVrf was null or undefined when calling createOneExternalVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -257,8 +242,8 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs`,
-            l3Out,
+        return this.httpClient.post<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs`,
+            externalVrf,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -270,18 +255,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Delete one L3Out
+     * Delete one ExternalVrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneExternalVrf(requestParameters: DeleteOneExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrf>;
+    public deleteOneExternalVrf(requestParameters: DeleteOneExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrf>>;
+    public deleteOneExternalVrf(requestParameters: DeleteOneExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrf>>;
+    public deleteOneExternalVrf(requestParameters: DeleteOneExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneL3Out.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneExternalVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -304,7 +289,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -316,18 +301,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Deprovision one L3Out
+     * Get external VRFs by environment ID
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneL3Out.');
+    public getExternalVrfsByEnvironmentIdExternalVrf(requestParameters: GetExternalVrfsByEnvironmentIdExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalVrf>>;
+    public getExternalVrfsByEnvironmentIdExternalVrf(requestParameters: GetExternalVrfsByEnvironmentIdExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalVrf>>>;
+    public getExternalVrfsByEnvironmentIdExternalVrf(requestParameters: GetExternalVrfsByEnvironmentIdExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalVrf>>>;
+    public getExternalVrfsByEnvironmentIdExternalVrf(requestParameters: GetExternalVrfsByEnvironmentIdExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const environmentId = requestParameters.environmentId;
+        if (environmentId === null || environmentId === undefined) {
+            throw new Error('Required parameter environmentId was null or undefined when calling getExternalVrfsByEnvironmentIdExternalVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -336,6 +321,7 @@ export class V2AppCentricL3outsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -349,8 +335,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/deprovision`,
-            null,
+        return this.httpClient.get<Array<ExternalVrf>>(`${this.configuration.basePath}/v2/routing/external-vrfs/environment/${encodeURIComponent(String(environmentId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -362,15 +347,15 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Get many L3Out
+     * Get many ExternalVrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyL3OutResponseDto>;
-    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyL3OutResponseDto>>;
-    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyL3OutResponseDto>>;
-    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyExternalVrf(requestParameters: GetManyExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyExternalVrfResponseDto>;
+    public getManyExternalVrf(requestParameters: GetManyExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyExternalVrfResponseDto>>;
+    public getManyExternalVrf(requestParameters: GetManyExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyExternalVrfResponseDto>>;
+    public getManyExternalVrf(requestParameters: GetManyExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -456,7 +441,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyL3OutResponseDto>(`${this.configuration.basePath}/v2/app-centric/l3outs`,
+        return this.httpClient.get<GetManyExternalVrfResponseDto>(`${this.configuration.basePath}/v2/routing/external-vrfs`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -469,18 +454,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Get one L3Out
+     * Get one ExternalVrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneExternalVrf(requestParameters: GetOneExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrf>;
+    public getOneExternalVrf(requestParameters: GetOneExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrf>>;
+    public getOneExternalVrf(requestParameters: GetOneExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrf>>;
+    public getOneExternalVrf(requestParameters: GetOneExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneL3Out.');
+            throw new Error('Required parameter id was null or undefined when calling getOneExternalVrf.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -519,7 +504,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -532,159 +517,22 @@ export class V2AppCentricL3outsService {
     }
 
     /**
-     * Provision one L3Out
+     * Update one ExternalVrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public updateOneExternalVrf(requestParameters: UpdateOneExternalVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalVrf>;
+    public updateOneExternalVrf(requestParameters: UpdateOneExternalVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalVrf>>;
+    public updateOneExternalVrf(requestParameters: UpdateOneExternalVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalVrf>>;
+    public updateOneExternalVrf(requestParameters: UpdateOneExternalVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneL3Out.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneExternalVrf.');
         }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/provision`,
-            null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restore one L3Out
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneL3Out.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/restore`,
-            null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Soft delete one L3Out
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneL3Out.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/soft`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update one L3Out
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneL3Out.');
-        }
-        const l3Out = requestParameters.l3Out;
-        if (l3Out === null || l3Out === undefined) {
-            throw new Error('Required parameter l3Out was null or undefined when calling updateOneL3Out.');
+        const externalVrf = requestParameters.externalVrf;
+        if (externalVrf === null || externalVrf === undefined) {
+            throw new Error('Required parameter externalVrf was null or undefined when calling updateOneExternalVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -716,8 +564,8 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}`,
-            l3Out,
+        return this.httpClient.put<ExternalVrf>(`${this.configuration.basePath}/v2/routing/external-vrfs/${encodeURIComponent(String(id))}`,
+            externalVrf,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

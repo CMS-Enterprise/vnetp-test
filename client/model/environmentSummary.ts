@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ExternalVrf } from './externalVrf';
 import { GlobalExternalRouteSummary } from './globalExternalRouteSummary';
 
 
@@ -32,7 +33,7 @@ export interface EnvironmentSummary {
     /**
      * External VRFs allowed for this environment
      */
-    externalVrfs: Array<EnvironmentSummaryExternalVrfsEnum>;
+    externalVrfs: Array<ExternalVrf>;
     /**
      * Total number of external routes in this environment
      */
@@ -42,25 +43,4 @@ export interface EnvironmentSummary {
      */
     globalExternalRoutes: Array<GlobalExternalRouteSummary>;
 }
-export enum EnvironmentSummaryExternalVrfsEnum {
-    CmsEntsrvInet = 'cms-entsrv-inet',
-    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
-    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
-    CmsEntsrvMon = 'cms-entsrv-mon',
-    CmsEntsrvPres = 'cms-entsrv-pres',
-    CmsEntsrvSec = 'cms-entsrv-sec',
-    CmsEntsrvVpn = 'cms-entsrv-vpn',
-    CmsnetAppdev = 'cmsnet_appdev',
-    CmsnetAppprod = 'cmsnet_appprod',
-    CmsnetDatadev = 'cmsnet_datadev',
-    CmsnetDataprod = 'cmsnet_dataprod',
-    CmsnetEdcVpn = 'cmsnet_edc_vpn',
-    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
-    CmsnetPresdev = 'cmsnet_presdev',
-    CmsnetPresprod = 'cmsnet_presprod',
-    CmsnetSec = 'cmsnet_sec',
-    CmsnetTransport = 'cmsnet_transport'
-};
-
-
 

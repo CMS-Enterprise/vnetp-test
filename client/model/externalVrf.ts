@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Environment } from './environment';
 
 
-export interface ExternalVrfConnectionConfigDto { 
+export interface ExternalVrf { 
+    readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
     name: string;
-    externalVrf: string;
-    injectDefaultRouteFromExternalVrf: boolean;
-    allowAllRoutesFromExternalVrf: boolean;
-    advertiseHostBasedRoutesToExternalVrf: boolean;
-    advertiseAllRoutesToExternalVrf: boolean;
+    readonly environments?: Array<Environment>;
 }
 

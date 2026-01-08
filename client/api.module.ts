@@ -58,6 +58,7 @@ import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 import { V2RoutingExternalRoutesService } from './api/v2RoutingExternalRoutes.service';
 import { V2RoutingExternalVrfConnectionsService } from './api/v2RoutingExternalVrfConnections.service';
+import { V2RoutingExternalVrfsService } from './api/v2RoutingExternalVrfs.service';
 import { V2RoutingInternalRoutesService } from './api/v2RoutingInternalRoutes.service';
 import { V2WorkflowsService } from './api/v2Workflows.service';
 import { V3GlobalBgpRangesService } from './api/v3GlobalBgpRanges.service';

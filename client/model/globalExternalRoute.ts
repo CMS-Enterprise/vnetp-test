@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ExternalVrf } from './externalVrf';
 import { Environment } from './environment';
 import { GlobalBgpAsnAllocation } from './globalBgpAsnAllocation';
 
@@ -16,7 +17,7 @@ import { GlobalBgpAsnAllocation } from './globalBgpAsnAllocation';
 export interface GlobalExternalRoute { 
     readonly id?: string;
     network: string;
-    externalVrf: GlobalExternalRouteExternalVrfEnum;
+    externalVrfId: ExternalVrf;
     lastSeen: string;
     expired: boolean;
     uptime: string;
@@ -33,25 +34,4 @@ export interface GlobalExternalRoute {
      */
     readonly bgpAllocation: GlobalBgpAsnAllocation;
 }
-export enum GlobalExternalRouteExternalVrfEnum {
-    CmsEntsrvInet = 'cms-entsrv-inet',
-    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
-    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
-    CmsEntsrvMon = 'cms-entsrv-mon',
-    CmsEntsrvPres = 'cms-entsrv-pres',
-    CmsEntsrvSec = 'cms-entsrv-sec',
-    CmsEntsrvVpn = 'cms-entsrv-vpn',
-    CmsnetAppdev = 'cmsnet_appdev',
-    CmsnetAppprod = 'cmsnet_appprod',
-    CmsnetDatadev = 'cmsnet_datadev',
-    CmsnetDataprod = 'cmsnet_dataprod',
-    CmsnetEdcVpn = 'cmsnet_edc_vpn',
-    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
-    CmsnetPresdev = 'cmsnet_presdev',
-    CmsnetPresprod = 'cmsnet_presprod',
-    CmsnetSec = 'cmsnet_sec',
-    CmsnetTransport = 'cmsnet_transport'
-};
-
-
 

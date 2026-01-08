@@ -15088,9 +15088,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/bgp-ranges"
-        ]
+        "tags": ["v3/global/bgp-ranges"]
       }
     },
     "/v3/global/bgp-ranges/environment/{environmentId}": {
@@ -15122,9 +15120,7 @@
             }
           }
         },
-        "tags": [
-          "v3/global/bgp-ranges"
-        ]
+        "tags": ["v3/global/bgp-ranges"]
       }
     },
     "/v3/global/bgp-ranges/{id}": {
@@ -15682,215 +15678,6 @@
           }
         },
         "tags": ["v2/app-centric/vrfs"]
-      }
-    },
-    "/v2/app-centric/l3outs/{id}/endpoint-groups": {
-      "post": {
-        "operationId": "addEndpointGroupToL3OutL3Out",
-        "summary": "Add endpoint group to L3Out",
-        "description": "Add an endpoint group to an L3Out",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully added endpoint group to L3Out",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "L3Out not found"
-          }
-        },
-        "tags": ["v2/app-centric/l3outs"]
-      }
-    },
-    "/v2/app-centric/l3outs/{id}/endpoint-groups/{epgId}/remove": {
-      "post": {
-        "operationId": "removeEpgFromL3OutL3Out",
-        "summary": "Remove endpoint group from L3Out",
-        "description": "Remove an endpoint group from an L3Out",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "epgId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully removed endpoint group from L3Out",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "L3Out or endpoint group not found"
-          }
-        },
-        "tags": ["v2/app-centric/l3outs"]
-      }
-    },
-    "/v2/app-centric/l3outs/{id}/endpoint-security-groups": {
-      "post": {
-        "operationId": "addEndpointSecurityGroupToL3OutL3Out",
-        "summary": "Add endpoint security group to L3Out",
-        "description": "Add an endpoint security group to an L3Out",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointSecurityGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully added endpoint security group to L3Out",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "L3Out not found"
-          }
-        },
-        "tags": ["v2/app-centric/l3outs"]
-      }
-    },
-    "/v2/app-centric/l3outs/{id}/endpoint-security-groups/{esgId}/remove": {
-      "post": {
-        "operationId": "removeEndpointSecurityGroupFromL3OutL3Out",
-        "summary": "Remove endpoint security group from L3Out",
-        "description": "Remove an endpoint security group from an L3Out",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "esgId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully removed endpoint security group from L3Out",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "L3Out or endpoint security group not found"
-          }
-        },
-        "tags": ["v2/app-centric/l3outs"]
-      }
-    },
-    "/v2/app-centric/l3outs/{id}/endpoint-security-groups/{esgId}": {
-      "delete": {
-        "operationId": "deleteEndpointSecurityGroupFromL3OutL3Out",
-        "summary": "Remove endpoint security group from L3Out",
-        "description": "Remove an endpoint security group from an L3Out",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "esgId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully removed endpoint security group from L3Out",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "L3Out or endpoint security group not found"
-          }
-        },
-        "tags": ["v2/app-centric/l3outs"]
       }
     },
     "/v2/app-centric/l3outs": {
@@ -18030,6 +17817,384 @@
           }
         },
         "tags": ["v2/app-centric/service-graph-firewalls"]
+      }
+    },
+    "/v2/routing/external-vrfs/environment/{environmentId}": {
+      "get": {
+        "operationId": "getExternalVrfsByEnvironmentIdExternalVrf",
+        "summary": "Get external VRFs by environment ID",
+        "parameters": [
+          {
+            "name": "environmentId",
+            "required": true,
+            "in": "path",
+            "description": "Environment ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalVrf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
+      }
+    },
+    "/v2/routing/external-vrfs": {
+      "post": {
+        "operationId": "createOneExternalVrf",
+        "summary": "Create one ExternalVrf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalVrf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
+      },
+      "get": {
+        "operationId": "getManyExternalVrf",
+        "summary": "Get many ExternalVrf",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyExternalVrfResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ExternalVrf"
+                      }
+                    }
+                  },
+                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
+      }
+    },
+    "/v2/routing/external-vrfs/bulk": {
+      "post": {
+        "operationId": "createManyExternalVrf",
+        "summary": "Create many ExternalVrf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyExternalVrfDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ExternalVrf"
+                    }
+                  }
+                },
+                "required": ["bulk"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalVrf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
+      }
+    },
+    "/v2/routing/external-vrfs/{id}": {
+      "get": {
+        "operationId": "getOneExternalVrf",
+        "summary": "Get one ExternalVrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
+      },
+      "put": {
+        "operationId": "updateOneExternalVrf",
+        "summary": "Update one ExternalVrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalVrf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
+      },
+      "delete": {
+        "operationId": "deleteOneExternalVrf",
+        "summary": "Delete one ExternalVrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["v2/routing/external-vrfs"]
       }
     },
     "/v2/app-centric/subjects/{subjectId}/filters/{filterId}": {
@@ -21706,27 +21871,8 @@
             "name": "vrf",
             "required": true,
             "in": "path",
-            "description": "VRF enum value",
+            "description": "VRF name",
             "schema": {
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ],
               "type": "string"
             }
           },
@@ -21898,27 +22044,8 @@
             "name": "vrf",
             "required": true,
             "in": "path",
-            "description": "VRF enum value",
+            "description": "VRF name",
             "schema": {
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ],
               "type": "string"
             }
           }
@@ -26527,26 +26654,7 @@
             "type": "string"
           },
           "externalVrf": {
-            "type": "string",
-            "enum": [
-              "cms-entsrv-inet",
-              "cms-entsrv-ldapdns",
-              "cms-entsrv-mgmt",
-              "cms-entsrv-mon",
-              "cms-entsrv-pres",
-              "cms-entsrv-sec",
-              "cms-entsrv-vpn",
-              "cmsnet_appdev",
-              "cmsnet_appprod",
-              "cmsnet_datadev",
-              "cmsnet_dataprod",
-              "cmsnet_edc_vpn",
-              "cmsnet_edcmgmt",
-              "cmsnet_presdev",
-              "cmsnet_presprod",
-              "cmsnet_sec",
-              "cmsnet_transport"
-            ]
+            "type": "string"
           },
           "injectDefaultRouteFromExternalVrf": {
             "type": "boolean"
@@ -26805,20 +26913,6 @@
             "type": "number",
             "readOnly": true,
             "default": 1
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
-          },
-          "endpointSecurityGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
           },
           "l3outType": {
             "type": "string",
@@ -27765,13 +27859,6 @@
           },
           "applicationProfileId": {
             "type": "string"
-          },
-          "l3outs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
           }
         },
         "required": ["name", "intraEsgIsolation", "preferredGroupMember", "tenantId", "vrfId", "applicationProfileId"]
@@ -29464,12 +29551,7 @@
             "maxLength": 500
           }
         },
-        "required": [
-          "datacenter",
-          "allowServiceGraphBypass",
-          "environmentId",
-          "bgpRangeId"
-        ]
+        "required": ["datacenter", "allowServiceGraphBypass", "environmentId", "bgpRangeId"]
       },
       "EndpointGroup": {
         "type": "object",
@@ -29599,13 +29681,6 @@
                 "$ref": "#/components/schemas/Selector"
               }
             ]
-          },
-          "l3outs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
           }
         },
         "required": ["intraEpgIsolation", "tenantId", "bridgeDomainId", "applicationProfileId"]
@@ -32720,11 +32795,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "name",
-          "environmentId",
-          "bgpRangeId"
-        ]
+        "required": ["name", "environmentId", "bgpRangeId"]
       },
       "ExternalVrfConnectionConfigDto": {
         "type": "object",
@@ -32733,26 +32804,7 @@
             "type": "string"
           },
           "externalVrf": {
-            "type": "string",
-            "enum": [
-              "cms-entsrv-inet",
-              "cms-entsrv-ldapdns",
-              "cms-entsrv-mgmt",
-              "cms-entsrv-mon",
-              "cms-entsrv-pres",
-              "cms-entsrv-sec",
-              "cms-entsrv-vpn",
-              "cmsnet_appdev",
-              "cmsnet_appprod",
-              "cmsnet_datadev",
-              "cmsnet_dataprod",
-              "cmsnet_edc_vpn",
-              "cmsnet_edcmgmt",
-              "cmsnet_presdev",
-              "cmsnet_presprod",
-              "cmsnet_sec",
-              "cmsnet_transport"
-            ]
+            "type": "string"
           },
           "injectDefaultRouteFromExternalVrf": {
             "type": "boolean"
@@ -33024,6 +33076,40 @@
         },
         "required": ["success", "errors"]
       },
+      "ExternalVrf": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "environments": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Environment"
+            }
+          }
+        },
+        "required": ["name"]
+      },
       "GlobalBgpAsnAllocation": {
         "type": "object",
         "properties": {
@@ -33064,27 +33150,8 @@
           "network": {
             "type": "string"
           },
-          "externalVrf": {
-            "type": "string",
-            "enum": [
-              "cms-entsrv-inet",
-              "cms-entsrv-ldapdns",
-              "cms-entsrv-mgmt",
-              "cms-entsrv-mon",
-              "cms-entsrv-pres",
-              "cms-entsrv-sec",
-              "cms-entsrv-vpn",
-              "cmsnet_appdev",
-              "cmsnet_appprod",
-              "cmsnet_datadev",
-              "cmsnet_dataprod",
-              "cmsnet_edc_vpn",
-              "cmsnet_edcmgmt",
-              "cmsnet_presdev",
-              "cmsnet_presprod",
-              "cmsnet_sec",
-              "cmsnet_transport"
-            ]
+          "externalVrfId": {
+            "$ref": "#/components/schemas/ExternalVrf"
           },
           "lastSeen": {
             "format": "date-time",
@@ -33129,7 +33196,7 @@
         },
         "required": [
           "network",
-          "externalVrf",
+          "externalVrfId",
           "lastSeen",
           "expired",
           "uptime",
@@ -33181,15 +33248,7 @@
             }
           }
         },
-        "required": [
-          "id",
-          "name",
-          "environmentId",
-          "environment",
-          "start",
-          "end",
-          "allocations"
-        ]
+        "required": ["id", "name", "environmentId", "environment", "start", "end", "allocations"]
       },
       "Environment": {
         "type": "object",
@@ -33209,30 +33268,10 @@
             "type": "string"
           },
           "externalVrfs": {
+            "readOnly": true,
             "type": "array",
-            "nullable": true,
-            "description": "External VRFs allowed for this environment",
             "items": {
-              "type": "string",
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ]
+              "$ref": "#/components/schemas/ExternalVrf"
             }
           },
           "globalExternalRoutes": {
@@ -33275,12 +33314,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name",
-          "environmentId",
-          "start",
-          "end"
-        ]
+        "required": ["name", "environmentId", "start", "end"]
       },
       "UpdateGlobalBgpRangeDto": {
         "type": "object",
@@ -33786,30 +33820,10 @@
             "nullable": true
           },
           "externalVrfs": {
-            "type": "array",
             "description": "External VRFs allowed for this environment",
-            "example": ["cmsnet_transport"],
+            "type": "array",
             "items": {
-              "type": "string",
-              "enum": [
-                "cms-entsrv-inet",
-                "cms-entsrv-ldapdns",
-                "cms-entsrv-mgmt",
-                "cms-entsrv-mon",
-                "cms-entsrv-pres",
-                "cms-entsrv-sec",
-                "cms-entsrv-vpn",
-                "cmsnet_appdev",
-                "cmsnet_appprod",
-                "cmsnet_datadev",
-                "cmsnet_dataprod",
-                "cmsnet_edc_vpn",
-                "cmsnet_edcmgmt",
-                "cmsnet_presdev",
-                "cmsnet_presprod",
-                "cmsnet_sec",
-                "cmsnet_transport"
-              ]
+              "$ref": "#/components/schemas/ExternalVrf"
             }
           },
           "totalRoutes": {

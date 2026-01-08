@@ -12,7 +12,6 @@ import {
   InternalRoute,
   V2RoutingInternalRoutesService,
   V2AppCentricVrfsService,
-  ExternalVrfConnectionExternalVrfEnum,
 } from '../../../../../../client';
 import { InternalRouteModalDto } from '../../../../models/network-scope-forms/internal-route-modal.dto';
 import { ApplicationMode } from '../../../../models/other/application-mode-enum';

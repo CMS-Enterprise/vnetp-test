@@ -53,8 +53,8 @@ export interface GetManyExternalRoutesRequestParams {
 export interface GetManyExternalRoutesByVrfRequestParams {
     /** Environment ID */
     environmentId: string;
-    /** VRF enum value */
-    vrf: 'cms-entsrv-inet' | 'cms-entsrv-ldapdns' | 'cms-entsrv-mgmt' | 'cms-entsrv-mon' | 'cms-entsrv-pres' | 'cms-entsrv-sec' | 'cms-entsrv-vpn' | 'cmsnet_appdev' | 'cmsnet_appprod' | 'cmsnet_datadev' | 'cmsnet_dataprod' | 'cmsnet_edc_vpn' | 'cmsnet_edcmgmt' | 'cmsnet_presdev' | 'cmsnet_presprod' | 'cmsnet_sec' | 'cmsnet_transport';
+    /** VRF name */
+    vrf: string;
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -80,8 +80,8 @@ export interface GetManyExternalRoutesByVrfRequestParams {
 export interface SyncExternalRoutesRequestParams {
     /** Environment ID */
     environmentId: string;
-    /** VRF enum value */
-    vrf: 'cms-entsrv-inet' | 'cms-entsrv-ldapdns' | 'cms-entsrv-mgmt' | 'cms-entsrv-mon' | 'cms-entsrv-pres' | 'cms-entsrv-sec' | 'cms-entsrv-vpn' | 'cmsnet_appdev' | 'cmsnet_appprod' | 'cmsnet_datadev' | 'cmsnet_dataprod' | 'cmsnet_edc_vpn' | 'cmsnet_edcmgmt' | 'cmsnet_presdev' | 'cmsnet_presprod' | 'cmsnet_sec' | 'cmsnet_transport';
+    /** VRF name */
+    vrf: string;
     /** Array of external routes to sync */
     externalRouteSyncDto: Array<ExternalRouteSyncDto>;
 }
