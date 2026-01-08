@@ -30,14 +30,16 @@ export class EnvironmentModalComponent implements OnInit {
     this.buildForm();
   }
 
-  getVrfOptions(usedVrfs: string[]): void {
+  getVrfOptions(usedVrfs?: string[]): void {
     this.externalVrfService.getManyExternalVrf({ limit: 1000 }).subscribe(vrfs => {
       if ((vrfs as unknown as ExternalVrf[]).length > 0) {
         this.vrfOptions = (vrfs as unknown as ExternalVrf[]).map(vrf => ({
           value: vrf.id,
           label: vrf.name,
         }));
-        this.vrfOptions = this.vrfOptions.filter(vrf => !usedVrfs.includes(vrf.label));
+        if (usedVrfs) {
+          this.vrfOptions = this.vrfOptions.filter(vrf => !usedVrfs.includes(vrf.label));
+        }
       }
     });
   }
@@ -50,6 +52,7 @@ export class EnvironmentModalComponent implements OnInit {
       this.environmentId = dto.environment.id;
       this.loadEnvironment(dto.environment.id);
     } else if (this.modalMode === ModalMode.Create) {
+      this.getVrfOptions();
       this.form.reset();
       this.form.enable();
     }

@@ -439,6 +439,7 @@ export class TenantInfrastructureComponent implements OnInit, OnDestroy {
           this.updateRawFromConfig();
           this.rightPanelView = 'graph';
           this.generateGraphInternal();
+          this.getExternalVrfOptions(this.config.tenant.environmentId);
         },
         error: () => {
           this.config = {
