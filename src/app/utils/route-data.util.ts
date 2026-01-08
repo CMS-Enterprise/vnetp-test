@@ -28,4 +28,18 @@ export class RouteDataUtil {
     console.error('Application mode not found via RouteDataUtil', route);
     return undefined;
   }
+
+  /**
+   * Traverses down the route tree to find the deepest active route.
+   * This is needed for root-level services that don't have access to component-level ActivatedRoute.
+   * @param route The starting ActivatedRoute.
+   * @returns The deepest active ActivatedRoute in the tree.
+   */
+  public static getDeepestActiveRoute(route: ActivatedRoute): ActivatedRoute {
+    let deepestRoute = route;
+    while (deepestRoute.firstChild) {
+      deepestRoute = deepestRoute.firstChild;
+    }
+    return deepestRoute;
+  }
 }

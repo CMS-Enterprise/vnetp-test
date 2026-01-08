@@ -12,6 +12,13 @@ import { RouteDataUtil } from '../utils/route-data.util';
 jest.mock('../utils/route-data.util', () => ({
   RouteDataUtil: {
     getApplicationModeFromRoute: jest.fn(),
+    getDeepestActiveRoute: jest.fn((route: ActivatedRoute) => {
+      let deepestRoute = route;
+      while (deepestRoute.firstChild) {
+        deepestRoute = deepestRoute.firstChild;
+      }
+      return deepestRoute;
+    }),
   },
 }));
 
@@ -23,13 +30,11 @@ describe('UndeployedChangesService', () => {
   let routerEventsSubject: Subject<any>;
   let datacenterSubject: Subject<any>;
 
-  const createMockActivatedRoute = (data: any, parent: ActivatedRoute | null = null, firstChild: ActivatedRoute | null = null) => {
-    return {
-      snapshot: { data },
-      parent,
-      firstChild,
-    } as any as ActivatedRoute;
-  };
+  const createMockActivatedRoute = (data: any, parent: ActivatedRoute | null = null, firstChild: ActivatedRoute | null = null) => ({
+    snapshot: { data },
+    parent,
+    firstChild,
+  } as any as ActivatedRoute);
 
   beforeEach(() => {
     routerEventsSubject = new Subject();
@@ -122,9 +127,7 @@ describe('UndeployedChangesService', () => {
       (childRoute as any).parent = rootRoute;
 
       mockRouter.routerState.root = rootRoute;
-      (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockImplementation((route: ActivatedRoute) => {
-        return route.snapshot.data.mode;
-      });
+      (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockImplementation((route: ActivatedRoute) => route.snapshot.data.mode);
 
       service = TestBed.inject(UndeployedChangesService);
       expect(RouteDataUtil.getApplicationModeFromRoute).toHaveBeenCalledWith(grandChildRoute);
@@ -134,9 +137,7 @@ describe('UndeployedChangesService', () => {
       const rootRoute = createMockActivatedRoute({ mode: ApplicationMode.NETCENTRIC });
       mockRouter.routerState.root = rootRoute;
 
-      (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockImplementation((route: ActivatedRoute) => {
-        return route.snapshot.data.mode;
-      });
+      (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockImplementation((route: ActivatedRoute) => route.snapshot.data.mode);
 
       service = TestBed.inject(UndeployedChangesService);
       expect(RouteDataUtil.getApplicationModeFromRoute).toHaveBeenCalledWith(rootRoute);

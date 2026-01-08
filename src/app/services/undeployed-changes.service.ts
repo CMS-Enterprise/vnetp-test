@@ -72,20 +72,8 @@ export class UndeployedChangesService {
   private setApplicationModeFromRouter(): void {
     // For root-level services, we need to traverse from router state root
     // to find the deepest active route, then traverse up to find mode data
-    const deepestRoute = this.getDeepestActiveRoute(this.router.routerState.root);
+    const deepestRoute = RouteDataUtil.getDeepestActiveRoute(this.router.routerState.root);
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(deepestRoute);
-  }
-
-  /**
-   * Traverses down the route tree to find the deepest active route.
-   * This is needed for root-level services that don't have access to component-level ActivatedRoute.
-   */
-  private getDeepestActiveRoute(route: ActivatedRoute): ActivatedRoute {
-    let deepestRoute = route;
-    while (deepestRoute.firstChild) {
-      deepestRoute = deepestRoute.firstChild;
-    }
-    return deepestRoute;
   }
 
   getNetcentricChanges(): void {

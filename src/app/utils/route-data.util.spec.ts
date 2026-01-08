@@ -11,10 +11,11 @@ const createMockActivatedRouteSnapshot = (data: Data, parent?: ActivatedRouteSna
   } as ActivatedRouteSnapshot);
 
 // Helper function to create a mock ActivatedRoute
-const createMockActivatedRoute = (snapshot: ActivatedRouteSnapshot): ActivatedRoute =>
+const createMockActivatedRoute = (snapshot: ActivatedRouteSnapshot, firstChild?: ActivatedRoute | null): ActivatedRoute =>
   ({
     snapshot,
     parent: snapshot.parent ? createMockActivatedRoute(snapshot.parent) : null,
+    firstChild: firstChild || null,
     // Add other properties if needed
   } as ActivatedRoute);
 
@@ -92,6 +93,55 @@ describe('RouteDataUtil', () => {
       const snapshot = createMockActivatedRouteSnapshot({}, null);
       const route = createMockActivatedRoute(snapshot);
       expect(RouteDataUtil.getApplicationModeFromRoute(route)).toBeUndefined();
+    });
+  });
+
+  describe('getDeepestActiveRoute', () => {
+    it('should return the route itself if it has no children', () => {
+      const snapshot = createMockActivatedRouteSnapshot({});
+      const route = createMockActivatedRoute(snapshot, null);
+      expect(RouteDataUtil.getDeepestActiveRoute(route)).toBe(route);
+    });
+
+    it('should return the first child if route has one child', () => {
+      const childSnapshot = createMockActivatedRouteSnapshot({});
+      const parentSnapshot = createMockActivatedRouteSnapshot({});
+      const childRoute = createMockActivatedRoute(childSnapshot, null);
+      const parentRoute = createMockActivatedRoute(parentSnapshot, childRoute);
+      expect(RouteDataUtil.getDeepestActiveRoute(parentRoute)).toBe(childRoute);
+    });
+
+    it('should return the deepest child when route has multiple nested children', () => {
+      const deepestSnapshot = createMockActivatedRouteSnapshot({});
+      const middleSnapshot = createMockActivatedRouteSnapshot({});
+      const topSnapshot = createMockActivatedRouteSnapshot({});
+
+      const deepestRoute = createMockActivatedRoute(deepestSnapshot, null);
+      const middleRoute = createMockActivatedRoute(middleSnapshot, deepestRoute);
+      const topRoute = createMockActivatedRoute(topSnapshot, middleRoute);
+
+      expect(RouteDataUtil.getDeepestActiveRoute(topRoute)).toBe(deepestRoute);
+    });
+
+    it('should handle route with multiple levels of nesting', () => {
+      const level4Snapshot = createMockActivatedRouteSnapshot({});
+      const level3Snapshot = createMockActivatedRouteSnapshot({});
+      const level2Snapshot = createMockActivatedRouteSnapshot({});
+      const level1Snapshot = createMockActivatedRouteSnapshot({});
+
+      const level4Route = createMockActivatedRoute(level4Snapshot, null);
+      const level3Route = createMockActivatedRoute(level3Snapshot, level4Route);
+      const level2Route = createMockActivatedRoute(level2Snapshot, level3Route);
+      const level1Route = createMockActivatedRoute(level1Snapshot, level2Route);
+
+      expect(RouteDataUtil.getDeepestActiveRoute(level1Route)).toBe(level4Route);
+    });
+
+    it('should return the route itself when firstChild is null', () => {
+      const snapshot = createMockActivatedRouteSnapshot({});
+      const route = createMockActivatedRoute(snapshot, null);
+      const result = RouteDataUtil.getDeepestActiveRoute(route);
+      expect(result).toBe(route);
     });
   });
 });
