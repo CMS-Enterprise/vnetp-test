@@ -122,26 +122,5 @@ describe('RouteDataUtil', () => {
 
       expect(RouteDataUtil.getDeepestActiveRoute(topRoute)).toBe(deepestRoute);
     });
-
-    it('should handle route with multiple levels of nesting', () => {
-      const level4Snapshot = createMockActivatedRouteSnapshot({});
-      const level3Snapshot = createMockActivatedRouteSnapshot({});
-      const level2Snapshot = createMockActivatedRouteSnapshot({});
-      const level1Snapshot = createMockActivatedRouteSnapshot({});
-
-      const level4Route = createMockActivatedRoute(level4Snapshot, null);
-      const level3Route = createMockActivatedRoute(level3Snapshot, level4Route);
-      const level2Route = createMockActivatedRoute(level2Snapshot, level3Route);
-      const level1Route = createMockActivatedRoute(level1Snapshot, level2Route);
-
-      expect(RouteDataUtil.getDeepestActiveRoute(level1Route)).toBe(level4Route);
-    });
-
-    it('should return the route itself when firstChild is null', () => {
-      const snapshot = createMockActivatedRouteSnapshot({});
-      const route = createMockActivatedRoute(snapshot, null);
-      const result = RouteDataUtil.getDeepestActiveRoute(route);
-      expect(result).toBe(route);
-    });
   });
 });

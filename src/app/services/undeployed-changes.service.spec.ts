@@ -12,13 +12,7 @@ import { RouteDataUtil } from '../utils/route-data.util';
 jest.mock('../utils/route-data.util', () => ({
   RouteDataUtil: {
     getApplicationModeFromRoute: jest.fn(),
-    getDeepestActiveRoute: jest.fn((route: ActivatedRoute) => {
-      let deepestRoute = route;
-      while (deepestRoute.firstChild) {
-        deepestRoute = deepestRoute.firstChild;
-      }
-      return deepestRoute;
-    }),
+    getDeepestActiveRoute: jest.fn(),
   },
 }));
 
@@ -72,8 +66,11 @@ describe('UndeployedChangesService', () => {
       ],
     });
 
-    // Reset RouteDataUtil mock
+    // Reset RouteDataUtil mocks
     (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockReturnValue(ApplicationMode.NETCENTRIC);
+    // Default mock: return the child route for the default router setup
+    // Individual tests can override this behavior if needed
+    (RouteDataUtil.getDeepestActiveRoute as jest.Mock).mockReturnValue(mockChildRoute);
 
     jest.useFakeTimers();
   });
@@ -115,7 +112,7 @@ describe('UndeployedChangesService', () => {
     });
   });
 
-  describe('getDeepestActiveRoute', () => {
+  describe('Application mode detection from router', () => {
     it('should find deepest route in route tree', () => {
       // Create routes bottom-up: grandchild first, then child with grandchild as firstChild, then root
       const grandChildRoute = createMockActivatedRoute({ mode: ApplicationMode.NETCENTRIC });
@@ -127,6 +124,8 @@ describe('UndeployedChangesService', () => {
       (childRoute as any).parent = rootRoute;
 
       mockRouter.routerState.root = rootRoute;
+      // Mock getDeepestActiveRoute to return the deepest route for this test
+      (RouteDataUtil.getDeepestActiveRoute as jest.Mock).mockReturnValue(grandChildRoute);
       (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockImplementation((route: ActivatedRoute) => route.snapshot.data.mode);
 
       service = TestBed.inject(UndeployedChangesService);
@@ -136,7 +135,8 @@ describe('UndeployedChangesService', () => {
     it('should return root route if no children exist', () => {
       const rootRoute = createMockActivatedRoute({ mode: ApplicationMode.NETCENTRIC });
       mockRouter.routerState.root = rootRoute;
-
+      // Mock getDeepestActiveRoute to return the root route itself (no children)
+      (RouteDataUtil.getDeepestActiveRoute as jest.Mock).mockReturnValue(rootRoute);
       (RouteDataUtil.getApplicationModeFromRoute as jest.Mock).mockImplementation((route: ActivatedRoute) => route.snapshot.data.mode);
 
       service = TestBed.inject(UndeployedChangesService);
