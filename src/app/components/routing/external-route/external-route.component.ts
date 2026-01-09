@@ -10,12 +10,14 @@ import { isIP } from 'validator';
 import {
   ExternalRoute,
   V3GlobalExternalRoutesService,
+  V3GlobalEnvironmentsService,
   GlobalExternalRoute,
   V2AppCentricVrfsService,
   Vrf,
   V2RoutingExternalRoutesService,
   ExternalVrfConnection,
   V2RoutingExternalVrfConnectionsService,
+  ExternalVrf,
 } from '../../../../../client';
 
 interface ExternalRouteWithGlobalRoute extends ExternalRoute {
@@ -56,6 +58,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   constructor(
     private ngx: NgxSmartModalService,
     private globalExternalRouteService: V3GlobalExternalRoutesService,
+    private environmentService: V3GlobalEnvironmentsService,
     private externalRouteService: V2RoutingExternalRoutesService,
     private vrfService: V2AppCentricVrfsService,
     private externalVrfConnectionService: V2RoutingExternalVrfConnectionsService,
@@ -102,15 +105,24 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   }
 
   getAllRoutes(): void {
-    const availableExternalVrfs = this.externalVrfConnection.externalFirewall.externalVrfConnections
-      .map(connection => connection.externalVrf)
-      .join(',');
-    forkJoin({
-      globalRoutes: this._fetchGlobalRoutes(availableExternalVrfs),
-      assignedRoutes: this._fetchAssignedRoutes(),
-    }).subscribe(({ globalRoutes, assignedRoutes }) => {
-      this._processRoutesData(globalRoutes, assignedRoutes);
+    this._fetchEnvironmentVrfs().subscribe(environmentVrfs => {
+      const vrfIds = environmentVrfs.map(vrf => vrf.id).filter(Boolean) as string[];
+      this.availableVrfs = environmentVrfs.map(vrf => vrf.name).sort();
+      const availableExternalVrfs = vrfIds.join(',');
+
+      forkJoin({
+        globalRoutes: this._fetchGlobalRoutes(availableExternalVrfs),
+        assignedRoutes: this._fetchAssignedRoutes(),
+      }).subscribe(({ globalRoutes, assignedRoutes }) => {
+        this._processRoutesData(globalRoutes, assignedRoutes);
+      });
     });
+  }
+
+  private _fetchEnvironmentVrfs(): Observable<ExternalVrf[]> {
+    return this.environmentService
+      .getOneEnvironment({ id: this.environmentId, relations: ['externalVrfs'] })
+      .pipe(map(env => (env?.externalVrfs ?? []) as ExternalVrf[]));
   }
 
   private _fetchGlobalRoutes(availableExternalVrfs: string): Observable<GlobalExternalRoute[]> {
@@ -118,7 +130,8 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
       .getManyExternalRoutes({
         environmentId: this.environmentId,
         limit: 50000,
-        filter: [`externalVrf||in||${availableExternalVrfs}`],
+        relations: ['externalVrf'],
+        filter: availableExternalVrfs ? [`externalVrfId||in||${availableExternalVrfs}`] : [],
       })
       .pipe(map(response => (response || []) as GlobalExternalRoute[]));
   }
@@ -134,9 +147,6 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   private _processRoutesData(globalRoutes: GlobalExternalRoute[], assignedRoutes: ExternalRoute[]): void {
     this.allGlobalRoutes = globalRoutes;
-    this.availableVrfs = [
-      ...new Set(this.externalVrfConnection.externalFirewall.externalVrfConnections.map(connection => connection.externalVrf)),
-    ].sort();
 
     const localRoutes = assignedRoutes as ExternalRouteWithGlobalRoute[];
     localRoutes.forEach(route => {

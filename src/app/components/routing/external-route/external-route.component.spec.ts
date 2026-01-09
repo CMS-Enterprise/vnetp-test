@@ -4,12 +4,14 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
 import {
   V3GlobalExternalRoutesService,
+  V3GlobalEnvironmentsService,
   V2AppCentricVrfsService,
   V2RoutingExternalVrfConnectionsService,
   V2RoutingExternalRoutesService,
   ExternalVrfConnection,
   GlobalExternalRoute,
   ExternalRoute,
+  ExternalVrf,
 } from '../../../../../client';
 import { MockFontAwesomeComponent, MockComponent } from '../../../../test/mock-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -30,6 +32,7 @@ describe('ExternalRouteComponent', () => {
   let mockActivatedRoute: any;
   let mockExternalRouteService: any;
   let mockExternalVrfConnectionService: any;
+  let mockEnvironmentService: any;
   let mockGlobalExternalRouteService: any;
   let mockVrfService: any;
   let mockRouter: any;
@@ -65,6 +68,17 @@ describe('ExternalRouteComponent', () => {
     mockExternalVrfConnectionService = {
       getOneExternalVrfConnection: jest.fn().mockReturnValue(of(baseConnection)),
     } as Partial<V2RoutingExternalVrfConnectionsService> as any;
+
+    mockEnvironmentService = {
+      getOneEnvironment: jest.fn().mockReturnValue(
+        of({
+          externalVrfs: [
+            { id: 'vrf-a', name: 'VRF_A' },
+            { id: 'vrf-b', name: 'VRF_B' },
+          ] as ExternalVrf[],
+        }),
+      ),
+    } as Partial<V3GlobalEnvironmentsService> as any;
 
     mockGlobalExternalRouteService = {
       getManyExternalRoutes: jest.fn().mockReturnValue(of([])),
@@ -106,6 +120,7 @@ describe('ExternalRouteComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: V2RoutingExternalVrfConnectionsService, useValue: mockExternalVrfConnectionService },
+        { provide: V3GlobalEnvironmentsService, useValue: mockEnvironmentService },
         { provide: V3GlobalExternalRoutesService, useValue: mockGlobalExternalRouteService },
         { provide: V2AppCentricVrfsService, useValue: mockVrfService },
         { provide: V2RoutingExternalRoutesService, useValue: mockExternalRouteService },
@@ -167,10 +182,21 @@ describe('ExternalRouteComponent', () => {
   });
 
   it('getAllRoutes fetches and processes data', () => {
-    const globals: GlobalExternalRoute[] = [{ id: 'gr-1', externalVrf: 'VRF_A' } as any, { id: 'gr-2', externalVrf: 'VRF_B' } as any];
+    const globals: GlobalExternalRoute[] = [
+      { id: 'gr-1', externalVrfId: 'vrf-a', externalVrf: { name: 'VRF_A' } } as any,
+      { id: 'gr-2', externalVrfId: 'vrf-b', externalVrf: { name: 'VRF_B' } } as any,
+    ];
     const assigned: ExternalRoute[] = [{ id: 'er-1', globalExternalRouteId: 'gr-2' } as any];
     mockGlobalExternalRouteService.getManyExternalRoutes.mockReturnValueOnce(of(globals));
     mockExternalRouteService.getManyExternalRoute.mockReturnValueOnce(of(assigned));
+    mockEnvironmentService.getOneEnvironment.mockReturnValueOnce(
+      of({
+        externalVrfs: [
+          { id: 'vrf-a', name: 'VRF_A' },
+          { id: 'vrf-b', name: 'VRF_B' },
+        ],
+      }),
+    );
 
     component.getAllRoutes();
 
@@ -178,14 +204,27 @@ describe('ExternalRouteComponent', () => {
     expect(component.assignedRoutesDataSource.data[0].globalExternalRoute.id).toBe('gr-2');
   });
 
+  it('_fetchEnvironmentVrfs requests environment vrfs', done => {
+    (component as any)._fetchEnvironmentVrfs().subscribe((vrfs: ExternalVrf[]) => {
+      expect(mockEnvironmentService.getOneEnvironment).toHaveBeenCalledWith({
+        id: 'env-1',
+        relations: ['externalVrfs'],
+      });
+      expect(vrfs.map(v => v.name)).toEqual(['VRF_A', 'VRF_B']);
+      expect(vrfs.map(v => v.id)).toEqual(['vrf-a', 'vrf-b']);
+      done();
+    });
+  });
+
   it('_fetchGlobalRoutes calls service with env and filter', done => {
     component.environmentId = 'env-1';
     mockGlobalExternalRouteService.getManyExternalRoutes.mockReturnValueOnce(of([{ id: 'x' }]));
-    (component as any)._fetchGlobalRoutes('VRF_A,VRF_B').subscribe((res: any) => {
+    (component as any)._fetchGlobalRoutes('vrf-a,vrf-b').subscribe((res: any) => {
       expect(mockGlobalExternalRouteService.getManyExternalRoutes).toHaveBeenCalledWith({
         environmentId: 'env-1',
         limit: 50000,
-        filter: ['externalVrf||in||VRF_A,VRF_B'],
+        relations: ['externalVrf'],
+        filter: ['externalVrfId||in||vrf-a,vrf-b'],
       });
       expect(res.length).toBe(1);
       done();
@@ -207,7 +246,10 @@ describe('ExternalRouteComponent', () => {
 
   it('_processRoutesData sets lists and calls updateAvailableRoutes', () => {
     const spyUpdate = jest.spyOn(component, 'updateAvailableRoutes');
-    const globals: GlobalExternalRoute[] = [{ id: 'gr-1', externalVrf: 'VRF_A' } as any, { id: 'gr-2', externalVrf: 'VRF_B' } as any];
+    const globals: GlobalExternalRoute[] = [
+      { id: 'gr-1', externalVrf: { name: 'VRF_A' } } as any,
+      { id: 'gr-2', externalVrf: { name: 'VRF_B' } } as any,
+    ];
     const assigned: ExternalRoute[] = [
       { id: 'er-1', globalExternalRouteId: 'gr-1' } as any,
       { id: 'er-2', globalExternalRouteId: 'gr-2' } as any,
@@ -262,7 +304,10 @@ describe('ExternalRouteComponent', () => {
     component.updateAvailableRoutes();
     expect(component.availableRoutesDataSource.data).toEqual([]);
 
-    component.allGlobalRoutes = [{ id: 'gr-1', externalVrf: 'VRF_A' } as any, { id: 'gr-2', externalVrf: 'VRF_B' } as any];
+    component.allGlobalRoutes = [
+      { id: 'gr-1', externalVrf: { name: 'VRF_A' } } as any,
+      { id: 'gr-2', externalVrf: { name: 'VRF_B' } } as any,
+    ];
     component.assignedRoutesDataSource.data = [{ globalExternalRouteId: 'gr-2' } as any];
     component.selectedVrf = 'VRF_A';
     const paginator: any = { firstPage: jest.fn() };
