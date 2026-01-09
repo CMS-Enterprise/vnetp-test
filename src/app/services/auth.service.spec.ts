@@ -3,10 +3,12 @@ import { AuthService } from './auth.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from 'src/environments/environment';
 import { UserDto } from '../../../client/model/models';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
+  let routeService: any;
   let mockLocation: any;
 
   beforeEach(() => {
@@ -21,11 +23,17 @@ describe('AuthService', () => {
     });
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
       providers: [AuthService],
     });
 
+    // routeService = {
+    //    getCurrentNavigation: jest.fn().mockResolvedValue({finalUrl: {queryParams: {tenant: 'tenant1'}}})
+    //  } as any
+
     service = TestBed.inject(AuthService);
+    jest.spyOn(service['router'], 'getCurrentNavigation').mockResolvedValue({ finalUrl: { queryParams: { tenant: 'tenant1' } } } as never);
+
     httpMock = TestBed.inject(HttpTestingController);
   });
 
