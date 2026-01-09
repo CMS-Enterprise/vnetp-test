@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { V3GlobalEnvironmentsService } from 'client';
+import { ExternalVrf, V3GlobalEnvironmentsService, V3GlobalExternalVrfsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -15,10 +15,18 @@ describe('EnvironmentModalComponent', () => {
   let fixture: ComponentFixture<EnvironmentModalComponent>;
   let mockEnvironmentService: Partial<V3GlobalEnvironmentsService>;
   let mockNgxSmartModalService: Partial<NgxSmartModalService>;
+  let mockExternalVrfService: Partial<V3GlobalExternalVrfsService>;
 
   beforeEach(async () => {
     mockEnvironmentService = {
-      getOneEnvironment: jest.fn().mockReturnValue(of({ id: 'e1', name: 'Env1', description: 'Desc', externalVrfs: ['A'] })),
+      getOneEnvironment: jest.fn().mockReturnValue(
+        of({
+          id: 'e1',
+          name: 'Env1',
+          description: 'Desc',
+          externalVrfs: [{ id: 'vrf-a', name: 'A' }] as ExternalVrf[],
+        }),
+      ),
       createOneEnvironment: jest.fn().mockReturnValue(of({})),
       updateOneEnvironment: jest.fn().mockReturnValue(of({})),
     };
@@ -35,6 +43,12 @@ describe('EnvironmentModalComponent', () => {
       resetModalData: jest.fn(),
     };
 
+    mockExternalVrfService = {
+      getManyExternalVrf: jest
+        .fn()
+        .mockReturnValue(of([{ id: 'v1', name: 'V1' } as unknown as ExternalVrf, { id: 'v2', name: 'V2' } as unknown as ExternalVrf])),
+    } as Partial<V3GlobalExternalVrfsService> as any;
+
     await TestBed.configureTestingModule({
       declarations: [EnvironmentModalComponent, MockFontAwesomeComponent],
       imports: [ReactiveFormsModule, NgxSmartModalModule],
@@ -42,6 +56,7 @@ describe('EnvironmentModalComponent', () => {
         UntypedFormBuilder,
         { provide: V3GlobalEnvironmentsService, useValue: mockEnvironmentService },
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
+        { provide: V3GlobalExternalVrfsService, useValue: mockExternalVrfService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -166,7 +181,12 @@ describe('EnvironmentModalComponent', () => {
       component.save();
 
       expect(createSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ name: 'N', description: 'D', externalVrfs: ['X'], lastRouteSyncAt: '2024-01-01T00:00:00.000Z' }),
+        expect.objectContaining({
+          name: 'N',
+          description: 'D',
+          externalVrfs: [{ id: 'X' }],
+          lastRouteSyncAt: '2024-01-01T00:00:00.000Z',
+        }),
       );
       jest.useRealTimers();
     });
@@ -179,7 +199,7 @@ describe('EnvironmentModalComponent', () => {
 
       component.save();
 
-      expect(updateSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'N', description: 'D', externalVrfs: ['X'] }));
+      expect(updateSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'N', description: 'D', externalVrfs: [{ id: 'X' }] }));
     });
 
     it('createEnvironment success should close modal', () => {
@@ -220,6 +240,14 @@ describe('EnvironmentModalComponent', () => {
   });
 
   describe('VRF helpers', () => {
+    beforeEach(() => {
+      component.vrfOptions = [
+        { value: 'v1', label: 'V1' },
+        { value: 'v2', label: 'V2' },
+      ];
+      component.form.get('externalVrfs')?.setValue([]);
+    });
+
     it('addVrf should append when not present', () => {
       component.form.get('externalVrfs')?.setValue(['A']);
       component.addVrf('B');

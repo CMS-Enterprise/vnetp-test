@@ -9,6 +9,7 @@ import {
   V2AppCentricAppCentricSubnetsService,
   V2AppCentricVrfsService,
   V2RoutingInternalRoutesService,
+  V3GlobalEnvironmentsService,
 } from '../../../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { DatacenterContextService } from '../../../../services/datacenter-context.service';
@@ -23,6 +24,7 @@ describe('InternalRouteModalComponent', () => {
   let datacenterContextService: any;
   let netcentricSubnetService: any;
   let appcentricSubnetService: any;
+  let environmentService: any;
   let route: any;
   let vrfService: any;
 
@@ -50,6 +52,10 @@ describe('InternalRouteModalComponent', () => {
       getManyAppCentricSubnet: jest.fn().mockReturnValue(of([{ id: 'a1', bridgeDomain: { id: 'bd1' } } as unknown as AppCentricSubnet])),
     } as Partial<V2AppCentricAppCentricSubnetsService> as any;
 
+    environmentService = {
+      getOneEnvironment: jest.fn().mockReturnValue(of({ externalVrfs: [] })),
+    } as Partial<V3GlobalEnvironmentsService> as any;
+
     route = {
       snapshot: { data: {} },
     } as Partial<ActivatedRoute> as any;
@@ -65,6 +71,7 @@ describe('InternalRouteModalComponent', () => {
         { provide: DatacenterContextService, useValue: datacenterContextService },
         { provide: V1NetworkSubnetsService, useValue: netcentricSubnetService },
         { provide: V2AppCentricAppCentricSubnetsService, useValue: appcentricSubnetService },
+        { provide: V3GlobalEnvironmentsService, useValue: environmentService },
         { provide: ActivatedRoute, useValue: route },
         { provide: V2AppCentricVrfsService, useValue: vrfService },
       ],

@@ -130,6 +130,7 @@ describe('TenantInfrastructureComponent', () => {
 
     mockGlobalEnvironmentService = {
       getManyEnvironments: jest.fn(),
+      getOneEnvironment: jest.fn().mockReturnValue(of({ externalVrfs: [] })),
     } as any;
 
     mockBgpRangesService = {
