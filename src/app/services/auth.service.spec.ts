@@ -3,8 +3,6 @@ import { AuthService } from './auth.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from 'src/environments/environment';
 import { UserDto } from '../../../client/model/models';
-import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { Router } from '@angular/router';
 
 describe('AuthService', () => {
