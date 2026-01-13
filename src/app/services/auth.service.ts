@@ -33,9 +33,7 @@ export class AuthService {
     const tenantQueryParam = this.getFromLocalStorage<string>('tenantQueryParam');
 
     // get tenantParam from current URL
-    const currentNav = this.router.getCurrentNavigation();
-    console.log('currentNav', currentNav);
-    const currentURLTenantParam = this.router.getCurrentNavigation().finalUrl.queryParams.tenant;
+    const currentURLTenantParam = this.router.getCurrentNavigation()?.finalUrl.queryParams.tenant;
     // this fixes an issue where there can be a mismatch between the tenantQueryParam that is stored in LocalStorage
     // and the currentURLTenantParam
 

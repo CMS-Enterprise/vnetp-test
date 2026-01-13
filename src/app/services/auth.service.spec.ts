@@ -4,11 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { environment } from 'src/environments/environment';
 import { UserDto } from '../../../client/model/models';
 import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
-  let routeService: any;
   let mockLocation: any;
 
   beforeEach(() => {
@@ -22,18 +23,16 @@ describe('AuthService', () => {
       writable: true,
     });
 
+    const routeService = {
+      getCurrentNavigation: jest.fn().mockReturnValue({ finalUrl: { queryParams: { tenant: 'tenant1' } } }),
+    };
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      providers: [AuthService],
+      imports: [HttpClientTestingModule],
+      providers: [{ provide: Router, useValue: routeService }],
     });
 
-    // routeService = {
-    //    getCurrentNavigation: jest.fn().mockResolvedValue({finalUrl: {queryParams: {tenant: 'tenant1'}}})
-    //  } as any
-
     service = TestBed.inject(AuthService);
-    jest.spyOn(service['router'], 'getCurrentNavigation').mockResolvedValue({ finalUrl: { queryParams: { tenant: 'tenant1' } } } as never);
-
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -61,9 +60,12 @@ describe('AuthService', () => {
 
       // Reset TestBed to force new instance
       TestBed.resetTestingModule();
+      const routeService = {
+        getCurrentNavigation: jest.fn().mockReturnValue({ finalUrl: { queryParams: { tenant: 'tenant1' } } }),
+      };
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-        providers: [AuthService],
+        providers: [AuthService, { provide: Router, useValue: routeService }],
       });
 
       const newService = TestBed.inject(AuthService);
@@ -80,9 +82,12 @@ describe('AuthService', () => {
 
       // Reset TestBed to force new instance
       TestBed.resetTestingModule();
+      const routeService = {
+        getCurrentNavigation: jest.fn().mockReturnValue({ finalUrl: { queryParams: { tenant: 'test-tenant' } } }),
+      };
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-        providers: [AuthService],
+        providers: [AuthService, { provide: Router, useValue: routeService }],
       });
 
       const newService = TestBed.inject(AuthService);
@@ -97,9 +102,12 @@ describe('AuthService', () => {
 
       // Reset TestBed to force new instance
       TestBed.resetTestingModule();
+      const routeService = {
+        getCurrentNavigation: jest.fn().mockReturnValue({ finalUrl: { queryParams: { tenant: 'tenant1' } } }),
+      };
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-        providers: [AuthService],
+        providers: [AuthService, { provide: Router, useValue: routeService }],
       });
 
       const newService = TestBed.inject(AuthService);
