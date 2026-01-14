@@ -71,12 +71,11 @@ describe('AuthService', () => {
       expect(newService.currentTenantValue).toBeNull();
     });
 
-    it('should set both user and tenant when both exist in localStorage', () => {
+    it('should set both user and tenant when both exist', () => {
       const mockUser: UserDto = { token: 'test-token' } as UserDto;
       const mockTenant = 'test-tenant';
 
       localStorage.setItem('user', JSON.stringify(mockUser));
-      localStorage.setItem('tenantQueryParam', JSON.stringify(mockTenant));
 
       // Reset TestBed to force new instance
       TestBed.resetTestingModule();
@@ -101,7 +100,7 @@ describe('AuthService', () => {
       // Reset TestBed to force new instance
       TestBed.resetTestingModule();
       const routeService = {
-        getCurrentNavigation: jest.fn().mockReturnValue({ finalUrl: { queryParams: { tenant: 'tenant1' } } }),
+        getCurrentNavigation: jest.fn().mockReturnValue(null),
       };
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],

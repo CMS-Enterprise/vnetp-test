@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UserDto, UserPass } from '../../../client/model/models';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -30,21 +30,13 @@ export class AuthService {
 
   constructor(private http: HttpClient, public router: Router) {
     const user = this.getFromLocalStorage<UserDto>('user');
-    const tenantQueryParam = this.getFromLocalStorage<string>('tenantQueryParam');
 
     // get tenantParam from current URL
     const currentURLTenantParam = this.router.getCurrentNavigation()?.finalUrl.queryParams.tenant;
-    // this fixes an issue where there can be a mismatch between the tenantQueryParam that is stored in LocalStorage
-    // and the currentURLTenantParam
-
-    // we will always want to default to the tenantParam that is in the URL as this is the tenant that will be used in API requests
-
-    // if user and tenantQueryParam are in localStorage, we want to ensure that the currentTenantSubject matches
-    // the tenant that is in the tenantParam in the URL
-    if (user && tenantQueryParam) {
-      // Since we are storing the tenant in local storage,
-      // it may need to be evaluated and changed if the local storage tenant is not the tenant in the current URL.
-      // If the user is not null, set the tenant to the currentURLTenantParam
+    // we will always want to default to the tenantParam that is in the URL as this is the tenant that will be used in API requests.
+    // we want to ensure that the currentTenantSubject is set to be whatever tenant query parameter is in the URL
+    if (user && currentURLTenantParam) {
+      // If the user and currentURLTenantParam is not null, set the tenant to the currentURLTenantParam
 
       this.currentTenantSubject.next(currentURLTenantParam);
     }
