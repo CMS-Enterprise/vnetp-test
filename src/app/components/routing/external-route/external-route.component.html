@@ -37,35 +37,35 @@
 
           <ng-container matColumnDef="externalVrf">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>External VRF</th>
-            <td mat-cell *matCellDef="let route">{{ route.externalVrf }}</td>
+            <td mat-cell *matCellDef="let route">{{ route.globalExternalRoute?.externalVrf?.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="lastSeen">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Seen</th>
             <td mat-cell *matCellDef="let route">
-              {{ route.lastSeen }}
+              {{ route.globalExternalRoute?.lastSeen }}
               <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="protocol">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Protocol</th>
-            <td mat-cell *matCellDef="let route">{{ route.protocol }}</td>
+            <td mat-cell *matCellDef="let route">{{ route.globalExternalRoute?.protocol }}</td>
           </ng-container>
 
           <ng-container matColumnDef="metric">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Metric</th>
-            <td mat-cell *matCellDef="let route">{{ route.metric }}</td>
+            <td mat-cell *matCellDef="let route">{{ route.globalExternalRoute?.metric }}</td>
           </ng-container>
 
           <ng-container matColumnDef="uptime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Uptime</th>
-            <td mat-cell *matCellDef="let route">{{ route.uptime || '-' }}</td>
+            <td mat-cell *matCellDef="let route">{{ route.globalExternalRoute?.uptime || '-' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="tag">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Tag</th>
-            <td mat-cell *matCellDef="let route">{{ route.tag }}</td>
+            <td mat-cell *matCellDef="let route">{{ route.globalExternalRoute?.tag }}</td>
           </ng-container>
 
           <ng-container matColumnDef="actions">
@@ -112,16 +112,7 @@
       </div>
     </mat-tab>
     <mat-tab label="Available Routes">
-      <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-        <mat-form-field class="w-25">
-          <mat-label>Select a VRF</mat-label>
-          <mat-select [(ngModel)]="selectedVrf" (selectionChange)="updateAvailableRoutes()">
-            <mat-option *ngFor="let vrf of availableVrfs" [value]="vrf">
-              {{ vrf }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
+      <div class="d-flex justify-content-end align-items-center mt-3 mb-3">
         <input
           type="text"
           class="search-input"
@@ -142,7 +133,7 @@
 
           <ng-container matColumnDef="externalVrf">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>External VRF</th>
-            <td mat-cell *matCellDef="let route">{{ route.externalVrf }}</td>
+            <td mat-cell *matCellDef="let route">{{ route.externalVrf?.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="lastSeen">

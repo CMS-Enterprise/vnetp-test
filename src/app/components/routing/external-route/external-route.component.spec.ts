@@ -42,6 +42,7 @@ describe('ExternalRouteComponent', () => {
   const baseConnection: ExternalVrfConnection = {
     id: 'conn-1',
     tenantId: 'tenant-1',
+    externalVrf: 'VRF_B',
     externalFirewall: {
       bgpAsn: 65001,
       externalVrfConnections: [{ externalVrf: 'VRF_B' } as any, { externalVrf: 'VRF_A' } as any, { externalVrf: 'VRF_A' } as any],
@@ -200,7 +201,8 @@ describe('ExternalRouteComponent', () => {
 
     component.getAllRoutes();
 
-    expect(component.availableVrfs).toEqual(['VRF_A', 'VRF_B']);
+    expect(component.availableVrfs).toEqual(['VRF_B']);
+    expect(component.selectedVrf).toBe('VRF_B');
     expect(component.assignedRoutesDataSource.data[0].globalExternalRoute.id).toBe('gr-2');
   });
 
@@ -219,12 +221,12 @@ describe('ExternalRouteComponent', () => {
   it('_fetchGlobalRoutes calls service with env and filter', done => {
     component.environmentId = 'env-1';
     mockGlobalExternalRouteService.getManyExternalRoutes.mockReturnValueOnce(of([{ id: 'x' }]));
-    (component as any)._fetchGlobalRoutes('vrf-a,vrf-b').subscribe((res: any) => {
+    (component as any)._fetchGlobalRoutes('vrf-b').subscribe((res: any) => {
       expect(mockGlobalExternalRouteService.getManyExternalRoutes).toHaveBeenCalledWith({
         environmentId: 'env-1',
         limit: 50000,
         relations: ['externalVrf'],
-        filter: ['externalVrfId||in||vrf-a,vrf-b'],
+        filter: ['externalVrfId||in||vrf-b'],
       });
       expect(res.length).toBe(1);
       done();

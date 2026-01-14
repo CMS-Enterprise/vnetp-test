@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { forkJoin, Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { isIP } from 'validator';
@@ -106,13 +106,18 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   getAllRoutes(): void {
     this._fetchEnvironmentVrfs().subscribe(environmentVrfs => {
-      const vrfIds = environmentVrfs.map(vrf => vrf.id).filter(Boolean) as string[];
-      this.availableVrfs = environmentVrfs.map(vrf => vrf.name).sort();
-      const availableExternalVrfs = vrfIds.join(',');
+      const externalVrfName = this.externalVrfConnection?.externalVrf;
+      const matchingExternalVrf = environmentVrfs.find(vrf => vrf.name === externalVrfName);
+
+      this.availableVrfs = matchingExternalVrf ? [matchingExternalVrf.name] : [];
+      this.selectedVrf = matchingExternalVrf?.name ?? '';
+
+      const globalRoutes$ = matchingExternalVrf?.id ? this._fetchGlobalRoutes(matchingExternalVrf.id) : of<GlobalExternalRoute[]>([]);
+      const assignedRoutes$ = this._fetchAssignedRoutes();
 
       forkJoin({
-        globalRoutes: this._fetchGlobalRoutes(availableExternalVrfs),
-        assignedRoutes: this._fetchAssignedRoutes(),
+        globalRoutes: globalRoutes$,
+        assignedRoutes: assignedRoutes$,
       }).subscribe(({ globalRoutes, assignedRoutes }) => {
         this._processRoutesData(globalRoutes, assignedRoutes);
       });
