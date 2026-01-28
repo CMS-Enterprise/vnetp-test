@@ -46,7 +46,6 @@ spec:
       restartPolicy: Never
       backoffLimit: 4
 
-
   - name: kaniko
     image: artifactory.cloud.cms.gov/docker/kaniko-project/executor:v1.23.2-debug
     imagePullPolicy: Always
