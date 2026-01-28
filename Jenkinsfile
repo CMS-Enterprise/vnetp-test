@@ -77,7 +77,7 @@ spec:
                 script {
                     // Invoke Snyk Security scan
                     snykSecurity(
-                        snykInstallation: 'snyk-vnetp-ui', // Name of your Snyk CLI installation configured in Global Tool Configuration
+                        snykInstallation: 'snyk-vnetp-ui', // Snyk CLI in Global Tool Configuration
                         snykTokenId: 'SNYK_TOKEN', // ID of your Snyk API Token credential in Jenkins
                         failOnIssues: true, // Fail the build if Snyk finds issues
                         severity: 'high', // Only report issues with 'high' severity or higher
