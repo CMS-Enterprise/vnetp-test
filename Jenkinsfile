@@ -36,6 +36,13 @@ spec:
         cpu: 1000m
         memory: 1024Mi
 
+  - name: snyk-scanner
+    image: artifactory.cloud.cms.gov/artifactory/docker/snyk/snyk-cli:latest
+    command: ["/bin/sh", "-c"]
+    args:
+      - snyk code test
+    restartPolicy: Never
+
   
   - name: kaniko
     image: artifactory.cloud.cms.gov/docker/kaniko-project/executor:v1.23.2-debug
