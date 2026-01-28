@@ -44,7 +44,7 @@ spec:
             snyk test &&
             snyk code test
       restartPolicy: Never
-  backoffLimit: 4
+      backoffLimit: 4
 
 
   - name: kaniko
