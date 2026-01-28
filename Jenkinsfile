@@ -72,60 +72,27 @@ spec:
       }
     }
 
-    // Internal Test
-    stage('Test') {
-      steps {
-        container('node') {
-          sh 'npm --version'
-          sh 'npm run test:ci'
-        }
-      }
-    }
-
-     // Test with SonarQube
-    stage('SonarQube') {
-      // Pre-requisites: Use withSonarQubeEnv step in your pipeline 
-      when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
-            }
-      steps {
-        container("sonarcli") {
-            withCredentials([string(credentialsId: 'CB2Sonar', variable: 'SONARQUBE')]) {
-              sh '''
-              sonar-scanner \
-                -Dsonar.projectKey=vnetp-ui \
-                -Dsonar.sources=. \
-                -Dsonar.host.url=https://sonarqube.cloud.cms.gov \
-                -Dsonar.login=sqp_f96a7ecc246898d6d4f6a72a00ede17335d22c49
-              '''
-            }
-        }
-      }
-    }
-  
-    // Push to Artifactory
-    stage('Kaniko') {
-      steps {
-        container('kaniko') {
-            sh '''
-            cat /kaniko/.docker/config.json
-            /kaniko/executor --context $(pwd) --build-arg build-number=${BUILD_NUMBER} --dockerfile Dockerfile --destination artifactory.cloud.cms.gov/cds-docker-local/vnetp-ui:${GIT_COMMIT}
-            '''
-        }
-      }
-    }
-  }
-
-  // Slack Message
-  post {
-        always {
-            echo 'send to cds-draas-jenkins channel in Slack'
-        }
-        success {
+    stage('Snyk Scan') {
+            steps {
                 script {
-                    slackSend(channel: 'cds-draas-jenkins')
+                    // Invoke Snyk Security scan
+                    snykSecurity(
+                        snykInstallation: 'SnykCLI', // Name of your Snyk CLI installation configured in Global Tool Configuration
+                        snykTokenId: 'SnykApiToken', // ID of your Snyk API Token credential in Jenkins
+                        failOnIssues: true, // Fail the build if Snyk finds issues
+                        severity: 'high', // Only report issues with 'high' severity or higher
+                        monitorProjectOnBuild: true // Monitor the project in Snyk after the scan
+                        // You can add other parameters as needed, enyk.g., targetFile: 'package.json'
+                    )
                 }
             }
+      
+        }
+
+
+    
+
+
     
   }
 }
