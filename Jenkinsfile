@@ -21,7 +21,7 @@ spec:
     image: artifactory.cloud.cms.gov/docker/snyk/snyk:alpine
     command: ["/bin/sh", "-c"]
     args:
-      - ls
+      - snyk test --help
         
   - name: sonarcli
     image: artifactory.cloud.cms.gov/docker/sonarsource/sonar-scanner-cli:5
