@@ -20,13 +20,9 @@ spec:
   - name: snyk-scanner
     image: artifactory.cloud.cms.gov/docker/snyk/snyk:alpine
     env:
-    - name: SNYK_TOKEN
-      valueFrom:
-            secretKeyRef:
-              name: snyk-secrets # Name of your Kubernetes Secret
-              key: snyk-api-token # Key within the Secret holding the token
-        command: ["/bin/sh", "-c"]
-        args:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      command: ["/bin/sh", "-c"]
+      args:
           - snyk auth $SNYK_TOKEN &&
             snyk test &&
             snyk code test
