@@ -22,7 +22,6 @@ spec:
     command: ["/bin/sh", "-c"]
     args:
       - snyk code test
-    restartPolicy: Never
         
   - name: sonarcli
     image: artifactory.cloud.cms.gov/docker/sonarsource/sonar-scanner-cli:5
