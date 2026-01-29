@@ -18,7 +18,7 @@ spec:
         memory: 5Gi
 
   - name: snyk-scanner
-    image: artifactory.cloud.cms.gov/artifactory/docker/snyk/snyk-cli:latest
+    image: snyk/snyk-cli:latest
     command: ["/bin/sh", "-c"]
     args:
       - snyk code test
