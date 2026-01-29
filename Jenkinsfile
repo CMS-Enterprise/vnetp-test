@@ -19,6 +19,8 @@ spec:
 
   - name: snyk-scanner
     image: artifactory.cloud.cms.gov/docker/snyk/snyk:alpine
+    env:
+        - name: SNYK_TOKEN
     command: ["/bin/sh", "-c"]
     args:
       - snyk test --help
