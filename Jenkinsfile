@@ -20,7 +20,7 @@ spec:
   - name: snyk-scanner
     image: artifactory.cloud.cms.gov/docker/snyk/snyk:alpine
     env:
-      - SNYK_TOKEN=724f43b6-2c73-44b3-a0a9-a69ee7c61bc9
+      - SNYK_TOKEN=
       command: ["/bin/sh", "-c"]
       args:
           - snyk auth $SNYK_TOKEN &&
