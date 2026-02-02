@@ -16,17 +16,7 @@ spec:
       limits:
         cpu: 500m
         memory: 5Gi
-
-  - name: snyk-scanner
-    image: artifactory.cloud.cms.gov/docker/snyk/snyk:alpine
-    env:
-      - SNYK_TOKEN=
-      command: ["/bin/sh", "-c"]
-      args:
-          - snyk auth $SNYK_TOKEN &&
-            snyk test &&
-            snyk code test
-        
+       
   - name: sonarcli
     image: artifactory.cloud.cms.gov/docker/sonarsource/sonar-scanner-cli:5
     command: ['cat']
