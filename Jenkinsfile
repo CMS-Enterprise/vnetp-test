@@ -73,6 +73,18 @@ spec:
       }
     }
 
+ // Internal Test
+    stage('Test') {
+      steps {
+        container('node') {
+          sh 'npm --version'
+          sh 'npm run test:ci'
+        }
+      }
+    }
+
+
+
     stage('Snyk Scan') {
             steps {
                 script {
