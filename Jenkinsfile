@@ -16,6 +16,7 @@ spec:
       limits:
         cpu: 500m
         memory: 5Gi
+
        
   - name: sonarcli
     image: artifactory.cloud.cms.gov/docker/sonarsource/sonar-scanner-cli:5
